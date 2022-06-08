@@ -36,18 +36,18 @@ func UpdateTo(assetURL, cmdPath string) error {
 func (up *Updater) downloadDirectlyFromURL(assetURL string) (io.ReadCloser, error) {
 	req, err := http.NewRequest("GET", assetURL, nil)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to create HTTP request to %s: %s", assetURL, err)
+		return nil, fmt.Errorf("failed to create HTTP request to %s: %s", assetURL, err)
 	}
 
 	req.Header.Add("Accept", "application/octet-stream")
 	req = req.WithContext(context.Background())
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("Failed to download a release file from %s: %s", assetURL, err)
+		return nil, fmt.Errorf("failed to download a release file from %s: %s", assetURL, err)
 	}
 
 	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("Failed to download a release file from %s: Not successful status %d", assetURL, res.StatusCode)
+		return nil, fmt.Errorf("failed to download a release file from %s: Not successful status %d", assetURL, res.StatusCode)
 	}
 
 	return res.Body, nil
@@ -60,7 +60,7 @@ func uncompressAndUpdate(src io.Reader, assetURL, cmdPath string) error {
 		return err
 	}
 
-	log.Flog.Debugf("Will update %s to the latest downloaded from", cmdPath, assetURL)
+	log.Flog.Debugf("will upgrade %s to the latest downloaded from", cmdPath, assetURL)
 	return update.Apply(asset, update.Options{
 		TargetPath: cmdPath,
 	})

@@ -9,6 +9,10 @@
 [![Releases](https://img.shields.io/github/release-pre/easysoft/qucheng_cli.svg)](https://github.com/easysoft/qucheng_cli/releases)
 [![docs](https://img.shields.io/badge/docs-done-green)](https://www.qucheng.cn/)
 
+compatibility:
+
+- [x] 100% support `Debian 11+`
+
 ## Quick start
 
 ```bash
@@ -20,4 +24,35 @@ q init
 ```bash
 make generate
 make build
+```
+
+## Install
+
+### Building From Source
+
+`qcadmin(q)` is currently using go v1.16 or above. In order to build ergo from source you must:
+
+```bash
+# Clone the repo
+# Build and run the executable
+make generate
+make build
+```
+
+### Linux Binary
+
+Downloaded from pre-compiled binaries
+
+```bash
+# stable / tag
+curl https://pkg.qucheng.com/qucheng/cli/stable/get.sh | sh -
+# edge / master (Recommended)
+curl https://pkg.qucheng.com/qucheng/cli/edge/get.sh | sh -
+```
+
+## Upgrade
+
+```bash
+# upgrade self
+q upgrade q
 ```

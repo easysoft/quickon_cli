@@ -35,19 +35,25 @@ const (
 )
 
 type versionGet struct {
-	Version   string `json:"version"`
-	BuildDate string `json:"build_date"`
+	Code int `json:"code"`
+	Data struct {
+		Name    string    `json:"name"`
+		Version string    `json:"version"`
+		Sync    time.Time `json:"sync"`
+	} `json:"data"`
+	Message   string `json:"message"`
+	Timestamp int    `json:"timestamp"`
 }
 
 // PreCheckLatestVersion 检查最新版本
 func PreCheckLatestVersion() (string, error) {
 	lastVersion := &versionGet{}
 	client := req.C().SetUserAgent(common.GetUG()).SetTimeout(time.Second * 5)
-	_, err := client.R().SetResult(lastVersion).Get("http://release.metrics.qucheng.com/last/qcadmin?type=none")
+	_, err := client.R().SetResult(lastVersion).Get("https://api.qucheng.com/api/release/last/qcadmin")
 	if err != nil {
 		return "", err
 	}
-	return lastVersion.Version, nil
+	return lastVersion.Data.Version, nil
 }
 
 func ShowVersion() {
@@ -74,7 +80,7 @@ func ShowVersion() {
 		nowversion, _ := gv.New(common.Version)
 		needupgrade := nowversion.LT(gv.MustParse(lastversion))
 		if needupgrade {
-			log.Flog.Infof("当前最新版本 %s, 可以使用 %s 将版本升级到最新版本", color.SGreen(lastversion), color.SGreen("ergo upgrade"))
+			log.Flog.Infof("当前最新版本 %s, 可以使用 %s 将版本升级到最新版本", color.SGreen(lastversion), color.SGreen("q upgrade q"))
 			return
 		}
 	}

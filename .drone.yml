@@ -72,26 +72,26 @@ steps:
       branch:
       - master
 
-  - name: upload edge install
-    image: ysicing/drone-plugin-cos
-    privileged: true
-    pull: always
-    settings:
-      debug: true
-      region: ap-shanghai
-      autotime: false
-      bucket:
-        from_secret: s3-bucket
-      accesskey:
-        from_secret: s3-access-key
-      secretkey:
-        from_secret: s3-secret-key
-      source: ./hack/scripts/get.sh
-      target:
-        from_secret: s3-edge-path
-    when:
-      branch:
-      - master
+  # - name: upload edge install
+  #   image: ysicing/drone-plugin-cos
+  #   privileged: true
+  #   pull: always
+  #   settings:
+  #     debug: true
+  #     region: ap-shanghai
+  #     autotime: false
+  #     bucket:
+  #       from_secret: s3-bucket
+  #     accesskey:
+  #       from_secret: s3-access-key
+  #     secretkey:
+  #       from_secret: s3-secret-key
+  #     source: ./hack/scripts/get.sh
+  #     target:
+  #       from_secret: s3-edge-path
+  #   when:
+  #     branch:
+  #     - master
 
   - name: release stable version
     image: ysicing/drone-plugin-rv

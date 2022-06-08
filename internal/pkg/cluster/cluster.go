@@ -37,7 +37,7 @@ type Cluster struct {
 	types.Metadata `json:",inline"`
 	types.Status   `json:"status"`
 	M              *sync.Map
-	KubeClient         *k8s.Client
+	KubeClient     *k8s.Client
 }
 
 func NewCluster() *Cluster {

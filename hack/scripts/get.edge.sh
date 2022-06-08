@@ -68,7 +68,7 @@ setup_tmp() {
 
 # --- use desired qcadmin version if defined or find version from channel ---
 get_release_version() {
-		VERSION="stable"
+		VERSION="edge"
     info "Using ${VERSION} as release"
 }
 
