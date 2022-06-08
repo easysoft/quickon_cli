@@ -1,0 +1,43 @@
+workflow:
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "master"
+      when: always
+    # - if: $CI_COMMIT_TAG
+    #   when: always
+    # - if: $CI_COMMIT_REF_NAME == "feat/ci" # test ci only
+    #   when: always
+    - when: never
+
+
+stages:
+  # - test
+  - compile
+  - cos
+
+# format:
+#   stage: test
+#   script:
+#   - make lint
+
+compile:
+  stage: compile
+  script:
+    - export GOPROXY="https://goproxy.cn"
+    - export GOPATH=/home/gitlab-runner/go
+    - export PATH=$PATH:/usr/local/go/bin:/home/gitlab-runner/go/bin
+    - make generate
+    - make build
+    - make upx
+  # artifacts:
+  #   paths:
+      # - dist
+
+upload:
+  stage: cos
+  needs: [compile]
+  before_script:
+  - docker info
+  script:
+  - docker run --rm -e PLUGIN_DEBUG="true" -e PLUGIN_BUCKET="${PLUGIN_BUCKET}" -e PLUGIN_ACCESSKEY="${PLUGIN_ACCESSKEY}" -e PLUGIN_SECRETKEY="${PLUGIN_SECRETKEY}" -e PLUGIN_REGION="ap-shanghai" -e PLUGIN_SOURCE="./dist" -e PLUGIN_TARGET="qucheng/cli/edge" -v $PWD:/go/src ysicing/drone-plugin-cos
+  only:
+    - master

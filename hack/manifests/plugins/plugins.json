@@ -1,0 +1,47 @@
+[
+	{
+		"type": "ingress",
+		"default": "nginx-ingress-controller",
+		"item": [
+			{
+				"name": "nginx-ingress-controller",
+				"description": "NGINX Ingress Controller is an Ingress controller that manages external access to HTTP services in a Kubernetes cluster using NGINX.",
+				"version": "1.2.0",
+				"home": "https://github.com/bitnami/charts/tree/master/bitnami/nginx-ingress-controller",
+				"appversion": "1.2.0",
+				"path": "hack/manifests/plugins/nginx-ingress-controller.yaml",
+				"tool": "kubectl"
+			}
+		]
+	},
+	{
+		"type": "monitoring",
+		"default": "monitoring",
+		"item": [
+			{
+				"name": "monitoring",
+				"description": "provides easy monitoring definitions for Kubernetes services and deployment and management of Monitoring instances.",
+				"version": "0.56.1",
+				"home": "https://github.com/bitnami/charts/tree/master/bitnami/kube-prometheus",
+				"appversion": "0.56.1",
+				"path": "install/kube-prometheus",
+				"tool": "helm"
+			}
+		]
+	},
+	{
+		"type": "lb",
+		"default": "openelb",
+		"item": [
+			{
+				"name": "openelb",
+				"description": "Load Balancer Implementation for Kubernetes in Bare-Metal, Edge, and Virtualization Environments.",
+				"version": "0.4.4",
+				"home": "https://github.com/openelb/openelb",
+				"appversion": "0.4.4",
+				"path": "hack/manifests/plugins/openelb.yaml",
+				"tool": "kubectl"
+			}
+		]
+	}
+]

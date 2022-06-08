@@ -1,0 +1,4 @@
+dist/
+hack/bin/*-linux-*
+internal/static/*/zz_generated_bindata*
+dockercgroup

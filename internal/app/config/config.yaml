@@ -1,0 +1,8 @@
+db: "sqlite"
+token: ""
+master:
+- name: "master"
+  host: ""
+worker:
+- name: "worker"
+  host: ""
