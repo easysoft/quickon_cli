@@ -7,18 +7,17 @@
 package cmd
 
 import (
-	"github.com/easysoft/qcadmin/cmd/plugin"
+	"github.com/easysoft/qcadmin/cmd/manage"
 	"github.com/spf13/cobra"
 )
 
-func newCmdPlugin() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:     "plugins",
-		Short:   "plugin",
-		Aliases: []string{"plugin"},
+func newCmdManage() *cobra.Command {
+	m := &cobra.Command{
+		Use:     "manage",
+		Short:   "manage qucheng tools",
+		Aliases: []string{"m", "op"},
 	}
-	cmd.AddCommand(plugin.ListPluginCmd())
-	cmd.AddCommand(plugin.InstallPluginCmd())
-	cmd.AddCommand(plugin.UnInstallPluginCmd())
-	return cmd
+	m.AddCommand(manage.NewCmdPlugin())
+	m.AddCommand(manage.NewResetPassword())
+	return m
 }
