@@ -242,7 +242,7 @@ func (p *Cluster) InitK3sCluster() error {
 	log.Flog.Donef("k3s cluster ready, cost: %v", t2.Sub(t1))
 	d := common.GetDefaultKubeConfig()
 	os.Symlink(common.K3sKubeConfig, d)
-	log.Flog.Donef("create kubeconfig soft link %v ---> %v/config", common.K3sKubeConfig, d)
+	log.Flog.Donef("create kubeconfig soft link %v ---> %v", common.K3sKubeConfig, d)
 	kclient, _ := k8s.NewSimpleClient()
 	if kclient != nil {
 		_, err = kclient.CreateNamespace(context.TODO(), common.DefaultSystem, metav1.CreateOptions{})
