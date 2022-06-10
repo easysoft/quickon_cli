@@ -1,0 +1,134 @@
+name: CI
+
+env:
+  # Common versions
+  GO_VERSION: '1.18'
+
+on:
+  push:
+    branches:
+      - "*"
+  pull_request:
+    branches:
+      - "*"
+    paths-ignore:
+      - 'docs/**'
+      - '*.md'
+      - '*.yml'
+
+jobs:
+
+  check-license:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      - name: install addlicense
+        run: |
+          echo "install addlicense"
+          go install github.com/google/addlicense@latest
+      - name: Run Check License
+        run: |
+          export TZ='Asia/Shanghai'
+          export PATH=$PATH:$(go env GOPATH)/bin
+          make gencopyright
+          modifyCode=$(git status  -s | grep M | wc -l)
+          git status  -s
+          if [ $modifyCode -eq 0 ] ; then
+             echo "Lic check ok"
+          else
+             echo "Failed git modify files num is $modifyCode. Lic check error,please exec 'make gencopyright' in your code "
+             exit -1
+          fi
+  golangci-lint:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: install gox
+        run: |
+          echo "install gox"
+          go install github.com/mitchellh/gox@latest
+      - name: install ghr
+        run: |
+          echo "install ghr"
+          go install github.com/tcnksm/ghr@latest
+      - name: install upx
+        run: |
+          echo "install upx"
+          sudo apt-get update -qq
+          sudo apt-get install -y upx
+      - name: Run Linter
+
+  lint:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: install gox
+        run: |
+          echo "install gox"
+          go install github.com/mitchellh/gox@latest
+      - name: install ghr
+        run: |
+          echo "install ghr"
+          go install github.com/tcnksm/ghr@latest
+      - name: install upx
+        run: |
+          echo "install upx"
+          sudo apt-get update -qq
+          sudo apt-get install -y upx
+      - name: Run Linter
+        run: make default
+
+  build-binaries:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: install gox
+        run: |
+          echo "install gox"
+          go install github.com/mitchellh/gox@latest
+      - name: install ghr
+        run: |
+          echo "install ghr"
+          go install github.com/tcnksm/ghr@latest
+      - name: install upx
+        run: |
+          echo "install upx"
+          sudo apt-get update -qq
+          sudo apt-get install -y upx
+      - name: build ergo
+        run: |
+          export TZ='Asia/Shanghai'
+          export PATH=$PATH:$(go env GOPATH)/bin
+          make generate
+          make build
+          make upx
+          ./dist/qcadmin_linux_amd64 version

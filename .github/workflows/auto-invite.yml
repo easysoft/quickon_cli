@@ -13,9 +13,10 @@ jobs:
     steps:
 
       - name: Invite user to join our group
-        uses: peter-evans/create-or-update-comment@v1
+        uses: peter-evans/create-or-update-comment@v2
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
             It's my pleasure to invite you to join us :
             home Website: https://www.qucheng.cn
+            qq group : 768721743

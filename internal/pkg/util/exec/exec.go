@@ -7,6 +7,7 @@
 package exec
 
 import (
+	"fmt"
 	"os"
 	sysexec "os/exec"
 	"strings"
@@ -55,4 +56,19 @@ func Command(name string, arg ...string) *sysexec.Cmd {
 	cmd := sysexec.Command(name, arg...) // #nosec
 	Trace(cmd)
 	return cmd
+}
+
+func CommandRespByte(command string, args ...string) ([]byte, error) {
+	c := Command(command, args...)
+	bytes, err := c.CombinedOutput()
+	if err != nil {
+		cmdStr := fmt.Sprintf("%s %s", command, strings.Join(args, " "))
+		log.Flog.Debugf("❌ Unable to execute %q:", cmdStr)
+		if len(bytes) > 0 {
+			log.Flog.Debugf(" %s", string(bytes))
+		}
+		return []byte{}, fmt.Errorf("unable to execute %q: %w", cmdStr, err)
+	}
+
+	return bytes, err
 }
