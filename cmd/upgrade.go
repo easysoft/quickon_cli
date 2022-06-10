@@ -14,7 +14,7 @@ import (
 func newCmdUpgrade() *cobra.Command {
 	up := &cobra.Command{
 		Use:     "upgrade",
-		Short:   "upgrade version",
+		Short:   "Upgrades the Q CLI to the newest version",
 		Aliases: []string{"ug", "ugc"},
 	}
 	up.AddCommand(upgrade.NewUpgradeQ())

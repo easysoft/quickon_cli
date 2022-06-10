@@ -44,10 +44,12 @@ make build
 Downloaded from pre-compiled binaries
 
 ```bash
-# stable / tag
+# 稳定版本 / stable / tag (Recommended)
 curl https://pkg.qucheng.com/qucheng/cli/stable/get.sh | sh -
-# edge / master (Recommended)
+q init
+# 开发版 / edge / master
 curl https://pkg.qucheng.com/qucheng/cli/edge/get.sh | sh -
+q init -q edge
 ```
 
 ## Upgrade

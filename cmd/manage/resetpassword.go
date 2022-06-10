@@ -8,6 +8,7 @@ package manage
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/easysoft/qcadmin/common"
@@ -17,12 +18,13 @@ import (
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/expass"
 	"github.com/imroc/req/v3"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 type Result struct {
-	Code    string `json:"code"`
+	Code    int    `json:"code"`
 	Message string `json:"message"`
 	Data    struct {
 		Account string `json:"account"`
@@ -64,17 +66,19 @@ func NewResetPassword() *cobra.Command {
 			// 更新密码
 			if len(password) == 0 {
 				log.Flog.Warn("not found password, will generate random password")
-				password = expass.RandomPassword(32)
+				password = expass.SaltMd5Pass(apiToken, expass.RandomPassword(16))
 			}
 			log.Flog.Infof("update superadmin password: %s", "")
 			client := req.C()
+			if log.Flog.GetLevel() > logrus.InfoLevel {
+				client = client.DevMode().EnableDumpAll()
+			}
 			var result Result
 			resp, err := client.R().
 				SetHeader("accept", "application/json").
 				SetHeader("TOKEN", apiToken).
 				SetBody(&Body{Password: password}).
-				SetResult(&result).
-				Put(fmt.Sprintf("http://%s:32379/api.php/v1/adminpassword.php", ips[0]))
+				Post(fmt.Sprintf("http://%s:32379/index.php?m=admin&f=resetpassword", ips[0]))
 			if err != nil {
 				log.Flog.Error("update password failed, reason: %v", err)
 				return
@@ -83,6 +87,7 @@ func NewResetPassword() *cobra.Command {
 				log.Flog.Error("update password failed, reason: bad response status %v", resp.Status)
 				return
 			}
+			json.Unmarshal([]byte(resp.String()), &result)
 			log.Flog.Donef("update superadmin %s password %s success.", color.SGreen(result.Data.Account), color.SGreen(password))
 		},
 	}

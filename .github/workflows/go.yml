@@ -1,23 +1,35 @@
-name: CI
+name: go
 
 env:
   # Common versions
   GO_VERSION: '1.18'
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
-      - "*"
+      - '*'
+    paths:
+      - '**.go'
+      - 'go.mod'
+      - '.golangci.yml'
+      - '.github/workflows/go.yml'
   pull_request:
     branches:
       - "*"
-    paths-ignore:
-      - 'docs/**'
-      - '*.md'
-      - '*.yml'
+    paths:
+      - '**.go'
+      - 'go.mod'
+      - '.golangci.yml'
+      - '.github/workflows/go.yml'
+    # paths-ignore:
+    #   - 'docs/**'
+    #   - '*.md'
+    #   - '*.yml'
 
 jobs:
-
   check-license:
     runs-on: ubuntu-18.04
     steps:
@@ -60,10 +72,6 @@ jobs:
         run: |
           echo "install gox"
           go install github.com/mitchellh/gox@latest
-      - name: install ghr
-        run: |
-          echo "install ghr"
-          go install github.com/tcnksm/ghr@latest
       - name: install upx
         run: |
           echo "install upx"
@@ -88,16 +96,12 @@ jobs:
         run: |
           echo "install gox"
           go install github.com/mitchellh/gox@latest
-      - name: install ghr
-        run: |
-          echo "install ghr"
-          go install github.com/tcnksm/ghr@latest
       - name: install upx
         run: |
           echo "install upx"
           sudo apt-get update -qq
           sudo apt-get install -y upx
-      - name: build ergo
+      - name: build qcadmin
         run: |
           export TZ='Asia/Shanghai'
           export PATH=$PATH:$(go env GOPATH)/bin
