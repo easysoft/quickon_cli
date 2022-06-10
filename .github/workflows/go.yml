@@ -44,33 +44,6 @@ jobs:
              echo "Failed git modify files num is $modifyCode. Lic check error,please exec 'make gencopyright' in your code "
              exit -1
           fi
-  golangci-lint:
-    runs-on: ubuntu-18.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          submodules: true
-      - name: Setup Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: ${{ env.GO_VERSION }}
-
-      - name: install gox
-        run: |
-          echo "install gox"
-          go install github.com/mitchellh/gox@latest
-      - name: install ghr
-        run: |
-          echo "install ghr"
-          go install github.com/tcnksm/ghr@latest
-      - name: install upx
-        run: |
-          echo "install upx"
-          sudo apt-get update -qq
-          sudo apt-get install -y upx
-      - name: Run Linter
-
   lint:
     runs-on: ubuntu-18.04
     steps:
