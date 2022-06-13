@@ -7,10 +7,9 @@ require (
 	github.com/blang/semver/v4 v4.0.0
 	github.com/cheggaaa/pb/v3 v3.0.8
 	github.com/containerd/continuity v0.3.0
-	github.com/davecgh/go-spew v1.1.1
 	github.com/docker/docker v20.10.14+incompatible
 	github.com/ergoapi/log v0.0.3
-	github.com/ergoapi/util v0.2.12
+	github.com/ergoapi/util v0.2.16
 	github.com/gin-gonic/gin v1.7.7
 	github.com/gosuri/uitable v0.0.4
 	github.com/idoubi/goz v1.2.2
@@ -40,7 +39,7 @@ require (
 )
 
 require (
-	github.com/6tail/lunar-go v1.2.16 // indirect
+	github.com/6tail/lunar-go v1.2.17 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/MakeNowJust/heredoc v0.0.0-20170808103936-bb23615498cd // indirect
 	github.com/Microsoft/go-winio v0.5.2 // indirect
@@ -52,6 +51,7 @@ require (
 	github.com/basgys/goxml2json v1.1.0 // indirect
 	github.com/chai2010/gettext-go v0.0.0-20160711120539-c6fed771bfd5 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/daviddengcn/go-colortext v0.0.0-20160507010035-511bcaf42ccd // indirect
 	github.com/docker/distribution v2.7.1+incompatible // indirect
 	github.com/evanphx/json-patch v4.12.0+incompatible // indirect
@@ -117,7 +117,7 @@ require (
 	github.com/xlab/treeprint v0.0.0-20181112141820-a009c3971eca // indirect
 	github.com/yoda-of-soda/map2xml v1.0.2 // indirect
 	go.starlark.net v0.0.0-20200306205701-8dd3e2ee1dd5 // indirect
-	golang.org/x/crypto v0.0.0-20220331220935-ae2d96664a29 // indirect
+	golang.org/x/crypto v0.0.0-20220511200225-c6db032c6c88 // indirect
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3 // indirect
 	golang.org/x/net v0.0.0-20220520000938-2e3eb7b945c2 // indirect
