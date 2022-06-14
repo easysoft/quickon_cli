@@ -7,7 +7,7 @@ require (
 	github.com/blang/semver/v4 v4.0.0
 	github.com/cheggaaa/pb/v3 v3.0.8
 	github.com/containerd/continuity v0.3.0
-	github.com/docker/docker v20.10.14+incompatible
+	github.com/docker/docker v20.10.17+incompatible
 	github.com/ergoapi/log v0.0.3
 	github.com/ergoapi/util v0.2.16
 	github.com/gin-gonic/gin v1.7.7
