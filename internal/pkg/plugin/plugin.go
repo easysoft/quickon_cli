@@ -116,7 +116,7 @@ func (p *Item) UnInstall() error {
 		}
 	} else {
 		// #nosec
-		applycmd := qcexec.Command(os.Args[0], "kubectl", "delete", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", common.DefaultSystem)
+		applycmd := qcexec.Command(os.Args[0], "experimental", "kubectl", "delete", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", common.DefaultSystem)
 		if output, err := applycmd.CombinedOutput(); err != nil {
 			log.Flog.Errorf("kubectl uninstall %s plugin %s failed: %s", p.Type, p.Name, string(output))
 			return err
@@ -151,7 +151,7 @@ func (p *Item) Install() error {
 		}
 	} else {
 		// #nosec
-		applycmd := qcexec.Command(os.Args[0], "kubectl", "apply", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", common.DefaultSystem)
+		applycmd := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", common.DefaultSystem)
 		if output, err := applycmd.CombinedOutput(); err != nil {
 			log.Flog.Errorf("kubectl install %s plugin %s failed: %s", p.Type, p.Name, string(output))
 			return err

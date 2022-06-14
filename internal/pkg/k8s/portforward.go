@@ -10,6 +10,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"os"
 	"time"
 
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
@@ -20,6 +21,8 @@ import (
 
 func PortForwardCommand(ctx context.Context, ns, svc string, sport, dport int) error {
 	args := []string{
+		"experimental",
+		"kubectl",
 		"port-forward",
 		"-n", ns,
 		fmt.Sprintf("svc/%s", svc),
@@ -37,6 +40,6 @@ func PortForwardCommand(ctx context.Context, ns, svc string, sport, dport int) e
 		log.Flog.Infof("Opening %q in your browser...", url)
 		browser.OpenURL(url)
 	}()
-	_, err := qcexec.CommandRespByte("kubectl", args...)
+	_, err := qcexec.CommandRespByte(os.Args[0], args...)
 	return err
 }
