@@ -193,13 +193,13 @@ require (
 // Replace to match K8s 1.23.6
 replace (
 	github.com/kardianos/service v1.2.1-0.20211104163826-b9d1d5b7279b => github.com/BeidouCloudPlatform/service v1.2.1-0.20211108101837-1fc58f473016
-	k8s.io/api => k8s.io/api v0.23.6
-	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.23.6
-	k8s.io/apimachinery => k8s.io/apimachinery v0.23.6
-	k8s.io/cli-runtime => k8s.io/cli-runtime v0.23.6
-	k8s.io/client-go => k8s.io/client-go v0.23.6
-	k8s.io/component-base => k8s.io/component-base v0.23.6
+	k8s.io/api => k8s.io/api v0.23.7
+	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.23.7
+	k8s.io/apimachinery => k8s.io/apimachinery v0.23.7
+	k8s.io/cli-runtime => k8s.io/cli-runtime v0.23.7
+	k8s.io/client-go => k8s.io/client-go v0.23.7
+	k8s.io/component-base => k8s.io/component-base v0.23.7
 	k8s.io/kube-openapi => k8s.io/kube-openapi v0.0.0-20211115234752-e816edb12b65
-	k8s.io/kubectl => k8s.io/kubectl v0.23.6
-	k8s.io/metrics => k8s.io/metrics v0.23.6
+	k8s.io/kubectl => k8s.io/kubectl v0.23.7
+	k8s.io/metrics => k8s.io/metrics v0.23.7
 )

@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2022 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.cn) All rights reserved.
+// Copyright (c) 2021-2022 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
 // Use of this source code is covered by the following dual licenses:
 // (1) Z PUBLIC LICENSE 1.2 (ZPL 1.2)
 // (2) Affero General Public License 3.0 (AGPL 3.0)
@@ -20,12 +20,12 @@ import (
 	"github.com/imroc/req/v3"
 )
 
-var versionTpl = `q version:
- Version:           %v
- Go version:        %v
- Git commit:        %v
- Built:             %v
- OS/Arch:           %v
+var versionTpl = `Client:
+ Version:           %s
+ Go version:        %s
+ Git commit:        %s
+ Built:             %s
+ OS/Arch:           %s
  Experimental:      true
 `
 

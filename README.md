@@ -6,7 +6,7 @@
 ![GitHub](https://img.shields.io/badge/license-ZPL%20%2B%20AGPL-blue)
 [![Go Report Card](https://goreportcard.com/badge/github.com/easysoft/qucheng_cli)](https://goreportcard.com/report/github.com/easysoft/qucheng_cli)
 [![Releases](https://img.shields.io/github/release-pre/easysoft/qucheng_cli.svg)](https://github.com/easysoft/qucheng_cli/releases)
-[![docs](https://img.shields.io/badge/docs-done-green)](https://www.qucheng.cn/)
+[![docs](https://img.shields.io/badge/docs-done-green)](https://www.qucheng.com/)
 
 compatibility:
 
