@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"strings"
 
 	"github.com/easysoft/qcadmin/cmd/version"
 	"github.com/easysoft/qcadmin/common"
@@ -39,7 +40,7 @@ func DoQcadmin() {
 		log.Flog.Errorf("fetch latest version err, reason: %v", err)
 		return
 	}
-	if lastversion == "" || lastversion == common.Version {
+	if lastversion == "" || lastversion == common.Version || strings.Contains(common.Version, lastversion) {
 		log.Flog.Infof("The current version %s is the latest version", common.Version)
 		return
 	}

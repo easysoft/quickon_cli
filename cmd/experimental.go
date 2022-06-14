@@ -7,18 +7,17 @@
 package cmd
 
 import (
-	"github.com/easysoft/qcadmin/cmd/manage"
+	"github.com/easysoft/qcadmin/cmd/experimental"
 	"github.com/spf13/cobra"
 )
 
-func newCmdManage() *cobra.Command {
-	m := &cobra.Command{
-		Use:     "manage",
-		Short:   "manage qucheng tools",
-		Aliases: []string{"m", "op"},
+func NewCmdExperimental() *cobra.Command {
+	experimentalCmd := &cobra.Command{
+		Use:     "experimental",
+		Aliases: []string{"x", "exp"},
+		Short:   "Experimental commands that may be modified or deprecated",
 	}
-	m.AddCommand(manage.NewCmdPlugin())
-	m.AddCommand(manage.NewResetPassword())
-	m.AddCommand(manage.NewUpgradeQucheg())
-	return m
+	experimentalCmd.AddCommand(experimental.KubectlCommand())
+	experimentalCmd.AddCommand(experimental.HelmCommand())
+	return experimentalCmd
 }

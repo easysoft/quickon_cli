@@ -67,26 +67,14 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ${{ env.GO_VERSION }}
-
-      - name: install gox
-        run: |
-          echo "install gox"
-          go install github.com/mitchellh/gox@latest
-      - name: install upx
-        run: |
-          echo "install upx"
-          sudo apt-get update -qq
-          sudo apt-get install -y upx
       - name: Run Linter
-        run: make default
+        run: make lint
 
   build-binaries:
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          submodules: true
       - name: Setup Go
         uses: actions/setup-go@v3
         with:
@@ -107,5 +95,5 @@ jobs:
           export PATH=$PATH:$(go env GOPATH)/bin
           make generate
           make build
-          make upx
+          # make upx
           ./dist/qcadmin_linux_amd64 version

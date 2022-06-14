@@ -9,7 +9,6 @@ GOPROXY = https://goproxy.cn,direct
 GOSUMDB = sum.golang.google.cn
 
 BUILD_RELEASE   ?= $(shell cat VERSION || echo "0.0.1")
-MODE ?= $(shell cat VERSION | grep -q "-" && echo "stable" || echo "edge")
 BUILD_DATE := $(shell date "+%F %T")
 GIT_COMMIT := $(shell git rev-parse --short HEAD || echo "abcdefgh")
 APP_VERSION := ${BUILD_RELEASE}-${BUILD_DATE}-${GIT_COMMIT}
@@ -18,7 +17,6 @@ LDFLAGS := "-w -s \
 	-X '$(VERSION_PKG).Version=$(BUILD_RELEASE)' \
 	-X '$(VERSION_PKG).BuildDate=$(BUILD_DATE)' \
 	-X '$(VERSION_PKG).GitCommitHash=$(GIT_COMMIT)' \
-	-X '$(VERSION_PKG).Mode=$(MODE)' \
 	-X 'k8s.io/client-go/pkg/version.gitVersion=${BUILD_RELEASE}' \
   -X 'k8s.io/client-go/pkg/version.gitCommit=${GIT_COMMIT}' \
   -X 'k8s.io/client-go/pkg/version.gitTreeState=dirty' \
@@ -96,3 +94,7 @@ legacy: # legacy code check
 	grep -rnw "\(LEGACY\|Deprecated\)" internal
 
 .PHONY : build prod-docker dev-push clean
+
+
+snapshot: ## local test goreleaser
+	goreleaser release --snapshot --rm-dist --skip-publish

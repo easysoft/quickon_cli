@@ -10,7 +10,6 @@ var (
 	Version       string
 	BuildDate     string
 	GitCommitHash string
-	Mode          string
 )
 
 // Check cloud provider APIs in evaluate task

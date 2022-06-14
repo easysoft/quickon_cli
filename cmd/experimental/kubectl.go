@@ -4,7 +4,7 @@
 // (2) Affero General Public License 3.0 (AGPL 3.0)
 // license that can be found in the LICENSE file.
 
-package cmd
+package experimental
 
 import (
 	"github.com/easysoft/qcadmin/internal/pkg/cli/kubectl"

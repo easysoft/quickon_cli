@@ -1,0 +1,72 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+before:
+  hooks:
+    - make generate
+    # - make default
+builds:
+  - id: universal
+    ldflags:
+      - -w -s -X github.com/easysoft/qcadmin/common.Version={{.Summary}}
+      - -X github.com/easysoft/qcadmin/common.BuildDate={{.Date}}
+      - -X github.com/easysoft/qcadmin/common.GitCommitHash={{.ShortCommit}}
+      - -X k8s.io/client-go/pkg/version.gitVersion={{.Summary}}
+      - -X k8s.io/client-go/pkg/version.gitCommit={{.FullCommit}}
+      - -X k8s.io/client-go/pkg/version.gitTreeState=dirty
+      - -X k8s.io/client-go/pkg/version.buildDate={{.Date}}
+      - -X k8s.io/client-go/pkg/version.gitMajor=1
+      - -X k8s.io/client-go/pkg/version.gitMinor=23
+      - -X k8s.io/component-base/version.gitVersion={{.Summary}}
+      - -X k8s.io/component-base/version.gitCommit={{.FullCommit}}
+      - -X k8s.io/component-base/version.gitTreeState=dirty
+      - -X k8s.io/component-base/version.gitMajor=1
+      - -X k8s.io/component-base/version.gitMinor=23
+      - -X k8s.io/component-base/version.buildDate={{.Date}}
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+      # - mips
+      # - mipsle
+      # - s390x
+      # - riscv64
+    # gomips:
+    #   - softfloat
+    ignore:
+      - goos: darwin
+        goarch: mips
+      - goos: darwin
+        goarch: mipsle
+      - goos: darwin
+        goarch: s390x
+      - goos: darwin
+        goarch: riscv64
+    main: main.go
+    binary: qcadmin
+# universal_binaries:
+#   - name_template: "qcadmin"
+#     replace: false
+archives:
+  - id: universal
+    builds:
+    - universal
+    format: binary
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "qcadmin-{{.Tag}}-{{.ShortCommit}}"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^feat(update):'
+      - Merge pull request
+      - Merge branch
+      - go mod tidy

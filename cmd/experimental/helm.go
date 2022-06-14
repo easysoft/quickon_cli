@@ -4,21 +4,14 @@
 // (2) Affero General Public License 3.0 (AGPL 3.0)
 // license that can be found in the LICENSE file.
 
-package cmd
+package experimental
 
 import (
-	"github.com/easysoft/qcadmin/cmd/manage"
+	"github.com/easysoft/qcadmin/internal/pkg/cli/helm"
 	"github.com/spf13/cobra"
 )
 
-func newCmdManage() *cobra.Command {
-	m := &cobra.Command{
-		Use:     "manage",
-		Short:   "manage qucheng tools",
-		Aliases: []string{"m", "op"},
-	}
-	m.AddCommand(manage.NewCmdPlugin())
-	m.AddCommand(manage.NewResetPassword())
-	m.AddCommand(manage.NewUpgradeQucheg())
-	return m
+// HelmCommand helm command.
+func HelmCommand() *cobra.Command {
+	return helm.EmbedCommand()
 }

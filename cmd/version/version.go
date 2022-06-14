@@ -8,6 +8,7 @@ package version
 
 import (
 	"fmt"
+	"os"
 	"runtime"
 	"strings"
 	"time"
@@ -76,11 +77,11 @@ func ShowVersion() {
 		log.Flog.Debugf("get update message err: %v", err)
 		return
 	}
-	if lastversion != "" && !strings.Contains(lastversion, defaultVersion) {
+	if lastversion != "" && !strings.Contains(common.Version, lastversion) {
 		nowversion, _ := gv.New(common.Version)
 		needupgrade := nowversion.LT(gv.MustParse(lastversion))
 		if needupgrade {
-			log.Flog.Infof("当前最新版本 %s, 可以使用 %s 将版本升级到最新版本", color.SGreen(lastversion), color.SGreen("q upgrade q"))
+			log.Flog.Infof("当前最新版本 %s, 可以使用 %s 将版本升级到最新版本", color.SGreen(lastversion), color.SGreen("%s upgrade q", os.Args[0]))
 			return
 		}
 	}
