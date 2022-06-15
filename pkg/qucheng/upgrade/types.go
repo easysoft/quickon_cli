@@ -15,4 +15,5 @@ type ComponentVersion struct {
 	Version      string
 	AppVersion   string
 	ChartVersion string
+	LastVersion  string
 }

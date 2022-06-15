@@ -74,6 +74,7 @@ require (
 	github.com/docker/go-units v0.4.0 // indirect
 	github.com/evanphx/json-patch v4.12.0+incompatible // indirect
 	github.com/exponent-io/jsonpath v0.0.0-20151013193312-d6023ce2651d // indirect
+	github.com/faabiosr/cachego v0.17.0 // indirect
 	github.com/fatih/camelcase v1.0.0 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fvbommel/sortorder v1.0.1 // indirect
@@ -190,9 +191,10 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.1 // indirect
 )
 
-// Replace to match K8s 1.23.6
+// Replace to match K8s 1.23.7
 replace (
 	github.com/kardianos/service v1.2.1-0.20211104163826-b9d1d5b7279b => github.com/BeidouCloudPlatform/service v1.2.1-0.20211108101837-1fc58f473016
+	helm.sh/helm/v3 => helm.sh/helm/v3 v3.8.2
 	k8s.io/api => k8s.io/api v0.23.7
 	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.23.7
 	k8s.io/apimachinery => k8s.io/apimachinery v0.23.7

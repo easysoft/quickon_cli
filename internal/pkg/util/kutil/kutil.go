@@ -6,7 +6,16 @@
 
 package kutil
 
-import "io/ioutil"
+import (
+	"fmt"
+	"io/ioutil"
+	"time"
+
+	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+	"github.com/ergoapi/util/file"
+	"github.com/ergoapi/util/ztime"
+)
 
 const (
 	NodeToken = "/var/lib/rancher/k3s/server/node-token"
@@ -18,4 +27,23 @@ func GetNodeToken() string {
 		return ""
 	}
 	return string(b)
+}
+
+// NeedCacheHelmFile helm repo update
+func NeedCacheHelmFile() bool {
+	cachefile := fmt.Sprintf("%s/.566964cd0285e57cd088caa251ae863a.lock", common.DefaultCacheDir)
+	if file.CheckFileExists(cachefile) {
+		data, err := file.ReadAll(cachefile)
+		if err != nil {
+			return true
+		}
+		old, _ := ztime.TimeParse("200601021504", string(data))
+		now := time.Now()
+		if now.Sub(old) > time.Hour {
+			return true
+		}
+		return false
+	}
+	file.Writefile(cachefile, ztime.NowUnixString())
+	return true
 }

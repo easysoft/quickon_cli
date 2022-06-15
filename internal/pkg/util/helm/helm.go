@@ -16,6 +16,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/Masterminds/semver/v3"
+	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/gofrs/flock"
 	"github.com/pkg/errors"
@@ -135,6 +137,9 @@ func (c Client) Upgrade(name, repoName, chartName, chartVersion string, values m
 }
 
 func (c Client) UpdateRepo() error {
+	if !kutil.NeedCacheHelmFile() {
+		return nil
+	}
 	repoFile := c.settings.RepositoryConfig
 	repoCache := c.settings.RepositoryCache
 	f, err := repo.LoadFile(repoFile)
@@ -157,7 +162,7 @@ func (c Client) UpdateRepo() error {
 }
 
 func updateCharts(repos []*repo.ChartRepository) {
-	log.Flog.Info("Hang tight while we grab the latest from your chart repositories...")
+	log.Flog.Debug("Hang tight while we grab the latest from your chart repositories...")
 	var wg sync.WaitGroup
 	for _, re := range repos {
 		wg.Add(1)
@@ -171,7 +176,7 @@ func updateCharts(repos []*repo.ChartRepository) {
 		}(re)
 	}
 	wg.Wait()
-	log.Flog.Done("Update Complete. ⎈ Happy Helming!⎈ ")
+	log.Flog.Debug("Update Complete. ⎈ Happy Helming!⎈ ")
 }
 
 func (c Client) ListRepo() ([]*repo.Entry, error) {
@@ -270,4 +275,47 @@ func (c Client) AddRepo(name, url, username, password string) error {
 		return err
 	}
 	return nil
+}
+
+func (c Client) GetCharts(repoName, name string) ([]*search.Result, error) {
+	charts, err := c.ListCharts(repoName, name)
+	if err != nil {
+		return nil, err
+	}
+	var result []*search.Result
+	for _, chart := range charts {
+		if chart.Chart.Name == name {
+			result = append(result, chart)
+		}
+	}
+	return result, nil
+}
+
+func (c Client) GetLastCharts(repoName, name string) ([]*search.Result, error) {
+	res, err := c.GetCharts(repoName, name)
+	if err != nil {
+		return nil, err
+	}
+	// stable >0.0.0
+	// alpha, beta, and release candidate releases >0.0.0-0
+	constraint, err := semver.NewConstraint(">0.0.0-0")
+	if err != nil {
+		return res, errors.Wrap(err, "an invalid version/constraint format")
+	}
+	data := res[:0]
+	foundNames := map[string]bool{}
+	for _, r := range res {
+		if foundNames[r.Name] {
+			continue
+		}
+		v, err := semver.NewVersion(r.Chart.Version)
+		if err != nil {
+			continue
+		}
+		if constraint.Check(v) {
+			data = append(data, r)
+			foundNames[r.Name] = true
+		}
+	}
+	return data, nil
 }
