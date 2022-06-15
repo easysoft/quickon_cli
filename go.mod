@@ -28,7 +28,7 @@ require (
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	golang.org/x/sys v0.0.0-20220608164250-635b8c9b7f68
 	gopkg.in/yaml.v2 v2.4.0
-	helm.sh/helm/v3 v3.8.2
+	helm.sh/helm/v3 v3.9.0
 	k8s.io/api v0.24.0
 	k8s.io/apimachinery v0.24.0
 	k8s.io/cli-runtime v0.24.0
