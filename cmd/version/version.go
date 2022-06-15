@@ -11,22 +11,42 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"text/tabwriter"
+	"text/template"
 	"time"
 
 	gv "github.com/blang/semver/v4"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+	"github.com/easysoft/qcadmin/pkg/qucheng/upgrade"
 	"github.com/ergoapi/util/color"
 	"github.com/imroc/req/v3"
+	"github.com/pkg/errors"
 )
 
-var versionTpl = `Client:
- Version:           %s
- Go version:        %s
- Git commit:        %s
- Built:             %s
- OS/Arch:           %s
- Experimental:      true
+var versionTpl = `{{with .Client -}}
+Client:
+ Version:           {{ .Version }}
+ Go version:        {{ .GoVersion }}
+ Git commit:        {{ .GitCommit }}
+ Built:             {{ .BuildTime }}
+ OS/Arch:           {{.Os}}/{{.Arch}}
+ Experimental:      {{.Experimental}}
+{{- if .CanUpgrade }}
+ Note:              {{ .UpgradeMessage }}
+ URL:               https://github.com/easysoft/qucheng_cli/releases/tag/v{{ .LastVersion }}
+{{- end }}
+{{- end}}
+{{- if .ServerDeployed }}{{with .Server}}
+
+Server:
+ {{- range $component := .Components}}
+ {{$component.Name}}:
+  AppVersion:       {{$component.AppVersion}}
+  ChartVersion:     {{$component.ChartVersion}}
+ {{- end}}
+{{- end}}
+{{- end}}
 `
 
 const (
@@ -44,6 +64,29 @@ type versionGet struct {
 	} `json:"data"`
 	Message   string `json:"message"`
 	Timestamp int    `json:"timestamp"`
+}
+
+type versionInfo struct {
+	Client clientVersion
+	Server *upgrade.Version
+}
+
+type clientVersion struct {
+	Version        string
+	LastVersion    string
+	GoVersion      string
+	GitCommit      string
+	Os             string
+	Arch           string
+	BuildTime      string `json:",omitempty"`
+	Experimental   bool
+	CanUpgrade     bool
+	UpgradeMessage string
+}
+
+// ServerDeployed returns true when the client could connect to the qucheng
+func (v versionInfo) ServerDeployed() bool {
+	return v.Server != nil
 }
 
 // PreCheckLatestVersion 检查最新版本
@@ -68,8 +111,22 @@ func ShowVersion() {
 	if common.GitCommitHash == "" {
 		common.GitCommitHash = defaultGitCommitHash
 	}
-	osarch := fmt.Sprintf("%v/%v", runtime.GOOS, runtime.GOARCH)
-	fmt.Printf(versionTpl, common.Version, runtime.Version(), common.GitCommitHash, common.BuildDate, osarch)
+	tmpl, err := newVersionTemplate()
+	if err != nil {
+		log.Flog.Fatalf("gen version failed, reason: %v", err)
+		return
+	}
+	vd := versionInfo{
+		Client: clientVersion{
+			Version:      common.Version,
+			GoVersion:    runtime.Version(),
+			GitCommit:    common.GitCommitHash,
+			BuildTime:    common.BuildDate,
+			Os:           runtime.GOOS,
+			Arch:         runtime.GOARCH,
+			Experimental: true,
+		},
+	}
 	log.Flog.StartWait("check update...")
 	lastversion, err := PreCheckLatestVersion()
 	log.Flog.StopWait()
@@ -81,9 +138,30 @@ func ShowVersion() {
 		nowversion, _ := gv.New(common.Version)
 		needupgrade := nowversion.LT(gv.MustParse(lastversion))
 		if needupgrade {
-			log.Flog.Infof("当前最新版本 %s, 可以使用 %s 将版本升级到最新版本", color.SGreen(lastversion), color.SGreen("%s upgrade q", os.Args[0]))
-			return
+			vd.Client.CanUpgrade = true
+			vd.Client.LastVersion = lastversion
+			vd.Client.Version = color.SGreen(vd.Client.Version)
+			vd.Client.UpgradeMessage = fmt.Sprintf("Now you can use %s to upgrade to the latest version %s", color.SGreen("%s upgrade q", os.Args[0]), color.SGreen(lastversion))
 		}
 	}
-	log.Flog.Info("current version is the latest")
+	qv, err := upgrade.QuchengVersion()
+	if err == nil {
+		vd.Server = &qv
+	}
+	if err := prettyPrintVersion(vd, tmpl); err != nil {
+		panic(err)
+	}
+}
+
+func prettyPrintVersion(vd versionInfo, tmpl *template.Template) error {
+	t := tabwriter.NewWriter(os.Stdout, 20, 1, 1, ' ', 0)
+	err := tmpl.Execute(t, vd)
+	t.Write([]byte("\n"))
+	t.Flush()
+	return err
+}
+
+func newVersionTemplate() (*template.Template, error) {
+	tmpl, err := template.New("version").Parse(versionTpl)
+	return tmpl, errors.Wrap(err, "template parsing error")
 }

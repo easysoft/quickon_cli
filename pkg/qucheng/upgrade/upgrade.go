@@ -24,3 +24,20 @@ func Upgrade(flagVersion string) error {
 	}
 	return nil
 }
+
+func QuchengVersion() (Version, error) {
+	v := Version{}
+	// TODO 获取渠成版本信息
+	v.Components = append(v.Components, ComponentVersion{
+		Name:         "qucheng_web",
+		Version:      "0.1.5",
+		AppVersion:   "1.0.0",
+		ChartVersion: "0.1.5",
+	}, ComponentVersion{
+		Name:         "qucheng_api",
+		Version:      "0.2.7",
+		AppVersion:   "1.0.0",
+		ChartVersion: "0.2.7",
+	})
+	return v, nil
+}

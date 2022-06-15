@@ -77,6 +77,9 @@ dev: ## dev test
     		-ldflags ${LDFLAGS}
 	upx dist/qcadmin_linux_amd64
 
+local: ## dev test
+	GO_ENABLED=1 gox -os="darwin" -arch="amd64" -output="dist/{{.Dir}}_{{.OS}}_{{.Arch}}" -ldflags ${LDFLAGS}
+
 clean: ## clean
 	rm -rf dist
 
