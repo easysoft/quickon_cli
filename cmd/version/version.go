@@ -144,8 +144,9 @@ func ShowVersion() {
 		return
 	}
 	if lastversion != "" && !strings.Contains(common.Version, lastversion) {
-		nowversion, _ := gv.New(common.Version)
+		nowversion := gv.MustParse(strings.TrimPrefix(common.Version, "v"))
 		needupgrade := nowversion.LT(gv.MustParse(lastversion))
+		// log.Flog.Debugf("lastversion: %s(%v), nowversion: %s(%v), needupgrade: %v", lastversion, gv.MustParse(lastversion), common.Version, nowversion, needupgrade)
 		if needupgrade {
 			vd.Client.CanUpgrade = true
 			vd.Client.LastVersion = lastversion
