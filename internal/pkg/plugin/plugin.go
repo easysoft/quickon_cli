@@ -15,7 +15,6 @@ import (
 	"strings"
 
 	"github.com/easysoft/qcadmin/common"
-	"github.com/easysoft/qcadmin/internal/pkg/util/binfile"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	corev1 "k8s.io/api/core/v1"
@@ -104,12 +103,8 @@ func (p *Item) UnInstall() error {
 	}
 	// #nosec
 	if p.Tool == "helm" {
-		getbin := binfile.Meta{}
-		helmbin, err := getbin.LoadLocalBin(common.HelmBinName)
-		if err != nil {
-			return err
-		}
-		applycmd := qcexec.Command(helmbin, "delete", p.Type, "install/"+p.Name, "-n", common.DefaultSystem)
+
+		applycmd := qcexec.Command(os.Args[0], "experimental", "helm", "delete", p.Type, "-n", common.DefaultSystem)
 		if output, err := applycmd.CombinedOutput(); err != nil {
 			log.Flog.Errorf("helm uninstall %s plugin %s failed: %s", p.Type, p.Name, string(output))
 			return err
@@ -139,12 +134,7 @@ func (p *Item) Install() error {
 		return fmt.Errorf("plugin %s install failed", p.Name)
 	}
 	if p.Tool == "helm" {
-		getbin := binfile.Meta{}
-		helmbin, err := getbin.LoadLocalBin(common.HelmBinName)
-		if err != nil {
-			return err
-		}
-		applycmd := qcexec.Command(helmbin, "upgrade", "-i", p.Type, p.Path, "-n", common.DefaultSystem)
+		applycmd := qcexec.Command(os.Args[0], "experimental", "helm", "upgrade", "--name", p.Type, "--repo", common.DefaultHelmRepoName, "--chart", p.Path, "--namespace", common.DefaultSystem)
 		if output, err := applycmd.CombinedOutput(); err != nil {
 			log.Flog.Errorf("helm install %s plugin %s failed: %s", p.Type, p.Name, string(output))
 			return err

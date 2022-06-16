@@ -9,10 +9,11 @@ package kutil
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"time"
 
 	"github.com/easysoft/qcadmin/common"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+	"github.com/ergoapi/util/exstr"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/ztime"
 )
@@ -33,13 +34,12 @@ func GetNodeToken() string {
 func NeedCacheHelmFile() bool {
 	cachefile := fmt.Sprintf("%s/.566964cd0285e57cd088caa251ae863a.lock", common.DefaultCacheDir)
 	if file.CheckFileExists(cachefile) {
-		data, err := file.ReadAll(cachefile)
-		if err != nil {
-			return true
-		}
-		old, _ := ztime.TimeParse("200601021504", string(data))
+		data, _ := file.ReadAll(cachefile)
+		old := time.Unix(exstr.Str2Int64(string(data)), 0)
 		now := time.Now()
-		if now.Sub(old) > time.Hour {
+		if now.Sub(old) > 10 * time.Minute {
+			os.Remove(cachefile)
+			file.Writefile(cachefile, ztime.NowUnixString())
 			return true
 		}
 		return false

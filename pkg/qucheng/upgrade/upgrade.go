@@ -7,10 +7,10 @@
 package upgrade
 
 import (
-	"github.com/davecgh/go-spew/spew"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+	"github.com/ergoapi/util/version"
 	"github.com/pkg/errors"
 )
 
@@ -32,20 +32,29 @@ func (opt *Option) Fetch(ns, name string) (ComponentVersion, error) {
 		log.Flog.Warn("update helm repo failed")
 	}
 	// TODO fetch local version
-	// remote version
-	cv, av, err := opt.fetchCR(ns, name)
+	localcv, localav, err := opt.fetchDeploy(ns, name)
 	if err != nil {
 		log.Flog.Debugf("fecth %s failed, reason: %v", name, err)
 	}
-	cmv.Version = av
-	cmv.AppVersion = av
-	cmv.ChartVersion = cv
+	cmv.Deploy.AppVersion = localav
+	cmv.Deploy.ChartVersion = localcv
+	// remote version
+	remotecv, remoteav, err := opt.fetchCR(ns, name)
+	if err != nil {
+		log.Flog.Debugf("fecth %s failed, reason: %v", name, err)
+	}
+	cmv.Remote.AppVersion = remoteav
+	cmv.Remote.ChartVersion = remotecv
+	// can upgrade
+	if cmv.Deploy.ChartVersion != cmv.Remote.ChartVersion && version.LT(cmv.Deploy.ChartVersion, cmv.Remote.ChartVersion) {
+		cmv.CanUpgrade = true
+	}
 	return cmv, err
 }
 
 // fetchDeploy get helm deployed version from k8s
 func (opt *Option) fetchDeploy(ns, name string) (string, string, error) {
-	result, err := opt.client.GetLastCharts("install", name)
+	result, _, err := opt.client.List(0, 0, name)
 	if err != nil || len(result) < 1 {
 		return "", "", errors.Errorf("not found chart: %s", name)
 	}
@@ -53,17 +62,16 @@ func (opt *Option) fetchDeploy(ns, name string) (string, string, error) {
 		return "", "", errors.Errorf("chart more than 1, now count: %d", len(result))
 	}
 	last := result[0]
-	return last.Chart.Version, last.Chart.AppVersion, nil
+	return last.Chart.Metadata.Version, last.Chart.Metadata.AppVersion, nil
 }
 
 // fetchDeploy get helm remote version from cr
 func (opt *Option) fetchCR(ns, name string) (string, string, error) {
-	result, err := opt.client.GetLastCharts("install", name)
+	result, err := opt.client.GetLastCharts(common.DefaultHelmRepoName, name)
 	if err != nil || len(result) < 1 {
 		return "", "", errors.Errorf("not found chart: %s", name)
 	}
 	if len(result) > 1 {
-		spew.Dump(result)
 		return "", "", errors.Errorf("chart more than 1, now count: %d", len(result))
 	}
 	last := result[0]
@@ -77,8 +85,23 @@ func Upgrade(flagVersion string) error {
 		return err
 	}
 
-	if flagVersion == "" {
-		// fetch
+	qv, err := QuchengVersion()
+	if err != nil {
+		return err
+	}
+	count := 0
+	for _, cv := range qv.Components {
+		if cv.CanUpgrade {
+			if _, err := helmClient.Upgrade(cv.Name, common.DefaultHelmRepoName, cv.Name, "", nil); err != nil {
+				log.Flog.Warnf("upgrade %s failed, reason: %v", cv.Name, err)
+			} else {
+				log.Flog.Donef("upgrade %s success", cv.Name)
+				count++
+			}
+		}
+	}
+	if count > 0 {
+		log.Flog.Warnf("no update is needed for now")
 	}
 	return nil
 }

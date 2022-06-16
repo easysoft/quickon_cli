@@ -30,6 +30,7 @@ import (
 	"helm.sh/helm/v3/pkg/helmpath"
 	"helm.sh/helm/v3/pkg/release"
 	"helm.sh/helm/v3/pkg/repo"
+	"helm.sh/helm/v3/pkg/storage/driver"
 )
 
 const (
@@ -111,6 +112,13 @@ func (c Client) Upgrade(name, repoName, chartName, chartVersion string, values m
 		return nil, errors.New("get chart detail failed, repo not found")
 	}
 
+	histClient := action.NewHistory(c.actionConfig)
+	histClient.Max = 1
+	if _, err := histClient.Run(name); err == driver.ErrReleaseNotFound {
+		// If a release does not exist, install it.
+		return c.Install(name, repoName, chartName, chartVersion, values)
+	}
+
 	client := action.NewUpgrade(c.actionConfig)
 	client.Namespace = c.Namespace
 	client.RepoURL = rp.URL
@@ -118,7 +126,9 @@ func (c Client) Upgrade(name, repoName, chartName, chartVersion string, values m
 	client.Password = rp.Password
 	client.DryRun = false
 	client.ChartPathOptions.InsecureSkipTLSverify = true
-	client.ChartPathOptions.Version = chartVersion
+	if len(chartVersion) > 0 {
+		client.ChartPathOptions.Version = chartVersion
+	}
 	p, err := client.ChartPathOptions.LocateChart(chartName, c.settings)
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf("locate chart %s failed: %v", chartName, err))
@@ -134,6 +144,45 @@ func (c Client) Upgrade(name, repoName, chartName, chartVersion string, values m
 		return release, errors.Wrap(err, fmt.Sprintf("upgrade tool %s with chart %s failed: %v", name, chartName, err))
 	}
 	return release, nil
+}
+
+func (c Client) Install(name, repoName, chartName, chartVersion string, values map[string]interface{}) (*release.Release, error) {
+	repos, err := c.ListRepo()
+	if err != nil {
+		return nil, err
+	}
+	var rp *repo.Entry
+	for _, r := range repos {
+		if r.Name == repoName {
+			rp = r
+		}
+	}
+	if rp == nil {
+		return nil, errors.New("get chart detail failed, repo not found")
+	}
+	client := action.NewInstall(c.actionConfig)
+	client.ReleaseName = name
+	client.Namespace = c.Namespace
+	client.RepoURL = rp.URL
+	client.Username = rp.Username
+	client.Password = rp.Password
+	client.ChartPathOptions.InsecureSkipTLSverify = true
+	if len(chartVersion) != 0 {
+		client.ChartPathOptions.Version = chartVersion
+	}
+	p, err := client.ChartPathOptions.LocateChart(chartName, c.settings)
+	if err != nil {
+		return nil, fmt.Errorf("locate chart %s failed: %v", chartName, err)
+	}
+	ct, err := loader.Load(p)
+	if err != nil {
+		return nil, fmt.Errorf("load chart %s failed: %v", chartName, err)
+	}
+	re, err := client.Run(ct, values)
+	if err != nil {
+		return re, errors.Wrap(err, fmt.Sprintf("install %s with chart %s failed: %v", name, chartName, err))
+	}
+	return re, nil
 }
 
 func (c Client) UpdateRepo() error {
@@ -318,4 +367,13 @@ func (c Client) GetLastCharts(repoName, name string) ([]*search.Result, error) {
 		}
 	}
 	return data, nil
+}
+
+func (c Client) Uninstall(name string) (*release.UninstallReleaseResponse, error) {
+	client := action.NewUninstall(c.actionConfig)
+	res, err := client.Run(name)
+	if err != nil {
+		return nil, errors.Wrap(err, fmt.Sprintf("uninstall tool %s failed: %v", name, err))
+	}
+	return res, nil
 }

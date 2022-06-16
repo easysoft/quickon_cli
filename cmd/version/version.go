@@ -42,9 +42,17 @@ Client:
 Server:
  {{- range $component := .Components}}
  {{$component.Name}}:
-  AppVersion:       {{$component.AppVersion}}
-  ChartVersion:     {{$component.ChartVersion}}
+{{- if $component.CanUpgrade }}
+  AppVersion:       {{$component.Deploy.AppVersion}} --> {{$component.Remote.Version}}
+  ChartVersion:     {{$component.Deploy.ChartVersion}} --> {{$component.Remote.Version}}
+{{- else }}
+  AppVersion:       {{$component.Deploy.AppVersion}}
+  ChartVersion:     {{$component.Deploy.ChartVersion}}
+{{- end }}
  {{- end}}
+{{- if .CanUpgrade }}
+  Note:              {{ .UpgradeMessage }}
+{{- end }}
 {{- end}}
 {{- end}}
 `
@@ -141,12 +149,21 @@ func ShowVersion() {
 			vd.Client.CanUpgrade = true
 			vd.Client.LastVersion = lastversion
 			vd.Client.Version = color.SGreen(vd.Client.Version)
-			vd.Client.UpgradeMessage = fmt.Sprintf("Now you can use %s to upgrade to the latest version %s", color.SGreen("%s upgrade q", os.Args[0]), color.SGreen(lastversion))
+			vd.Client.UpgradeMessage = fmt.Sprintf("Now you can use %s to upgrade cli to the latest version %s", color.SGreen("%s upgrade q", os.Args[0]), color.SGreen(lastversion))
 		}
 	}
 	qv, err := upgrade.QuchengVersion()
 	if err == nil {
 		vd.Server = &qv
+		canUpgrade := false
+		for _, component := range qv.Components {
+			if component.CanUpgrade {
+				canUpgrade = true
+				break
+			}
+		}
+		vd.Server.CanUpgrade = canUpgrade
+		vd.Server.UpgradeMessage = fmt.Sprintf("Now you can use %s to upgrade  qucheng to the latest version %s", color.SGreen("%s upgrade manage upgrade ", os.Args[0]), color.SGreen(lastversion))
 	}
 	if err := prettyPrintVersion(vd, tmpl); err != nil {
 		panic(err)

@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
+	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/spf13/cobra"
 )
 
@@ -20,6 +21,8 @@ func EmbedCommand() *cobra.Command {
 	}
 	helm.AddCommand(repoUpdate())
 	helm.AddCommand(repoAdd())
+	helm.AddCommand(chartUpgrade())
+	helm.AddCommand(chartUninstall())
 	return helm
 }
 
@@ -32,7 +35,9 @@ func repoUpdate() *cobra.Command {
 			if err != nil {
 				return fmt.Errorf("helm create go client err: %v", err)
 			}
-			return hc.UpdateRepo()
+			hc.UpdateRepo()
+			log.Flog.Done("Update Complete. ⎈ Happy Helming!⎈ ")
+			return nil
 		},
 	}
 	return helm
@@ -44,6 +49,9 @@ func repoAdd() *cobra.Command {
 		Use:   "repo-add",
 		Short: "add a chart repository",
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if len(name) == 0 || len(url) == 0 {
+				return fmt.Errorf("name or url is empty")
+			}
 			hc, err := helm.NewClient(&helm.Config{Namespace: ""})
 			if err != nil {
 				return fmt.Errorf("helm create go client err: %v", err)
@@ -51,6 +59,72 @@ func repoAdd() *cobra.Command {
 			return hc.AddRepo(name, url, username, password)
 		},
 	}
-	helm.Flags().StringVar(&name, "name", "", "")
+	helm.Flags().StringVar(&name, "name", "", "repo name")
+	helm.Flags().StringVar(&url, "url", "", "repo url")
+	helm.Flags().StringVar(&username, "username", "", "private repo username")
+	helm.Flags().StringVar(&password, "password", "", "private repo password")
+	return helm
+}
+
+func chartUpgrade() *cobra.Command {
+	var ns, name, repoName, chartName, chartVersion string
+	var p []string
+	helm := &cobra.Command{
+		Use:   "upgrade",
+		Short: "upgrade a release",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if len(name) == 0 || len(repoName) == 0 || len(chartName) == 0 {
+				return fmt.Errorf("name or repoName or chartName is empty")
+			}
+			return nil
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if ns == "" {
+				ns = "default"
+			}
+			hc, err := helm.NewClient(&helm.Config{Namespace: ns})
+			if err != nil {
+				return fmt.Errorf("helm create go client err: %v", err)
+			}
+			values, _ := helm.MergeValues(p)
+			_, err = hc.Upgrade(name, repoName, chartName, chartVersion, values)
+			return err
+		},
+	}
+	helm.Flags().StringVarP(&ns, "namespace", "n", "", "namespace")
+	helm.Flags().StringVar(&name, "name", "", "release name")
+	helm.Flags().StringVar(&repoName, "repo", "", "repo name")
+	helm.Flags().StringVar(&chartName, "chart", "", "chart name")
+	helm.Flags().StringVar(&chartVersion, "version", "", "chart version")
+	helm.Flags().StringArrayVar(&p, "set", []string{}, "set values on the command line (e.g. '--set key1=value1,key2=value2')")
+	return helm
+}
+
+func chartUninstall() *cobra.Command {
+	var ns, name string
+	helm := &cobra.Command{
+		Use:     "uninstall",
+		Aliases: []string{"un", "del", "delete"},
+		Short:   "uninstall a chart",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if len(name) == 0 {
+				return fmt.Errorf("name is empty")
+			}
+			return nil
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if ns == "" {
+				ns = "default"
+			}
+			hc, err := helm.NewClient(&helm.Config{Namespace: ns})
+			if err != nil {
+				return fmt.Errorf("helm create go client err: %v", err)
+			}
+			_, err = hc.Uninstall(name)
+			return err
+		},
+	}
+	helm.Flags().StringVarP(&ns, "namespace", "n", "", "namespace")
+	helm.Flags().StringVar(&name, "name", "", "release name")
 	return helm
 }

@@ -70,9 +70,10 @@ const (
 	QcAdminBinPath      = "/usr/local/bin/qcadmin"
 	StatusWaitDuration  = 5 * time.Minute
 	WaitRetryInterval   = 5 * time.Second
+	DefaultHelmRepoName = "install"
 	DefaultSystem       = "cne-system"
-	DefaultChartName    = "install/qucheng"
-	DefaultAPIChartName = "install/cne-api"
+	DefaultChartName    = "qucheng"
+	DefaultAPIChartName = "cne-api"
 	DefaultQuchengName  = "qucheng"
 	DefaultCneAPIName   = "cne-api"
 	DefaultDBName       = "qucheng-mysql"

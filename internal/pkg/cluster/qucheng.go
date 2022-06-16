@@ -8,11 +8,11 @@ package cluster
 
 import (
 	"context"
+	"os"
 	"strings"
 	"time"
 
 	"github.com/easysoft/qcadmin/common"
-	"github.com/easysoft/qcadmin/internal/pkg/util/binfile"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/ergoapi/util/expass"
@@ -53,12 +53,8 @@ func (p *Cluster) InstallQuCheng() error {
 		}
 	}
 	log.Flog.Debug("start init qucheng")
-	getbin := binfile.Meta{}
-	helmbin, err := getbin.LoadLocalBin(common.HelmBinName)
-	if err != nil {
-		return err
-	}
-	output, err := qcexec.Command(helmbin, "repo", "add", "install", common.GetChartRepo(p.QuchengVersion)).CombinedOutput()
+
+	output, err := qcexec.Command(os.Args[0], "experimental", "helm", "repo-add", "--name", common.DefaultHelmRepoName, "--url", common.GetChartRepo(p.QuchengVersion)).CombinedOutput()
 	if err != nil {
 		errmsg := string(output)
 		if !strings.Contains(errmsg, "exists") {
@@ -70,7 +66,7 @@ func (p *Cluster) InstallQuCheng() error {
 		log.Flog.Done("init qucheng install repo done")
 	}
 
-	output, err = qcexec.Command(helmbin, "repo", "update").CombinedOutput()
+	output, err = qcexec.Command(os.Args[0], "experimental", "helm", "repo-update").CombinedOutput()
 	if err != nil {
 		log.Flog.Errorf("update qucheng install repo failed: %s", string(output))
 		return err
@@ -78,13 +74,13 @@ func (p *Cluster) InstallQuCheng() error {
 	log.Flog.Done("update qucheng install repo done")
 	token := p.genQuChengToken()
 	// helm upgrade -i nginx-ingress-controller bitnami/nginx-ingress-controller -n kube-system
-	output, err = qcexec.Command(helmbin, "upgrade", "-i", common.DefaultQuchengName, common.DefaultChartName, "-n", common.DefaultSystem, "--set", "env.CNE_API_TOKEN="+token, "--set", "cloud.defaultChannel="+common.GetChannel(p.QuchengVersion)).CombinedOutput()
+	output, err = qcexec.Command(os.Args[0], "experimental", "helm", "upgrade", "--name", common.DefaultChartName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultChartName, "--namespace", common.DefaultSystem, "--set", "env.CNE_API_TOKEN="+token, "--set", "cloud.defaultChannel="+common.GetChannel(p.QuchengVersion)).CombinedOutput()
 	if err != nil {
 		log.Flog.Errorf("upgrade install qucheng web failed: %s", string(output))
 		return err
 	}
 	// Deprecated CNE_API_TOKEN
-	output, err = qcexec.Command(helmbin, "upgrade", "-i", common.DefaultCneAPIName, common.DefaultAPIChartName, "-n", common.DefaultSystem, "--set", "env.CNE_TOKEN="+token, "--set", "env.CNE_API_TOKEN="+token, "--set", "cloud.defaultChannel="+common.GetChannel(p.QuchengVersion)).CombinedOutput()
+	output, err = qcexec.Command(os.Args[0], "experimental", "helm", "upgrade", "--name", common.DefaultCneAPIName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultAPIChartName, "--namespace", common.DefaultSystem, "--set", "env.CNE_TOKEN="+token, "--set", "env.CNE_API_TOKEN="+token, "--set", "cloud.defaultChannel="+common.GetChannel(p.QuchengVersion)).CombinedOutput()
 	if err != nil {
 		log.Flog.Errorf("upgrade install qucheng api failed: %s", string(output))
 		return err
