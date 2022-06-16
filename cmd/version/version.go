@@ -20,6 +20,7 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/qucheng/upgrade"
 	"github.com/ergoapi/util/color"
+	"github.com/ergoapi/util/file"
 	"github.com/imroc/req/v3"
 	"github.com/pkg/errors"
 )
@@ -152,18 +153,20 @@ func ShowVersion() {
 			vd.Client.UpgradeMessage = fmt.Sprintf("Now you can use %s to upgrade cli to the latest version %s", color.SGreen("%s upgrade q", os.Args[0]), color.SGreen(lastversion))
 		}
 	}
-	qv, err := upgrade.QuchengVersion()
-	if err == nil {
-		vd.Server = &qv
-		canUpgrade := false
-		for _, component := range qv.Components {
-			if component.CanUpgrade {
-				canUpgrade = true
-				break
+	if file.CheckFileExists(common.GetCustomConfig(common.InitFileName)) {
+		qv, err := upgrade.QuchengVersion()
+		if err == nil {
+			vd.Server = &qv
+			canUpgrade := false
+			for _, component := range qv.Components {
+				if component.CanUpgrade {
+					canUpgrade = true
+					break
+				}
 			}
+			vd.Server.CanUpgrade = canUpgrade
+			vd.Server.UpgradeMessage = fmt.Sprintf("Now you can use %s to upgrade  qucheng to the latest version %s", color.SGreen("%s upgrade manage upgrade ", os.Args[0]), color.SGreen(lastversion))
 		}
-		vd.Server.CanUpgrade = canUpgrade
-		vd.Server.UpgradeMessage = fmt.Sprintf("Now you can use %s to upgrade  qucheng to the latest version %s", color.SGreen("%s upgrade manage upgrade ", os.Args[0]), color.SGreen(lastversion))
 	}
 	if err := prettyPrintVersion(vd, tmpl); err != nil {
 		panic(err)
