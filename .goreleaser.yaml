@@ -1,10 +1,10 @@
 # This is an example .goreleaser.yml file with some sensible defaults.
 # Make sure to check the documentation at https://goreleaser.com
-env:
-  - GO111MODULE=on
+# env:
+#   - GO111MODULE=on
 
-gomod:
-  proxy: true
+# gomod:
+#   proxy: true
 
 before:
   hooks:
@@ -105,6 +105,8 @@ changelog:
       - '^test:'
       - '^feat(update):'
       - '^feat(ci):'
+      - '^chore(ci):'
+      - '^chore(action):'
       - Merge pull request
       - Merge branch
       - go mod tidy
