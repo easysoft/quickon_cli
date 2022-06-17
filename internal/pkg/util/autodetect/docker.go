@@ -17,8 +17,8 @@ import (
 
 const (
 	// constant for cgroup drivers
-	cgroupFsDriver      = "cgroupfs"
-	cgroupSystemdDriver = "systemd"
+	cgroupFsDriver = "cgroupfs"
+	// cgroupSystemdDriver = "systemd"
 	// cgroupNoneDriver    = "none"
 )
 
