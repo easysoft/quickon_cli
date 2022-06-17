@@ -40,7 +40,6 @@ import (
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
-	"github.com/easysoft/qcadmin/internal/pkg/util/autodetect"
 	"github.com/easysoft/qcadmin/internal/pkg/util/initsystem"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 )
@@ -508,9 +507,11 @@ func (ContainerRuntimeCheck) Name() string {
 func (crc ContainerRuntimeCheck) Check() error {
 	log.Flog.Debug("check container runtime")
 	if file.CheckFileExists(strings.ReplaceAll(common.CRISocketDocker, "unix://", "")) {
-		if err := autodetect.VerifyDockerDaemon(); err != nil {
-			return err
-		}
+		// Deprecated K3s now uses the systemd cgroup driver instead of cgroupfs when running under systemd 244 or later
+		// https://github.com/k3s-io/k3s/pull/5462
+		// if err := autodetect.VerifyDockerDaemon(); err != nil {
+		// 	return err
+		// }
 		log.Flog.Warnf("docker installed, will used docker runtime")
 		return nil
 	}

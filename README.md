@@ -1,7 +1,7 @@
 # qcadmin(q)
 
 ![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/easysoft/qucheng_cli?filename=go.mod&style=flat-square)
-![GitHub Workflow Status (event)](https://img.shields.io/github/workflow/status/easysoft/qucheng_cli/tag?style=flat-square)
+![GitHub Workflow Status (event)](https://img.shields.io/github/workflow/status/easysoft/qucheng_cli/Release?style=flat-square)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/easysoft/qucheng_cli?style=flat-square)
 ![GitHub](https://img.shields.io/badge/license-ZPL%20%2B%20AGPL-blue)
 [![Go Report Card](https://goreportcard.com/badge/github.com/easysoft/qucheng_cli)](https://goreportcard.com/report/github.com/easysoft/qucheng_cli)
