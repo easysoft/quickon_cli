@@ -17,6 +17,7 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	pluginapi "github.com/easysoft/qcadmin/internal/pkg/plugin"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
+	"github.com/easysoft/qcadmin/internal/pkg/util/autodetect"
 	"github.com/easysoft/qcadmin/internal/pkg/util/binfile"
 	"github.com/easysoft/qcadmin/internal/pkg/util/initsystem"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
@@ -258,6 +259,10 @@ func (p *Cluster) configCommonOptions() []string {
 	var args []string
 	if excmd.CheckBin("docker") {
 		args = append(args, "--docker")
+		// check docker  cgroup
+		if autodetect.VerifyCgroupDriverSystemd() {
+			args = append(args, "--kubelet-arg=cgroup-driver=systemd")
+		}
 	}
 	if len(p.EIP) != 0 {
 		args = append(args, fmt.Sprintf("--node-external-ip=%v", p.EIP))

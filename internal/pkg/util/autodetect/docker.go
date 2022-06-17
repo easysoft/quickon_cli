@@ -17,7 +17,7 @@ import (
 
 const (
 	// constant for cgroup drivers
-	cgroupFsDriver = "cgroupfs"
+	cgroupFsDriver      = "cgroupfs"
 	cgroupSystemdDriver = "systemd"
 	// cgroupNoneDriver    = "none"
 )
@@ -58,6 +58,11 @@ func verifyDockerDaemonSettings(conf *Config) error {
 	return nil
 }
 
+func verifyCgroupDriverSystemd(conf *Config) bool {
+	cd := getCD(conf)
+	return cd != cgroupFsDriver
+}
+
 func VerifyDockerDaemon() error {
 	config := &Config{}
 	if file.CheckFileExists("/etc/docker/daemon.json") {
@@ -65,4 +70,14 @@ func VerifyDockerDaemon() error {
 		json.Unmarshal(daemonDatam, config)
 	}
 	return verifyDockerDaemonSettings(config)
+}
+
+func VerifyCgroupDriverSystemd() bool {
+	config := &Config{}
+	if file.CheckFileExists("/etc/docker/daemon.json") {
+		daemonDatam, _ := file.ReadAll("/etc/docker/daemon.json")
+		json.Unmarshal(daemonDatam, config)
+		return verifyCgroupDriverSystemd(config)
+	}
+	return true
 }
