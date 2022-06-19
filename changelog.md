@@ -18,6 +18,7 @@
 
 ## v1.0.2 (2022-06-17)
 
+ * [eb07994](https://github.com/easysoft/qucheng_cli/commit/eb07994f53deb592064d8bb1ce43b8bf6753d98f) feat(1.0.2): update k3s version & fix with docker install
  * [6129ec6](https://github.com/easysoft/qucheng_cli/commit/6129ec650342bca79da6cb932dd51731b510a9b9) fix(k3s): fix cgroup typo
  * [5540069](https://github.com/easysoft/qucheng_cli/commit/55400694753adf52e19c292500014c25b5d79f41) feat(dockercgroup): deprecated docker check
  * [4f54538](https://github.com/easysoft/qucheng_cli/commit/4f5453812ff9d8afbd825025e34ed9a5bbb28a4a) chore(action): fix typo
