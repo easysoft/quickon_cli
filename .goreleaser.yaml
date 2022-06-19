@@ -8,9 +8,9 @@ env:
 
 before:
   hooks:
+    - make generate
     - ./hack/scripts/gencompletions.sh
     - ./hack/scripts/genmanpages.sh
-    - make generate
     # - make default
 builds:
   - ldflags:
@@ -100,7 +100,7 @@ snapshot:
   name_template: "{{ .Version }}-snapshot-{{.ShortCommit}}"
 
 nfpms:
-- file_name_template: '{{ .ProjectName }}_{{ .Tag }}_{{ .Os }}_{{ .Arch }}'
+- file_name_template: 'qcadmin_{{ .Tag }}_{{ .Os }}_{{ .Arch }}'
   homepage: https://www.qucheng.com
   version_metadata: git
   description: |-
@@ -200,8 +200,3 @@ changelog:
       order: 10
     - title: Other work
       order: 999
-
-release:
-  footer: |
-    **Full Changelog**: https://github.com/easysoft/qucheng_cli/compare/{{ .PreviousTag }}...{{ .Tag }}
-
