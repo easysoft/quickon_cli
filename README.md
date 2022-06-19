@@ -51,6 +51,26 @@ curl https://pkg.qucheng.com/qucheng/cli/edge/get.sh | sh -
 q init -q edge
 ```
 
+### Debian/CentOS 7
+
+```bash
+# debian
+echo "deb [trusted=yes] https://apt.fury.io/qucheng/ /" | tee /etc/apt/sources.list.d/qcadmin.list
+apt update
+apt search qcadmin
+apt install qcadmin
+# centos7
+cat > /etc/yum.repos.d/qcadmin.repo << EOF
+[fury]
+name=Qucheng Yum Repo
+baseurl=https://yum.fury.io/qucheng/
+enabled=1
+gpgcheck=0
+EOF
+yum makecache
+yum install qcadmin
+```
+
 ## Upgrade
 
 ```bash

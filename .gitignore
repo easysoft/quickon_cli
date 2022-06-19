@@ -2,4 +2,7 @@ dist/
 hack/bin/*-linux-*
 internal/static/*/zz_generated_bindata*
 !internal/pkg/cli/dockercgroup/*.go
-
+*.deb
+*.rpm
+completions
+manpages

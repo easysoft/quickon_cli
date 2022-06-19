@@ -138,7 +138,7 @@ func (c Client) Upgrade(name, repoName, chartName, chartVersion string, values m
 		return nil, errors.Wrap(err, fmt.Sprintf("load chart %s failed: %v", chartName, err))
 
 	}
-
+	// TODO 获取之前参数，并且更新参数
 	release, err := client.Run(name, ct, values)
 	if err != nil {
 		return release, errors.Wrap(err, fmt.Sprintf("upgrade tool %s with chart %s failed: %v", name, chartName, err))

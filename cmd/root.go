@@ -7,9 +7,14 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/easysoft/qcadmin/cmd/flags"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+	mcobra "github.com/muesli/mango-cobra"
+	"github.com/muesli/roff"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -55,6 +60,7 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 	// Add plugin commands
 
 	rootCmd.AddCommand(NewCmdExperimental())
+	rootCmd.AddCommand(newManCmd())
 	return rootCmd
 }
 
@@ -82,4 +88,26 @@ func NewRootCmd(f factory.Factory) *cobra.Command {
 			return nil
 		},
 	}
+}
+
+func newManCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:                   "man",
+		Short:                 "Generates q's command line manpages",
+		SilenceUsage:          true,
+		DisableFlagsInUseLine: true,
+		Hidden:                true,
+		Args:                  cobra.NoArgs,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			manPage, err := mcobra.NewManPage(1, cmd.Root())
+			if err != nil {
+				return err
+			}
+
+			_, err = fmt.Fprint(os.Stdout, manPage.Build(roff.NewDocument()))
+			return err
+		},
+	}
+
+	return cmd
 }

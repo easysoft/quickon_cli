@@ -23,3 +23,11 @@ jobs:
         args: release --rm-dist
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+    - name: Publish .deb & .rpm to Gemfury
+      env:
+        FURY_TOKEN: ${{ secrets.FURY_TOKEN }}
+      run: |
+        curl -F package=@dist/qcadmin*linux_amd64.deb https://{$FURY_TOKEN}@push.fury.io/qucheng/
+        curl -F package=@dist/qcadmin*linux_arm64.deb https://{$FURY_TOKEN}@push.fury.io/qucheng/
+        curl -F package=@dist/qcadmin*linux_amd64.rpm https://{$FURY_TOKEN}@push.fury.io/qucheng/
+        curl -F package=@dist/qcadmin*linux_arm64.rpm https://{$FURY_TOKEN}@push.fury.io/qucheng/

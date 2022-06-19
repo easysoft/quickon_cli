@@ -98,30 +98,39 @@ net.ipv4.tcp_fin_timeout = 30 # 缩短TIME_WAIT时间,加速端口回收
 #端口重用, 一般不开启,仅对客户端有效果,对于高并发客户端,可以复用TIME_WAIT连接端口,避免源端口耗尽建连失败
 net.ipv4.tcp_tw_reuse = 0
 #临时端口范围
-# net.ipv4.ip_local_port_range = 1024 65535
+net.ipv4.ip_local_port_range = 20000 65535
+#预留给kubernetes service的nodeport端口范围,不设置可能会造成
+#kubernetes在做服务探针时使用下列范围端口,造成连接被占用而失败,引起探针失效
+net.ipv4.ip_local_reserved_ports = 30000-32768
+# 以下三个参数是 arp 缓存的 gc 阀值,相比默认值提高了,避免在某些场景下arp缓存溢出导致网络超时,参考: https://imroc.cc/k8s/troubleshooting/arp-cache-overflow-causes-healthcheck-failed/
+# net.ipv4.neigh.default.gc_thresh1 = 2048
+# net.ipv4.neigh.default.gc_thresh2 = 4096
+# net.ipv4.neigh.default.gc_thresh3 = 8192
+net.ipv4.tcp_keepalive_time = 600
+net.ipv4.tcp_keepalive_intvl = 30
+net.ipv4.tcp_keepalive_probes = 10
+net.core.somaxconn = 32768
+net.bridge.bridge-nf-call-iptables = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-arptables = 1
+
 # conntrack优化
 net.netfilter.nf_conntrack_tcp_be_liberal = 1 # 容器环境下, 开启这个参数可以避免 NAT 过的 TCP 连接 带宽上不去。
 net.netfilter.nf_conntrack_tcp_loose = 1
 net.netfilter.nf_conntrack_max = 3200000
 net.netfilter.nf_conntrack_buckets = 1600512
 net.netfilter.nf_conntrack_tcp_timeout_time_wait = 30
-# 以下三个参数是 arp 缓存的 gc 阀值,相比默认值提高了,避免在某些场景下arp缓存溢出导致网络超时,参考: https://imroc.cc/k8s/troubleshooting/arp-cache-overflow-causes-healthcheck-failed/
-# net.ipv4.neigh.default.gc_thresh1 = 2048
-# net.ipv4.neigh.default.gc_thresh2 = 4096
-# net.ipv4.neigh.default.gc_thresh3 = 8192
+
 # fd优化
 fs.file-max = 6553600 # 提升文件句柄上限，像 nginx 这种代理，每个连接实际分别会对 downstream 和 upstream 占用一个句柄，连接量大的情况下句柄消耗就大。
-fs.inotify.max_user_instances = 8192 # 表示同一用户同时最大可以拥有的 inotify 实例 (每个实例可以有很多 watch)
+fs.inotify.max_user_instances = 524288 # 表示同一用户同时最大可以拥有的 inotify 实例 (每个实例可以有很多 watch)
 fs.inotify.max_user_watches = 524288 # 表示同一用户同时可以添加的watch数目（watch一般是针对目录，决定了同时同一用户可以监控的目录数量) 默认值 8192 在容器场景下偏小，在某些情况下可能会导致 inotify watch 数量耗尽，使得创建 Pod 不成功或者 kubelet 无法启动成功，将其优化到 524288
-net.bridge.bridge-nf-call-iptables = 1
-net.bridge.bridge-nf-call-ip6tables = 1
-net.bridge.bridge-nf-call-arptables = 1
+#如果wattch数过多可以打开 inotify_add_watch 跟踪，进一步 debug inotify watch 耗尽的原因:
+#echo 1 >> /sys/kernel/debug/tracing/events/syscalls/sys_exit_inotify_add_watch/enable
+
 vm.swappiness = 0
 vm.max_map_count = 655360
-net.ipv4.tcp_keepalive_time = 600
-net.ipv4.tcp_keepalive_intvl = 30
-net.ipv4.tcp_keepalive_probes = 10
-net.core.somaxconn = 32768
+
 EOF
 
 sysctl -p /etc/sysctl.d/95-k8s-sysctl.conf
