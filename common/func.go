@@ -40,6 +40,11 @@ func GetBinURL(binName string) string {
 	return fmt.Sprintf(url, binName, binName, runtime.GOARCH)
 }
 
+func GetDefaultBinDir() string {
+	home := zos.GetHomeDir()
+	return home + "/" + DefaultBinDir
+}
+
 func GetDefaultCacheDir() string {
 	home := zos.GetHomeDir()
 	return home + "/" + DefaultCacheDir

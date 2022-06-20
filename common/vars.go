@@ -20,6 +20,10 @@ type cloudAPIS struct {
 	DocURL        string
 }
 
+var (
+	ValidPrefixes = []string{"ergo", "kubectl", "qcadmin"}
+)
+
 var CloudAPI = []cloudAPIS{
 	{
 		CloudProvider: "Alibaba Cloud",
