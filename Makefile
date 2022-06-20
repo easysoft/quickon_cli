@@ -13,8 +13,7 @@ BUILD_DATE := $(shell date "+%F %T")
 GIT_COMMIT := $(shell git rev-parse --short HEAD || echo "abcdefgh")
 APP_VERSION := ${BUILD_RELEASE}-${BUILD_DATE}-${GIT_COMMIT}
 
-LDFLAGS := "-w -s \
-	-X '$(VERSION_PKG).Version=$(BUILD_RELEASE)' \
+FLAGS := "-X '$(VERSION_PKG).Version=$(BUILD_RELEASE)' \
 	-X '$(VERSION_PKG).BuildDate=$(BUILD_DATE)' \
 	-X '$(VERSION_PKG).GitCommitHash=$(GIT_COMMIT)' \
 	-X 'k8s.io/client-go/pkg/version.gitVersion=${BUILD_RELEASE}' \
@@ -29,6 +28,9 @@ LDFLAGS := "-w -s \
 	-X 'k8s.io/component-base/version.gitMajor=1' \
 	-X 'k8s.io/component-base/version.gitMinor=23' \
   -X 'k8s.io/component-base/version.buildDate=${BUILD_DATE}'"
+
+LDFLAGS := "-w -s \
+	${FLAGS}"
 
 ##########################################################################
 
@@ -74,8 +76,7 @@ generate: ## generate
 dev: ## dev test
 	GO_ENABLED=1 gox -osarch="linux/amd64" \
         -output="dist/{{.Dir}}_{{.OS}}_{{.Arch}}" \
-    		-ldflags ${LDFLAGS}
-	upx dist/qcadmin_linux_amd64
+    		-ldflags ${FLAGS}
 
 local: ## dev test
 	GO_ENABLED=1 gox -os="darwin" -arch="arm64" -output="dist/{{.Dir}}_{{.OS}}_{{.Arch}}" -ldflags ${LDFLAGS}

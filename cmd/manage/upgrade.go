@@ -9,6 +9,7 @@ package manage
 import (
 	"fmt"
 
+	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/qucheng/upgrade"
 	"github.com/spf13/cobra"
 )
@@ -34,6 +35,7 @@ func NewUpgradeQucheg() *cobra.Command {
 // Run executes the command logic
 func (cmd *UpgradeCmd) Run() error {
 	// Run the upgrade command
+	log.Flog.Infof("check update...")
 	err := upgrade.Upgrade(cmd.Version)
 	if err != nil {
 		return fmt.Errorf("couldn't upgrade: %v", err)

@@ -92,7 +92,8 @@ func Upgrade(flagVersion string) error {
 	count := 0
 	for _, cv := range qv.Components {
 		if cv.CanUpgrade {
-			if _, err := helmClient.Upgrade(cv.Name, common.DefaultHelmRepoName, cv.Name, "", nil); err != nil {
+			defaultValue, _ := helmClient.GetValues(cv.Name)
+			if _, err := helmClient.Upgrade(cv.Name, common.DefaultHelmRepoName, cv.Name, "", defaultValue); err != nil {
 				log.Flog.Warnf("upgrade %s failed, reason: %v", cv.Name, err)
 			} else {
 				log.Flog.Donef("upgrade %s success", cv.Name)
@@ -100,8 +101,8 @@ func Upgrade(flagVersion string) error {
 			}
 		}
 	}
-	if count > 0 {
-		log.Flog.Warnf("no update is needed for now")
+	if count == 0 {
+		log.Flog.Done("the current version is the latest")
 	}
 	return nil
 }
