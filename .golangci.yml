@@ -32,6 +32,9 @@ issues:
     - linters:
         - goheader
       text: "SPDX-License-Identifier"
+    - linters:
+        - goheader
+      text: "Authors"
 
 linters:
   # TODO: fix errors so that all of the linters below pass.

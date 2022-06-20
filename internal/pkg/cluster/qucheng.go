@@ -15,6 +15,8 @@ import (
 	"github.com/easysoft/qcadmin/common"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+	"github.com/easysoft/qcadmin/internal/pkg/util/retry"
+	suffixdomain "github.com/easysoft/qcadmin/pkg/qucheng/domain"
 	"github.com/ergoapi/util/expass"
 	"github.com/ergoapi/util/file"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -24,6 +26,36 @@ import (
 func (p *Cluster) genQuChengToken() string {
 	// TODO token 生成优化
 	return expass.RandomPassword(32)
+}
+
+func (p *Cluster) getOrCreateUUIDAndAuth() (id, auth string, err error) {
+	// cm := &corev1.ConfigMap{}
+	cm, err := p.KubeClient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Get(context.TODO(), "q-suffix-host", metav1.GetOptions{})
+	if err != nil {
+		if !errors.IsNotFound(err) {
+			return "", "", err
+		}
+		if errors.IsNotFound(err) {
+			log.Flog.Debug("q-suffix-host not found, create it")
+			cm = suffixdomain.GenerateSuffixConfigMap("q-suffix-host", common.DefaultSystem)
+			if _, err := p.KubeClient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Create(context.TODO(), cm, metav1.CreateOptions{}); err != nil {
+				return "", "", err
+			}
+		}
+	}
+	return cm.Data["uuid"], cm.Data["auth"], nil
+}
+
+func (p *Cluster) genSuffixHTTPHost(ip string) (domain string, err error) {
+	id, auth, err := p.getOrCreateUUIDAndAuth()
+	if err != nil {
+		return "", err
+	}
+	domain, err = suffixdomain.GenerateDomain(ip, id, auth)
+	if err != nil {
+		return "", err
+	}
+	return "", nil
 }
 
 func (p *Cluster) InstallQuCheng() error {
@@ -53,6 +85,25 @@ func (p *Cluster) InstallQuCheng() error {
 		}
 	}
 	log.Flog.Debug("start init qucheng")
+
+	// TODO 生成域名
+	if p.Domain == "" {
+		if len(p.IP) != 0 {
+			err := retry.Retry(time.Second*1, 3, func() (bool, error) {
+				domain, err := p.genSuffixHTTPHost(p.IP)
+				if err != nil {
+					return false, err
+				}
+				p.Domain = domain
+				return true, nil
+			})
+			if err != nil {
+				log.Flog.Warn("gen suffix domain failed, reason: %v, use default domain", err)
+			}
+		} else {
+			log.Flog.Info("ip is empty %s", p.IP)
+		}
+	}
 
 	output, err := qcexec.Command(os.Args[0], "experimental", "helm", "repo-add", "--name", common.DefaultHelmRepoName, "--url", common.GetChartRepo(p.QuchengVersion)).CombinedOutput()
 	if err != nil {

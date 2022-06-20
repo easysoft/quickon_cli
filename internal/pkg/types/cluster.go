@@ -33,6 +33,7 @@ type Metadata struct {
 	DisableIngress bool   `json:"disable-ingress,omitempty" yaml:"disable-ingress,omitempty"`
 	CNEAPI         string `json:"cne-api,omitempty" yaml:"cne-api,omitempty"`
 	CNEToken       string `json:"cne-token,omitempty" yaml:"cne-token,omitempty"`
+	Domain         string `json:"domain,omitempty" yaml:"domain,omitempty"`
 }
 
 type Status struct {
