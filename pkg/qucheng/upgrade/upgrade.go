@@ -34,14 +34,14 @@ func (opt *Option) Fetch(ns, name string) (ComponentVersion, error) {
 	// TODO fetch local version
 	localcv, localav, err := opt.fetchDeploy(ns, name)
 	if err != nil {
-		log.Flog.Debugf("fecth %s failed, reason: %v", name, err)
+		log.Flog.Debugf("fecth local %s failed, reason: %v", name, err)
 	}
 	cmv.Deploy.AppVersion = localav
 	cmv.Deploy.ChartVersion = localcv
 	// remote version
 	remotecv, remoteav, err := opt.fetchCR(ns, name)
 	if err != nil {
-		log.Flog.Debugf("fecth %s failed, reason: %v", name, err)
+		log.Flog.Debugf("fecth remote %s failed, reason: %v", name, err)
 	}
 	cmv.Remote.AppVersion = remoteav
 	cmv.Remote.ChartVersion = remotecv

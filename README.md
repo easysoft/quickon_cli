@@ -8,26 +8,43 @@
 [![Releases](https://img.shields.io/github/release-pre/easysoft/qucheng_cli.svg)](https://github.com/easysoft/qucheng_cli/releases)
 [![docs](https://img.shields.io/badge/docs-done-green)](https://www.qucheng.com/)
 
-compatibility:
 
-- [x] 100% support `Debian 11+`
+> qcadmin is an open-source lightweight cli tool for managing qucheng.
 
-## Quick start
+## Requirements
 
-```bash
-q init
-```
+<table>
+  <tbody>
+    <tr>
+    	<th width='320'>OS</th>
+    	<th>Minimum Requirements</th>
+    </tr>
+    <tr>
+      <td><b>Debian(Recommended)</b> <i>Bullseye</i>, <i>Buster</i></td>
+      <td>2 CPU cores, 4 GB memory, 40 GB disk space</td>
+    </tr>
+    <tr>
+      <td><b>Ubuntu</b> <i>16.04</i>, <i>18.04</i></td>
+      <td>2 CPU cores, 4 GB memory, 40 GB disk space</td>
+    </tr>
+		<tr>
+    <td><b>CentOS</b> <i>7.x</i></td>
+      <td>2 CPU cores, 4 GB memory, 40 GB disk space</td>
+    </tr>
+  </tbody>
+</table>
 
-## Quick build
+> Recommended Linux Kernel Version: 5.14 or later
 
-```bash
-make generate
-make build
-```
+## Container runtimes
 
-## Install
+> If you use q to set up a cluster, use containerd by default. Alternatively, you can manually install Docker  runtimes before you create a cluster.
 
-### Building From Source
+## Usage
+
+### Install
+
+#### 1. Building From Source
 
 `qcadmin(q)` is currently using go v1.16 or above. In order to build ergo from source you must:
 
@@ -38,7 +55,7 @@ make generate
 make build
 ```
 
-### Linux Binary
+#### 2. Linux Binary
 
 Downloaded from pre-compiled binaries
 
@@ -51,7 +68,7 @@ curl https://pkg.qucheng.com/qucheng/cli/edge/get.sh | sh -
 q init -q edge
 ```
 
-### Debian/CentOS 7
+#### 3. Debian/CentOS 7
 
 ```bash
 # debian
@@ -71,9 +88,11 @@ yum makecache
 yum install qcadmin
 ```
 
-## Upgrade
+### Quick Start
 
 ```bash
-# upgrade self
-q upgrade q
+# create qucheng cluster
+q init
+# create a k3s cluster with other cidr
+q init --podsubnet 10.42.0.0/16 --svcsubnet 10.43.0.0/16
 ```

@@ -29,6 +29,7 @@ type Node struct {
 type Config struct {
 	Generated time.Time `json:"-" yaml:"-"`
 	DB        string    `yaml:"db" json:"db"`
+	Domain    string    `yaml:"domain" json:"domain"`
 	InitNode  string    `yaml:"init_node" json:"init_node"`
 	Token     string    `yaml:"token" json:"token"`
 	Master    []Node    `yaml:"master" json:"master"`
