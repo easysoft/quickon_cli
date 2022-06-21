@@ -8,8 +8,10 @@ package tool
 
 import (
 	"context"
+	"strings"
 
 	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/qucheng/domain"
@@ -35,6 +37,12 @@ func dnsClean() *cobra.Command {
 		Short:  "clean dns",
 		Hidden: true,
 		Run: func(cmd *cobra.Command, args []string) {
+			cfg, _ := config.LoadConfig()
+			if cfg != nil {
+				if !strings.HasSuffix(cfg.Domain, "haogs.cn") {
+					return
+				}
+			}
 			kclient, _ := k8s.NewSimpleClient()
 			cm, err := kclient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Get(context.TODO(), "q-suffix-host", metav1.GetOptions{})
 			if err != nil {
@@ -48,7 +56,7 @@ func dnsClean() *cobra.Command {
 			if _, err := client.R().
 				SetHeader("Content-Type", "application/json").
 				SetBody(&reqbody).
-				Delete("https://api.qucheng.com/api/qdns/oss/record"); err != nil {
+				Delete(common.GetAPI("/api/qdns/oss/record")); err != nil {
 				log.Flog.Error("clean dns failed, reason: %v", err)
 			}
 		},

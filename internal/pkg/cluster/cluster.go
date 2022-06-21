@@ -127,6 +127,12 @@ func (p *Cluster) GetCreateExtOptions() []types.Flag {
 			ShortHand: "q",
 			Usage:     "qucheng version: stable, test",
 		},
+		{
+			Name:  "domain",
+			P:     &p.Domain,
+			V:     p.Domain,
+			Usage: "application custom domain name",
+		},
 	}
 }
 
