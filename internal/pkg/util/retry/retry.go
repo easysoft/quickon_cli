@@ -19,6 +19,7 @@ import (
 	"time"
 )
 
+//nolint
 //RetryError -
 type RetryError struct {
 	n int
