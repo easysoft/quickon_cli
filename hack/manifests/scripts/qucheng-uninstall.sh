@@ -3,8 +3,10 @@
 [ $(id -u) -eq 0 ] || exec sudo $0 $@
 
 echo "incluster mode"
-if [ -f "/usr/local/bin/helm" ]; then
-	helm delete cne-api -n cne-system
-	helm delete qucheng -n cne-system
-	helm repo list | grep -q install && helm repo remove install || true
+
+if [ -f "/usr/local/bin/qcadmin" ]; then
+  qcadmin experimental dns clean
+	qcadmin experimental helm uninstall --name cne-api -n cne-system
+	qcadmin experimental helm uninstall --name qucheng -n cne-system
+  qcadmin experimental helm repo-del
 fi

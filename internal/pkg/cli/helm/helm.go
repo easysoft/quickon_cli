@@ -21,6 +21,7 @@ func EmbedCommand() *cobra.Command {
 	}
 	helm.AddCommand(repoUpdate())
 	helm.AddCommand(repoAdd())
+	helm.AddCommand(repoDel())
 	helm.AddCommand(chartUpgrade())
 	helm.AddCommand(chartUninstall())
 	return helm
@@ -63,6 +64,28 @@ func repoAdd() *cobra.Command {
 	helm.Flags().StringVar(&url, "url", "", "repo url")
 	helm.Flags().StringVar(&username, "username", "", "private repo username")
 	helm.Flags().StringVar(&password, "password", "", "private repo password")
+	return helm
+}
+
+func repoDel() *cobra.Command {
+	var name string
+	helm := &cobra.Command{
+		Use:     "repo-del",
+		Aliases: []string{"repo-remove"},
+		Short:   "del a chart repository",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			hc, err := helm.NewClient(&helm.Config{Namespace: ""})
+			if err != nil {
+				return fmt.Errorf("helm create go client err: %v", err)
+			}
+			if err := hc.RemoveRepo(name); err != nil {
+				return err
+			}
+			log.Flog.Donef("Remove Helm Repo %s Complete. ⎈ Happy Helming!⎈ ", name)
+			return nil
+		},
+	}
+	helm.Flags().StringVar(&name, "name", "install", "repo name")
 	return helm
 }
 

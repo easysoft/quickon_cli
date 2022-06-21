@@ -2,6 +2,13 @@
 
 [ $(id -u) -eq 0 ] || exec sudo $0 $@
 
+if [ -f "/usr/local/bin/qcadmin" ]; then
+  qcadmin experimental dns clean
+	qcadmin experimental helm uninstall --name cne-api -n cne-system
+	qcadmin experimental helm uninstall --name qucheng -n cne-system
+  qcadmin experimental helm repo-del
+fi
+
 for bin in /var/lib/rancher/k3s/data/**/bin/; do
     [ -d $bin ] && export PATH=$PATH:$bin:$bin/aux
 done
@@ -121,10 +128,11 @@ done
 if [ -f "/usr/local/bin/k3s" ]; then
 	rm -f /usr/local/bin/k3s
 fi
-if [ -f "/usr/local/bin/helm" ]; then
-	helm repo list | grep install && helm repo remove install || true
-	rm -rf /usr/local/bin/helm
-fi
+
+# if [ -f "/usr/local/bin/helm" ]; then
+# 	helm repo list | grep install && helm repo remove install || true
+# 	rm -rf /usr/local/bin/helm
+# fi
 
 # clean kube config
 if [ -f "/root/.kube/config" ]; then

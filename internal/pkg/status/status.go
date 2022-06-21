@@ -14,8 +14,10 @@ import (
 	"text/tabwriter"
 
 	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/util/output"
 	"github.com/ergoapi/util/color"
+	"github.com/ergoapi/util/exnet"
 )
 
 type MapCount map[string]int
@@ -135,6 +137,19 @@ func (s *Status) Format() error {
 		} else {
 			fmt.Fprintf(w, "%s\t%s\n", "status", color.SRed("unhealth"))
 		}
+		cfg, _ := config.LoadConfig()
+		domain := ""
+		loginip := exnet.LocalIPs()[0]
+		if cfg != nil {
+			domain = cfg.Domain
+		}
+		consoleURL := ""
+		if len(domain) > 0 {
+			consoleURL = fmt.Sprintf("http://console.%s", domain)
+		} else {
+			consoleURL = fmt.Sprintf("http://%s:32379", loginip)
+		}
+		fmt.Fprintf(w, "web console: %s\n", color.SGreen(consoleURL))
 		w.Flush()
 		return output.EncodeText(os.Stdout, buf.Bytes())
 	}

@@ -27,6 +27,10 @@ var (
 	globalFlags *flags.GlobalFlags
 )
 
+// func init() {
+// 	cobra.OnInitialize(initConfig)
+// }
+
 func Execute() {
 	// create a new factory
 	f := factory.DefaultFactory()
@@ -233,3 +237,12 @@ func HandlePluginCommand(pluginHandler PluginHandler, cmdArgs []string) error {
 
 	return nil
 }
+
+// func initConfig() {
+// 	if globalFlags.ConfigPath == "" {
+// 		globalFlags.ConfigPath = common.GetDefaultConfig()
+// 	}
+// 	viper.SetConfigFile(globalFlags.ConfigPath)
+// 	viper.AutomaticEnv()
+// 	viper.ReadInConfig()
+// }

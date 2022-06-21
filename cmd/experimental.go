@@ -19,5 +19,6 @@ func NewCmdExperimental() *cobra.Command {
 	}
 	experimentalCmd.AddCommand(experimental.KubectlCommand())
 	experimentalCmd.AddCommand(experimental.HelmCommand())
+	experimentalCmd.AddCommand(experimental.ToolsCommand())
 	return experimentalCmd
 }

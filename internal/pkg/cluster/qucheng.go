@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/app/config"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/internal/pkg/util/retry"
@@ -57,7 +58,7 @@ func (p *Cluster) genSuffixHTTPHost(ip string) (domain string, err error) {
 	if err != nil {
 		return "", err
 	}
-	return "", nil
+	return domain, nil
 }
 
 func (p *Cluster) InstallQuCheng() error {
@@ -99,8 +100,11 @@ func (p *Cluster) InstallQuCheng() error {
 			if err != nil {
 				return false, err
 			}
-			log.Flog.Infof("generate suffix domain: %s, ip: %v", p.Domain, loginip)
 			p.Domain = domain
+			cfg, _ := config.LoadConfig()
+			cfg.Domain = p.Domain
+			cfg.SaveConfig()
+			log.Flog.Infof("generate suffix domain: %s, ip: %v", p.Domain, loginip)
 			return true, nil
 		})
 		if err != nil {

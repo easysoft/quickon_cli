@@ -7,13 +7,18 @@
 package domain
 
 import (
-	"github.com/davecgh/go-spew/spew"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/ergoapi/util/exid"
 	"github.com/imroc/req/v3"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
+
+type ReqBody struct {
+	IP        string `json:"ip"`
+	UUID      string `json:"uuid"`
+	SecretKey string `json:"secretKey"`
+}
 
 // GenerateDomain generate suffix domain
 func GenerateDomain(iip, id, secretKey string) (string, error) {
@@ -25,16 +30,21 @@ func GenerateDomain(iip, id, secretKey string) (string, error) {
 		Message   string `json:"message"`
 		Timestamp int    `json:"timestamp"`
 	}
-	reqbody := struct {
-		IP        string `json:"ip"`
-		UUID      string `json:"uuid"`
-		SecretKey string `json:"secretKey"`
-	}{
+	// reqbody := struct {
+	// 	IP        string `json:"ip"`
+	// 	UUID      string `json:"uuid"`
+	// 	SecretKey string `json:"secretKey"`
+	// }{
+	// 	IP:        iip,
+	// 	UUID:      id,
+	// 	SecretKey: secretKey,
+	// }
+	reqbody := ReqBody{
 		IP:        iip,
 		UUID:      id,
 		SecretKey: secretKey,
 	}
-	client := req.C().SetUserAgent(common.GetUG()).EnableDumpAll()
+	client := req.C().SetUserAgent(common.GetUG())
 	_, err := client.R().
 		SetHeader("Content-Type", "application/json").
 		SetResult(&respbody).
@@ -44,7 +54,6 @@ func GenerateDomain(iip, id, secretKey string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	spew.Dump(respbody)
 	return respbody.Data.Domain, nil
 }
 

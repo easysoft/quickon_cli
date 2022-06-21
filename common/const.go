@@ -78,6 +78,7 @@ const (
 	DefaultCneAPIName   = "cne-api"
 	DefaultDBName       = "qucheng-mysql"
 	InitFileName        = ".initdone"
+	InitLockFileName    = ".qlock"
 	InitModeCluster     = ".incluster"
 )
 

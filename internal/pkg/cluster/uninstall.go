@@ -17,11 +17,6 @@ import (
 )
 
 func (p *Cluster) Uninstall() error {
-	initfile := common.GetCustomConfig(common.InitFileName)
-	if !file.CheckFileExists(initfile) {
-		log.Flog.Warn("no cluster need uninstall")
-		return nil
-	}
 	var uninstallFile string
 	checkfile := common.GetCustomConfig(common.InitModeCluster)
 	mode := "native"
@@ -47,6 +42,9 @@ func (p *Cluster) Uninstall() error {
 	} else if mode == "incluster" {
 		os.Remove(common.GetCustomConfig(common.InitModeCluster))
 	}
-	os.Remove(initfile)
+	initfile := common.GetCustomConfig(common.InitFileName)
+	if file.CheckFileExists(initfile) {
+		os.Remove(initfile)
+	}
 	return nil
 }

@@ -266,6 +266,21 @@ func (c Client) ListCharts(repoName, pattern string) ([]*search.Result, error) {
 	return result, nil
 }
 
+func (c Client) RemoveRepo(name string) error {
+	f, err := repo.LoadFile(c.settings.RepositoryConfig)
+	if err != nil {
+		return err
+	}
+	success := f.Remove(name)
+	if !success {
+		return err
+	}
+	if err := f.WriteFile(c.settings.RepositoryConfig, 0644); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (c Client) AddRepo(name, url, username, password string) error {
 	repoFile := c.settings.RepositoryConfig
 

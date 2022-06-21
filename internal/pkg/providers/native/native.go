@@ -140,6 +140,7 @@ func (p *Native) Show() {
 		loginip = exnet.LocalIPs()[0]
 	}
 	cfg, _ := config.LoadConfig()
+	domain := ""
 	if cfg != nil {
 		cfg.DB = "sqlite"
 		cfg.Token = kutil.GetNodeToken()
@@ -151,10 +152,15 @@ func (p *Native) Show() {
 				Init: true,
 			},
 		}
+		domain = cfg.Domain
 		cfg.SaveConfig()
 	}
 
 	log.Flog.Info("----------------------------")
-	log.Flog.Donef("web:: %s", fmt.Sprintf("http://%s:32379", loginip))
+	if len(domain) > 0 {
+		log.Flog.Donef("web:: %s", fmt.Sprintf("http://console.%s", domain))
+	} else {
+		log.Flog.Donef("web:: %s", fmt.Sprintf("http://%s:32379", loginip))
+	}
 	log.Flog.Donef("docs: %s", common.QuchengDocs)
 }
