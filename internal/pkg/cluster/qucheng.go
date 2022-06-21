@@ -101,9 +101,7 @@ func (p *Cluster) InstallQuCheng() error {
 				return false, err
 			}
 			p.Domain = domain
-			cfg, _ := config.LoadConfig()
-			cfg.Domain = p.Domain
-			cfg.SaveConfig()
+
 			log.Flog.Infof("generate suffix domain: %s, ip: %v", p.Domain, loginip)
 			return true, nil
 		})
@@ -111,7 +109,13 @@ func (p *Cluster) InstallQuCheng() error {
 			p.Domain = "demo.haogs.cn"
 			log.Flog.Warn("gen suffix domain failed, reason: %v, use default domain: %s", err, p.Domain)
 		}
+	} else {
+		log.Flog.Infof("use custom domain %s", p.Domain)
 	}
+
+	cfg, _ := config.LoadConfig()
+	cfg.Domain = p.Domain
+	cfg.SaveConfig()
 
 	output, err := qcexec.Command(os.Args[0], "experimental", "helm", "repo-add", "--name", common.DefaultHelmRepoName, "--url", common.GetChartRepo(p.QuchengVersion)).CombinedOutput()
 	if err != nil {

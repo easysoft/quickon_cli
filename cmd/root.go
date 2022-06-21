@@ -62,7 +62,6 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 	rootCmd.AddCommand(newCmdJoin(f))
 	rootCmd.AddCommand(newCmdUninstall())
 	rootCmd.AddCommand(newCmdStatus())
-	rootCmd.AddCommand(newCmdServe())
 	rootCmd.AddCommand(newCmdUpgrade())
 	rootCmd.AddCommand(newCmdManage())
 	// Add plugin commands

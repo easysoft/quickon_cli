@@ -49,7 +49,7 @@ func GenerateDomain(iip, id, secretKey string) (string, error) {
 		SetHeader("Content-Type", "application/json").
 		SetResult(&respbody).
 		SetBody(&reqbody).
-		Post("https://api.qucheng.com/api/qdns/oss/record")
+		Post(common.GetAPI("/api/qdns/oss/record"))
 
 	if err != nil {
 		return "", err

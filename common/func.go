@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"strings"
 
 	"github.com/ergoapi/util/zos"
 )
@@ -89,4 +90,9 @@ func GetDefaultKubeConfig() string {
 func GetCustomConfig(name string) string {
 	home := zos.GetHomeDir()
 	return fmt.Sprintf("%s/%s/%s", home, DefaultCfgDir, name)
+}
+
+func GetAPI(path string) string {
+	path = strings.TrimLeft(path, "/")
+	return fmt.Sprintf("https://api.qucheng.com/%s", path)
 }

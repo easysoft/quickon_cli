@@ -102,7 +102,7 @@ func (v versionInfo) ServerDeployed() bool {
 func PreCheckLatestVersion() (string, error) {
 	lastVersion := &versionGet{}
 	client := req.C().SetUserAgent(common.GetUG()).SetTimeout(time.Second * 5)
-	_, err := client.R().SetResult(lastVersion).Get("https://api.qucheng.com/api/release/last/qcadmin")
+	_, err := client.R().SetResult(lastVersion).Get(common.GetAPI("/api/release/last/qcadmin"))
 	if err != nil {
 		return "", err
 	}
