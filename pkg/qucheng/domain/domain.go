@@ -7,31 +7,45 @@
 package domain
 
 import (
-	"io/ioutil"
-	"net/http"
-	"net/url"
-
+	"github.com/davecgh/go-spew/spew"
+	"github.com/easysoft/qcadmin/common"
 	"github.com/ergoapi/util/exid"
+	"github.com/imroc/req/v3"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // GenerateDomain generate suffix domain
 func GenerateDomain(iip, id, secretKey string) (string, error) {
-	body := make(url.Values)
-	body["ip"] = []string{iip}
-	body["uuid"] = []string{id}
-	body["secretKey"] = []string{secretKey}
-	resp, err := http.PostForm("https://api.qucheng.com/api/qdns", body)
+	var respbody struct {
+		Code int `json:"code"`
+		Data struct {
+			Domain string `json:"domain"`
+		} `json:"data"`
+		Message   string `json:"message"`
+		Timestamp int    `json:"timestamp"`
+	}
+	reqbody := struct {
+		IP        string `json:"ip"`
+		UUID      string `json:"uuid"`
+		SecretKey string `json:"secretKey"`
+	}{
+		IP:        iip,
+		UUID:      id,
+		SecretKey: secretKey,
+	}
+	client := req.C().SetUserAgent(common.GetUG()).EnableDumpAll()
+	_, err := client.R().
+		SetHeader("Content-Type", "application/json").
+		SetResult(&respbody).
+		SetBody(&reqbody).
+		Post("https://api.qucheng.com/api/qdns/oss/record")
+
 	if err != nil {
 		return "", err
 	}
-	defer resp.Body.Close()
-	data, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return "", err
-	}
-	return string(data), nil
+	spew.Dump(respbody)
+	return respbody.Data.Domain, nil
 }
 
 // GenerateSuffixConfigMap -

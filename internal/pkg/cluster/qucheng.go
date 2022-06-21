@@ -8,6 +8,7 @@ package cluster
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"strings"
 	"time"
@@ -17,6 +18,7 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/internal/pkg/util/retry"
 	suffixdomain "github.com/easysoft/qcadmin/pkg/qucheng/domain"
+	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/expass"
 	"github.com/ergoapi/util/file"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -86,22 +88,24 @@ func (p *Cluster) InstallQuCheng() error {
 	}
 	log.Flog.Debug("start init qucheng")
 
-	// TODO 生成域名
+	// TODO 支持用户自定义域名
 	if p.Domain == "" {
-		if len(p.IP) != 0 {
-			err := retry.Retry(time.Second*1, 3, func() (bool, error) {
-				domain, err := p.genSuffixHTTPHost(p.IP)
-				if err != nil {
-					return false, err
-				}
-				p.Domain = domain
-				return true, nil
-			})
+		loginip := p.Metadata.EIP
+		if len(loginip) <= 0 {
+			loginip = exnet.LocalIPs()[0]
+		}
+		err := retry.Retry(time.Second*1, 3, func() (bool, error) {
+			domain, err := p.genSuffixHTTPHost(loginip)
 			if err != nil {
-				log.Flog.Warn("gen suffix domain failed, reason: %v, use default domain", err)
+				return false, err
 			}
-		} else {
-			log.Flog.Info("ip is empty %s", p.IP)
+			log.Flog.Infof("generate suffix domain: %s, ip: %v", p.Domain, loginip)
+			p.Domain = domain
+			return true, nil
+		})
+		if err != nil {
+			p.Domain = "demo.haogs.cn"
+			log.Flog.Warn("gen suffix domain failed, reason: %v, use default domain: %s", err, p.Domain)
 		}
 	}
 
@@ -125,7 +129,7 @@ func (p *Cluster) InstallQuCheng() error {
 	log.Flog.Done("update qucheng install repo done")
 	token := p.genQuChengToken()
 	// helm upgrade -i nginx-ingress-controller bitnami/nginx-ingress-controller -n kube-system
-	output, err = qcexec.Command(os.Args[0], "experimental", "helm", "upgrade", "--name", common.DefaultChartName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultChartName, "--namespace", common.DefaultSystem, "--set", "env.CNE_API_TOKEN="+token, "--set", "cloud.defaultChannel="+common.GetChannel(p.QuchengVersion)).CombinedOutput()
+	output, err = qcexec.Command(os.Args[0], "experimental", "helm", "upgrade", "--name", common.DefaultChartName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultChartName, "--namespace", common.DefaultSystem, "--set", fmt.Sprintf("ingress.host=console.%s", p.Domain), "--set", "env.APP_DOMAIN="+p.Domain, "--set", "env.CNE_API_TOKEN="+token, "--set", "cloud.defaultChannel="+common.GetChannel(p.QuchengVersion)).CombinedOutput()
 	if err != nil {
 		log.Flog.Errorf("upgrade install qucheng web failed: %s", string(output))
 		return err
