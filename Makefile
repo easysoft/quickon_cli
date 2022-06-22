@@ -64,7 +64,7 @@ default: gencopyright fmt lint ## fmt code
 
 build: ## build binary
 	@echo "build bin ${GIT_VERSION} $(GIT_COMMIT) $(GIT_BRANCH) $(BUILD_DATE) $(GIT_TREE_STATE)"
-	@GO_ENABLED=1 gox -osarch="linux/amd64 linux/arm64 darwin/amd64 darwin/arm64" \
+	@GO_ENABLED=1 gox -osarch="linux/amd64 linux/arm64" \
         -output="dist/{{.Dir}}_{{.OS}}_{{.Arch}}" \
     		-ldflags ${LDFLAGS}
 
