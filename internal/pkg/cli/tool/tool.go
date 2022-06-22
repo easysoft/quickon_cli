@@ -24,6 +24,7 @@ import (
 	"github.com/spf13/cobra"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"helm.sh/helm/v3/pkg/strvals"
 )
 
 func EmbedCommand() *cobra.Command {
@@ -112,7 +113,7 @@ func dnsAdd() *cobra.Command {
 				}
 				cfg.Domain = domain
 			} else {
-				cfg.Domain = cfg.InitNode
+				cfg.Domain = customdomain
 			}
 			// save config
 			cfg.SaveConfig()
@@ -122,8 +123,12 @@ func dnsAdd() *cobra.Command {
 				log.Flog.Warn("update repo failed, reason: %v", err)
 			}
 			defaultValue, _ := helmClient.GetValues(common.DefaultQuchengName)
-
-			defaultValue = exmap.MergeMaps(defaultValue, map[string]interface{}{"env.APP_DOMAIN": cfg.Domain, "ingress.host": fmt.Sprintf("console.%s", cfg.Domain)})
+			base := map[string]interface{}{}
+			values := []string{fmt.Sprintf("env.APP_DOMAIN=%s", cfg.Domain), fmt.Sprintf("ingress.host=console.%s", cfg.Domain)}
+			for _, value := range values {
+				strvals.ParseInto(value, base);
+			}
+			defaultValue = exmap.MergeMaps(defaultValue, base)
 			if _, err := helmClient.Upgrade(common.DefaultQuchengName, common.DefaultHelmRepoName, common.DefaultQuchengName, "", defaultValue); err != nil {
 				log.Flog.Warnf("upgrade %s failed, reason: %v", common.DefaultQuchengName, err)
 			} else {
