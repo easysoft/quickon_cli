@@ -22,9 +22,9 @@ import (
 	"github.com/ergoapi/util/exnet"
 	"github.com/imroc/req/v3"
 	"github.com/spf13/cobra"
+	"helm.sh/helm/v3/pkg/strvals"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"helm.sh/helm/v3/pkg/strvals"
 )
 
 func EmbedCommand() *cobra.Command {
@@ -126,7 +126,7 @@ func dnsAdd() *cobra.Command {
 			base := map[string]interface{}{}
 			values := []string{fmt.Sprintf("env.APP_DOMAIN=%s", cfg.Domain), fmt.Sprintf("ingress.host=console.%s", cfg.Domain)}
 			for _, value := range values {
-				strvals.ParseInto(value, base);
+				strvals.ParseInto(value, base)
 			}
 			defaultValue = exmap.MergeMaps(defaultValue, base)
 			if _, err := helmClient.Upgrade(common.DefaultQuchengName, common.DefaultHelmRepoName, common.DefaultQuchengName, "", defaultValue); err != nil {

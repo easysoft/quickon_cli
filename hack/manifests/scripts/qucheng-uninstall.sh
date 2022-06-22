@@ -4,9 +4,12 @@
 
 echo "incluster mode"
 
-if [ -f "/usr/local/bin/qcadmin" ]; then
-  qcadmin experimental dns clean
-  qcadmin experimental helm uninstall --name cne-api -n cne-system
-  qcadmin experimental helm uninstall --name qucheng -n cne-system
-  qcadmin experimental helm repo-del
+qcmd=${1:-"/usr/local/bin/qcadmin"}
+
+if [ -f "${qcmd}" ]; then
+  echo "${qcmd} clean helm"
+  ${qcmd} experimental dns clean
+  ${qcmd} experimental helm uninstall --name cne-api -n cne-system
+  ${qcmd} experimental helm uninstall --name qucheng -n cne-system
+  ${qcmd} experimental helm repo-del
 fi

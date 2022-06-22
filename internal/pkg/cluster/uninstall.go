@@ -17,6 +17,10 @@ import (
 )
 
 func (p *Cluster) Uninstall() error {
+	if !file.CheckFileExists(common.GetDefaultConfig()) {
+		log.Flog.Done("uninstall cluster success")
+		return nil
+	}
 	var uninstallFile string
 	checkfile := common.GetCustomConfig(common.InitModeCluster)
 	mode := "native"
@@ -30,7 +34,7 @@ func (p *Cluster) Uninstall() error {
 	uninstallShell := fmt.Sprintf("%s/hack/manifests/scripts/%s", common.GetDefaultDataDir(), uninstallFile)
 	log.Flog.Debugf("gen %s uninstall script: %v", mode, uninstallShell)
 	// 移除qcadmin初始化文件
-	if err := qcexec.RunCmd("/bin/bash", uninstallShell); err != nil {
+	if err := qcexec.RunCmd("/bin/bash", uninstallShell, os.Args[0]); err != nil {
 		return err
 	}
 
