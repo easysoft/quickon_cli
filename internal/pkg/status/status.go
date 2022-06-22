@@ -89,30 +89,14 @@ func (s *Status) Format() error {
 		w := tabwriter.NewWriter(&buf, 0, 0, 4, ' ', 0)
 		// k8s
 		fmt.Fprintf(w, "Cluster Status: \n")
-		fmt.Fprintf(w, "%s\t%s\n", "version", s.KubeStatus.Version)
-		fmt.Fprintf(w, "%s\t%s\n", "mode", s.KubeStatus.Type)
+		fmt.Fprintf(w, "  %s\t%s\n", "version", s.KubeStatus.Version)
+		fmt.Fprintf(w, "  %s\t%s\n", "mode", s.KubeStatus.Type)
 		if s.KubeStatus.NodeCount["ready"] > 0 {
-			fmt.Fprintf(w, "%s\t%s\n", "status", color.SGreen("health"))
+			fmt.Fprintf(w, "  %s\t%s\n", "status", color.SGreen("health"))
 		} else {
-			fmt.Fprintf(w, "%s\t%s\n", "status", color.SRed("unhealth"))
+			fmt.Fprintf(w, "  %s\t%s\n", "status", color.SRed("unhealth"))
 		}
 		for name, state := range s.KubeStatus.PodState {
-			if state.Disabled {
-				fmt.Fprintf(w, "%s\t%s\n", name, color.SBlue("disabled"))
-			} else {
-				if state.Available > 0 {
-					fmt.Fprintf(w, "%s\t%s\n", name, color.SGreen("ok"))
-				} else {
-					fmt.Fprintf(w, "%s\t%s\n", name, color.SRed("warn"))
-				}
-			}
-		}
-		fmt.Fprintf(w, "\n")
-		fmt.Fprintf(w, "Qucheng Status: \n")
-		fmt.Fprintf(w, "namespace\t%s\n", color.SBlue(common.DefaultSystem))
-		quchengOK := true
-		fmt.Fprintf(w, "component status: \n")
-		for name, state := range s.QStatus.PodState {
 			if state.Disabled {
 				fmt.Fprintf(w, "  %s\t%s\n", name, color.SBlue("disabled"))
 			} else {
@@ -120,23 +104,12 @@ func (s *Status) Format() error {
 					fmt.Fprintf(w, "  %s\t%s\n", name, color.SGreen("ok"))
 				} else {
 					fmt.Fprintf(w, "  %s\t%s\n", name, color.SRed("warn"))
-					quchengOK = false
 				}
 			}
 		}
-		fmt.Fprintf(w, "plugin status: \n")
-		for name, state := range s.QStatus.PluginState {
-			if state.Disabled {
-				fmt.Fprintf(w, "  %s\t%s\n", name, color.SBlue("disabled"))
-			} else {
-				fmt.Fprintf(w, "  %s\t%s\n", name, color.SGreen("enabled"))
-			}
-		}
-		if quchengOK {
-			fmt.Fprintf(w, "%s\t%s\n", "status", color.SGreen("health"))
-		} else {
-			fmt.Fprintf(w, "%s\t%s\n", "status", color.SRed("unhealth"))
-		}
+		fmt.Fprintf(w, "\n")
+		fmt.Fprintf(w, "Qucheng Status: \n")
+		fmt.Fprintf(w, "  namespace:\t%s\n", color.SBlue(common.DefaultSystem))
 		cfg, _ := config.LoadConfig()
 		domain := ""
 		loginip := exnet.LocalIPs()[0]
@@ -149,7 +122,34 @@ func (s *Status) Format() error {
 		} else {
 			consoleURL = fmt.Sprintf("http://%s:32379", loginip)
 		}
-		fmt.Fprintf(w, "web console: %s\n", color.SGreen(consoleURL))
+		fmt.Fprintf(w, "  console: %s\n", color.SGreen(consoleURL))
+		quchengOK := true
+		fmt.Fprintf(w, "  component status: \n")
+		for name, state := range s.QStatus.PodState {
+			if state.Disabled {
+				fmt.Fprintf(w, "    %s\t%s\n", name, color.SBlue("disabled"))
+			} else {
+				if state.Available > 0 {
+					fmt.Fprintf(w, "    %s\t%s\n", name, color.SGreen("ok"))
+				} else {
+					fmt.Fprintf(w, "    %s\t%s\n", name, color.SRed("warn"))
+					quchengOK = false
+				}
+			}
+		}
+		fmt.Fprintf(w, "  plugin status: \n")
+		for name, state := range s.QStatus.PluginState {
+			if state.Disabled {
+				fmt.Fprintf(w, "    %s\t%s\n", name, color.SBlue("disabled"))
+			} else {
+				fmt.Fprintf(w, "    %s\t%s\n", name, color.SGreen("enabled"))
+			}
+		}
+		if quchengOK {
+			fmt.Fprintf(w, "  %s\t%s\n", "status", color.SGreen("health"))
+		} else {
+			fmt.Fprintf(w, "  %s\t%s\n", "status", color.SRed("unhealth"))
+		}
 		w.Flush()
 		return output.EncodeText(os.Stdout, buf.Bytes())
 	}

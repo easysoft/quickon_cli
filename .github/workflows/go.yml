@@ -97,4 +97,4 @@ jobs:
           make build
           # make upx
           ./dist/qcadmin_linux_amd64 version
-          ./dist/qcadmin_linux_amd64 init -q test --domain q.local  --debug
+          sudo ./dist/qcadmin_linux_amd64 init -q test --domain q.local --skip-precheck  --debug
