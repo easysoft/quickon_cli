@@ -8,52 +8,46 @@
 [![Releases](https://img.shields.io/github/release-pre/easysoft/qucheng_cli.svg)](https://github.com/easysoft/qucheng_cli/releases)
 [![docs](https://img.shields.io/badge/docs-done-green)](https://www.qucheng.com/)
 
+> English | [中文](README.md)
 
-> 中文 | [English](README-EN.md)
+qcadmin is an open-source lightweight cli tool for managing qucheng.
 
-使用 `qcadmin`(`q`)，您可以轻松、高效、灵活地单独或整体安装渠成平台。
+## Requirements
 
-## 支持的环境
+<table>
+  <tbody>
+    <tr>
+    	<th width='320'>OS</th>
+    	<th>Minimum Requirements</th>
+    </tr>
+    <tr>
+      <td><b>Debian(Recommended)</b> <i>Bullseye</i>, <i>Buster</i></td>
+      <td>2 CPU cores, 4 GB memory, 40 GB disk space</td>
+    </tr>
+    <tr>
+      <td><b>Ubuntu</b> <i>16.04</i>, <i>18.04</i></td>
+      <td>2 CPU cores, 4 GB memory, 40 GB disk space</td>
+    </tr>
+		<tr>
+    <td><b>CentOS</b> <i>7.x</i></td>
+      <td>2 CPU cores, 4 GB memory, 40 GB disk space</td>
+    </tr>
+  </tbody>
+</table>
 
-### Linux 发行版
+> Recommended Linux Kernel Version: 5.14 or later
 
-* **Debian**  *Buster(推荐), Stretch*
-* **Ubuntu**  *16.04, 18.04*
-* **CentOS**  *7*
+## Container runtimes
 
-> 建议内核版本`5.14及之后版本`
+> If you use q to set up a cluster, use containerd by default. Alternatively, you can manually install Docker  runtimes before you create a cluster.
 
-### 容器运行时
+## Usage
 
-默认使用k3s内置的`Containerd`, 如果本地已经安装docker，则优先使用docker
+### Install
 
-### k8s/k3s版本
+#### 1. Building From Source
 
-* 对接已有k8s集群, 推荐1.20+版本
-* 默认k3s版本为`1.23`
-
-## 要求和建议
-
-* 最低资源要求：
-  * 2 核虚拟 CPU
-  * 4 GB 内存
-  * 40 GB 储存空间
-
-* 操作系统要求：
-
-  * 节点时间同步。
-  * `sudo`/`curl` 节点需已安装。
-  * 网络正常。
-
-> * 建议您的操作系统环境足够干净 (不安装任何其他软件)，否则可能会发生冲突。
-
-## 使用
-
-### 安装二进制
-
-#### 1. 从源码安装
-
-> 需要go环境，且版本大于1.16
+`qcadmin(q)` is currently using go v1.16 or above. In order to build ergo from source you must:
 
 ```bash
 # Clone the repo
@@ -62,9 +56,9 @@ make generate
 make build
 ```
 
-#### 2. 二进制安装
+#### 2. Linux Binary
 
-> 使用我们提供的编译二进制文件。可以从下面或者github获取
+Downloaded from pre-compiled binaries
 
 ```bash
 # 稳定版本 / stable / tag (Recommended)
@@ -75,9 +69,7 @@ curl https://pkg.qucheng.com/qucheng/cli/edge/get.sh | sh -
 q init -q edge
 ```
 
-#### 3. 包安装
-
-> 目前仅提供deb或者rpm包方式安装。
+#### 3. Debian/CentOS 7
 
 ```bash
 # debian
@@ -97,9 +89,7 @@ yum makecache
 yum install qcadmin
 ```
 
-### 快速开始
-
-> 快速入门使用 `all-in-one` 安装，这是熟悉 渠成平台 的良好开始。
+### Quick Start
 
 ```bash
 # create qucheng cluster
@@ -107,5 +97,3 @@ q init
 # create a k3s cluster with other cidr
 q init --podsubnet 10.42.0.0/16 --svcsubnet 10.43.0.0/16
 ```
-
-## 相关文档
