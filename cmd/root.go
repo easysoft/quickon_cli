@@ -64,10 +64,12 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 	rootCmd.AddCommand(newCmdStatus())
 	rootCmd.AddCommand(newCmdUpgrade())
 	rootCmd.AddCommand(newCmdManage())
+	rootCmd.AddCommand(newCmdManageGet())
 	// Add plugin commands
 
 	rootCmd.AddCommand(NewCmdExperimental())
 	rootCmd.AddCommand(newManCmd())
+	rootCmd.AddCommand(newCmdBugReport())
 
 	args := os.Args
 	if len(args) > 1 {

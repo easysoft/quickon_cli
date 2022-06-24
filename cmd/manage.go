@@ -14,11 +14,21 @@ import (
 func newCmdManage() *cobra.Command {
 	m := &cobra.Command{
 		Use:     "manage",
-		Short:   "manage qucheng tools",
+		Short:   "Manage qucheng tools",
 		Aliases: []string{"m", "op"},
 	}
 	m.AddCommand(manage.NewCmdPlugin())
 	m.AddCommand(manage.NewResetPassword())
 	m.AddCommand(manage.NewUpgradeQucheg())
+	return m
+}
+
+func newCmdManageGet() *cobra.Command {
+	m := &cobra.Command{
+		Use:   "get",
+		Short: "Display one or many resources.",
+	}
+	m.AddCommand(manage.NewCmdGetNode())
+	m.AddCommand(manage.NewCmdGetApp())
 	return m
 }

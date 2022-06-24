@@ -78,13 +78,13 @@ func NewResetPassword() *cobra.Command {
 				SetHeader("accept", "application/json").
 				SetHeader("TOKEN", apiToken).
 				SetBody(&Body{Password: password}).
-				Post(fmt.Sprintf("http://%s:32379/index.php?m=admin&f=resetpassword", ips[0]))
+				Post(fmt.Sprintf("http://%s:32379/admin-resetpassword.html", ips[0]))
 			if err != nil {
-				log.Flog.Error("update password failed, reason: %v", err)
+				log.Flog.Errorf("update password failed, reason: %v", err)
 				return
 			}
 			if !resp.IsSuccess() {
-				log.Flog.Error("update password failed, reason: bad response status %v", resp.Status)
+				log.Flog.Errorf("update password failed, reason: bad response status %v", resp.Status)
 				return
 			}
 			json.Unmarshal([]byte(resp.String()), &result)

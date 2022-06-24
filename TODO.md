@@ -1,5 +1,10 @@
 # TODO
 
+
+## 已知问题
+
+- [ ] 与`kubectl status`冲突
+
 ## 1.x
 
 - [ ] 支持ssh方式

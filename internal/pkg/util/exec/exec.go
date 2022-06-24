@@ -58,6 +58,14 @@ func Command(name string, arg ...string) *sysexec.Cmd {
 	return cmd
 }
 
+func CommandRun(name string, arg ...string) error {
+	cmd := sysexec.Command(name, arg...) // #nosec
+	Trace(cmd)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+
 func CommandRespByte(command string, args ...string) ([]byte, error) {
 	c := Command(command, args...)
 	bytes, err := c.CombinedOutput()

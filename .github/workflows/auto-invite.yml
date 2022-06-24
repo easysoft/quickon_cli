@@ -18,5 +18,5 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           body: |
             It's my pleasure to invite you to join us :
-            home Website: https://www.qucheng.cn
+            home Website: https://www.qucheng.com
             qq group : 768721743
