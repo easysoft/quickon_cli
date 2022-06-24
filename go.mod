@@ -18,12 +18,12 @@ require (
 	github.com/kardianos/service v1.2.1-0.20211104163826-b9d1d5b7279b
 	github.com/logrusorgru/aurora/v3 v3.0.0
 	github.com/mattn/go-isatty v0.0.14
-	github.com/muesli/mango-cobra v1.1.0
+	github.com/muesli/mango-cobra v1.2.0
 	github.com/muesli/roff v0.1.0
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.8.1
-	github.com/spf13/cobra v1.4.0
+	github.com/spf13/cobra v1.5.0
 	github.com/spf13/pflag v1.0.5
 	github.com/ulikunitz/xz v0.5.10
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
@@ -63,7 +63,7 @@ require (
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/chai2010/gettext-go v0.0.0-20160711120539-c6fed771bfd5 // indirect
 	github.com/containerd/containerd v1.6.3 // indirect
-	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
+	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.3 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/daviddengcn/go-colortext v0.0.0-20160507010035-511bcaf42ccd // indirect
