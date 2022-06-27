@@ -10,10 +10,12 @@ import (
 	"os"
 	"strings"
 
+	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	pluginapi "github.com/easysoft/qcadmin/internal/pkg/plugin"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/internal/pkg/util/output"
+	"github.com/easysoft/qcadmin/internal/static/deploy"
 	"github.com/gosuri/uitable"
 	"github.com/spf13/cobra"
 )
@@ -29,7 +31,26 @@ func NewCmdPlugin() *cobra.Command {
 	cmd.AddCommand(listPluginCmd())
 	cmd.AddCommand(installPluginCmd())
 	cmd.AddCommand(unInstallPluginCmd())
+	cmd.AddCommand(syncPluginFileCmd())
 	return cmd
+}
+
+func syncPluginFileCmd() *cobra.Command {
+	sync := &cobra.Command{
+		Use:   "sync",
+		Short: "sync plugin file",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			dataDir := common.GetDefaultDataDir()
+			templateVars := map[string]string{
+				"%{NAMESPACE}%": common.DefaultSystem,
+			}
+			if err := deploy.StageFunc(dataDir, templateVars); err != nil {
+				return err
+			}
+			return nil
+		},
+	}
+	return sync
 }
 
 func listPluginCmd() *cobra.Command {

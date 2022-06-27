@@ -27,7 +27,7 @@ metadata:
     app.kubernetes.io/component: controller
 data:
   compute-full-forwarded-for: "true"
-  custom-http-errors: 503
+  custom-http-errors: "503"
   forwarded-for-header: X-Forwarded-For
   generate-request-id: "true"
   keep-alive-requests: "10000"
