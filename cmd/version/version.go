@@ -44,8 +44,16 @@ Server:
  {{- range $component := .Components}}
  {{$component.Name}}:
 {{- if $component.CanUpgrade }}
-  AppVersion:       {{$component.Deploy.AppVersion}} --> {{$component.Remote.Version}}
-  ChartVersion:     {{$component.Deploy.ChartVersion}} --> {{$component.Remote.Version}}
+{{- if eq $component.Deploy.AppVersion $component.Remote.AppVersion }}
+  AppVersion:       {{$component.Deploy.AppVersion}}
+{{- else }}
+  AppVersion:       {{$component.Deploy.AppVersion}} --> {{$component.Remote.AppVersion}}
+{{- end }}
+{{- if eq $component.Deploy.ChartVersion $component.Remote.ChartVersion }}
+  ChartVersion:     {{$component.Deploy.ChartVersion}}
+{{- else }}
+  ChartVersion:     {{$component.Deploy.ChartVersion}} --> {{$component.Remote.ChartVersion}}
+{{- end }}
 {{- else }}
   AppVersion:       {{$component.Deploy.AppVersion}}
   ChartVersion:     {{$component.Deploy.ChartVersion}}
@@ -166,7 +174,7 @@ func ShowVersion() {
 				}
 			}
 			vd.Server.CanUpgrade = canUpgrade
-			vd.Server.UpgradeMessage = fmt.Sprintf("Now you can use %s to upgrade  qucheng to the latest version %s", color.SGreen("%s upgrade manage upgrade ", os.Args[0]), color.SGreen(lastversion))
+			vd.Server.UpgradeMessage = fmt.Sprintf("Now you can use %s to upgrade qucheng to the latest version", color.SGreen("%s manage upgrade", os.Args[0]))
 		}
 	}
 	if err := prettyPrintVersion(vd, tmpl); err != nil {

@@ -143,11 +143,11 @@ func (p *Cluster) InstallQuCheng() error {
 		return err
 	}
 	// Deprecated CNE_API_TOKEN
-	output, err = qcexec.Command(os.Args[0], "experimental", "helm", "upgrade", "--name", common.DefaultCneAPIName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultAPIChartName, "--namespace", common.DefaultSystem, "--set", "env.CNE_TOKEN="+token, "--set", "env.CNE_API_TOKEN="+token, "--set", "cloud.defaultChannel="+common.GetChannel(p.QuchengVersion)).CombinedOutput()
-	if err != nil {
-		log.Flog.Errorf("upgrade install qucheng api failed: %s", string(output))
-		return err
-	}
+	// output, err = qcexec.Command(os.Args[0], "experimental", "helm", "upgrade", "--name", common.DefaultCneAPIName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultAPIChartName, "--namespace", common.DefaultSystem, "--set", "env.CNE_TOKEN="+token, "--set", "env.CNE_API_TOKEN="+token, "--set", "cloud.defaultChannel="+common.GetChannel(p.QuchengVersion)).CombinedOutput()
+	// if err != nil {
+	// 	log.Flog.Errorf("upgrade install qucheng api failed: %s", string(output))
+	// 	return err
+	// }
 	log.Flog.Done("install qucheng done")
 	p.Ready()
 	initfile := common.GetCustomConfig(common.InitFileName)

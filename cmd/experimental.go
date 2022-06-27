@@ -16,6 +16,7 @@ func NewCmdExperimental() *cobra.Command {
 		Use:     "experimental",
 		Aliases: []string{"x", "exp"},
 		Short:   "Experimental commands that may be modified or deprecated",
+		Hidden:  true,
 	}
 	experimentalCmd.AddCommand(experimental.KubectlCommand())
 	experimentalCmd.AddCommand(experimental.HelmCommand())

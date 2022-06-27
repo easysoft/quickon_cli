@@ -1,15 +1,15 @@
-## qcadmin uninstall
+## qcadmin bug-report
 
-Uninstall
+Display system information for bug report
 
 ```
-qcadmin uninstall [flags]
+qcadmin bug-report [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for uninstall
+  -h, --help   help for bug-report
 ```
 
 ### Options inherited from parent commands

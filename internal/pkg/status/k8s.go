@@ -152,7 +152,7 @@ func (k *K8sStatusCollector) quchengStatus(ctx context.Context, status *Status) 
 	// 业务层
 	k.deploymentStatus(ctx, common.DefaultSystem, common.DefaultQuchengName, "", status)
 	// 平台层
-	k.deploymentStatus(ctx, common.DefaultSystem, common.DefaultCneAPIName, "", status)
+	// k.deploymentStatus(ctx, common.DefaultSystem, common.DefaultCneAPIName, "", status)
 	// 数据库
 	k.deploymentStatus(ctx, common.DefaultSystem, common.DefaultDBName, "", status)
 

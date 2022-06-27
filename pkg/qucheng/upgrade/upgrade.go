@@ -46,9 +46,8 @@ func (opt *Option) Fetch(ns, name string) (ComponentVersion, error) {
 	cmv.Remote.AppVersion = remoteav
 	cmv.Remote.ChartVersion = remotecv
 	// can upgrade
-	if cmv.Deploy.ChartVersion != cmv.Remote.ChartVersion && version.LT(cmv.Deploy.ChartVersion, cmv.Remote.ChartVersion) {
-		cmv.CanUpgrade = true
-	}
+	cmv.CanUpgrade = version.LT(cmv.Remote.ChartVersion, cmv.Deploy.ChartVersion)
+	log.Flog.Debugf("local: %s(%s), remote : %s(%s), upgrade: %v", localcv, localav, remotecv, remoteav, cmv.CanUpgrade)
 	return cmv, err
 }
 
@@ -110,9 +109,9 @@ func Upgrade(flagVersion string) error {
 func QuchengVersion() (Version, error) {
 	v := Version{}
 	opt := Option{}
-	if uiVersion, err := opt.Fetch(common.DefaultSystem, "cne-api"); err == nil {
-		v.Components = append(v.Components, uiVersion)
-	}
+	// if uiVersion, err := opt.Fetch(common.DefaultSystem, "cne-api"); err == nil {
+	// 	v.Components = append(v.Components, uiVersion)
+	// }
 	if apiVersion, err := opt.Fetch(common.DefaultSystem, "qucheng"); err == nil {
 		v.Components = append(v.Components, apiVersion)
 	}
