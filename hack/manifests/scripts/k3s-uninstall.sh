@@ -142,10 +142,13 @@ if [ -f "/root/.kube/config" ]; then
 	mv /root/.kube/config /root/.kube/config.bak
 fi
 
-if [ -d "/root/.qc/data/hack/" ]; then
-	rm -rf /root/.qc/data/hack
+if [ -d "/root/.qc/data" ]; then
+	rm -rf /root/.qc/data
 fi
 
+if [ -d "/root/.qc/config" ]; then
+	rm -rf /root/.qc/config
+fi
 
 if command_exists docker && [ -e /var/run/docker.sock ]; then
 		(

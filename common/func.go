@@ -56,6 +56,11 @@ func GetDefaultDataDir() string {
 	return home + "/" + DefaultDataDir
 }
 
+func GetDefaultLogDir() string {
+	home := zos.GetHomeDir()
+	return home + "/" + DefaultLogDir
+}
+
 // GetChartRepo 获取chartrepo地址
 func GetChartRepo(p string) string {
 	if p == "test" || p == "dev" || p == "edge" || p == "latest" {

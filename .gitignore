@@ -6,3 +6,4 @@ internal/static/*/zz_generated_bindata*
 *.rpm
 completions
 manpages
+internal/pkg/cli/test/*.go

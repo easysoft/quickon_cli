@@ -15,7 +15,7 @@ import (
 	"text/template"
 	"time"
 
-	gv "github.com/blang/semver/v4"
+	gv "github.com/Masterminds/semver/v3"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/qucheng/upgrade"
@@ -153,7 +153,7 @@ func ShowVersion() {
 	}
 	if lastversion != "" && !strings.Contains(common.Version, lastversion) {
 		nowversion := gv.MustParse(strings.TrimPrefix(common.Version, "v"))
-		needupgrade := nowversion.LT(gv.MustParse(lastversion))
+		needupgrade := nowversion.LessThan(gv.MustParse(lastversion))
 		// log.Flog.Debugf("lastversion: %s(%v), nowversion: %s(%v), needupgrade: %v", lastversion, gv.MustParse(lastversion), common.Version, nowversion, needupgrade)
 		if needupgrade {
 			vd.Client.CanUpgrade = true

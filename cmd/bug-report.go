@@ -12,6 +12,7 @@ import (
 	"runtime/debug"
 
 	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/spf13/cobra"
 )
 
@@ -19,6 +20,7 @@ func newCmdBugReport() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "bug-report",
 		Short: "Display system information for bug report",
+		Long:  "this command shares no personally-identifiable information, and is unused unless you share the bug identifier with our team.",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return bugReport()
 		},
@@ -27,6 +29,7 @@ func newCmdBugReport() *cobra.Command {
 }
 
 func bugReport() error {
+	log.Flog.Info("Issue: 🐛Bug Report: https://github.com/easysoft/qucheng_cli/issues/new?assignees=&labels=&template=bug-report.md")
 	// TODO 详细信息
 	sprintf := func(key, val string) string {
 		return fmt.Sprintf("%-24s%s\n", key, val)

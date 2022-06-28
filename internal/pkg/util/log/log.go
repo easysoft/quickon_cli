@@ -7,14 +7,19 @@
 package log
 
 import (
+	"fmt"
+
+	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/ergoapi/log"
+	"github.com/ergoapi/util/ztime"
 )
 
 var Flog log.Logger
 
 func init() {
+	filelog := fmt.Sprintf("%s.log", ztime.GetTodayHour())
+	log.StartFileLogging(common.GetDefaultLogDir(), filelog)
 	f := factory.DefaultFactory()
 	Flog = f.GetLog()
-	log.StartFileLogging("/tmp", "install.log")
 }

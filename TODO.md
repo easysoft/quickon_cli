@@ -11,7 +11,7 @@
 
 ## 1.0.5
 
-- [ ] 优化charts配置
+- [x] 优化charts配置
 - [x] nginx-ingress-controller升级到1.2.1
 
 ## 1.0.4
