@@ -62,7 +62,7 @@ require (
 	github.com/blang/semver/v4 v4.0.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/chai2010/gettext-go v0.0.0-20160711120539-c6fed771bfd5 // indirect
-	github.com/containerd/containerd v1.6.3 // indirect
+	github.com/containerd/containerd v1.6.6 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.3 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -187,17 +187,17 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.1 // indirect
 )
 
-// Replace to match K8s 1.23.7
+// Replace to match K8s 1.23.8
 replace (
 	github.com/kardianos/service v1.2.1-0.20211104163826-b9d1d5b7279b => github.com/BeidouCloudPlatform/service v1.2.1-0.20211108101837-1fc58f473016
 	helm.sh/helm/v3 => helm.sh/helm/v3 v3.8.2
-	k8s.io/api => k8s.io/api v0.23.7
-	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.23.7
-	k8s.io/apimachinery => k8s.io/apimachinery v0.23.7
-	k8s.io/cli-runtime => k8s.io/cli-runtime v0.23.7
-	k8s.io/client-go => k8s.io/client-go v0.23.7
-	k8s.io/component-base => k8s.io/component-base v0.23.7
+	k8s.io/api => k8s.io/api v0.23.8
+	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.23.8
+	k8s.io/apimachinery => k8s.io/apimachinery v0.23.8
+	k8s.io/cli-runtime => k8s.io/cli-runtime v0.23.8
+	k8s.io/client-go => k8s.io/client-go v0.23.8
+	k8s.io/component-base => k8s.io/component-base v0.23.8
 	k8s.io/kube-openapi => k8s.io/kube-openapi v0.0.0-20211115234752-e816edb12b65
-	k8s.io/kubectl => k8s.io/kubectl v0.23.7
-	k8s.io/metrics => k8s.io/metrics v0.23.7
+	k8s.io/kubectl => k8s.io/kubectl v0.23.8
+	k8s.io/metrics => k8s.io/metrics v0.23.8
 )

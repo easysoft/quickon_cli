@@ -497,7 +497,7 @@ spec:
       terminationGracePeriodSeconds: 60
       containers:
         - name: default-backend
-          image: hub.qucheng.com/platform/nginx-ingress-default-page:2.0220627e+07
+          image: hub.qucheng.com/platform/nginx-ingress-default-page:20220627
           imagePullPolicy: "IfNotPresent"
           securityContext:
             runAsNonRoot: true
