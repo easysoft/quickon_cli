@@ -13,7 +13,7 @@ require (
 	github.com/gofrs/flock v0.8.1
 	github.com/gosuri/uitable v0.0.4
 	github.com/idoubi/goz v1.2.2
-	github.com/imroc/req/v3 v3.13.1
+	github.com/imroc/req/v3 v3.13.2
 	github.com/inconshreveable/go-update v0.0.0-20160112193335-8152e7eb6ccf
 	github.com/kardianos/service v1.2.1-0.20211104163826-b9d1d5b7279b
 	github.com/logrusorgru/aurora/v3 v3.0.0
