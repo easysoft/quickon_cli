@@ -8,11 +8,14 @@ if type apt >/dev/null 2>&1; then
 	export DEBIAN_FRONTEND=noninteractive
 	apt update -qq
 	apt remove -y -qq ufw lxd lxd-client lxcfs lxc-common
-	apt install -y -qq nfs-common iptables conntrack jq socat bash-completion rsync ipset ipvsadm htop net-tools wget libseccomp2 psmisc git curl nload ebtables ethtool
+	apt install -y -qq nfs-common iptables conntrack jq socat bash-completion open-iscsi rsync ipset ipvsadm htop net-tools wget libseccomp2 psmisc git curl nload ebtables ethtool
 fi
 
 if type yum >/dev/null 2>&1; then
 	yum install -y -q nfs-utils iptables conntrack jq socat bash-completion rsync ipset ipvsadm htop net-tools wget libseccomp2 psmisc git curl nload ebtables ethtool
+  yum --setopt=tsflags=noscripts install -y -q iscsi-initiator-utils
+  systemctl enable iscsid
+  systemctl start iscsid
 fi
 
 if command -v systemctl; then
