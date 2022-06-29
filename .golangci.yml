@@ -55,7 +55,7 @@ linters:
     # - staticcheck
     - structcheck
     # - typecheck
-    # - unused
+    - unused
     - varcheck
     - goheader
 

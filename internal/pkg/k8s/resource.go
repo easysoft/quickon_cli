@@ -9,7 +9,6 @@ package k8s
 import (
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
-	"k8s.io/kubectl/pkg/metricsutil"
 	metricsapi "k8s.io/metrics/pkg/apis/metrics"
 )
 
@@ -122,21 +121,21 @@ func getNodeMetricsByNodeName(nodeMetricsList *metricsapi.NodeMetricsList) map[s
 	return nodeMetricsByName
 }
 
-func getPodMetrics(m *metricsapi.PodMetrics) v1.ResourceList {
-	podMetrics := make(v1.ResourceList)
-	for _, res := range metricsutil.MeasuredResources {
-		podMetrics[res], _ = resource.ParseQuantity("0")
-	}
+// func getPodMetrics(m *metricsapi.PodMetrics) v1.ResourceList {
+// 	podMetrics := make(v1.ResourceList)
+// 	for _, res := range metricsutil.MeasuredResources {
+// 		podMetrics[res], _ = resource.ParseQuantity("0")
+// 	}
 
-	for _, c := range m.Containers {
-		for _, res := range metricsutil.MeasuredResources {
-			quantity := podMetrics[res]
-			quantity.Add(c.Usage[res])
-			podMetrics[res] = quantity
-		}
-	}
-	return podMetrics
-}
+// 	for _, c := range m.Containers {
+// 		for _, res := range metricsutil.MeasuredResources {
+// 			quantity := podMetrics[res]
+// 			quantity.Add(c.Usage[res])
+// 			podMetrics[res] = quantity
+// 		}
+// 	}
+// 	return podMetrics
+// }
 
 //getNodeAllocatedResources https://github.com/kubernetes/dashboard/blob/d386ff60597b6eab0222f2c3c4aecf8e49b3014e/src/app/backend/resource/node/detail.go\#L171
 func getNodeAllocatedResources(node v1.Node, podList *v1.PodList, nodeMetricsList *metricsapi.NodeMetricsList) (NodeAllocatedResources, error) {
@@ -210,57 +209,57 @@ func getNodeAllocatedResources(node v1.Node, podList *v1.PodList, nodeMetricsLis
 }
 
 //getPodAllocatedResources
-func getPodAllocatedResources(pod v1.Pod, podmetric *metricsapi.PodMetrics) (PodAllocatedResources, error) {
-	reqs, limits := map[v1.ResourceName]resource.Quantity{}, map[v1.ResourceName]resource.Quantity{}
+// func getPodAllocatedResources(pod v1.Pod, podmetric *metricsapi.PodMetrics) (PodAllocatedResources, error) {
+// 	reqs, limits := map[v1.ResourceName]resource.Quantity{}, map[v1.ResourceName]resource.Quantity{}
 
-	podReqs, podLimits, err := PodRequestsAndLimits(pod)
-	if err != nil {
-		return PodAllocatedResources{}, err
-	}
-	for podReqName, podReqValue := range podReqs {
-		if value, ok := reqs[podReqName]; !ok {
-			reqs[podReqName] = podReqValue.DeepCopy()
-		} else {
-			value.Add(podReqValue)
-			reqs[podReqName] = value
-		}
-	}
-	for podLimitName, podLimitValue := range podLimits {
-		if value, ok := limits[podLimitName]; !ok {
-			limits[podLimitName] = podLimitValue.DeepCopy()
-		} else {
-			value.Add(podLimitValue)
-			limits[podLimitName] = value
-		}
-	}
-	//podMetricsByPodName := getPodMetricsByPodName(podMetricsList)
-	//usageMetrics := podMetricsByPodName[pod.Name]
-	usageMetrics := getPodMetrics(podmetric)
+// 	podReqs, podLimits, err := PodRequestsAndLimits(pod)
+// 	if err != nil {
+// 		return PodAllocatedResources{}, err
+// 	}
+// 	for podReqName, podReqValue := range podReqs {
+// 		if value, ok := reqs[podReqName]; !ok {
+// 			reqs[podReqName] = podReqValue.DeepCopy()
+// 		} else {
+// 			value.Add(podReqValue)
+// 			reqs[podReqName] = value
+// 		}
+// 	}
+// 	for podLimitName, podLimitValue := range podLimits {
+// 		if value, ok := limits[podLimitName]; !ok {
+// 			limits[podLimitName] = podLimitValue.DeepCopy()
+// 		} else {
+// 			value.Add(podLimitValue)
+// 			limits[podLimitName] = value
+// 		}
+// 	}
+// 	//podMetricsByPodName := getPodMetricsByPodName(podMetricsList)
+// 	//usageMetrics := podMetricsByPodName[pod.Name]
+// 	usageMetrics := getPodMetrics(podmetric)
 
-	_cpuRequests, _cpuLimits, _memoryRequests, _memoryLimits := reqs[v1.ResourceCPU], limits[v1.ResourceCPU],
-		reqs[v1.ResourceMemory], limits[v1.ResourceMemory]
-	_cpuUsages, _memoryUsages := usageMetrics[v1.ResourceCPU], usageMetrics[v1.ResourceMemory]
+// 	_cpuRequests, _cpuLimits, _memoryRequests, _memoryLimits := reqs[v1.ResourceCPU], limits[v1.ResourceCPU],
+// 		reqs[v1.ResourceMemory], limits[v1.ResourceMemory]
+// 	_cpuUsages, _memoryUsages := usageMetrics[v1.ResourceCPU], usageMetrics[v1.ResourceMemory]
 
-	cpuUsages := NewCPUResource(_cpuUsages.MilliValue())
-	cpuRequests := NewCPUResource(_cpuRequests.MilliValue())
-	cpuLimits := NewCPUResource(_cpuLimits.MilliValue())
+// 	cpuUsages := NewCPUResource(_cpuUsages.MilliValue())
+// 	cpuRequests := NewCPUResource(_cpuRequests.MilliValue())
+// 	cpuLimits := NewCPUResource(_cpuLimits.MilliValue())
 
-	memoryUsages := NewMemoryResource(_memoryUsages.Value())
-	memoryRequests := NewMemoryResource(_memoryRequests.Value())
-	memoryLimits := NewMemoryResource(_memoryLimits.Value())
+// 	memoryUsages := NewMemoryResource(_memoryUsages.Value())
+// 	memoryRequests := NewMemoryResource(_memoryRequests.Value())
+// 	memoryLimits := NewMemoryResource(_memoryLimits.Value())
 
-	podAllocatedResources := PodAllocatedResources{
-		CPUUsages:            cpuUsages,
-		CPUUsagesFraction:    cpuUsages.calcPercentage(&_cpuLimits),
-		CPURequests:          cpuRequests,
-		CPULimits:            cpuLimits,
-		MemoryUsages:         memoryUsages,
-		MemoryUsagesFraction: memoryUsages.calcPercentage(&_memoryLimits),
-		MemoryRequests:       memoryRequests,
-		MemoryLimits:         memoryLimits,
-	}
-	return podAllocatedResources, nil
-}
+// 	podAllocatedResources := PodAllocatedResources{
+// 		CPUUsages:            cpuUsages,
+// 		CPUUsagesFraction:    cpuUsages.calcPercentage(&_cpuLimits),
+// 		CPURequests:          cpuRequests,
+// 		CPULimits:            cpuLimits,
+// 		MemoryUsages:         memoryUsages,
+// 		MemoryUsagesFraction: memoryUsages.calcPercentage(&_memoryLimits),
+// 		MemoryRequests:       memoryRequests,
+// 		MemoryLimits:         memoryLimits,
+// 	}
+// 	return podAllocatedResources, nil
+// }
 
 // PodRequestsAndLimits returns a dictionary of all defined resources summed up for all
 // containers of the pod. If pod overhead is non-nil, the pod overhead is added to the
