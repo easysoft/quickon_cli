@@ -125,8 +125,7 @@ func (fc FirewalldCheck) Check() error {
 	}
 
 	if initSystem.ServiceIsActive("firewalld") {
-		return errors.Errorf("firewalld is active, please ensure ports %v are open or your cluster may not function correctly",
-			fc.ports)
+		log.Flog.Warnf("firewalld is active, please ensure ports %v are open or your cluster may not function correctly", fc.ports)
 	}
 	return nil
 }
