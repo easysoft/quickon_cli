@@ -47,6 +47,7 @@ type Client struct {
 	actionConfig *action.Configuration
 	Namespace    string
 	settings     *cli.EnvSettings
+	log          log.Logger
 }
 
 func NewClient(config *Config) (*Client, error) {
@@ -60,6 +61,7 @@ func NewClient(config *Config) (*Client, error) {
 	}
 	client.actionConfig = actionConfig
 	client.Namespace = config.Namespace
+	client.log = log.GetInstance()
 	return client, nil
 }
 
@@ -206,26 +208,26 @@ func (c Client) UpdateRepo() error {
 		}
 		rps = append(rps, r)
 	}
-	updateCharts(rps)
+	c.updateCharts(rps)
 	return nil
 }
 
-func updateCharts(repos []*repo.ChartRepository) {
-	log.Flog.Debug("Hang tight while we grab the latest from your chart repositories...")
+func (c Client) updateCharts(repos []*repo.ChartRepository) {
+	c.log.Debug("Hang tight while we grab the latest from your chart repositories...")
 	var wg sync.WaitGroup
 	for _, re := range repos {
 		wg.Add(1)
 		go func(re *repo.ChartRepository) {
 			defer wg.Done()
 			if _, err := re.DownloadIndexFile(); err != nil {
-				log.Flog.Errorf("...Unable to get an update from the %q chart repository (%s):\n\t%s", re.Config.Name, re.Config.URL, err)
+				c.log.Errorf("...Unable to get an update from the %q chart repository (%s):\n\t%s", re.Config.Name, re.Config.URL, err)
 			} else {
-				log.Flog.Debugf("...Successfully got an update from the %q chart repository", re.Config.Name)
+				c.log.Debugf("...Successfully got an update from the %q chart repository", re.Config.Name)
 			}
 		}(re)
 	}
 	wg.Wait()
-	log.Flog.Debug("Update Complete. ⎈ Happy Helming!⎈ ")
+	c.log.Debug("Update Complete. ⎈ Happy Helming!⎈ ")
 }
 
 func (c Client) ListRepo() ([]*repo.Entry, error) {
@@ -296,7 +298,7 @@ func (c Client) AddRepo(name, url, username, password string) error {
 	if err == nil && locked {
 		defer func() {
 			if err := fileLock.Unlock(); err != nil {
-				log.Flog.Errorf("addRepo fileLock.Unlock failed, error: %s", err.Error())
+				c.log.Errorf("addRepo fileLock.Unlock failed, error: %s", err.Error())
 			}
 		}()
 	}

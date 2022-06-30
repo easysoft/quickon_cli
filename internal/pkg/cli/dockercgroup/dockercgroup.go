@@ -12,9 +12,10 @@ import (
 )
 
 func main() {
+	log := log.GetInstance()
 	if err := autodetect.VerifyDockerDaemon(); err != nil {
-		log.Flog.Fatal(err)
+		log.Fatal(err)
 		return
 	}
-	log.Flog.Done("docker daemon setting is ok")
+	log.Done("docker daemon setting is ok")
 }

@@ -21,7 +21,7 @@ import (
 	"github.com/containerd/continuity/fs"
 	"github.com/easysoft/qcadmin/common"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
-	"github.com/ergoapi/log"
+	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/ergoapi/util/validation"
 	"github.com/ergoapi/util/zos"
 	"github.com/mattn/go-isatty"

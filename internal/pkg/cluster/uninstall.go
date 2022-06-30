@@ -12,13 +12,12 @@ import (
 
 	"github.com/easysoft/qcadmin/common"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/ergoapi/util/file"
 )
 
 func (p *Cluster) Uninstall() error {
 	if !file.CheckFileExists(common.GetDefaultConfig()) {
-		log.Flog.Done("uninstall cluster success")
+		p.Log.Done("uninstall cluster success")
 		return nil
 	}
 	var uninstallFile string
@@ -32,7 +31,7 @@ func (p *Cluster) Uninstall() error {
 	}
 
 	uninstallShell := fmt.Sprintf("%s/hack/manifests/scripts/%s", common.GetDefaultDataDir(), uninstallFile)
-	log.Flog.Debugf("gen %s uninstall script: %v", mode, uninstallShell)
+	p.Log.Debugf("gen %s uninstall script: %v", mode, uninstallShell)
 	// 移除qcadmin初始化文件
 	if err := qcexec.RunCmd("/bin/bash", uninstallShell, os.Args[0]); err != nil {
 		return err

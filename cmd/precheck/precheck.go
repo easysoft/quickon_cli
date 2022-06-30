@@ -18,7 +18,8 @@ type PreCheck struct {
 }
 
 func (pc PreCheck) Run() error {
-	log.Flog.Info("start pre-flight checks")
+	log := log.GetInstance()
+	log.Info("start pre-flight checks")
 	if err := preflight.RunInitNodeChecks(utilsexec.New(), &types.Metadata{
 		ServiceCidr: "10.100.0.0/16",
 		ClusterCidr: "10.101.0.0/16",

@@ -44,7 +44,7 @@ func matchExecutableName(cmd, target string) bool {
 	return false
 }
 
-func unarchiveTar(src io.Reader, url, cmd string) (io.Reader, error) {
+func unarchiveTar(log log.Logger, src io.Reader, url, cmd string) (io.Reader, error) {
 	t := tar.NewReader(src)
 	for {
 		h, err := t.Next()
@@ -56,7 +56,7 @@ func unarchiveTar(src io.Reader, url, cmd string) (io.Reader, error) {
 		}
 		_, name := filepath.Split(h.Name)
 		if matchExecutableName(cmd, name) {
-			log.Flog.Debugf("executable file %s was found in tar archive", h.Name)
+			log.Debugf("executable file %s was found in tar archive", h.Name)
 			return t, nil
 		}
 	}
@@ -68,9 +68,9 @@ func unarchiveTar(src io.Reader, url, cmd string) (io.Reader, error) {
 // automatically detected from 'url' parameter, which represents the URL of asset.
 // This returns a reader for the uncompressed command given by 'cmd'. '.zip',
 // '.tar.gz', '.tar.xz', '.tgz', '.gz' and '.xz' are supported.
-func UncompressCommand(src io.Reader, url, cmd string) (io.Reader, error) {
+func UncompressCommand(log log.Logger, src io.Reader, url, cmd string) (io.Reader, error) {
 	if strings.HasSuffix(url, ".zip") {
-		log.Flog.Debug("uncompressing zip file", url)
+		log.Debug("uncompressing zip file", url)
 
 		// Zip format requires its file size for uncompressing.
 		// So we need to read the HTTP response into a buffer at first.
@@ -88,23 +88,23 @@ func UncompressCommand(src io.Reader, url, cmd string) (io.Reader, error) {
 		for _, file := range z.File {
 			_, name := filepath.Split(file.Name)
 			if !file.FileInfo().IsDir() && matchExecutableName(cmd, name) {
-				log.Flog.Debug("executable file", file.Name, "was found in zip archive")
+				log.Debug("executable file", file.Name, "was found in zip archive")
 				return file.Open()
 			}
 		}
 
 		return nil, fmt.Errorf("File '%s' for the command is not found in %s", cmd, url)
 	} else if strings.HasSuffix(url, ".tar.gz") || strings.HasSuffix(url, ".tgz") {
-		log.Flog.Debug("uncompressing tar.gz file", url)
+		log.Debug("uncompressing tar.gz file", url)
 
 		gz, err := gzip.NewReader(src)
 		if err != nil {
 			return nil, fmt.Errorf("Failed to uncompress .tar.gz file: %s", err)
 		}
 
-		return unarchiveTar(gz, url, cmd)
+		return unarchiveTar(log, gz, url, cmd)
 	} else if strings.HasSuffix(url, ".gzip") || strings.HasSuffix(url, ".gz") {
-		log.Flog.Debug("uncompressing gzip file", url)
+		log.Debug("uncompressing gzip file", url)
 
 		r, err := gzip.NewReader(src)
 		if err != nil {
@@ -116,29 +116,29 @@ func UncompressCommand(src io.Reader, url, cmd string) (io.Reader, error) {
 			return nil, fmt.Errorf("File name '%s' does not match to command '%s' found in %s", name, cmd, url)
 		}
 
-		log.Flog.Debug("executable file", name, "was found in gzip file")
+		log.Debug("executable file", name, "was found in gzip file")
 		return r, nil
 	} else if strings.HasSuffix(url, ".tar.xz") {
-		log.Flog.Debug("uncompressing tar.xz file", url)
+		log.Debug("uncompressing tar.xz file", url)
 
 		xzip, err := xz.NewReader(src)
 		if err != nil {
 			return nil, fmt.Errorf("failed to uncompress .tar.xz file: %s", err)
 		}
 
-		return unarchiveTar(xzip, url, cmd)
+		return unarchiveTar(log, xzip, url, cmd)
 	} else if strings.HasSuffix(url, ".xz") {
-		log.Flog.Debug("uncompressing xzip file", url)
+		log.Debug("uncompressing xzip file", url)
 
 		xzip, err := xz.NewReader(src)
 		if err != nil {
 			return nil, fmt.Errorf("failed to uncompress xzip file downloaded from %s: %s", url, err)
 		}
 
-		log.Flog.Debug("uncompressed file from xzip is assumed to be an executable", cmd)
+		log.Debug("uncompressed file from xzip is assumed to be an executable", cmd)
 		return xzip, nil
 	}
 
-	log.Flog.Debug("uncompression is not needed", url)
+	log.Debug("uncompression is not needed", url)
 	return src, nil
 }

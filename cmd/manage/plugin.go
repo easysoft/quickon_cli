@@ -13,7 +13,6 @@ import (
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	pluginapi "github.com/easysoft/qcadmin/internal/pkg/plugin"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/internal/pkg/util/output"
 	"github.com/easysoft/qcadmin/internal/static/deploy"
 	"github.com/gosuri/uitable"
@@ -107,8 +106,7 @@ func installPluginCmd() *cobra.Command {
 			}
 			c, err := k8s.NewClient("", "")
 			if err != nil {
-				log.Flog.Fatal("connect k8s failed")
-				return nil
+				return err
 			}
 			ps.Client = c
 			return ps.Install()
@@ -130,8 +128,7 @@ func unInstallPluginCmd() *cobra.Command {
 			}
 			c, err := k8s.NewClient("", "")
 			if err != nil {
-				log.Flog.Fatal("connect k8s failed")
-				return nil
+				return err
 			}
 			ps.Client = c
 			return ps.UnInstall()

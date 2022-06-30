@@ -23,16 +23,17 @@ import (
 )
 
 func GetAll() ([]Meta, error) {
+	log := log.GetInstance()
 	var plugins []Meta
 	pf := fmt.Sprintf("%s/hack/manifests/plugins/plugins.json", common.GetDefaultDataDir())
-	log.Flog.Debug("load local plugin config from", pf)
+	log.Debug("load local plugin config from", pf)
 	content, err := ioutil.ReadFile(pf)
 	if err != nil {
 		return nil, err
 	}
 	err = json.Unmarshal(content, &plugins)
 	if err != nil {
-		log.Flog.Errorf("unmarshal plugin meta failed: %v", err)
+		log.Errorf("unmarshal plugin meta failed: %v", err)
 		return nil, err
 	}
 	return plugins, nil
@@ -51,6 +52,7 @@ func GetMaps() (map[string]Meta, error) {
 }
 
 func GetMeta(args ...string) (Item, error) {
+	log := log.GetInstance()
 	ps, err := GetMaps()
 	if err != nil {
 		return Item{}, err
@@ -81,10 +83,11 @@ func GetMeta(args ...string) (Item, error) {
 			}
 		}
 		if !exist {
-			log.Flog.Warnf("%s not found %s, will use default: %s", t, name, v.Default)
+			log.Warnf("%s not found %s, will use default: %s", t, name, v.Default)
 			return GetMeta(t, v.Default)
 		}
-		log.Flog.Infof("install %s plugin: %s", t, name)
+		log.Infof("install %s plugin: %s", t, name)
+		plugin.log = log
 		return plugin, nil
 	}
 	return Item{}, fmt.Errorf("plugin %s not found", t)
@@ -95,10 +98,10 @@ func (p *Item) UnInstall() error {
 	_, err := p.Client.GetSecret(context.TODO(), common.DefaultSystem, pluginName, metav1.GetOptions{})
 	if err != nil {
 		if errors.IsNotFound(err) {
-			log.Flog.Warnf("plugin %s is already uninstalled", p.Type)
+			p.log.Warnf("plugin %s is already uninstalled", p.Type)
 			return nil
 		}
-		log.Flog.Fatalf("get plugin secret failed: %v", err)
+		p.log.Fatalf("get plugin secret failed: %v", err)
 		return nil
 	}
 	// #nosec
@@ -106,18 +109,18 @@ func (p *Item) UnInstall() error {
 
 		applycmd := qcexec.Command(os.Args[0], "experimental", "helm", "delete", p.Type, "-n", common.DefaultSystem)
 		if output, err := applycmd.CombinedOutput(); err != nil {
-			log.Flog.Errorf("helm uninstall %s plugin %s failed: %s", p.Type, p.Name, string(output))
+			p.log.Errorf("helm uninstall %s plugin %s failed: %s", p.Type, p.Name, string(output))
 			return err
 		}
 	} else {
 		// #nosec
 		applycmd := qcexec.Command(os.Args[0], "experimental", "kubectl", "delete", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", common.DefaultSystem)
 		if output, err := applycmd.CombinedOutput(); err != nil {
-			log.Flog.Errorf("kubectl uninstall %s plugin %s failed: %s", p.Type, p.Name, string(output))
+			p.log.Errorf("kubectl uninstall %s plugin %s failed: %s", p.Type, p.Name, string(output))
 			return err
 		}
 	}
-	log.Flog.Donef("uninstall %s plugin done", p.Type)
+	p.log.Donef("uninstall %s plugin done", p.Type)
 	p.Client.DeleteSecret(context.TODO(), common.DefaultSystem, pluginName, metav1.DeleteOptions{})
 	return nil
 }
@@ -126,29 +129,29 @@ func (p *Item) Install() error {
 	pluginName := fmt.Sprintf("qc-plugin-%s", p.Type)
 	_, err := p.Client.GetSecret(context.TODO(), common.DefaultSystem, pluginName, metav1.GetOptions{})
 	if err == nil {
-		log.Flog.Warnf("plugin %s is already installed", p.Type)
+		p.log.Warnf("plugin %s is already installed", p.Type)
 		return nil
 	}
 	if !errors.IsNotFound(err) {
-		log.Flog.Debugf("get plugin secret failed: %v", err)
+		p.log.Debugf("get plugin secret failed: %v", err)
 		return fmt.Errorf("plugin %s install failed", p.Name)
 	}
 	if p.Tool == "helm" {
 		applycmd := qcexec.Command(os.Args[0], "experimental", "helm", "upgrade", "--name", p.Type, "--repo", common.DefaultHelmRepoName, "--chart", p.Path, "--namespace", common.DefaultSystem)
 		if output, err := applycmd.CombinedOutput(); err != nil {
-			log.Flog.Errorf("helm install %s plugin %s failed: %s", p.Type, p.Name, string(output))
+			p.log.Errorf("helm install %s plugin %s failed: %s", p.Type, p.Name, string(output))
 			return err
 		}
 	} else {
 		// #nosec
 		applycmd := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", common.DefaultSystem)
 		if output, err := applycmd.CombinedOutput(); err != nil {
-			log.Flog.Errorf("kubectl install %s plugin %s failed: %s", p.Type, p.Name, string(output))
+			p.log.Errorf("kubectl install %s plugin %s failed: %s", p.Type, p.Name, string(output))
 			return err
 		}
 	}
 
-	log.Flog.Donef("upgrade install %s plugin %s done", p.Type, p.Name)
+	p.log.Donef("upgrade install %s plugin %s done", p.Type, p.Name)
 	plugindata := map[string]string{
 		"type":       p.Type,
 		"name":       p.Name,

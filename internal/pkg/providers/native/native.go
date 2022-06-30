@@ -15,7 +15,6 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/providers"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/internal/pkg/util/preflight"
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/zos"
@@ -92,7 +91,7 @@ func (p *Native) GetProviderName() string {
 
 // CreateCluster create cluster.
 func (p *Native) CreateCluster() (err error) {
-	log.Flog.Info("start init cluster")
+	p.Log.Info("start init cluster")
 	return p.InitCluster()
 }
 
@@ -107,23 +106,23 @@ func (p *Native) InitQucheng() error {
 
 func (p *Native) CreateCheck(skip bool) error {
 	if skip {
-		log.Flog.Warn("skip precheck")
+		p.Log.Warn("skip precheck")
 		return nil
 	}
-	log.Flog.Info("start pre-flight checks")
+	p.Log.Info("start pre-flight checks")
 	if err := preflight.RunInitNodeChecks(utilsexec.New(), &p.Metadata, false); err != nil {
 		return err
 	}
-	log.Flog.Done("pre-flight checks passed")
+	p.Log.Done("pre-flight checks passed")
 	return nil
 }
 
 func (p *Native) PreSystemInit() error {
-	log.Flog.Info("start system init")
+	p.Log.Info("start system init")
 	if err := p.SystemInit(); err != nil {
 		return err
 	}
-	log.Flog.Done("system init passed")
+	p.Log.Done("system init passed")
 	return nil
 }
 
@@ -156,11 +155,11 @@ func (p *Native) Show() {
 		cfg.SaveConfig()
 	}
 
-	log.Flog.Info("----------------------------")
+	p.Log.Info("----------------------------")
 	if len(domain) > 0 {
-		log.Flog.Donef("web:: %s", fmt.Sprintf("http://console.%s", domain))
+		p.Log.Donef("web:: %s", fmt.Sprintf("http://console.%s", domain))
 	} else {
-		log.Flog.Donef("web:: %s", fmt.Sprintf("http://%s:32379", loginip))
+		p.Log.Donef("web:: %s", fmt.Sprintf("http://%s:32379", loginip))
 	}
-	log.Flog.Donef("docs: %s", common.QuchengDocs)
+	p.Log.Donef("docs: %s", common.QuchengDocs)
 }

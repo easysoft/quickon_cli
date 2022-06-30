@@ -11,12 +11,11 @@ import (
 
 	"github.com/easysoft/qcadmin/common"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 )
 
 func (p *Cluster) SystemInit() (err error) {
 	initShell := fmt.Sprintf("%s/hack/manifests/scripts/init.sh", common.GetDefaultDataDir())
-	log.Flog.Debugf("gen init shell: %v", initShell)
+	p.Log.Debugf("gen init shell: %v", initShell)
 	if err := qcexec.RunCmd("/bin/bash", initShell); err != nil {
 		return err
 	}

@@ -20,7 +20,10 @@ import (
 )
 
 func newCmdStatus() *cobra.Command {
-	var params = status.K8sStatusOption{}
+	log := log.GetInstance()
+	var params = status.K8sStatusOption{
+		Log: log,
+	}
 	cmd := &cobra.Command{
 		Use:   "status",
 		Short: "Display status",
@@ -28,7 +31,7 @@ func newCmdStatus() *cobra.Command {
 		PreRun: func(cmd *cobra.Command, args []string) {
 			defaultArgs := os.Args
 			if !file.CheckFileExists(common.GetDefaultKubeConfig()) {
-				log.Flog.Warnf("not found cluster. just run %s init cluster", color.SGreen("%s init", defaultArgs[0]))
+				log.Warnf("not found cluster. just run %s init cluster", color.SGreen("%s init", defaultArgs[0]))
 				os.Exit(0)
 			}
 		},
@@ -41,7 +44,7 @@ func newCmdStatus() *cobra.Command {
 			// Report the most recent status even if an error occurred.
 			s.Format()
 			if err != nil {
-				log.Flog.Fatalf("Unable to determine status:  %s", err)
+				log.Fatalf("Unable to determine status:  %s", err)
 			}
 			return err
 		},

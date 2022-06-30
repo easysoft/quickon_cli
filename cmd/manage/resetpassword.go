@@ -36,6 +36,7 @@ type Body struct {
 }
 
 func NewResetPassword() *cobra.Command {
+	log := log.GetInstance()
 	var password string
 	rp := &cobra.Command{
 		Use:     "reset-password",
@@ -47,12 +48,12 @@ func NewResetPassword() *cobra.Command {
 			// 获取节点
 			k8sClient, err := k8s.NewSimpleClient()
 			if err != nil {
-				log.Flog.Errorf("k8s client err: %v", err)
+				log.Errorf("k8s client err: %v", err)
 				return
 			}
 			cneapiDeploy, err := k8sClient.GetDeployment(context.Background(), common.DefaultSystem, "cne-api", metav1.GetOptions{})
 			if err != nil {
-				log.Flog.Errorf("get k8s deploy err: %v", err)
+				log.Errorf("get k8s deploy err: %v", err)
 				return
 			}
 			apiToken := ""
@@ -62,15 +63,15 @@ func NewResetPassword() *cobra.Command {
 					break
 				}
 			}
-			log.Flog.Debug("fetch api token")
+			log.Debug("fetch api token")
 			// 更新密码
 			if len(password) == 0 {
-				log.Flog.Warn("not found password, will generate random password")
+				log.Warn("not found password, will generate random password")
 				password = expass.SaltMd5Pass(apiToken, expass.RandomPassword(16))
 			}
-			log.Flog.Infof("update superadmin password: %s", "")
+			log.Infof("update superadmin password: %s", "")
 			client := req.C()
-			if log.Flog.GetLevel() > logrus.InfoLevel {
+			if log.GetLevel() > logrus.InfoLevel {
 				client = client.DevMode().EnableDumpAll()
 			}
 			var result Result
@@ -80,15 +81,15 @@ func NewResetPassword() *cobra.Command {
 				SetBody(&Body{Password: password}).
 				Post(fmt.Sprintf("http://%s:32379/admin-resetpassword.html", ips[0]))
 			if err != nil {
-				log.Flog.Errorf("update password failed, reason: %v", err)
+				log.Errorf("update password failed, reason: %v", err)
 				return
 			}
 			if !resp.IsSuccess() {
-				log.Flog.Errorf("update password failed, reason: bad response status %v", resp.Status)
+				log.Errorf("update password failed, reason: bad response status %v", resp.Status)
 				return
 			}
 			json.Unmarshal([]byte(resp.String()), &result)
-			log.Flog.Donef("update superadmin %s password %s success.", color.SGreen(result.Data.Account), color.SGreen(password))
+			log.Donef("update superadmin %s password %s success.", color.SGreen(result.Data.Account), color.SGreen(password))
 		},
 	}
 	rp.Flags().StringVarP(&password, "password", "p", "", "superadmin password")

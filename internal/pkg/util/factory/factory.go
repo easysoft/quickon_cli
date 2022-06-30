@@ -7,7 +7,7 @@
 package factory
 
 import (
-	"github.com/ergoapi/log"
+	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 )
 
 // Factory is the main interface for various client creations

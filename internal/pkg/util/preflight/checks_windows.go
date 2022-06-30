@@ -54,6 +54,7 @@ func (ipuc IsPrivilegedUserCheck) Check() error {
 // Check number of memory required by kubeadm
 // No-op for Windows.
 func (mc MemCheck) Check() error {
-	log.Flog.Warnf("validating number of Memory is not supported on Windows, Skipping")
+	log := log.GetInstance()
+	log.Warnf("validating number of Memory is not supported on Windows, Skipping")
 	return nil
 }

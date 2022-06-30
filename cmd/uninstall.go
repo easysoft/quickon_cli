@@ -13,17 +13,18 @@ import (
 )
 
 func newCmdUninstall() *cobra.Command {
+	log := log.GetInstance()
 	return &cobra.Command{
 		Use:   "uninstall",
 		Short: "Uninstall",
 		Run: func(cmd *cobra.Command, args []string) {
-			log.Flog.Info("start uninstall cluster")
+			log.Info("start uninstall cluster")
 			c := cluster.NewCluster()
 			err := c.Uninstall()
 			if err != nil {
-				log.Flog.Fatalf("uninstall cluster failed, reason: %v", err)
+				log.Fatalf("uninstall cluster failed, reason: %v", err)
 			}
-			log.Flog.Info("uninstall cluster success")
+			log.Info("uninstall cluster success")
 		},
 	}
 }

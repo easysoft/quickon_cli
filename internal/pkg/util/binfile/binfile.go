@@ -19,7 +19,7 @@ import (
 type Meta struct{}
 
 // func (p *Meta) unpack(binName string) error {
-// 	log.Flog.Debugf("unpacking %s-linux-%s", binName, runtime.GOARCH)
+// 	log.Debugf("unpacking %s-linux-%s", binName, runtime.GOARCH)
 // 	sourcefile, err := bin.BinFS.ReadFile(fmt.Sprintf("%s-linux-%s", binName, runtime.GOARCH))
 // 	if err != nil {
 // 		return err
@@ -32,7 +32,7 @@ type Meta struct{}
 // 	if _, err := io.Copy(installFile, bytes.NewReader(sourcefile)); err != nil {
 // 		return err
 // 	}
-// 	log.Flog.Donef("unpack %s complete", binName)
+// 	log.Donef("unpack %s complete", binName)
 // 	return nil
 // }
 
@@ -55,12 +55,12 @@ func (p *Meta) LoadLocalBin(binName string) (string, error) {
 }
 
 // func (p *Meta) download(binName string) error {
-// 	log.Flog.Debugf("unpack %s bin failed, will download from remote.", binName)
+// 	log.Debugf("unpack %s bin failed, will download from remote.", binName)
 // 	binPath := fmt.Sprintf("/usr/local/bin/%s", binName)
 // 	if _, err := downloader.Download(common.GetBinURL(binName), binPath); err != nil {
 // 		return err
 // 	}
 // 	os.Chmod(binPath, common.FileMode0755)
-// 	log.Flog.Donef("download %s complete", binName)
+// 	log.Donef("download %s complete", binName)
 // 	return nil
 // }

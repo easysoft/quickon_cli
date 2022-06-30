@@ -61,16 +61,17 @@ func newCmdJoin(f factory.Factory) *cobra.Command {
 }
 
 func newCmdGenJoin() *cobra.Command {
+	log := log.GetInstance()
 	genjoin := &cobra.Command{
 		Use:   "gen",
 		Short: "Generate a join command",
 		Run: func(cmd *cobra.Command, args []string) {
 			cfg, _ := config.LoadConfig()
 			if cfg == nil {
-				log.Flog.Fatalf("only support run firstnode")
+				log.Fatalf("only support run firstnode")
 				return
 			}
-			log.Flog.Infof("\tjoin command: %s join --cne-api %s --cne-token %s", os.Args[0], cfg.InitNode, cfg.Token)
+			log.Infof("\tjoin command: %s join --cne-api %s --cne-token %s", os.Args[0], cfg.InitNode, cfg.Token)
 		},
 	}
 	return genjoin

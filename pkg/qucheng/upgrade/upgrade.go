@@ -16,6 +16,7 @@ import (
 
 type Option struct {
 	client *helm.Client
+	log    log.Logger
 }
 
 func (opt *Option) Fetch(ns, name string) (ComponentVersion, error) {
@@ -29,25 +30,25 @@ func (opt *Option) Fetch(ns, name string) (ComponentVersion, error) {
 	opt.client = helmClient
 	// update helm repo cache
 	if err := opt.client.UpdateRepo(); err != nil {
-		log.Flog.Warn("update helm repo failed")
+		opt.log.Warn("update helm repo failed")
 	}
 	// TODO fetch local version
 	localcv, localav, err := opt.fetchDeploy(ns, name)
 	if err != nil {
-		log.Flog.Debugf("fecth local %s failed, reason: %v", name, err)
+		opt.log.Debugf("fecth local %s failed, reason: %v", name, err)
 	}
 	cmv.Deploy.AppVersion = localav
 	cmv.Deploy.ChartVersion = localcv
 	// remote version
 	remotecv, remoteav, err := opt.fetchCR(ns, name)
 	if err != nil {
-		log.Flog.Debugf("fecth remote %s failed, reason: %v", name, err)
+		opt.log.Debugf("fecth remote %s failed, reason: %v", name, err)
 	}
 	cmv.Remote.AppVersion = remoteav
 	cmv.Remote.ChartVersion = remotecv
 	// can upgrade
 	cmv.CanUpgrade = version.LT(cmv.Remote.ChartVersion, cmv.Deploy.ChartVersion)
-	log.Flog.Debugf("local: %s(%s), remote : %s(%s), upgrade: %v", localcv, localav, remotecv, remoteav, cmv.CanUpgrade)
+	opt.log.Debugf("local: %s(%s), remote : %s(%s), upgrade: %v", localcv, localav, remotecv, remoteav, cmv.CanUpgrade)
 	return cmv, err
 }
 
@@ -77,10 +78,10 @@ func (opt *Option) fetchCR(ns, name string) (string, string, error) {
 	return last.Chart.Version, last.Chart.AppVersion, nil
 }
 
-func Upgrade(flagVersion string) error {
+func Upgrade(flagVersion string, log log.Logger) error {
 	helmClient, _ := helm.NewClient(&helm.Config{Namespace: common.DefaultSystem})
 	if err := helmClient.UpdateRepo(); err != nil {
-		log.Flog.Errorf("update repo failed, reason: %v", err)
+		log.Errorf("update repo failed, reason: %v", err)
 		return err
 	}
 
@@ -93,22 +94,24 @@ func Upgrade(flagVersion string) error {
 		if cv.CanUpgrade {
 			defaultValue, _ := helmClient.GetValues(cv.Name)
 			if _, err := helmClient.Upgrade(cv.Name, common.DefaultHelmRepoName, cv.Name, "", defaultValue); err != nil {
-				log.Flog.Warnf("upgrade %s failed, reason: %v", cv.Name, err)
+				log.Warnf("upgrade %s failed, reason: %v", cv.Name, err)
 			} else {
-				log.Flog.Donef("upgrade %s success", cv.Name)
+				log.Donef("upgrade %s success", cv.Name)
 				count++
 			}
 		}
 	}
 	if count == 0 {
-		log.Flog.Done("the current version is the latest")
+		log.Done("the current version is the latest")
 	}
 	return nil
 }
 
 func QuchengVersion() (Version, error) {
 	v := Version{}
-	opt := Option{}
+	opt := Option{
+		log: log.GetInstance(),
+	}
 	// if uiVersion, err := opt.Fetch(common.DefaultSystem, "cne-api"); err == nil {
 	// 	v.Components = append(v.Components, uiVersion)
 	// }

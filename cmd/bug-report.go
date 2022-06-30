@@ -29,7 +29,8 @@ func newCmdBugReport() *cobra.Command {
 }
 
 func bugReport() error {
-	log.Flog.Info("Issue: 🐛Bug Report: https://github.com/easysoft/qucheng_cli/issues/new?assignees=&labels=&template=bug-report.md")
+	log := log.GetInstance()
+	log.Info("Issue: 🐛Bug Report: https://github.com/easysoft/qucheng_cli/issues/new?assignees=&labels=&template=bug-report.md")
 	// TODO 详细信息
 	sprintf := func(key, val string) string {
 		return fmt.Sprintf("%-24s%s\n", key, val)

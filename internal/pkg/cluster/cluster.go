@@ -39,9 +39,11 @@ type Cluster struct {
 	types.Status   `json:"status"`
 	M              *sync.Map
 	KubeClient     *k8s.Client
+	Log            log.Logger
 }
 
 func NewCluster() *Cluster {
+	log := log.GetFileLogger(fmt.Sprintf("cluster.init.%s.log", ztime.GetTodayHour()))
 	return &Cluster{
 		Metadata: types.Metadata{
 			ClusterCidr:    "10.42.0.0/16",
@@ -50,7 +52,8 @@ func NewCluster() *Cluster {
 			QuchengVersion: "stable",
 			DisableIngress: false,
 		},
-		M: new(syncmap.Map),
+		M:   new(syncmap.Map),
+		Log: log,
 	}
 }
 
@@ -150,22 +153,22 @@ func (p *Cluster) InitCluster() error {
 		return err
 	}
 	if p.Metadata.DisableIngress {
-		log.Flog.Warn("disable ingress controller")
+		p.Log.Warn("disable ingress controller")
 	} else {
-		log.Flog.Debug("start deploy ingress plugins: nginx-ingress-controller")
+		p.Log.Debug("start deploy ingress plugins: nginx-ingress-controller")
 		localp, _ := pluginapi.GetMeta("ingress", "nginx-ingress-controller")
 		localp.Client = p.KubeClient
 		if err := localp.Install(); err != nil {
-			log.Flog.Warnf("deploy ingress plugins: nginx-ingress-controller failed, reason: %v", err)
+			p.Log.Warnf("deploy ingress plugins: nginx-ingress-controller failed, reason: %v", err)
 		} else {
-			log.Flog.Done("deployed ingress plugins: nginx-ingress-controller success")
+			p.Log.Done("deployed ingress plugins: nginx-ingress-controller success")
 		}
 	}
 	return nil
 }
 
 func (p *Cluster) InitK3sCluster() error {
-	log.Flog.Debug("executing init k3s cluster logic...")
+	p.Log.Debug("executing init k3s cluster logic...")
 	// Download k3s.
 	getbin := binfile.Meta{}
 	k3sbin, err := getbin.LoadLocalBin(common.K3sBinName)
@@ -217,44 +220,44 @@ func (p *Cluster) InitK3sCluster() error {
 	ds := new(initsystem.DaemonService)
 	s, err := service.New(ds, svcConfig)
 	if err != nil {
-		log.Flog.Errorf("create k3s service failed: %s", err)
+		p.Log.Errorf("create k3s service failed: %s", err)
 		return err
 	}
 	if err := s.Install(); err != nil {
-		log.Flog.Errorf("install k3s service failed: %s", err)
+		p.Log.Errorf("install k3s service failed: %s", err)
 		return err
 	}
-	log.Flog.Done("installed k3s service success")
+	p.Log.Done("installed k3s service success")
 	// Start k3s service.
 	if err := s.Start(); err != nil {
-		log.Flog.Errorf("start k3s service failed: %s", err)
+		p.Log.Errorf("start k3s service failed: %s", err)
 		return err
 	}
-	log.Flog.Done("started k3s service success")
+	p.Log.Done("started k3s service success")
 	if !excmd.CheckBin("kubectl") {
 		os.Symlink(k3sbin, common.KubectlBinPath)
-		log.Flog.Done("create kubectl soft link")
+		p.Log.Done("create kubectl soft link")
 	}
-	log.Flog.StartWait("waiting for k3s cluster to be ready...")
+	p.Log.StartWait("waiting for k3s cluster to be ready...")
 	t1 := time.Now()
 	for {
 		if file.CheckFileExists(common.K3sKubeConfig) {
 			break
 		}
 		time.Sleep(time.Second * 5)
-		log.Flog.Info(".")
+		p.Log.Info(".")
 	}
-	log.Flog.StopWait()
+	p.Log.StopWait()
 	t2 := time.Now()
-	log.Flog.Donef("k3s cluster ready, cost: %v", t2.Sub(t1))
+	p.Log.Donef("k3s cluster ready, cost: %v", t2.Sub(t1))
 	d := common.GetDefaultKubeConfig()
 	os.Symlink(common.K3sKubeConfig, d)
-	log.Flog.Donef("create kubeconfig soft link %v ---> %v", common.K3sKubeConfig, d)
+	p.Log.Donef("create kubeconfig soft link %v ---> %v", common.K3sKubeConfig, d)
 	kclient, _ := k8s.NewSimpleClient()
 	if kclient != nil {
 		_, err = kclient.CreateNamespace(context.TODO(), common.DefaultSystem, metav1.CreateOptions{})
 		if err == nil {
-			log.Flog.Donef("create namespace %s", common.DefaultSystem)
+			p.Log.Donef("create namespace %s", common.DefaultSystem)
 		}
 		p.KubeClient = kclient
 	}
@@ -328,7 +331,7 @@ func (p *Cluster) configServerOptions() []string {
 }
 
 func (p *Cluster) JoinCluster() error {
-	log.Flog.Debug("executing init k3s cluster logic...")
+	p.Log.Debug("executing init k3s cluster logic...")
 	// Download k3s.
 	getbin := binfile.Meta{}
 	k3sbin, err := getbin.LoadLocalBin(common.K3sBinName)
@@ -380,20 +383,20 @@ func (p *Cluster) JoinCluster() error {
 	ds := new(initsystem.DaemonService)
 	s, err := service.New(ds, svcConfig)
 	if err != nil {
-		log.Flog.Errorf("create k3s agent failed: %s", err)
+		p.Log.Errorf("create k3s agent failed: %s", err)
 		return err
 	}
 	if err := s.Install(); err != nil {
-		log.Flog.Errorf("install k3s agent failed: %s", err)
+		p.Log.Errorf("install k3s agent failed: %s", err)
 		return err
 	}
-	log.Flog.Done("installed k3s agent success")
+	p.Log.Done("installed k3s agent success")
 	// Start k3s service.
 	if err := s.Start(); err != nil {
-		log.Flog.Errorf("start k3s agent failed: %s", err)
+		p.Log.Errorf("start k3s agent failed: %s", err)
 		return err
 	}
-	log.Flog.Done("started k3s agent success")
+	p.Log.Done("started k3s agent success")
 	return nil
 }
 
@@ -411,12 +414,12 @@ func (p *Cluster) configAgentOptions() []string {
 	var args []string
 
 	sever := p.getEnv(p.CNEAPI, "CNE_API", "")
-	log.Flog.Debug("agent: %s, %s", p.CNEAPI, sever)
+	p.Log.Debug("agent: %s, %s", p.CNEAPI, sever)
 	if len(sever) > 0 {
 		args = append(args, fmt.Sprintf("--server=https://%s:6443", sever))
 	}
 	token := p.getEnv(p.CNEToken, "CNE_TOKEN", "")
-	log.Flog.Debug("agent: %s, %s", p.CNEToken, token)
+	p.Log.Debug("agent: %s, %s", p.CNEToken, token)
 	if len(token) > 0 {
 		args = append(args, "--token="+token)
 	}
@@ -437,19 +440,19 @@ func (p *Cluster) Ready() {
 		return p.ready(ctx)
 	})
 	if err := clusterWaitGroup.Wait(); err != nil {
-		log.Flog.Error(err)
+		p.Log.Error(err)
 	}
 }
 
 func (p *Cluster) ready(ctx context.Context) error {
 	t1 := ztime.NowUnix()
 	client := req.C().SetUserAgent(common.GetUG()).SetTimeout(time.Second * 1)
-	log.Flog.StartWait("waiting for qucheng ready")
+	p.Log.StartWait("waiting for qucheng ready")
 	status := false
 	for {
 		t2 := ztime.NowUnix() - t1
 		if t2 > 180 {
-			log.Flog.Warnf("waiting for qucheng ready 3min timeout: check your network or storage. after install you can run: q status")
+			p.Log.Warnf("waiting for qucheng ready 3min timeout: check your network or storage. after install you can run: q status")
 			break
 		}
 		_, err := client.R().Get(fmt.Sprintf("http://%s:32379", exnet.LocalIPs()[0]))
@@ -459,9 +462,9 @@ func (p *Cluster) ready(ctx context.Context) error {
 		}
 		time.Sleep(time.Second * 10)
 	}
-	log.Flog.StopWait()
+	p.Log.StopWait()
 	if status {
-		log.Flog.Donef("qucheng ready, cost: %v", time.Since(time.Unix(t1, 0)))
+		p.Log.Donef("qucheng ready, cost: %v", time.Since(time.Unix(t1, 0)))
 	}
 	return nil
 }

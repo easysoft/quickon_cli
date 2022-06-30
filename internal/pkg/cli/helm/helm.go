@@ -10,7 +10,6 @@ import (
 	"fmt"
 
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/spf13/cobra"
 )
 
@@ -37,7 +36,6 @@ func repoUpdate() *cobra.Command {
 				return fmt.Errorf("helm create go client err: %v", err)
 			}
 			hc.UpdateRepo()
-			log.Flog.Done("Update Complete. ⎈ Happy Helming!⎈ ")
 			return nil
 		},
 	}
@@ -81,7 +79,6 @@ func repoDel() *cobra.Command {
 			if err := hc.RemoveRepo(name); err != nil {
 				return err
 			}
-			log.Flog.Donef("Remove Helm Repo %s Complete. ⎈ Happy Helming!⎈ ", name)
 			return nil
 		},
 	}

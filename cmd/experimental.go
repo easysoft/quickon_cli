@@ -8,18 +8,19 @@ package cmd
 
 import (
 	"github.com/easysoft/qcadmin/cmd/experimental"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/spf13/cobra"
 )
 
-func NewCmdExperimental() *cobra.Command {
+func NewCmdExperimental(f factory.Factory) *cobra.Command {
 	experimentalCmd := &cobra.Command{
 		Use:     "experimental",
 		Aliases: []string{"x", "exp"},
 		Short:   "Experimental commands that may be modified or deprecated",
 		Hidden:  true,
 	}
-	experimentalCmd.AddCommand(experimental.KubectlCommand())
-	experimentalCmd.AddCommand(experimental.HelmCommand())
-	experimentalCmd.AddCommand(experimental.ToolsCommand())
+	experimentalCmd.AddCommand(experimental.KubectlCommand(f))
+	experimentalCmd.AddCommand(experimental.HelmCommand(f))
+	experimentalCmd.AddCommand(experimental.ToolsCommand(f))
 	return experimentalCmd
 }

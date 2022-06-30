@@ -28,6 +28,7 @@ type K8sStatusOption struct {
 	WaitDuration   time.Duration
 	IgnoreWarnings bool
 	ListOutput     string
+	Log            log.Logger
 }
 
 type K8sStatusCollector struct {
@@ -82,16 +83,16 @@ func (k *K8sStatusCollector) statusIsReady(s *Status) bool {
 func (k *K8sStatusCollector) status(ctx context.Context) *Status {
 	status := newStatus(k.option.ListOutput)
 	if err := k.nodesStatus(ctx, status); err != nil {
-		log.Flog.Errorf("failed to get nodes status: %v", err)
+		k.option.Log.Errorf("failed to get nodes status: %v", err)
 	}
 	if err := k.quchengStatus(ctx, status); err != nil {
-		log.Flog.Errorf("failed to get qucheng status: %v", err)
+		k.option.Log.Errorf("failed to get qucheng status: %v", err)
 	}
 	return status
 }
 
 func (k *K8sStatusCollector) deploymentStatus(ctx context.Context, ns, name, t string, status *Status) (bool, error) {
-	log.Flog.Debugf("check cm %s status", name)
+	k.option.Log.Debugf("check cm %s status", name)
 	stateCount := PodStateCount{Type: "Deployment"}
 	d, err := k.client.GetDeployment(ctx, ns, name, metav1.GetOptions{})
 	if errors.IsNotFound(err) {
@@ -136,10 +137,10 @@ func (k *K8sStatusCollector) deploymentStatus(ctx context.Context, ns, name, t s
 	}
 	notReady := stateCount.Desired - stateCount.Ready
 	if notReady > 0 {
-		log.Flog.Warnf("%d pods of Deployment %s are not ready", notReady, name)
+		k.option.Log.Warnf("%d pods of Deployment %s are not ready", notReady, name)
 	}
 	if unavailable := stateCount.Unavailable - notReady; unavailable > 0 {
-		log.Flog.Warnf("%d pods of Deployment %s are not available", unavailable, name)
+		k.option.Log.Warnf("%d pods of Deployment %s are not available", unavailable, name)
 	}
 	return false, nil
 }
@@ -165,7 +166,7 @@ func (k *K8sStatusCollector) quchengStatus(ctx context.Context, status *Status) 
 }
 
 func (k *K8sStatusCollector) quchengPluginStatus(ctx context.Context, p plugin.Meta, status *Status) error {
-	log.Flog.Debugf("check plugin %s status", p.Type)
+	k.option.Log.Debugf("check plugin %s status", p.Type)
 	stateCount := PodStateCount{Type: "Plugin"}
 	_, err := k.client.GetSecret(ctx, common.DefaultSystem, "qc-plugin-"+p.Type, metav1.GetOptions{})
 	if err != nil {

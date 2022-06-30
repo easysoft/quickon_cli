@@ -17,6 +17,7 @@ import (
 // UpgradeCmd is a struct that defines a command call for "upgrade"
 type UpgradeCmd struct {
 	Version string
+	log     log.Logger
 }
 
 func NewUpgradeQucheg() *cobra.Command {
@@ -35,8 +36,8 @@ func NewUpgradeQucheg() *cobra.Command {
 // Run executes the command logic
 func (cmd *UpgradeCmd) Run() error {
 	// Run the upgrade command
-	log.Flog.Infof("check update...")
-	err := upgrade.Upgrade(cmd.Version)
+	cmd.log.Infof("check update...")
+	err := upgrade.Upgrade(cmd.Version, cmd.log)
 	if err != nil {
 		return fmt.Errorf("couldn't upgrade: %v", err)
 	}

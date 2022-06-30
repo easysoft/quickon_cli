@@ -20,6 +20,7 @@ import (
 )
 
 func PortForwardCommand(ctx context.Context, ns, svc string, sport, dport int) error {
+	log := log.GetInstance()
 	args := []string{
 		"experimental",
 		"kubectl",
@@ -37,7 +38,7 @@ func PortForwardCommand(ctx context.Context, ns, svc string, sport, dport int) e
 		// avoid cluttering stdout/stderr when opening the browser
 		browser.Stdout = io.Discard
 		browser.Stderr = io.Discard
-		log.Flog.Infof("Opening %q in your browser...", url)
+		log.Infof("Opening %q in your browser...", url)
 		browser.OpenURL(url)
 	}()
 	_, err := qcexec.CommandRespByte(os.Args[0], args...)

@@ -26,6 +26,7 @@ import "github.com/easysoft/qcadmin/internal/pkg/util/log"
 // Check number of memory required by kubeadm
 // No-op for Darwin (MacOS).
 func (mc MemCheck) Check() error {
-	log.Flog.Warnf("validating number of Memory is not supported on MacOS, Skipping")
+	log := log.GetInstance()
+	log.Warnf("validating number of Memory is not supported on MacOS, Skipping")
 	return nil
 }

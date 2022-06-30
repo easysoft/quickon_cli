@@ -74,7 +74,8 @@ func (sc ServiceCheck) Name() string {
 
 // Check validates if the service is enabled and active.
 func (sc ServiceCheck) Check() error {
-	log.Flog.Debugf("validating if the %q service is existed or active", sc.Service)
+	log := log.GetInstance()
+	log.Debugf("validating if the %q service is existed or active", sc.Service)
 	initSystem, err := initsystem.GetInitSystem()
 	if err != nil {
 		return err
@@ -114,7 +115,8 @@ func (FirewalldCheck) Name() string {
 
 // Check validates if the firewall is enabled and active.
 func (fc FirewalldCheck) Check() error {
-	log.Flog.Debug("validating if the firewall is enabled and active")
+	log := log.GetInstance()
+	log.Debug("validating if the firewall is enabled and active")
 	initSystem, err := initsystem.GetInitSystem()
 	if err != nil {
 		return err
@@ -125,7 +127,7 @@ func (fc FirewalldCheck) Check() error {
 	}
 
 	if initSystem.ServiceIsActive("firewalld") {
-		log.Flog.Warnf("firewalld is active, please ensure ports %v are open or your cluster may not function correctly", fc.ports)
+		log.Warnf("firewalld is active, please ensure ports %v are open or your cluster may not function correctly", fc.ports)
 	}
 	return nil
 }
@@ -146,7 +148,8 @@ func (poc PortOpenCheck) Name() string {
 
 // Check validates if the particular port is available.
 func (poc PortOpenCheck) Check() error {
-	log.Flog.Debugf("validating availability of port %d", poc.port)
+	log := log.GetInstance()
+	log.Debugf("validating availability of port %d", poc.port)
 	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", poc.port))
 	if err != nil {
 		return errors.Errorf("Port %d is in use", poc.port)
@@ -183,7 +186,8 @@ func (dac DirAvailableCheck) Name() string {
 
 // Check validates if a directory does not exist or empty.
 func (dac DirAvailableCheck) Check() error {
-	log.Flog.Debugf("validating the existence and emptiness of directory %s", dac.Path)
+	log := log.GetInstance()
+	log.Debugf("validating the existence and emptiness of directory %s", dac.Path)
 
 	// If it doesn't exist we are good:
 	if _, err := os.Stat(dac.Path); os.IsNotExist(err) {
@@ -219,7 +223,8 @@ func (fac FileAvailableCheck) Name() string {
 
 // Check validates if the given file does not already exist.
 func (fac FileAvailableCheck) Check() error {
-	log.Flog.Debugf("validating the existence of file %s", fac.Path)
+	log := log.GetInstance()
+	log.Debugf("validating the existence of file %s", fac.Path)
 
 	if _, err := os.Stat(fac.Path); err == nil {
 		return errors.Errorf("%s already exists", fac.Path)
@@ -243,7 +248,8 @@ func (fac FileExistingCheck) Name() string {
 
 // Check validates if the given file already exists.
 func (fac FileExistingCheck) Check() error {
-	log.Flog.Debugf("validating the existence of file %s", fac.Path)
+	log := log.GetInstance()
+	log.Debugf("validating the existence of file %s", fac.Path)
 
 	if _, err := os.Stat(fac.Path); err != nil {
 		return errors.Errorf("%s doesn't exist", fac.Path)
@@ -268,7 +274,8 @@ func (fcc FileContentCheck) Name() string {
 
 // Check validates if the given file contains the given content.
 func (fcc FileContentCheck) Check() error {
-	log.Flog.Debugf("validating the contents of file %s", fcc.Path)
+	log := log.GetInstance()
+	log.Debugf("validating the contents of file %s", fcc.Path)
 	f, err := os.Open(fcc.Path)
 	if err != nil {
 		return errors.Errorf("%s does not exist", fcc.Path)
@@ -308,7 +315,8 @@ func (ipc InPathCheck) Name() string {
 
 // Check validates if the given executable is present in the path.
 func (ipc InPathCheck) Check() error {
-	log.Flog.Debugf("validating the presence of executable %s", ipc.executable)
+	log := log.GetInstance()
+	log.Debugf("validating the presence of executable %s", ipc.executable)
 	_, err := ipc.exec.LookPath(ipc.executable)
 	if err != nil {
 		if ipc.mandatory {
@@ -320,7 +328,7 @@ func (ipc InPathCheck) Check() error {
 		if ipc.suggestion != "" {
 			warningMessage += fmt.Sprintf("\nSuggestion: %s", ipc.suggestion)
 		}
-		log.Flog.Warn(warningMessage)
+		log.Warn(warningMessage)
 		return nil
 	}
 	return nil
@@ -340,16 +348,17 @@ func (HostnameCheck) Name() string {
 // Check validates if hostname match dns sub domain regex.
 // Check hostname length and format
 func (hc HostnameCheck) Check() error {
-	log.Flog.Debug("checking whether the given node name is valid and reachable using net.LookupHost")
+	log := log.GetInstance()
+	log.Debug("checking whether the given node name is valid and reachable using net.LookupHost")
 	for _, msg := range validation.IsQualifiedName(hc.nodeName) {
-		log.Flog.Warnf("invalid node name format %q: %s", hc.nodeName, msg)
+		log.Warnf("invalid node name format %q: %s", hc.nodeName, msg)
 	}
 	addr, err := net.LookupHost(hc.nodeName)
 	if addr == nil {
-		log.Flog.Warnf("hostname \"%s\" could not be reached", hc.nodeName)
+		log.Warnf("hostname \"%s\" could not be reached", hc.nodeName)
 	}
 	if err != nil {
-		log.Flog.Warnf("hostname \"%s\", err: %v", hc.nodeName, err)
+		log.Warnf("hostname \"%s\", err: %v", hc.nodeName, err)
 	}
 	return nil
 }
@@ -368,7 +377,8 @@ func (hst HTTPProxyCheck) Name() string {
 
 // Check validates http connectivity type, direct or via proxy.
 func (hst HTTPProxyCheck) Check() error {
-	log.Flog.Debug("validating if the connectivity type is via proxy or direct")
+	log := log.GetInstance()
+	log.Debug("validating if the connectivity type is via proxy or direct")
 	u := &url.URL{Scheme: hst.Proto, Host: hst.Host}
 	if netutils.IsIPv6String(hst.Host) {
 		u.Host = net.JoinHostPort(hst.Host, "1234")
@@ -407,7 +417,8 @@ func (HTTPProxyCIDRCheck) Name() string {
 // Check validates http connectivity to first IP address in the CIDR.
 // If it is not directly connected and goes via proxy it will produce warning.
 func (subnet HTTPProxyCIDRCheck) Check() error {
-	log.Flog.Debug("validating http connectivity to first IP address in the CIDR")
+	log := log.GetInstance()
+	log.Debug("validating http connectivity to first IP address in the CIDR")
 	if len(subnet.CIDR) == 0 {
 		return nil
 	}
@@ -439,7 +450,7 @@ func (subnet HTTPProxyCIDRCheck) Check() error {
 		return err
 	}
 	if proxy != nil {
-		log.Flog.Warnf("connection to %q uses proxy %q. This may lead to malfunctional cluster setup. Make sure that Pod and Services IP ranges specified correctly as exceptions in proxy configuration", subnet.CIDR, proxy)
+		log.Warnf("connection to %q uses proxy %q. This may lead to malfunctional cluster setup. Make sure that Pod and Services IP ranges specified correctly as exceptions in proxy configuration", subnet.CIDR, proxy)
 	}
 	return nil
 }
@@ -454,7 +465,8 @@ func (SystemVerificationCheck) Name() string {
 
 // Check runs all individual checks
 func (sysver SystemVerificationCheck) Check() error {
-	log.Flog.Debug("running all checks")
+	log := log.GetInstance()
+	log.Debug("running all checks")
 	// Create a buffered writer and choose a quite large value (1M) and suppose the output from the system verification test won't exceed the limit
 	// Run the system verification check, but write to out buffered writer instead of stdout
 	bufw := bufio.NewWriterSize(os.Stdout, 1*1024*1024)
@@ -477,16 +489,16 @@ func (sysver SystemVerificationCheck) Check() error {
 		warn, err := v.Validate(system.DefaultSysSpec)
 		if err != nil {
 			errs = append(errs, err...)
-			log.Flog.Error(err)
+			log.Error(err)
 		}
 		if warn != nil {
-			log.Flog.Warn(warn)
+			log.Warn(warn)
 		}
 	}
 
 	if len(errs) != 0 {
 		// Only print the output from the system verification check if the check failed
-		log.Flog.Error("[preflight] The system verification failed. Printing the output from the verification:")
+		log.Error("[preflight] The system verification failed. Printing the output from the verification:")
 		bufw.Flush()
 		return errors.Errorf("system verification failed")
 	}
@@ -504,17 +516,18 @@ func (ContainerRuntimeCheck) Name() string {
 
 // Check validates the container runtime
 func (crc ContainerRuntimeCheck) Check() error {
-	log.Flog.Debug("check container runtime")
+	log := log.GetInstance()
+	log.Debug("check container runtime")
 	if file.CheckFileExists(strings.ReplaceAll(common.CRISocketDocker, "unix://", "")) {
 		// Deprecated K3s now uses the systemd cgroup driver instead of cgroupfs when running under systemd 244 or later
 		// https://github.com/k3s-io/k3s/pull/5462
 		// if err := autodetect.VerifyDockerDaemon(); err != nil {
 		// 	return err
 		// }
-		log.Flog.Warnf("docker installed, will used docker runtime")
+		log.Warnf("docker installed, will used docker runtime")
 		return nil
 	}
-	log.Flog.Infof("use default runtime: containerd")
+	log.Infof("use default runtime: containerd")
 	return nil
 }
 
@@ -528,7 +541,8 @@ func (SwapCheck) Name() string {
 
 // Check validates whether swap is enabled or not
 func (swc SwapCheck) Check() error {
-	log.Flog.Debug("validating whether swap is enabled or not")
+	log := log.GetInstance()
+	log.Debug("validating whether swap is enabled or not")
 	f, err := os.Open("/proc/swaps")
 	if err != nil {
 		// /proc/swaps not available, thus no reasons to warn
@@ -541,12 +555,12 @@ func (swc SwapCheck) Check() error {
 		buf = append(buf, scanner.Text())
 	}
 	if err := scanner.Err(); err != nil {
-		log.Flog.Warnf("error reading /proc/swaps: %v", err)
+		log.Warnf("error reading /proc/swaps: %v", err)
 		return nil
 	}
 
 	if len(buf) > 1 {
-		log.Flog.Warnf("swap is enabled; production deployments should disable swap unless testing the NodeSwap feature gate of the kubelet")
+		log.Warnf("swap is enabled; production deployments should disable swap unless testing the NodeSwap feature gate of the kubelet")
 		return nil
 	}
 	return nil
@@ -564,12 +578,13 @@ func (NumCPUCheck) Name() string {
 
 // Check number of CPUs required by qcadmin
 func (ncc NumCPUCheck) Check() error {
-	log.Flog.Debug("validating number of CPUs")
+	log := log.GetInstance()
+	log.Debug("validating number of CPUs")
 	numCPU := runtime.NumCPU()
 	if numCPU < ncc.NumCPU {
 		return errors.Errorf("the number of available CPUs %d is less than the required %d", numCPU, ncc.NumCPU)
 	}
-	log.Flog.Donef("the number of available CPUs %d is greater than the required %d", numCPU, ncc.NumCPU)
+	log.Donef("the number of available CPUs %d is greater than the required %d", numCPU, ncc.NumCPU)
 	return nil
 }
 
@@ -673,7 +688,8 @@ func (KubeExistCheck) Name() string {
 
 // Check Exist kubernetes directory
 func (kc KubeExistCheck) Check() error {
-	log.Flog.Debug("validating kubernetes exist")
+	log := log.GetInstance()
+	log.Debug("validating kubernetes exist")
 	return nil
 }
 
@@ -689,11 +705,12 @@ func RunKubeOnly(ignorePreflightErrors bool) error {
 // RunChecks runs each check, displays it's warnings/errors, and once all
 // are processed will exit if any errors occurred.
 func RunChecks(checks []Checker, ww io.Writer, ignorePreflightErrors bool) error {
+	log := log.GetInstance()
 	for _, c := range checks {
 		// name := c.Name()
 		if err := c.Check(); err != nil {
 			if ignorePreflightErrors {
-				log.Flog.Errorf("%s check err, reason: %v", c.Name(), err)
+				log.Errorf("%s check err, reason: %v", c.Name(), err)
 				continue
 			}
 			return err

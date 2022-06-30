@@ -33,6 +33,7 @@ func NewCmdGetNode() *cobra.Command {
 }
 
 func NewCmdGetApp() *cobra.Command {
+	log := log.GetInstance()
 	app := &cobra.Command{
 		Use:     "app",
 		Aliases: []string{"apps"},
@@ -41,10 +42,10 @@ func NewCmdGetApp() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// node id为0 list
 			if len(args) == 0 {
-				log.Flog.Debug("get console")
+				log.Debug("get console")
 				return nil
 			}
-			log.Flog.Debug("get app")
+			log.Debug("get app")
 			return nil
 		},
 	}

@@ -33,30 +33,31 @@ func NewUpgradeQ() *cobra.Command {
 }
 
 func DoQcadmin() {
-	log.Flog.StartWait("fetch latest version from remote...")
+	logutil := log.GetInstance()
+	logutil.StartWait("fetch latest version from remote...")
 	lastversion, err := version.PreCheckLatestVersion()
-	log.Flog.StopWait()
+	logutil.StopWait()
 	if err != nil {
-		log.Flog.Errorf("fetch latest version err, reason: %v", err)
+		logutil.Errorf("fetch latest version err, reason: %v", err)
 		return
 	}
 	if lastversion == "" || lastversion == common.Version || strings.Contains(common.Version, lastversion) {
-		log.Flog.Infof("The current version %s is the latest version", common.Version)
+		logutil.Infof("The current version %s is the latest version", common.Version)
 		return
 	}
 	cmdPath, err := os.Executable()
 	if err != nil {
-		log.Flog.Errorf("q executable err:%v", err)
+		logutil.Errorf("q executable err:%v", err)
 		return
 	}
-	log.Flog.StartWait(fmt.Sprintf("downloading version %s...", lastversion))
+	logutil.StartWait(fmt.Sprintf("downloading version %s...", lastversion))
 	assetURL := fmt.Sprintf("https://pkg.qucheng.com/qucheng/cli/stable/qcadmin_%s_%s", runtime.GOOS, runtime.GOARCH)
-	err = selfupdate.UpdateTo(assetURL, cmdPath)
-	log.Flog.StopWait()
+	err = selfupdate.UpdateTo(logutil, assetURL, cmdPath)
+	logutil.StopWait()
 	if err != nil {
-		log.Flog.Errorf("upgrade failed, reason: %v", err)
+		logutil.Errorf("upgrade failed, reason: %v", err)
 		return
 	}
-	log.Flog.Donef("Successfully updated ergo to version %s", lastversion)
-	log.Flog.Infof("Release note: \n\trelease %s ", lastversion)
+	logutil.Donef("Successfully updated ergo to version %s", lastversion)
+	logutil.Infof("Release note: \n\trelease %s ", lastversion)
 }

@@ -6,7 +6,11 @@
 
 package plugin
 
-import "github.com/easysoft/qcadmin/internal/pkg/k8s"
+import (
+	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+
+	"github.com/easysoft/qcadmin/internal/pkg/k8s"
+)
 
 type Meta struct {
 	Type    string `json:"type"`
@@ -24,6 +28,7 @@ type Item struct {
 	Type        string      `json:"type"`
 	Path        string      `json:"path"`
 	Tool        string      `json:"tool"`
+	log         log.Logger  `json:"-"`
 }
 
 type List []Meta

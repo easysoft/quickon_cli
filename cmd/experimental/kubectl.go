@@ -8,10 +8,11 @@ package experimental
 
 import (
 	"github.com/easysoft/qcadmin/internal/pkg/cli/kubectl"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/spf13/cobra"
 )
 
 // KubectlCommand kubectl command.
-func KubectlCommand() *cobra.Command {
+func KubectlCommand(f factory.Factory) *cobra.Command {
 	return kubectl.EmbedCommand()
 }

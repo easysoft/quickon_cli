@@ -8,10 +8,11 @@ package experimental
 
 import (
 	"github.com/easysoft/qcadmin/internal/pkg/cli/helm"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/spf13/cobra"
 )
 
 // HelmCommand helm command.
-func HelmCommand() *cobra.Command {
+func HelmCommand(f factory.Factory) *cobra.Command {
 	return helm.EmbedCommand()
 }

@@ -16,7 +16,6 @@ import (
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/internal/pkg/util/retry"
 	suffixdomain "github.com/easysoft/qcadmin/pkg/qucheng/domain"
 	"github.com/ergoapi/util/exnet"
@@ -39,7 +38,7 @@ func (p *Cluster) getOrCreateUUIDAndAuth() (id, auth string, err error) {
 			return "", "", err
 		}
 		if errors.IsNotFound(err) {
-			log.Flog.Debug("q-suffix-host not found, create it")
+			p.Log.Debug("q-suffix-host not found, create it")
 			cm = suffixdomain.GenerateSuffixConfigMap("q-suffix-host", common.DefaultSystem)
 			if _, err := p.KubeClient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Create(context.TODO(), cm, metav1.CreateOptions{}); err != nil {
 				return "", "", err
@@ -62,21 +61,21 @@ func (p *Cluster) genSuffixHTTPHost(ip string) (domain string, err error) {
 }
 
 func (p *Cluster) InstallQuCheng() error {
-	log.Flog.Info("executing init qucheng logic...")
+	p.Log.Info("executing init qucheng logic...")
 	ctx := context.Background()
-	log.Flog.Debug("waiting for storage to be ready...")
+	p.Log.Debug("waiting for storage to be ready...")
 	waitsc := time.Now()
 	// wait.BackoffUntil TODO
 	for {
 		sc, _ := p.KubeClient.GetDefaultSC(ctx)
 		if sc != nil {
-			log.Flog.Donef("default storage %s is ready", sc.Name)
+			p.Log.Donef("default storage %s is ready", sc.Name)
 			break
 		}
 		time.Sleep(time.Second * 5)
 		trywaitsc := time.Now()
 		if trywaitsc.Sub(waitsc) > time.Minute*3 {
-			log.Flog.Warnf("wait storage %s ready, timeout: %v", sc.Name, trywaitsc.Sub(waitsc).Seconds())
+			p.Log.Warnf("wait storage %s ready, timeout: %v", sc.Name, trywaitsc.Sub(waitsc).Seconds())
 			break
 		}
 	}
@@ -87,7 +86,7 @@ func (p *Cluster) InstallQuCheng() error {
 			return err
 		}
 	}
-	log.Flog.Debug("start init qucheng")
+	p.Log.Debug("start init qucheng")
 
 	// TODO 支持用户自定义域名
 	if p.Domain == "" {
@@ -102,15 +101,15 @@ func (p *Cluster) InstallQuCheng() error {
 			}
 			p.Domain = domain
 
-			log.Flog.Infof("generate suffix domain: %s, ip: %v", p.Domain, loginip)
+			p.Log.Infof("generate suffix domain: %s, ip: %v", p.Domain, loginip)
 			return true, nil
 		})
 		if err != nil {
 			p.Domain = "demo.haogs.cn"
-			log.Flog.Warn("gen suffix domain failed, reason: %v, use default domain: %s", err, p.Domain)
+			p.Log.Warn("gen suffix domain failed, reason: %v, use default domain: %s", err, p.Domain)
 		}
 	} else {
-		log.Flog.Infof("use custom domain %s", p.Domain)
+		p.Log.Infof("use custom domain %s", p.Domain)
 	}
 
 	cfg, _ := config.LoadConfig()
@@ -121,20 +120,20 @@ func (p *Cluster) InstallQuCheng() error {
 	if err != nil {
 		errmsg := string(output)
 		if !strings.Contains(errmsg, "exists") {
-			log.Flog.Errorf("init qucheng install repo failed: %s", string(output))
+			p.Log.Errorf("init qucheng install repo failed: %s", string(output))
 			return err
 		}
-		log.Flog.Warn("qucheng install repo  already exists")
+		p.Log.Warn("qucheng install repo  already exists")
 	} else {
-		log.Flog.Done("init qucheng install repo done")
+		p.Log.Done("init qucheng install repo done")
 	}
 
 	output, err = qcexec.Command(os.Args[0], "experimental", "helm", "repo-update").CombinedOutput()
 	if err != nil {
-		log.Flog.Errorf("update qucheng install repo failed: %s", string(output))
+		p.Log.Errorf("update qucheng install repo failed: %s", string(output))
 		return err
 	}
-	log.Flog.Done("update qucheng install repo done")
+	p.Log.Done("update qucheng install repo done")
 	token := p.genQuChengToken()
 	helmchan := common.GetChannel(p.QuchengVersion)
 	// helm upgrade -i nginx-ingress-controller bitnami/nginx-ingress-controller -n kube-system
@@ -144,20 +143,20 @@ func (p *Cluster) InstallQuCheng() error {
 	}
 	output, err = qcexec.Command(os.Args[0], helmargs...).CombinedOutput()
 	if err != nil {
-		log.Flog.Errorf("upgrade install qucheng web failed: %s", string(output))
+		p.Log.Errorf("upgrade install qucheng web failed: %s", string(output))
 		return err
 	}
 	// Deprecated CNE_API_TOKEN
 	// output, err = qcexec.Command(os.Args[0], "experimental", "helm", "upgrade", "--name", common.DefaultCneAPIName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultAPIChartName, "--namespace", common.DefaultSystem, "--set", "env.CNE_TOKEN="+token, "--set", "env.CNE_API_TOKEN="+token, "--set", "cloud.defaultChannel="+common.GetChannel(p.QuchengVersion)).CombinedOutput()
 	// if err != nil {
-	// 	log.Flog.Errorf("upgrade install qucheng api failed: %s", string(output))
+	// p.Log.Errorf("upgrade install qucheng api failed: %s", string(output))
 	// 	return err
 	// }
-	log.Flog.Done("install qucheng done")
+	p.Log.Done("install qucheng done")
 	p.Ready()
 	initfile := common.GetCustomConfig(common.InitFileName)
 	if err := file.Writefile(initfile, "init done"); err != nil {
-		log.Flog.Warnf("write init done file failed, reason: %v.\n\t please run: touch %s", err, initfile)
+		p.Log.Warnf("write init done file failed, reason: %v.\n\t please run: touch %s", err, initfile)
 	}
 	return nil
 }

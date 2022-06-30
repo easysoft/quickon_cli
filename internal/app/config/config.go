@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/easysoft/qcadmin/common"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/ergoapi/util/file"
 	"sigs.k8s.io/yaml"
 )
@@ -44,7 +43,6 @@ func NewConfig() *Config {
 
 func LoadConfig() (*Config, error) {
 	path := common.GetDefaultConfig()
-	log.Flog.Debugf("load config from: %s", path)
 	r := new(Config)
 	if file.CheckFileExists(path) {
 		b, _ := ioutil.ReadFile(path)
@@ -55,15 +53,12 @@ func LoadConfig() (*Config, error) {
 
 func (r *Config) SaveConfig() error {
 	path := common.GetDefaultConfig()
-	log.Flog.Debugf("save config to: %s", path)
 	b, err := yaml.Marshal(r)
 	if err != nil {
-		log.Flog.Debugf("yaml marshal err: %v", err)
 		return err
 	}
 	err = ioutil.WriteFile(path, b, common.FileMode0644)
 	if err != nil {
-		log.Flog.Debugf("save config file (%s), err: %v", path, err)
 		return err
 	}
 	return nil

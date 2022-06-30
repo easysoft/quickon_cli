@@ -33,7 +33,8 @@ func Stage(dataDir string) error {
 }
 
 func StageFunc(dataDir string, templateVars map[string]string) error {
-	log.Flog.Debugf("writing manifest: %s/hack/manifests/plugins", dataDir)
+	log := log.GetInstance()
+	log.Debugf("writing manifest: %s/hack/manifests/plugins", dataDir)
 	for _, name := range AssetNames() {
 		content, err := Asset(name)
 		if err != nil {

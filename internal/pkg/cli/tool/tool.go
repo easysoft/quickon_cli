@@ -14,8 +14,8 @@ import (
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/qucheng/domain"
 	suffixdomain "github.com/easysoft/qcadmin/pkg/qucheng/domain"
 	"github.com/ergoapi/util/exmap"
@@ -27,18 +27,18 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func EmbedCommand() *cobra.Command {
+func EmbedCommand(f factory.Factory) *cobra.Command {
 	dns := &cobra.Command{
 		Use:    "dns",
 		Short:  "dns manager",
 		Hidden: true,
 	}
-	dns.AddCommand(dnsClean())
-	dns.AddCommand(dnsAdd())
+	dns.AddCommand(dnsClean(f))
+	dns.AddCommand(dnsAdd(f))
 	return dns
 }
 
-func dnsClean() *cobra.Command {
+func dnsClean(f factory.Factory) *cobra.Command {
 	dns := &cobra.Command{
 		Use:    "clean",
 		Short:  "clean dns",
@@ -64,14 +64,15 @@ func dnsClean() *cobra.Command {
 				SetHeader("Content-Type", "application/json").
 				SetBody(&reqbody).
 				Delete(common.GetAPI("/api/qdns/oss/record")); err != nil {
-				log.Flog.Error("clean dns failed, reason: %v", err)
+				f.GetLog().Error("clean dns failed, reason: %v", err)
 			}
 		},
 	}
 	return dns
 }
 
-func dnsAdd() *cobra.Command {
+func dnsAdd(f factory.Factory) *cobra.Command {
+	log := f.GetLog()
 	var customdomain string
 	dns := &cobra.Command{
 		Use:    "init",
@@ -92,14 +93,14 @@ func dnsAdd() *cobra.Command {
 				cm, err := kclient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Get(context.TODO(), "q-suffix-host", metav1.GetOptions{})
 				if err != nil {
 					if errors.IsNotFound(err) {
-						log.Flog.Debug("q-suffix-host not found, create it")
+						log.Debug("q-suffix-host not found, create it")
 						cm = suffixdomain.GenerateSuffixConfigMap("q-suffix-host", common.DefaultSystem)
 						if _, err := kclient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Create(context.TODO(), cm, metav1.CreateOptions{}); err != nil {
-							log.Flog.Errorf("k8s api err: %v", err)
+							log.Errorf("k8s api err: %v", err)
 							return
 						}
 					} else {
-						log.Flog.Errorf("conn k8s err: %v", err)
+						log.Errorf("conn k8s err: %v", err)
 						return
 					}
 				}
@@ -108,7 +109,7 @@ func dnsAdd() *cobra.Command {
 				ip := exnet.LocalIPs()[0]
 				domain, err = suffixdomain.GenerateDomain(ip, id, auth)
 				if len(domain) == 0 {
-					log.Flog.Warnf("gen domain failed: %v, use default domain: demo.haogs.cn", err)
+					log.Warnf("gen domain failed: %v, use default domain: demo.haogs.cn", err)
 					domain = "demo.haogs.cn"
 				}
 				cfg.Domain = domain
@@ -120,7 +121,7 @@ func dnsAdd() *cobra.Command {
 			// upgrade qucheng
 			helmClient, _ := helm.NewClient(&helm.Config{Namespace: common.DefaultSystem})
 			if err := helmClient.UpdateRepo(); err != nil {
-				log.Flog.Warn("update repo failed, reason: %v", err)
+				log.Warn("update repo failed, reason: %v", err)
 			}
 			defaultValue, _ := helmClient.GetValues(common.DefaultQuchengName)
 			base := map[string]interface{}{}
@@ -130,9 +131,9 @@ func dnsAdd() *cobra.Command {
 			}
 			defaultValue = exmap.MergeMaps(defaultValue, base)
 			if _, err := helmClient.Upgrade(common.DefaultQuchengName, common.DefaultHelmRepoName, common.DefaultQuchengName, "", defaultValue); err != nil {
-				log.Flog.Warnf("upgrade %s failed, reason: %v", common.DefaultQuchengName, err)
+				log.Warnf("upgrade %s failed, reason: %v", common.DefaultQuchengName, err)
 			} else {
-				log.Flog.Donef("upgrade %s success", common.DefaultQuchengName)
+				log.Donef("upgrade %s success", common.DefaultQuchengName)
 			}
 		},
 	}

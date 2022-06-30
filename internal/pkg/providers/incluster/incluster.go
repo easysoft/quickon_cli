@@ -16,7 +16,6 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/providers"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
@@ -75,7 +74,7 @@ func (p *InCluster) GetProviderName() string {
 
 // CreateCluster create cluster.
 func (p *InCluster) CreateCluster() (err error) {
-	log.Flog.Warn("exists cluster, check cluster status")
+	p.Log.Warn("exists cluster, check cluster status")
 	return nil
 }
 
@@ -89,7 +88,7 @@ func (p *InCluster) InitQucheng() (err error) {
 	if err != nil {
 		return err
 	}
-	log.Flog.Info("start init qucheng")
+	p.Log.Info("start init qucheng")
 	if err := p.InstallQuCheng(); err != nil {
 		return err
 	}
@@ -135,12 +134,12 @@ func (p *InCluster) Show() {
 		cfg.SaveConfig()
 	}
 
-	log.Flog.Info("----------------------------")
+	p.Log.Info("----------------------------")
 	if len(domain) > 0 {
-		log.Flog.Donef("web:: %s", fmt.Sprintf("http://console.%s", domain))
+		p.Log.Donef("web:: %s", fmt.Sprintf("http://console.%s", domain))
 	} else {
-		log.Flog.Donef("web:: %s", fmt.Sprintf("http://%s:32379", loginip))
+		p.Log.Donef("web:: %s", fmt.Sprintf("http://%s:32379", loginip))
 	}
 
-	log.Flog.Donef("docs: %s", common.QuchengDocs)
+	p.Log.Donef("docs: %s", common.QuchengDocs)
 }

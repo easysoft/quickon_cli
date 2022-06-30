@@ -13,7 +13,7 @@ import (
 	"strings"
 
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
-	elog "github.com/ergoapi/log"
+	elog "github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/ergoapi/util/environ"
 )
 
@@ -38,17 +38,19 @@ func (lw *LogWriter) Write(p []byte) (n int, err error) {
 }
 
 func RunCmd(name string, arg ...string) error {
+	log := log.GetInstance()
 	cmd := sysexec.Command(name, arg[:]...) // #nosec
 	cmd.Stdin = os.Stdin
-	cmd.Stderr = NewLogWrite(log.Flog, "err")
-	cmd.Stdout = NewLogWrite(log.Flog, "")
+	cmd.Stderr = NewLogWrite(log, "err")
+	cmd.Stdout = NewLogWrite(log, "")
 	return cmd.Run()
 }
 
 func Trace(cmd *sysexec.Cmd) {
+	log := log.GetFileLogger("trace.log")
 	if environ.GetEnv("TRACE", "false") == "true" {
 		key := strings.Join(cmd.Args, " ")
-		log.Flog.Debugf("+ %s\n", key)
+		log.Debugf("+ %s\n", key)
 	}
 }
 
@@ -67,13 +69,14 @@ func CommandRun(name string, arg ...string) error {
 }
 
 func CommandRespByte(command string, args ...string) ([]byte, error) {
+	log := log.GetInstance()
 	c := Command(command, args...)
 	bytes, err := c.CombinedOutput()
 	if err != nil {
 		cmdStr := fmt.Sprintf("%s %s", command, strings.Join(args, " "))
-		log.Flog.Debugf("❌ Unable to execute %q:", cmdStr)
+		log.Debugf("❌ Unable to execute %q:", cmdStr)
 		if len(bytes) > 0 {
-			log.Flog.Debugf(" %s", string(bytes))
+			log.Debugf(" %s", string(bytes))
 		}
 		return []byte{}, fmt.Errorf("unable to execute %q: %w", cmdStr, err)
 	}

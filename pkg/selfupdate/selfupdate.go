@@ -23,14 +23,14 @@ func DefaultUpdater() *Updater {
 	return &Updater{}
 }
 
-func UpdateTo(assetURL, cmdPath string) error {
+func UpdateTo(log log.Logger, assetURL, cmdPath string) error {
 	up := DefaultUpdater()
 	src, err := up.downloadDirectlyFromURL(assetURL)
 	if err != nil {
 		return err
 	}
 	defer src.Close()
-	return uncompressAndUpdate(src, assetURL, cmdPath)
+	return uncompressAndUpdate(log, src, assetURL, cmdPath)
 }
 
 func (up *Updater) downloadDirectlyFromURL(assetURL string) (io.ReadCloser, error) {
@@ -53,14 +53,14 @@ func (up *Updater) downloadDirectlyFromURL(assetURL string) (io.ReadCloser, erro
 	return res.Body, nil
 }
 
-func uncompressAndUpdate(src io.Reader, assetURL, cmdPath string) error {
+func uncompressAndUpdate(log log.Logger, src io.Reader, assetURL, cmdPath string) error {
 	_, cmd := filepath.Split(cmdPath)
-	asset, err := UncompressCommand(src, assetURL, cmd)
+	asset, err := UncompressCommand(log, src, assetURL, cmd)
 	if err != nil {
 		return err
 	}
 
-	log.Flog.Debugf("will upgrade %s to the latest downloaded from", cmdPath, assetURL)
+	log.Debugf("will upgrade %s to the latest downloaded from", cmdPath, assetURL)
 	return update.Apply(asset, update.Options{
 		TargetPath: cmdPath,
 	})

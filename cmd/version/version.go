@@ -118,6 +118,7 @@ func PreCheckLatestVersion() (string, error) {
 }
 
 func ShowVersion() {
+	log := log.GetInstance()
 	// logo.PrintLogo()
 	if common.Version == "" {
 		common.Version = defaultVersion
@@ -130,7 +131,7 @@ func ShowVersion() {
 	}
 	tmpl, err := newVersionTemplate()
 	if err != nil {
-		log.Flog.Fatalf("gen version failed, reason: %v", err)
+		log.Fatalf("gen version failed, reason: %v", err)
 		return
 	}
 	vd := versionInfo{
@@ -144,17 +145,17 @@ func ShowVersion() {
 			Experimental: true,
 		},
 	}
-	log.Flog.StartWait("check update...")
+	log.StartWait("check update...")
 	lastversion, err := PreCheckLatestVersion()
-	log.Flog.StopWait()
+	log.StopWait()
 	if err != nil {
-		log.Flog.Debugf("get update message err: %v", err)
+		log.Debugf("get update message err: %v", err)
 		return
 	}
 	if lastversion != "" && !strings.Contains(common.Version, lastversion) {
 		nowversion := gv.MustParse(strings.TrimPrefix(common.Version, "v"))
 		needupgrade := nowversion.LessThan(gv.MustParse(lastversion))
-		// log.Flog.Debugf("lastversion: %s(%v), nowversion: %s(%v), needupgrade: %v", lastversion, gv.MustParse(lastversion), common.Version, nowversion, needupgrade)
+		// log.Debugf("lastversion: %s(%v), nowversion: %s(%v), needupgrade: %v", lastversion, gv.MustParse(lastversion), common.Version, nowversion, needupgrade)
 		if needupgrade {
 			vd.Client.CanUpgrade = true
 			vd.Client.LastVersion = lastversion

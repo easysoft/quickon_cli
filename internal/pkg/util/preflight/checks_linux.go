@@ -28,7 +28,8 @@ import (
 
 // Check number of memory required by kubeadm
 func (mc MemCheck) Check() error {
-	log.Flog.Debug("validating number of Memory")
+	log := log.GetInstance()
+	log.Debug("validating number of Memory")
 	info := syscall.Sysinfo_t{}
 	err := syscall.Sysinfo(&info)
 	if err != nil {
@@ -40,6 +41,6 @@ func (mc MemCheck) Check() error {
 	if actual < mc.Mem {
 		return errors.Errorf("the system RAM (%d MB) is less than the minimum %d MB", actual, mc.Mem)
 	}
-	log.Flog.Donef("the system RAM (%d MB) is greater than the minimum %d MB", actual, mc.Mem)
+	log.Donef("the system RAM (%d MB) is greater than the minimum %d MB", actual, mc.Mem)
 	return nil
 }
