@@ -1,5 +1,27 @@
 # Changelog
 
+## v1.0.5-beta1 (2022-07-01)
+
+ * [5c441a5](https://github.com/easysoft/qucheng_cli/commit/5c441a5b1e412e6a558a148192b83ef3717cb1ba) feat(get): support get app info
+ * [c6d347e](https://github.com/easysoft/qucheng_cli/commit/c6d347ecb93e84603808234b350d30c308fbc50f) feat(update): update
+ * [2aad046](https://github.com/easysoft/qucheng_cli/commit/2aad0460931c8d3468edd0d9557597a585d321b1) style(log): update log
+ * [6936981](https://github.com/easysoft/qucheng_cli/commit/69369814b1d94abf5959074774ecb1698296d58f) fix(install): fix install firewalld warning check
+ * [4dd3eeb](https://github.com/easysoft/qucheng_cli/commit/4dd3eeb978d7946884ee6be10aed28f7d8c58e13) feat(storage): add longhorn plugin
+ * [ef84031](https://github.com/easysoft/qucheng_cli/commit/ef8403146f27b59641b2b90a9f8c0b33ed1a469d) chore(mod): update go mod
+ * [e654a96](https://github.com/easysoft/qucheng_cli/commit/e654a96fb8c665e005c0f628213c522b79326307) docs(typo): fix url typo
+ * [b81b24c](https://github.com/easysoft/qucheng_cli/commit/b81b24cda22262e78ac17da30f6dda57f1d21afa) fix(typo): fix ingress defaultpage image tag
+ * [fd95db7](https://github.com/easysoft/qucheng_cli/commit/fd95db75e20eb932620ef3c17b9f002efd0064bb) build(deps): bump github.com/muesli/mango-cobra from 1.1.0 to 1.2.0
+ * [aa2960f](https://github.com/easysoft/qucheng_cli/commit/aa2960fcb8143d2141a7e5e3e9022a97749139a4) feat(update): update k3s version
+ * [3ed8505](https://github.com/easysoft/qucheng_cli/commit/3ed850564b13e74ceaf215b4f92cfbbfc4fe7476) fix(typo): fix ingress typo
+ * [7153c94](https://github.com/easysoft/qucheng_cli/commit/7153c947c8df52baefa2dd17fc71da9b7df0dd49) feat(upgrade): update ingress version & fix upgrade message show
+ * [6d69657](https://github.com/easysoft/qucheng_cli/commit/6d696574052c188d9d86df12891f41fe77ddae11) feat(update): update
+ * [c15beb7](https://github.com/easysoft/qucheng_cli/commit/c15beb78fbd152c6068f988e3eacee3004465db5) chore(build): disable build macOS binary
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v1.0.4 (2022-06-22)
 
  * [20d54f2](https://github.com/easysoft/qucheng_cli/commit/20d54f2383209c5de6302be36c98eafd53b6c554) feat(uninstall): imp uninstall clean helm
