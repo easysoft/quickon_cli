@@ -9,8 +9,11 @@ package manage
 import (
 	"os"
 
+	"github.com/davecgh/go-spew/spew"
+	"github.com/easysoft/qcadmin/internal/app/debug"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -38,15 +41,21 @@ func NewCmdGetApp(f factory.Factory) *cobra.Command {
 		Use:     "app",
 		Aliases: []string{"apps"},
 		Short:   "get app",
-		Example: `q get app http://console.efbb.haogs.cn`,
+		Args:    cobra.ExactArgs(1),
+		Example: `q get app http://console.efbb.haogs.cn/instance-view-39.html`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			// node id为0 list
-			if len(args) == 0 {
-				log.Debug("get console")
-				return nil
+			url := args[0]
+			log.Infof("start fetch app: %s", url)
+			appdata, err := debug.GetNameByURL(url)
+			if err != nil {
+				return err
 			}
-			log.Debug("get app")
-			return nil
+			if log.GetLevel() == logrus.DebugLevel {
+				spew.Dump(appdata)
+			}
+			extargs := []string{"exp", "kubectl", "get", "-o", "wide", "pods,deploy,pvc,svc,ing", "-l", "release=" + appdata.K8Name, "-l", "app=" + appdata.Chart}
+			// extargs = append(extargs, args...)
+			return qcexec.CommandRun(os.Args[0], extargs...)
 		},
 	}
 	return app

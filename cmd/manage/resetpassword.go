@@ -12,6 +12,7 @@ import (
 	"fmt"
 
 	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/ergoapi/util/color"
@@ -43,31 +44,36 @@ func NewResetPassword(f factory.Factory) *cobra.Command {
 		Short:   "reset qucheng superadmin password",
 		Aliases: []string{"rp", "re-pass"},
 		Run: func(cmd *cobra.Command, args []string) {
-			ips := exnet.LocalIPs()
-
-			// 获取节点
-			k8sClient, err := k8s.NewSimpleClient()
-			if err != nil {
-				log.Errorf("k8s client err: %v", err)
-				return
-			}
-			cneapiDeploy, err := k8sClient.GetDeployment(context.Background(), common.DefaultSystem, "cne-api", metav1.GetOptions{})
-			if err != nil {
-				log.Errorf("get k8s deploy err: %v", err)
-				return
-			}
-			apiToken := ""
-			for _, e := range cneapiDeploy.Spec.Template.Spec.Containers[0].Env {
-				if e.Name == "CNE_API_TOKEN" {
-					apiToken = e.Value
-					break
+			cfg, _ := config.LoadConfig()
+			if cfg.Token == "" {
+				k8sClient, err := k8s.NewSimpleClient()
+				if err != nil {
+					log.Errorf("k8s client err: %v", err)
+					return
 				}
+				cneapiDeploy, err := k8sClient.GetDeployment(context.Background(), common.DefaultSystem, "qucheng", metav1.GetOptions{})
+				if err != nil {
+					log.Errorf("get k8s deploy err: %v", err)
+					return
+				}
+				for _, e := range cneapiDeploy.Spec.Template.Spec.Containers[0].Env {
+					if e.Name == "CNE_API_TOKEN" {
+						cfg.APIToken = e.Value
+						break
+					}
+				}
+				cfg.SaveConfig()
 			}
+
+			if cfg.Domain == "" {
+				cfg.Domain = fmt.Sprintf("%s:32379", exnet.LocalIPs()[0])
+			}
+
 			log.Debug("fetch api token")
 			// 更新密码
 			if len(password) == 0 {
 				log.Warn("not found password, will generate random password")
-				password = expass.SaltMd5Pass(apiToken, expass.RandomPassword(16))
+				password = expass.SaltMd5Pass(cfg.APIToken, expass.RandomPassword(16))
 			}
 			log.Infof("update superadmin password: %s", "")
 			client := req.C()
@@ -77,9 +83,9 @@ func NewResetPassword(f factory.Factory) *cobra.Command {
 			var result Result
 			resp, err := client.R().
 				SetHeader("accept", "application/json").
-				SetHeader("TOKEN", apiToken).
+				SetHeader("TOKEN", cfg.APIToken).
 				SetBody(&Body{Password: password}).
-				Post(fmt.Sprintf("http://%s:32379/admin-resetpassword.html", ips[0]))
+				Post(fmt.Sprintf("http://%s/admin-resetpassword.html", cfg.Domain))
 			if err != nil {
 				log.Errorf("update password failed, reason: %v", err)
 				return
