@@ -8,27 +8,28 @@ package cmd
 
 import (
 	"github.com/easysoft/qcadmin/cmd/manage"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/spf13/cobra"
 )
 
-func newCmdManage() *cobra.Command {
+func newCmdManage(f factory.Factory) *cobra.Command {
 	m := &cobra.Command{
 		Use:     "manage",
 		Short:   "Manage qucheng tools",
 		Aliases: []string{"m", "op"},
 	}
-	m.AddCommand(manage.NewCmdPlugin())
-	m.AddCommand(manage.NewResetPassword())
-	m.AddCommand(manage.NewUpgradeQucheg())
+	m.AddCommand(manage.NewCmdPlugin(f))
+	m.AddCommand(manage.NewResetPassword(f))
+	m.AddCommand(manage.NewUpgradeQucheg(f))
 	return m
 }
 
-func newCmdManageGet() *cobra.Command {
+func newCmdManageGet(f factory.Factory) *cobra.Command {
 	m := &cobra.Command{
 		Use:   "get",
 		Short: "Display one or many resources.",
 	}
-	m.AddCommand(manage.NewCmdGetNode())
-	m.AddCommand(manage.NewCmdGetApp())
+	m.AddCommand(manage.NewCmdGetNode(f))
+	m.AddCommand(manage.NewCmdGetApp(f))
 	return m
 }

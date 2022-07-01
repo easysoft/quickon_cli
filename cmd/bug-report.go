@@ -12,25 +12,33 @@ import (
 	"runtime/debug"
 
 	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/spf13/cobra"
 )
 
-func newCmdBugReport() *cobra.Command {
+type bugReportCmd struct {
+	log log.Logger
+}
+
+func newCmdBugReport(f factory.Factory) *cobra.Command {
+	br := bugReportCmd{
+		log: f.GetLog(),
+	}
 	cmd := &cobra.Command{
 		Use:   "bug-report",
 		Short: "Display system information for bug report",
 		Long:  "this command shares no personally-identifiable information, and is unused unless you share the bug identifier with our team.",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return bugReport()
+			return br.BugReport()
 		},
 	}
 	return cmd
 }
 
-func bugReport() error {
-	log := log.GetInstance()
-	log.Info("Issue: 🐛Bug Report: https://github.com/easysoft/qucheng_cli/issues/new?assignees=&labels=&template=bug-report.md")
+func (br bugReportCmd) BugReport() error {
+	bugmsg := "found bug: submit the error message to Github or Gitee\n\t Github: https://github.com/easysoft/qucheng_cli/issues/new?assignees=&labels=&template=bug-report.md\n\t Gitee: https://gitee.com/wwccss/qucheng_cli/issues\n"
+	br.log.Info(bugmsg)
 	// TODO 详细信息
 	sprintf := func(key, val string) string {
 		return fmt.Sprintf("%-24s%s\n", key, val)

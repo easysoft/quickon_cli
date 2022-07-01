@@ -13,6 +13,7 @@ import (
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	pluginapi "github.com/easysoft/qcadmin/internal/pkg/plugin"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/output"
 	"github.com/easysoft/qcadmin/internal/static/deploy"
 	"github.com/gosuri/uitable"
@@ -21,20 +22,20 @@ import (
 
 var show string
 
-func NewCmdPlugin() *cobra.Command {
+func NewCmdPlugin(f factory.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "plugins",
 		Short:   "manage plugin",
 		Aliases: []string{"plugin"},
 	}
-	cmd.AddCommand(listPluginCmd())
-	cmd.AddCommand(installPluginCmd())
-	cmd.AddCommand(unInstallPluginCmd())
-	cmd.AddCommand(syncPluginFileCmd())
+	cmd.AddCommand(listPluginCmd(f))
+	cmd.AddCommand(installPluginCmd(f))
+	cmd.AddCommand(unInstallPluginCmd(f))
+	cmd.AddCommand(syncPluginFileCmd(f))
 	return cmd
 }
 
-func syncPluginFileCmd() *cobra.Command {
+func syncPluginFileCmd(f factory.Factory) *cobra.Command {
 	sync := &cobra.Command{
 		Use:   "sync",
 		Short: "sync plugin file",
@@ -52,7 +53,7 @@ func syncPluginFileCmd() *cobra.Command {
 	return sync
 }
 
-func listPluginCmd() *cobra.Command {
+func listPluginCmd(f factory.Factory) *cobra.Command {
 	listcmd := &cobra.Command{
 		Use:     "list",
 		Short:   "list plugin",
@@ -93,7 +94,7 @@ func listPluginCmd() *cobra.Command {
 	return listcmd
 }
 
-func installPluginCmd() *cobra.Command {
+func installPluginCmd(f factory.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "enable",
 		Short:   "install plugin",
@@ -115,7 +116,7 @@ func installPluginCmd() *cobra.Command {
 	return cmd
 }
 
-func unInstallPluginCmd() *cobra.Command {
+func unInstallPluginCmd(f factory.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "disable",
 		Short:   "uninstall plugin",

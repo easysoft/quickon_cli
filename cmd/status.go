@@ -13,14 +13,14 @@ import (
 	statussubcmd "github.com/easysoft/qcadmin/cmd/status"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/status"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/file"
 	"github.com/spf13/cobra"
 )
 
-func newCmdStatus() *cobra.Command {
-	log := log.GetInstance()
+func newCmdStatus(f factory.Factory) *cobra.Command {
+	log := f.GetLog()
 	var params = status.K8sStatusOption{
 		Log: log,
 	}

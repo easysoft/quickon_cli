@@ -7,8 +7,10 @@
 package log
 
 import (
+	"fmt"
 	"strings"
 
+	"github.com/easysoft/qcadmin/common"
 	"github.com/mgutz/ansi"
 	"github.com/sirupsen/logrus"
 )
@@ -21,9 +23,10 @@ var defaultLog Logger = &stdoutLogger{
 var Discard = &DiscardLogger{}
 
 // StartFileLogging logs the output of the global logger to the file default.log
-func StartFileLogging(filename string) {
+func StartFileLogging() {
 	defaultLogStdout, ok := defaultLog.(*stdoutLogger)
 	if ok {
+		filename := fmt.Sprintf("%s.default.log", common.Version)
 		defaultLogStdout.fileLogger = GetFileLogger(filename)
 	}
 

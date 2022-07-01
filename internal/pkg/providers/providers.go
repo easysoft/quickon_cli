@@ -10,6 +10,8 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 )
 
@@ -33,6 +35,7 @@ type Provider interface {
 	CreateCheck(skip bool) error
 	PreSystemInit() error
 	Show()
+	SetLog(log log.Logger)
 }
 
 // RegisterProvider registers a provider.Factory by name.

@@ -14,50 +14,57 @@ import (
 
 	"github.com/easysoft/qcadmin/cmd/version"
 	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/selfupdate"
 	"github.com/spf13/cobra"
 )
 
-func NewUpgradeQ() *cobra.Command {
+type option struct {
+	log log.Logger
+}
+
+func NewUpgradeQ(f factory.Factory) *cobra.Command {
+	up := option{
+		log: f.GetLog(),
+	}
 	upq := &cobra.Command{
 		Use:     "q",
 		Aliases: []string{"qcadmin"},
 		Short:   "upgrade qcadmin(q) to the newest version",
 		Args:    cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
-			DoQcadmin()
+			up.DoQcadmin()
 		},
 	}
 	return upq
 }
 
-func DoQcadmin() {
-	logutil := log.GetInstance()
-	logutil.StartWait("fetch latest version from remote...")
+func (up option) DoQcadmin() {
+	up.log.StartWait("fetch latest version from remote...")
 	lastversion, err := version.PreCheckLatestVersion()
-	logutil.StopWait()
+	up.log.StopWait()
 	if err != nil {
-		logutil.Errorf("fetch latest version err, reason: %v", err)
+		up.log.Errorf("fetch latest version err, reason: %v", err)
 		return
 	}
 	if lastversion == "" || lastversion == common.Version || strings.Contains(common.Version, lastversion) {
-		logutil.Infof("The current version %s is the latest version", common.Version)
+		up.log.Infof("The current version %s is the latest version", common.Version)
 		return
 	}
 	cmdPath, err := os.Executable()
 	if err != nil {
-		logutil.Errorf("q executable err:%v", err)
+		up.log.Errorf("q executable err:%v", err)
 		return
 	}
-	logutil.StartWait(fmt.Sprintf("downloading version %s...", lastversion))
+	up.log.StartWait(fmt.Sprintf("downloading version %s...", lastversion))
 	assetURL := fmt.Sprintf("https://pkg.qucheng.com/qucheng/cli/stable/qcadmin_%s_%s", runtime.GOOS, runtime.GOARCH)
-	err = selfupdate.UpdateTo(logutil, assetURL, cmdPath)
-	logutil.StopWait()
+	err = selfupdate.UpdateTo(up.log, assetURL, cmdPath)
+	up.log.StopWait()
 	if err != nil {
-		logutil.Errorf("upgrade failed, reason: %v", err)
+		up.log.Errorf("upgrade failed, reason: %v", err)
 		return
 	}
-	logutil.Donef("Successfully updated ergo to version %s", lastversion)
-	logutil.Infof("Release note: \n\trelease %s ", lastversion)
+	up.log.Donef("Successfully updated ergo to version %s", lastversion)
+	up.log.Infof("Release note: \n\trelease %s ", lastversion)
 }

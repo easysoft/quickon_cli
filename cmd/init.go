@@ -65,6 +65,7 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 			log.Fatalf("failed to stage files: %s", err)
 			return
 		}
+		cp.SetLog(log)
 		if name != "incluster" {
 			if err := cp.PreSystemInit(); err != nil {
 				log.Fatalf("presystem init err, reason: %s", err)

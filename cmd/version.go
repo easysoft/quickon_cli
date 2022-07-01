@@ -8,17 +8,18 @@ package cmd
 
 import (
 	"github.com/easysoft/qcadmin/cmd/version"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/spf13/cobra"
 )
 
 // newCmdVersion show version
-func newCmdVersion() *cobra.Command {
+func newCmdVersion(f factory.Factory) *cobra.Command {
 	return &cobra.Command{
 		Use:   "version",
 		Short: "Show version",
 		Args:  cobra.NoArgs,
 		Run: func(cobraCmd *cobra.Command, args []string) {
-			version.ShowVersion()
+			version.ShowVersion(f.GetLog())
 		},
 	}
 }

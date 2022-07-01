@@ -9,24 +9,25 @@ package helm
 import (
 	"fmt"
 
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
 	"github.com/spf13/cobra"
 )
 
-func EmbedCommand() *cobra.Command {
+func EmbedCommand(f factory.Factory) *cobra.Command {
 	helm := &cobra.Command{
 		Use:   "helm",
 		Short: "The Kubernetes package manager",
 	}
-	helm.AddCommand(repoUpdate())
-	helm.AddCommand(repoAdd())
-	helm.AddCommand(repoDel())
-	helm.AddCommand(chartUpgrade())
-	helm.AddCommand(chartUninstall())
+	helm.AddCommand(repoUpdate(f))
+	helm.AddCommand(repoAdd(f))
+	helm.AddCommand(repoDel(f))
+	helm.AddCommand(chartUpgrade(f))
+	helm.AddCommand(chartUninstall(f))
 	return helm
 }
 
-func repoUpdate() *cobra.Command {
+func repoUpdate(f factory.Factory) *cobra.Command {
 	helm := &cobra.Command{
 		Use:   "repo-update",
 		Short: "update information of available charts locally from chart repositories",
@@ -42,7 +43,7 @@ func repoUpdate() *cobra.Command {
 	return helm
 }
 
-func repoAdd() *cobra.Command {
+func repoAdd(f factory.Factory) *cobra.Command {
 	var name, url, username, password string
 	helm := &cobra.Command{
 		Use:   "repo-add",
@@ -65,7 +66,7 @@ func repoAdd() *cobra.Command {
 	return helm
 }
 
-func repoDel() *cobra.Command {
+func repoDel(f factory.Factory) *cobra.Command {
 	var name string
 	helm := &cobra.Command{
 		Use:     "repo-del",
@@ -86,7 +87,7 @@ func repoDel() *cobra.Command {
 	return helm
 }
 
-func chartUpgrade() *cobra.Command {
+func chartUpgrade(f factory.Factory) *cobra.Command {
 	var ns, name, repoName, chartName, chartVersion string
 	var p []string
 	helm := &cobra.Command{
@@ -120,7 +121,7 @@ func chartUpgrade() *cobra.Command {
 	return helm
 }
 
-func chartUninstall() *cobra.Command {
+func chartUninstall(f factory.Factory) *cobra.Command {
 	var ns, name string
 	helm := &cobra.Command{
 		Use:     "uninstall",
@@ -140,8 +141,12 @@ func chartUninstall() *cobra.Command {
 			if err != nil {
 				return fmt.Errorf("helm create go client err: %v", err)
 			}
-			_, err = hc.Uninstall(name)
-			return err
+			release, _ := hc.GetDetail(name)
+			if release != nil {
+				_, err = hc.Uninstall(name)
+				return err
+			}
+			return nil
 		},
 	}
 	helm.Flags().StringVarP(&ns, "namespace", "n", "", "namespace")

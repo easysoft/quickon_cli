@@ -17,6 +17,7 @@ import (
 	"github.com/easysoft/qcadmin/cmd/flags"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	mcobra "github.com/muesli/mango-cobra"
 	"github.com/muesli/roff"
 	"github.com/sirupsen/logrus"
@@ -46,6 +47,11 @@ func Execute() {
 		} else {
 			f.GetLog().Fatal(err)
 		}
+		if !strings.Contains(err.Error(), "unknown command") {
+			f.GetLog().Info("----------------------------")
+			bugmsg := "found bug: submit the error message to Github or Gitee\n\t Github: https://github.com/easysoft/qucheng_cli/issues/new?assignees=&labels=&template=bug-report.md\n\t Gitee: https://gitee.com/wwccss/qucheng_cli/issues"
+			f.GetLog().Info(bugmsg)
+		}
 	}
 }
 
@@ -56,20 +62,20 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 	persistentFlags := rootCmd.PersistentFlags()
 	globalFlags = flags.SetGlobalFlags(persistentFlags)
 	// Add main commands
-	rootCmd.AddCommand(newCmdVersion())
-	rootCmd.AddCommand(newCmdPreCheck())
+	rootCmd.AddCommand(newCmdVersion(f))
+	rootCmd.AddCommand(newCmdPreCheck(f))
 	rootCmd.AddCommand(newCmdInit(f))
 	rootCmd.AddCommand(newCmdJoin(f))
-	rootCmd.AddCommand(newCmdUninstall())
-	rootCmd.AddCommand(newCmdStatus())
-	rootCmd.AddCommand(newCmdUpgrade())
-	rootCmd.AddCommand(newCmdManage())
-	rootCmd.AddCommand(newCmdManageGet())
+	rootCmd.AddCommand(newCmdUninstall(f))
+	rootCmd.AddCommand(newCmdStatus(f))
+	rootCmd.AddCommand(newCmdUpgrade(f))
+	rootCmd.AddCommand(newCmdManage(f))
+	rootCmd.AddCommand(newCmdManageGet(f))
 	// Add plugin commands
 
 	rootCmd.AddCommand(NewCmdExperimental(f))
 	rootCmd.AddCommand(newManCmd())
-	rootCmd.AddCommand(newCmdBugReport())
+	rootCmd.AddCommand(newCmdBugReport(f))
 
 	args := os.Args
 	if len(args) > 1 {
@@ -110,13 +116,14 @@ func NewRootCmd(f factory.Factory) *cobra.Command {
 			if cobraCmd.Annotations != nil {
 				return nil
 			}
-			log := f.GetLog()
+			qlog := f.GetLog()
 			if globalFlags.Silent {
-				log.SetLevel(logrus.FatalLevel)
+				qlog.SetLevel(logrus.FatalLevel)
 			} else if globalFlags.Debug {
-				log.SetLevel(logrus.DebugLevel)
+				qlog.SetLevel(logrus.DebugLevel)
 			}
 
+			log.StartFileLogging()
 			// TODO apply extra flags
 			return nil
 		},

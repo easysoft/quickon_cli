@@ -13,7 +13,6 @@ import (
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/providers"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/internal/static"
 	"github.com/spf13/cobra"
 )
@@ -56,12 +55,12 @@ func newCmdJoin(f factory.Factory) *cobra.Command {
 			log.Fatal(err)
 		}
 	}
-	joinCmd.AddCommand(newCmdGenJoin())
+	joinCmd.AddCommand(newCmdGenJoin(f))
 	return joinCmd
 }
 
-func newCmdGenJoin() *cobra.Command {
-	log := log.GetInstance()
+func newCmdGenJoin(f factory.Factory) *cobra.Command {
+	log := f.GetLog()
 	genjoin := &cobra.Command{
 		Use:   "gen",
 		Short: "Generate a join command",

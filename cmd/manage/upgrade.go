@@ -9,6 +9,7 @@ package manage
 import (
 	"fmt"
 
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/qucheng/upgrade"
 	"github.com/spf13/cobra"
@@ -20,8 +21,10 @@ type UpgradeCmd struct {
 	log     log.Logger
 }
 
-func NewUpgradeQucheg() *cobra.Command {
-	upcmd := &UpgradeCmd{}
+func NewUpgradeQucheg(f factory.Factory) *cobra.Command {
+	upcmd := &UpgradeCmd{
+		log: f.GetLog(),
+	}
 	up := &cobra.Command{
 		Use:   "upgrade",
 		Short: "Upgrades the QuCheng to the newest version",

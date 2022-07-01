@@ -17,7 +17,7 @@ import (
 
 	gv "github.com/Masterminds/semver/v3"
 	"github.com/easysoft/qcadmin/common"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+	logpkg "github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/qucheng/upgrade"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/file"
@@ -117,8 +117,7 @@ func PreCheckLatestVersion() (string, error) {
 	return lastVersion.Data.Version, nil
 }
 
-func ShowVersion() {
-	log := log.GetInstance()
+func ShowVersion(log logpkg.Logger) {
 	// logo.PrintLogo()
 	if common.Version == "" {
 		common.Version = defaultVersion

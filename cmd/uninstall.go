@@ -8,18 +8,19 @@ package cmd
 
 import (
 	"github.com/easysoft/qcadmin/internal/pkg/cluster"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/spf13/cobra"
 )
 
-func newCmdUninstall() *cobra.Command {
-	log := log.GetInstance()
+func newCmdUninstall(f factory.Factory) *cobra.Command {
+	log := f.GetLog()
 	return &cobra.Command{
 		Use:   "uninstall",
 		Short: "Uninstall",
 		Run: func(cmd *cobra.Command, args []string) {
 			log.Info("start uninstall cluster")
 			c := cluster.NewCluster()
+			c.Log = log
 			err := c.Uninstall()
 			if err != nil {
 				log.Fatalf("uninstall cluster failed, reason: %v", err)

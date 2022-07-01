@@ -14,5 +14,5 @@ import (
 
 // HelmCommand helm command.
 func HelmCommand(f factory.Factory) *cobra.Command {
-	return helm.EmbedCommand()
+	return helm.EmbedCommand(f)
 }

@@ -16,6 +16,7 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/providers"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
+	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
@@ -142,4 +143,8 @@ func (p *InCluster) Show() {
 	}
 
 	p.Log.Donef("docs: %s", common.QuchengDocs)
+}
+
+func (p *InCluster) SetLog(log log.Logger) {
+	p.Log = log
 }

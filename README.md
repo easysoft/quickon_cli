@@ -10,7 +10,6 @@
 [![TODOs](https://img.shields.io/endpoint?url=https://api.tickgit.com/badge?repo=github.com/easysoft/qucheng_cli)](https://www.tickgit.com/browse?repo=github.com/easysoft/qucheng_cli)
 [![docs](https://img.shields.io/badge/docs-done-green)](https://www.qucheng.com/)
 
-
 > 中文 | [English](README-EN.md)
 
 使用 `qcadmin`(`q`)，您可以轻松、高效、灵活地单独或整体安装渠成平台。
@@ -113,3 +112,11 @@ q init --podsubnet 10.42.0.0/16 --svcsubnet 10.43.0.0/16
 ## 相关文档
 
 [版本升级](https://github.com/easysoft/qucheng_cli/wiki/%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7)
+
+## Contributors
+
+<!-- readme: collaborators,contributors -start -->
+<!-- readme: collaborators,contributors -end -->
+<a href="https://github.com/easysoft/qucheng_cli/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=easysoft/qucheng_cli" />
+</a>

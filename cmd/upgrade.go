@@ -8,15 +8,16 @@ package cmd
 
 import (
 	"github.com/easysoft/qcadmin/cmd/upgrade"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/spf13/cobra"
 )
 
-func newCmdUpgrade() *cobra.Command {
+func newCmdUpgrade(f factory.Factory) *cobra.Command {
 	up := &cobra.Command{
 		Use:     "upgrade",
 		Short:   "Upgrades the Q CLI to the newest version",
 		Aliases: []string{"ug", "ugc"},
 	}
-	up.AddCommand(upgrade.NewUpgradeQ())
+	up.AddCommand(upgrade.NewUpgradeQ(f))
 	return up
 }

@@ -13,7 +13,7 @@ import (
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/expass"
@@ -35,8 +35,8 @@ type Body struct {
 	Password string `json:"password"`
 }
 
-func NewResetPassword() *cobra.Command {
-	log := log.GetInstance()
+func NewResetPassword(f factory.Factory) *cobra.Command {
+	log := f.GetLog()
 	var password string
 	rp := &cobra.Command{
 		Use:     "reset-password",

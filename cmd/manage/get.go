@@ -10,11 +10,11 @@ import (
 	"os"
 
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/spf13/cobra"
 )
 
-func NewCmdGetNode() *cobra.Command {
+func NewCmdGetNode(f factory.Factory) *cobra.Command {
 	node := &cobra.Command{
 		Use:     "node",
 		Aliases: []string{"no", "nodes"},
@@ -32,8 +32,8 @@ func NewCmdGetNode() *cobra.Command {
 	return node
 }
 
-func NewCmdGetApp() *cobra.Command {
-	log := log.GetInstance()
+func NewCmdGetApp(f factory.Factory) *cobra.Command {
+	log := f.GetLog()
 	app := &cobra.Command{
 		Use:     "app",
 		Aliases: []string{"apps"},

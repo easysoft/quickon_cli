@@ -8,10 +8,11 @@ package cmd
 
 import (
 	"github.com/easysoft/qcadmin/cmd/precheck"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/spf13/cobra"
 )
 
-func newCmdPreCheck() *cobra.Command {
+func newCmdPreCheck(f factory.Factory) *cobra.Command {
 	var pc precheck.PreCheck
 	cmd := &cobra.Command{
 		Use:   "precheck",

@@ -15,9 +15,11 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/providers"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
+	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/internal/pkg/util/preflight"
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/zos"
+
 	utilsexec "k8s.io/utils/exec"
 )
 
@@ -162,4 +164,8 @@ func (p *Native) Show() {
 		p.Log.Donef("web:: %s", fmt.Sprintf("http://%s:32379", loginip))
 	}
 	p.Log.Donef("docs: %s", common.QuchengDocs)
+}
+
+func (p *Native) SetLog(log log.Logger) {
+	p.Log = log
 }

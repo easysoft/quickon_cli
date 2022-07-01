@@ -43,7 +43,6 @@ type Cluster struct {
 }
 
 func NewCluster() *Cluster {
-	log := log.GetFileLogger(fmt.Sprintf("cluster.init.%s.log", ztime.GetTodayHour()))
 	return &Cluster{
 		Metadata: types.Metadata{
 			ClusterCidr:    "10.42.0.0/16",
@@ -52,8 +51,7 @@ func NewCluster() *Cluster {
 			QuchengVersion: "stable",
 			DisableIngress: false,
 		},
-		M:   new(syncmap.Map),
-		Log: log,
+		M: new(syncmap.Map),
 	}
 }
 
