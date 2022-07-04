@@ -221,6 +221,8 @@ func (p *Cluster) InitK3sCluster() error {
 		p.Log.Errorf("create k3s service failed: %s", err)
 		return err
 	}
+	// TODO fix reinstall typo
+	_ = s.Uninstall()
 	if err := s.Install(); err != nil {
 		p.Log.Errorf("install k3s service failed: %s", err)
 		return err

@@ -9,6 +9,7 @@ package autodetect
 import (
 	"encoding/json"
 	"fmt"
+	"os/exec"
 	"strings"
 
 	"github.com/docker/docker/pkg/parsers"
@@ -17,8 +18,8 @@ import (
 
 const (
 	// constant for cgroup drivers
-	cgroupFsDriver = "cgroupfs"
-	// cgroupSystemdDriver = "systemd"
+	cgroupFsDriver      = "cgroupfs"
+	cgroupSystemdDriver = "systemd"
 	// cgroupNoneDriver    = "none"
 )
 
@@ -73,11 +74,19 @@ func VerifyDockerDaemon() error {
 }
 
 func VerifyCgroupDriverSystemd() bool {
-	config := &Config{}
-	if file.CheckFileExists("/etc/docker/daemon.json") {
-		daemonDatam, _ := file.ReadAll("/etc/docker/daemon.json")
-		json.Unmarshal(daemonDatam, config)
-		return verifyCgroupDriverSystemd(config)
+	// TODO
+	// 不同系统下cgroup
+	// Debian 默认systemd
+	// Ubuntu 默认cgroupfs
+	out, err := exec.Command("/usr/bin/docker", "info", "-f", "'{{ .CgroupDriver }}'").Output()
+	if err != nil {
+		config := &Config{}
+		if file.CheckFileExists("/etc/docker/daemon.json") {
+			daemonDatam, _ := file.ReadAll("/etc/docker/daemon.json")
+			json.Unmarshal(daemonDatam, config)
+			return verifyCgroupDriverSystemd(config)
+		}
+		return false
 	}
-	return true
+	return strings.Contains(string(out), cgroupSystemdDriver)
 }
