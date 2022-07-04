@@ -13,9 +13,15 @@ import (
 
 func main() {
 	log := log.GetInstance()
-	if err := autodetect.VerifyDockerDaemon(); err != nil {
-		log.Fatal(err)
+	// if err := autodetect.VerifyDockerDaemon(); err != nil {
+	// 	log.Fatal(err)
+	// 	return
+	// }
+	// log.Done("docker daemon setting is ok")
+	status := autodetect.VerifyCgroupDriverSystemd()
+	if status {
+		log.Done("docker daemon cgroup driver is systemd")
 		return
 	}
-	log.Done("docker daemon setting is ok")
+	log.Done("docker daemon cgroup driver is cgroupfs")
 }
