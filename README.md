@@ -18,7 +18,7 @@
 
 ### Linux 发行版
 
-* **Debian**  *Buster(推荐), Stretch*
+* **Debian**  *Bullseye(推荐), Buster*
 * **Ubuntu**  *16.04, 18.04*
 * **CentOS**  *7*
 
@@ -26,7 +26,7 @@
 
 ### 容器运行时
 
-默认使用k3s内置的`Containerd`, 如果本地已经安装docker，则优先使用docker
+默认使用k3s内置的`Containerd`, 如果本地已经安装docker，则优先使用docker, 不推荐使用`docker`
 
 ### k8s/k3s版本
 
@@ -54,7 +54,7 @@
 
 #### 1. 从源码安装
 
-> 需要go环境，且版本大于1.16
+> 需要go环境，推荐使用`1.18`
 
 ```bash
 # Clone the repo
