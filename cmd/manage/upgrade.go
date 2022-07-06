@@ -8,7 +8,10 @@ package manage
 
 import (
 	"fmt"
+	"os"
 
+	"github.com/easysoft/qcadmin/common"
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/qucheng/upgrade"
@@ -32,6 +35,10 @@ func NewUpgradeQucheg(f factory.Factory) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return upcmd.Run()
 		},
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			// 升级成功
+			return upcmd.Clean()
+		},
 	}
 	return up
 }
@@ -39,10 +46,19 @@ func NewUpgradeQucheg(f factory.Factory) *cobra.Command {
 // Run executes the command logic
 func (cmd *UpgradeCmd) Run() error {
 	// Run the upgrade command
-	cmd.log.Infof("check update...")
+	cmd.log.Info("check update...")
 	err := upgrade.Upgrade(cmd.Version, cmd.log)
 	if err != nil {
 		return fmt.Errorf("couldn't upgrade: %v", err)
+	}
+	return nil
+}
+
+// Clean executes the command logic
+func (cmd *UpgradeCmd) Clean() error {
+	cmd.log.Debug("cleanup deprecated resources")
+	if err := qcexec.CommandRun(os.Args[0], "exp", "helm", "uninstall", "--name", "cne-api", "--namespace", common.DefaultSystem); err != nil {
+		cmd.log.Debugf("clean cne-api err: %v", err)
 	}
 	return nil
 }
