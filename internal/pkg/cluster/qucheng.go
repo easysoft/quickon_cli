@@ -139,12 +139,9 @@ func (p *Cluster) InstallQuCheng() error {
 	// helm upgrade -i nginx-ingress-controller bitnami/nginx-ingress-controller -n kube-system
 	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultChartName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultChartName, "--namespace", common.DefaultSystem, "--set", fmt.Sprintf("ingress.host=console.%s", p.Domain), "--set", "env.APP_DOMAIN=" + p.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
 	if helmchan != "stable" {
-		imagetag := "image.tag=test"
-		if strings.HasPrefix(p.QuchengVersion, "v") {
-			imagetag = "image.tag=" + p.QuchengVersion
-		}
-		helmargs = append(helmargs, "--set", "env.PHP_DEBUG=2", "--set", imagetag)
+		helmargs = append(helmargs, "--set", "env.PHP_DEBUG=2")
 	}
+	helmargs = append(helmargs, "--version", common.GetVersion(p.QuchengVersion))
 	output, err = qcexec.Command(os.Args[0], helmargs...).CombinedOutput()
 	if err != nil {
 		p.Log.Errorf("upgrade install qucheng web failed: %s", string(output))

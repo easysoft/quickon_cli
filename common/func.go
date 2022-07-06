@@ -63,20 +63,32 @@ func GetDefaultLogDir() string {
 
 // GetChartRepo 获取chartrepo地址
 func GetChartRepo(p string) string {
-	if p == "stable" || p == "latest" {
-		p = "stable"
-	} else {
+	if strings.HasPrefix(p, "test") || strings.HasPrefix(p, "edge") {
 		p = "test"
+	} else {
+		p = "stable"
 	}
 	return fmt.Sprintf("https://hub.qucheng.com/chartrepo/%s", p)
 }
 
 // GetChannel 获取chartrepo channel地址
 func GetChannel(p string) string {
-	if p == "stable" || p == "latest" {
-		p = "stable"
-	} else {
+	if strings.HasPrefix(p, "test") || strings.HasPrefix(p, "edge") {
 		p = "test"
+	} else {
+		p = "stable"
+	}
+	return p
+}
+
+// GetChannel 获取chartrepo channel地址
+func GetVersion(p string) string {
+	if strings.Contains(p, "-") {
+		v := strings.Split(p, "-")
+		if len(v) != 2 {
+			return DefaultQuchengVersion
+		}
+		return v[1]
 	}
 	return p
 }
