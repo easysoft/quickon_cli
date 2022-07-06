@@ -94,6 +94,10 @@ func GetMeta(args ...string) (Item, error) {
 }
 
 func (p *Item) UnInstall() error {
+	if p.BuiltIn {
+		p.log.Warnf("builtin plugin %s cannot be uninstalled", p.Type)
+		return nil
+	}
 	pluginName := fmt.Sprintf("qc-plugin-%s", p.Type)
 	_, err := p.Client.GetSecret(context.TODO(), common.DefaultSystem, pluginName, metav1.GetOptions{})
 	if err != nil {

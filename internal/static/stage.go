@@ -9,12 +9,24 @@ package static
 import (
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/static/data"
+	"github.com/easysoft/qcadmin/internal/static/deploy"
 	"github.com/easysoft/qcadmin/internal/static/scripts"
 )
 
 func StageFiles() error {
 	dataDir := common.GetDefaultDataDir()
 	if err := data.Stage(dataDir); err != nil {
+		return err
+	}
+	if err := scripts.Stage(dataDir); err != nil {
+		return err
+	}
+	return nil
+}
+
+func UpgradeFiles() error {
+	dataDir := common.GetDefaultDataDir()
+	if err := deploy.Stage(dataDir); err != nil {
 		return err
 	}
 	if err := scripts.Stage(dataDir); err != nil {

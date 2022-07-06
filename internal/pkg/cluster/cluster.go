@@ -15,10 +15,10 @@ import (
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
-	pluginapi "github.com/easysoft/qcadmin/internal/pkg/plugin"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/autodetect"
 	"github.com/easysoft/qcadmin/internal/pkg/util/binfile"
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/initsystem"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/internal/static/deploy"
@@ -154,12 +154,17 @@ func (p *Cluster) InitCluster() error {
 		p.Log.Warn("disable ingress controller")
 	} else {
 		p.Log.Debug("start deploy ingress plugins: nginx-ingress-controller")
-		localp, _ := pluginapi.GetMeta("ingress", "nginx-ingress-controller")
-		localp.Client = p.KubeClient
-		if err := localp.Install(); err != nil {
-			p.Log.Warnf("deploy ingress plugins: nginx-ingress-controller failed, reason: %v", err)
+		// localp, _ := pluginapi.GetMeta("ingress", "nginx-ingress-controller")
+		// localp.Client = p.KubeClient
+		// if err := localp.Install(); err != nil {
+		// 	p.Log.Warnf("deploy ingress plugins: nginx-ingress-controller failed, reason: %v", err)
+		// } else {
+		// 	p.Log.Done("deployed ingress plugins: nginx-ingress-controller success")
+		// }
+		if err := qcexec.CommandRun(os.Args[0], "manage", "plugins", "enable", "ingress"); err != nil {
+			p.Log.Errorf("deploy plugin ingress err: %v", err)
 		} else {
-			p.Log.Done("deployed ingress plugins: nginx-ingress-controller success")
+			p.Log.Done("deployed operator plugins: cne-ingress success")
 		}
 	}
 	return nil

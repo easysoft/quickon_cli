@@ -28,6 +28,7 @@ type Item struct {
 	Type        string      `json:"type"`
 	Path        string      `json:"path"`
 	Tool        string      `json:"tool"`
+	BuiltIn     bool        `json:"builtin"`
 	log         log.Logger  `json:"-"`
 }
 
