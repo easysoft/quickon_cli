@@ -1,7 +1,29 @@
 # Changelog
 
+## v1.0.5-beta2 (2022-07-06)
+
+ * [7dc0adc](https://github.com/easysoft/qucheng_cli/commit/7dc0adc589c94b61ed1e3d3780044b419258ef06) feat(install): fix install chart version (#29)
+ * [de9d1ea](https://github.com/easysoft/qucheng_cli/commit/de9d1ea5c82c98bdc7c83b252f8e89ba0d333f36) fix(action): delete deprecated workflows
+ * [8911610](https://github.com/easysoft/qucheng_cli/commit/89116103f23cd48c36d6a22143f0dc09358ef9b5) fix(docker): fix docker cgroup #24
+
+### Contributors
+
+ * ysicing
+ * 缘生
+
 ## v1.0.5-beta1 (2022-07-01)
 
+
+### Contributors
+
+
+## v1.0.5 (2022-07-06)
+
+ * [94ff7df](https://github.com/easysoft/qucheng_cli/commit/94ff7df69b287b4bb6b919ecdcbdb92599bcade0) feat(upgrade): fix upgrade tools
+ * [77f32ca](https://github.com/easysoft/qucheng_cli/commit/77f32ca2b999c76f12c2751e55d69ae66e42886c) fix(typo): fix upgrade cleanup old res (#33)
+ * [7dc0adc](https://github.com/easysoft/qucheng_cli/commit/7dc0adc589c94b61ed1e3d3780044b419258ef06) feat(install): fix install chart version (#29)
+ * [de9d1ea](https://github.com/easysoft/qucheng_cli/commit/de9d1ea5c82c98bdc7c83b252f8e89ba0d333f36) fix(action): delete deprecated workflows
+ * [8911610](https://github.com/easysoft/qucheng_cli/commit/89116103f23cd48c36d6a22143f0dc09358ef9b5) fix(docker): fix docker cgroup #24
  * [5c441a5](https://github.com/easysoft/qucheng_cli/commit/5c441a5b1e412e6a558a148192b83ef3717cb1ba) feat(get): support get app info
  * [c6d347e](https://github.com/easysoft/qucheng_cli/commit/c6d347ecb93e84603808234b350d30c308fbc50f) feat(update): update
  * [2aad046](https://github.com/easysoft/qucheng_cli/commit/2aad0460931c8d3468edd0d9557597a585d321b1) style(log): update log
@@ -21,6 +43,7 @@
 
  * dependabot[bot]
  * ysicing
+ * 缘生
 
 ## v1.0.4 (2022-06-22)
 
