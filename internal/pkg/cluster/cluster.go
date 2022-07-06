@@ -48,7 +48,7 @@ func NewCluster() *Cluster {
 			ClusterCidr:    "10.42.0.0/16",
 			ServiceCidr:    "10.43.0.0/16",
 			Network:        "flannel",
-			QuchengVersion: "stable",
+			QuchengVersion: common.DefaultQuchengVersion,
 			DisableIngress: false,
 		},
 		M: new(syncmap.Map),
@@ -126,7 +126,7 @@ func (p *Cluster) GetCreateExtOptions() []types.Flag {
 			P:         &p.QuchengVersion,
 			V:         p.QuchengVersion,
 			ShortHand: "q",
-			Usage:     "qucheng version: stable, test",
+			Usage:     "qucheng version",
 		},
 		{
 			Name:  "domain",

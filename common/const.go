@@ -56,30 +56,31 @@ const (
 )
 
 const (
-	K3sBinName          = "k3s"
-	K3sBinPath          = "/usr/local/bin/k3s"
-	HelmBinName         = "helm"
-	HelmBinPath         = "/usr/local/bin/helm"
-	K3sBinVersion       = "v1.23.5+k3s1"
-	K3sBinURL           = "https://github.com/k3s-io/k3s/releases/download"
-	K3sAgentEnv         = "/etc/systemd/system/k3s-agent.service.env"
-	K3sKubeConfig       = "/etc/rancher/k3s/k3s.yaml"
-	KubeQPS             = 5.0
-	KubeBurst           = 10
-	KubectlBinPath      = "/usr/local/bin/kubectl"
-	QcAdminBinPath      = "/usr/local/bin/qcadmin"
-	StatusWaitDuration  = 5 * time.Minute
-	WaitRetryInterval   = 5 * time.Second
-	DefaultHelmRepoName = "install"
-	DefaultSystem       = "cne-system"
-	DefaultChartName    = "qucheng"
-	DefaultAPIChartName = "cne-api"
-	DefaultQuchengName  = "qucheng"
-	DefaultCneAPIName   = "cne-api"
-	DefaultDBName       = "qucheng-mysql"
-	InitFileName        = ".initdone"
-	InitLockFileName    = ".qlock"
-	InitModeCluster     = ".incluster"
+	DefaultQuchengVersion = "stable-1.1.0"
+	K3sBinName            = "k3s"
+	K3sBinPath            = "/usr/local/bin/k3s"
+	HelmBinName           = "helm"
+	HelmBinPath           = "/usr/local/bin/helm"
+	K3sBinVersion         = "v1.23.5+k3s1"
+	K3sBinURL             = "https://github.com/k3s-io/k3s/releases/download"
+	K3sAgentEnv           = "/etc/systemd/system/k3s-agent.service.env"
+	K3sKubeConfig         = "/etc/rancher/k3s/k3s.yaml"
+	KubeQPS               = 5.0
+	KubeBurst             = 10
+	KubectlBinPath        = "/usr/local/bin/kubectl"
+	QcAdminBinPath        = "/usr/local/bin/qcadmin"
+	StatusWaitDuration    = 5 * time.Minute
+	WaitRetryInterval     = 5 * time.Second
+	DefaultHelmRepoName   = "install"
+	DefaultSystem         = "cne-system"
+	DefaultChartName      = "qucheng"
+	DefaultAPIChartName   = "cne-api"
+	DefaultQuchengName    = "qucheng"
+	DefaultCneAPIName     = "cne-api"
+	DefaultDBName         = "qucheng-mysql"
+	InitFileName          = ".initdone"
+	InitLockFileName      = ".qlock"
+	InitModeCluster       = ".incluster"
 )
 
 const (
