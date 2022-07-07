@@ -8,10 +8,10 @@ package cmd
 
 import (
 	"fmt"
-	"runtime"
-	"runtime/debug"
+	"os"
 
 	"github.com/easysoft/qcadmin/common"
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/spf13/cobra"
@@ -37,31 +37,14 @@ func newCmdBugReport(f factory.Factory) *cobra.Command {
 }
 
 func (br bugReportCmd) BugReport() error {
+	// TODO 详细信息
+	debugShell := fmt.Sprintf("%s/hack/manifests/scripts/diagnose.sh", common.GetDefaultDataDir())
+	br.log.Debugf("gen debug message script: %v", debugShell)
+	// 移除qcadmin初始化文件
+	if err := qcexec.CommandRun("/bin/bash", debugShell, os.Args[0]); err != nil {
+		return err
+	}
 	bugmsg := "found bug: submit the error message to Github or Gitee\n\t Github: https://github.com/easysoft/qucheng_cli/issues/new?assignees=&labels=&template=bug-report.md\n\t Gitee: https://gitee.com/wwccss/qucheng_cli/issues\n"
 	br.log.Info(bugmsg)
-	// TODO 详细信息
-	sprintf := func(key, val string) string {
-		return fmt.Sprintf("%-24s%s\n", key, val)
-	}
-	report := sprintf("q version:", common.Version)
-	report += sprintf("GOOS:", runtime.GOOS)
-	report += sprintf("GOARCH:", runtime.GOARCH)
-	report += sprintf("NumCPU:", fmt.Sprint(runtime.NumCPU()))
-	vcs, ok := debug.ReadBuildInfo()
-	if ok && vcs != nil {
-		report += fmt.Sprintln("Build info:")
-		vcs := *vcs
-		report += sprintf("\tGo version:", vcs.GoVersion)
-		report += sprintf("\tModule path:", vcs.Path)
-		report += sprintf("\tMain version:", vcs.Main.Version)
-		report += sprintf("\tMain path:", vcs.Main.Path)
-		report += sprintf("\tMain checksum:", vcs.Main.Sum)
-
-		report += fmt.Sprintln("\tBuild settings:")
-		for _, set := range vcs.Settings {
-			report += sprintf(fmt.Sprintf("\t\t%s:", set.Key), set.Value)
-		}
-	}
-	fmt.Println(report)
 	return nil
 }

@@ -2,7 +2,7 @@
 
 [ $(id -u) -eq 0 ] || exec sudo $0 $@
 
-set -x
+qcmd=${1:-/usr/local/bin/qcadmin}
 
 current_dir=$(pwd)
 tmpdir=/tmp
@@ -21,25 +21,11 @@ run() {
     echo "------------End of ${1}----------------"
 }
 
-os_env()
-{
-    grep -q "Debian" /etc/os-release && export OS="Debian" && return
-    grep -q "Ubuntu" /etc/os-release && export OS="Ubuntu" && return
-    grep -q "SUSE" /etc/os-release && export OS="SUSE" && return
-    grep -q "Red Hat" /etc/os-release && export OS="RedHat" && return
-    grep -q "CentOS Linux" /etc/os-release && export OS="CentOS" && return
-    grep -q "Kylin Linux" /etc/os-release && export OS="CentOS" && return
-    grep -q "Rocky" /etc/os-release && export OS="Rocky" && return
-    grep -q "TencentOS Server" /etc/os-release && export OS="TencentOS" && return
-    grep -q "OpenCloudOS" /etc/os-release && export OS="OpenCloudOS" && return
-    grep -q "Aliyun Linux" /etc/os-release && export OS="AliyunOS" && return
-
-    echo "unknown os...  exit."
-    exit 1
-}
-
-dist() {
+get_distribution() {
     cat /etc/issue*
+    if [ -r /etc/os-release ]; then
+      cat /etc/os-release
+    fi
 }
 
 command_exists() {
@@ -57,16 +43,15 @@ service_status() {
 #system info
 
 system_info() {
-    # mkdir -p ${diagnose_dir}/system_info
-    run uname -a | tee -a ${diagnose_dir}/system_info
-    run uname -r | tee -a ${diagnose_dir}/system_info
-    run dist | tee -a ${diagnose_dir}/system_info
+    run uname -a | tee -a ${diagnose_dir}/os_info
+    run uname -r | tee -a ${diagnose_dir}/os_info
+    run get_distribution | tee -a ${diagnose_dir}/os_info
     if command_exists lsb_release; then
-        run lsb_release | tee -a ${diagnose_dir}/system_info
+        run lsb_release | tee -a ${diagnose_dir}/os_info
     fi
-    run ulimit -a | tee -a ${diagnose_dir}/system_info
-    run sysctl -a | tee -a ${diagnose_dir}/system_info
-    run cat /proc/vmstat | tee -a ${diagnose_dir}/system_info
+    run ulimit -a | tee -a ${diagnose_dir}/os_info
+    run sysctl -a | tee -a ${diagnose_dir}/os_info
+    run cat /proc/vmstat | tee -a ${diagnose_dir}/os_info
 }
 
 #network
@@ -78,9 +63,9 @@ network_info() {
     run ip route show | tee -a ${diagnose_dir}/network_info
     run iptables-save | tee -a ${diagnose_dir}/network_info
     run cat /proc/net/nf_conntrack | tee -a ${diagnose_dir}/network_info
-    netstat -nt | tee -a ${diagnose_dir}/network_info
-    netstat -nu | tee -a ${diagnose_dir}/network_info
-    netstat -ln | tee -a ${diagnose_dir}/network_info
+    run netstat -nt | tee -a ${diagnose_dir}/network_info
+    run netstat -nu | tee -a ${diagnose_dir}/network_info
+    run netstat -ln | tee -a ${diagnose_dir}/network_info
 }
 
 memory_info() {
@@ -124,22 +109,19 @@ check_ps_hang() {
 #system status
 system_status() {
     #mkdir -p ${diagnose_dir}/system_status
-    run uptime | tee -a ${diagnose_dir}/system_status
-    run top -b -n 1 | tee -a ${diagnose_dir}/system_status
+    run uptime | tee -a ${diagnose_dir}/system_uptime_status
+    run top -b -n 1 | tee -a ${diagnose_dir}/system_top_status
     if [ "$is_ps_hang" == "false" ]; then
         run ps -ef | tee -a ${diagnose_dir}/system_status
     else
         echo "ps -ef command hang, skip [ps -ef] check" | tee -a ${diagnose_dir}/system_status
     fi
-    run netstat -nt | tee -a ${diagnose_dir}/system_status
-    run netstat -nu | tee -a ${diagnose_dir}/system_status
-    run netstat -ln | tee -a ${diagnose_dir}/system_status
 
     run sar -A | tee -a ${diagnose_dir}/system_status
 
-    run df -h | tee -a ${diagnose_dir}/system_status
+    run df -h | tee -a ${diagnose_dir}/system_df_status
 
-    run cat /proc/mounts | tee -a ${diagnose_dir}/system_status
+    run cat /proc/mounts | tee -a ${diagnose_dir}/system_mounts_status
 
     if [ "$is_ps_hang" == "false" ]; then
         run pstree -al | tee -a ${diagnose_dir}/system_status
@@ -165,14 +147,33 @@ system_status() {
 
 
 daemon_status() {
-     run systemctl status docker -l | tee -a ${diagnose_dir}/docker_status
-     run systemctl status containerd -l | tee -a ${diagnose_dir}/containerd_status
-     run systemctl status container-storaged -l | tee -a ${diagnose_dir}/container-storaged_status
-     run systemctl status kubelet -l | tee -a ${diagnose_dir}/kubelet_status
+    if command_exists docker; then
+        run systemctl status docker -l | tee -a ${diagnose_dir}/docker_status
+        run systemctl cat docker | tee -a ${diagnose_dir}/k3s_status
+        docker_check
+    fi
+    if command_exists kubelet; then
+        run systemctl status kubelet -l | tee -a ${diagnose_dir}/kubelet_status
+    fi
+    if command_exists containerd; then
+        run systemctl status containerd -l | tee -a ${diagnose_dir}/containerd_status
+    fi
+    if command_exists k3s; then
+        run systemctl status k3s -l | tee -a ${diagnose_dir}/k3s_status
+        run systemctl cat k3s | tee -a ${diagnose_dir}/k3s_status
+        k3s_check
+    fi
+    # run systemctl status container-storaged -l | tee -a ${diagnose_dir}/container-storaged_status
 }
 
-docker_status() {
-    #mkdir -p ${diagnose_dir}/docker_status
+k3s_check() {
+  log_tail_lines=10000
+  pidof systemd && journalctl -n ${log_tail_lines} -u k3s.service &> ${diagnose_dir}/logs/k3s.log
+}
+
+docker_check() {
+    log_tail_lines=10000
+    pidof systemd && journalctl -n ${log_tail_lines} -u docker.service &> ${diagnose_dir}/logs/docker.log || tail -n ${log_tail_lines} /var/log/upstart/docker.log &> ${diagnose_dir}/logs/docker.log
     echo "check dockerd process"
     if [ "$is_ps_hang" == "false" ]; then
         run ps -ef|grep -E 'dockerd|docker daemon'|grep -v grep| tee -a ${diagnose_dir}/docker_status
@@ -187,7 +188,6 @@ docker_status() {
     cp /var/run/docker/libcontainerd/containerd/events.log ${diagnose_dir}/containerd_events.log
     sleep 10
     cp /var/run/docker/*.log ${diagnose_dir}
-
 }
 
 showlog() {
@@ -203,7 +203,6 @@ common_logs() {
     mkdir -p ${diagnose_dir}/logs
     run dmesg -T | tail -n ${log_tail_lines}  | tee ${diagnose_dir}/logs/dmesg.log
     tail -c 500M /var/log/messages &> ${diagnose_dir}/logs/messages
-    pidof systemd && journalctl -n ${log_tail_lines} -u docker.service &> ${diagnose_dir}/logs/docker.log || tail -n ${log_tail_lines} /var/log/upstart/docker.log &> ${diagnose_dir}/logs/docker.log
 }
 
 archive() {
@@ -216,29 +215,40 @@ varlogmessage(){
 }
 
 cluster_dump(){
-    kubectl cluster-info dump > $diagnose_dir/cluster_dump.log
+    run kubectl cluster-info dump | tee $diagnose_dir/cluster_dump.log
 }
 
-events(){
-    kubectl get events > $diagnose_dir/events.log
+cluster_events(){
+    run kubectl get events | tee $diagnose_dir/cluster.log
 }
 
-core_component() {
-    local comp="$1"
-    local label="$2"
-    mkdir -p $diagnose_dir/cs/$comp/
-    local pods=`kubectl get -n kube-system po -l $label=$comp | awk '{print $1}'|grep -v NAME`
+component() {
+    local ns="$1"
+    mkdir -p $diagnose_dir/cs/$ns/
+    local pods=`kubectl get -n $ns po  | awk '{print $1}'|grep -v NAME`
     for po in ${pods}
     do
-        kubectl logs -n kube-system ${po} &> $diagnose_dir/cs/${comp}/${po}.log
+        kubectl logs -n ${ns} ${po} &> $diagnose_dir/cs/${ns}/${po}.log
     done
 }
-
-
 
 quchenglog() {
     mkdir -p ${diagnose_dir}/logs/qucheng
     cp ~/.qc/log/* ${diagnose_dir}/logs/qucheng/
+     if command_exists q; then
+        run q version | tee $diagnose_dir/logs/qucheng/q.log
+        run q status | tee $diagnose_dir/logs/qucheng/q.log
+        run q status node | tee $diagnose_dir/logs/qucheng/q.log
+     fi
+}
+
+kube_status() {
+  if command_exists kubectl; then
+     cluster_dump
+     cluster_events
+     component kube-system
+     component cne-system
+  fi
 }
 
 pd_collect() {
@@ -248,20 +258,14 @@ pd_collect() {
     network_info
     check_ps_hang
     system_status
-    docker_status
-    sandbox_runtime_status
+    daemon_status
     common_logs
+    quchenglog
 
     # memory
     memory_info
-
     varlogmessage
-    core_component "cloud-controller-manager" "app"
-    core_component "kube-apiserver" "component"
-    core_component "kube-controller-manager" "component"
-    core_component "kube-scheduler" "component"
-    events
-    cluster_dump
+    kube_status
     archive
 }
 
