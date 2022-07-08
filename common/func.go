@@ -90,7 +90,7 @@ func GetVersion(p string) string {
 		}
 		return v[1]
 	}
-	return DefaultQuchengVersion
+	return ""
 }
 
 func GetDefaultConfig() string {
