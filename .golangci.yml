@@ -52,7 +52,7 @@ linters:
     - ineffassign
     - misspell
     - revive
-    # - staticcheck
+    - staticcheck
     - structcheck
     # - typecheck
     - unused

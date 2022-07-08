@@ -60,7 +60,7 @@ func uncompressAndUpdate(log log.Logger, src io.Reader, assetURL, cmdPath string
 		return err
 	}
 
-	log.Debugf("will upgrade %s to the latest downloaded from", cmdPath, assetURL)
+	log.Debugf("will upgrade %s to the latest downloaded from %s", cmdPath, assetURL)
 	return update.Apply(asset, update.Options{
 		TargetPath: cmdPath,
 	})

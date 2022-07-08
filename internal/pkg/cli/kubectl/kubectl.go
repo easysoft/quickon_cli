@@ -8,8 +8,6 @@ package kubectl
 
 import (
 	"math/rand"
-	"os"
-	"strings"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -19,17 +17,18 @@ import (
 )
 
 func Main() {
-	kubenv := os.Getenv("KUBECONFIG")
-	for i, arg := range os.Args {
-		if strings.HasPrefix(arg, "--kubeconfig=") {
-			kubenv = strings.Split(arg, "=")[1]
-		} else if strings.HasPrefix(arg, "--kubeconfig") && i+1 < len(os.Args) {
-			kubenv = os.Args[i+1]
-		}
-	}
-	if kubenv == "" {
-		// TODO: use default kubeconfig
-	}
+	// kubenv := os.Getenv("KUBECONFIG")
+	// for i, arg := range os.Args {
+	// 	if strings.HasPrefix(arg, "--kubeconfig=") {
+	// 		kubenv = strings.Split(arg, "=")[1]
+	// 	} else if strings.HasPrefix(arg, "--kubeconfig") && i+1 < len(os.Args) {
+	// 		kubenv = os.Args[i+1]
+	// 	}
+	// }
+	// if kubenv == "" {
+	// 	// TODO: use default kubeconfig
+	// 	kubenv = filepath.Join(homedir.HomeDir(), ".kube", "config")
+	// }
 
 	main()
 }
