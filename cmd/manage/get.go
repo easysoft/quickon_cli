@@ -9,7 +9,6 @@ package manage
 import (
 	"os"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/easysoft/qcadmin/internal/app/debug"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
@@ -45,14 +44,15 @@ func NewCmdGetApp(f factory.Factory) *cobra.Command {
 		Example: `q get app http://console.efbb.haogs.cn/instance-view-39.html`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			url := args[0]
+			apidebug := log.GetLevel() == logrus.DebugLevel
 			log.Infof("start fetch app: %s", url)
-			appdata, err := debug.GetNameByURL(url)
+			appdata, err := debug.GetNameByURL(url, apidebug)
 			if err != nil {
 				return err
 			}
-			if log.GetLevel() == logrus.DebugLevel {
-				spew.Dump(appdata)
-			}
+			// if apidebug {
+			// 	spew.Dump(appdata)
+			// }
 			extargs := []string{"exp", "kubectl", "get", "-o", "wide", "pods,deploy,pvc,svc,ing", "-l", "release=" + appdata.K8Name, "-l", "app=" + appdata.Chart}
 			// extargs = append(extargs, args...)
 			return qcexec.CommandRun(os.Args[0], extargs...)
