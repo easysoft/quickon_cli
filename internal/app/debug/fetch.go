@@ -45,7 +45,7 @@ type AppData struct {
 	Deleted    string `json:"deleted"`
 }
 
-func GetNameByURL(url string) (*AppData, error) {
+func GetNameByURL(url string, debug bool) (*AppData, error) {
 	// 获取ID
 	k := strings.Split(url, "-")
 	key := strings.Trim(k[len(k)-1], ".html")
@@ -71,15 +71,19 @@ func GetNameByURL(url string) (*AppData, error) {
 
 	if cfg.Domain == "" {
 		cfg.Domain = fmt.Sprintf("%s:32379", exnet.LocalIPs()[0])
+	} else {
+		cfg.Domain = fmt.Sprintf("console.%s", cfg.Domain)
 	}
 
 	client := req.C()
-	client = client.DevMode().EnableDumpAll()
+	if debug {
+		client = client.DevMode().EnableDumpAll()
+	}
 	var result Result
 	resp, err := client.R().
 		SetHeader("accept", "application/json").
 		SetHeader("TOKEN", cfg.APIToken).
-		Get(fmt.Sprintf("http://%s//instance-apidetail-%s.html", cfg.Domain, key))
+		Get(fmt.Sprintf("http://%s/instance-apidetail-%s.html", cfg.Domain, key))
 	if err != nil {
 		return nil, fmt.Errorf("update password failed, reason: %v", err)
 	}
