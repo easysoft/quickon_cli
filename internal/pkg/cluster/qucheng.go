@@ -147,7 +147,10 @@ func (p *Cluster) InstallQuCheng() error {
 	if helmchan != "stable" {
 		helmargs = append(helmargs, "--set", "env.PHP_DEBUG=2")
 	}
-	helmargs = append(helmargs, "--version", common.GetVersion(p.QuchengVersion))
+	chartversion := common.GetVersion(p.QuchengVersion)
+	if len(chartversion) > 0 {
+		helmargs = append(helmargs, "--version", chartversion)
+	}
 	output, err = qcexec.Command(os.Args[0], helmargs...).CombinedOutput()
 	if err != nil {
 		p.Log.Errorf("upgrade install qucheng web failed: %s", string(output))
