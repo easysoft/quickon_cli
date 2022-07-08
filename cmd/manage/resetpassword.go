@@ -45,7 +45,7 @@ func NewResetPassword(f factory.Factory) *cobra.Command {
 		Aliases: []string{"rp", "re-pass"},
 		Run: func(cmd *cobra.Command, args []string) {
 			cfg, _ := config.LoadConfig()
-			if cfg.Token == "" {
+			if cfg.APIToken == "" {
 				k8sClient, err := k8s.NewSimpleClient()
 				if err != nil {
 					log.Errorf("k8s client err: %v", err)

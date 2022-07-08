@@ -51,7 +51,7 @@ func GetNameByURL(url string, debug bool) (*AppData, error) {
 	key := strings.Trim(k[len(k)-1], ".html")
 
 	cfg, _ := config.LoadConfig()
-	if cfg.Token == "" {
+	if cfg.APIToken == "" {
 		k8sClient, err := k8s.NewSimpleClient()
 		if err != nil {
 			return nil, err
