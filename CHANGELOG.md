@@ -1,5 +1,28 @@
 # Changelog
 
+## v1.0.7 (2022-07-08)
+
+ * [b9b1a8f](https://github.com/easysoft/qucheng_cli/commit/b9b1a8f834f80cb096f92a0ee157156ec38b6302) fix(token): fix api token typo
+
+### Contributors
+
+ * ysicing
+
+## v1.0.6 (2022-07-08)
+
+ * [e3177ee](https://github.com/easysoft/qucheng_cli/commit/e3177ee47c782637e3f63edf7b1a3159d535e793) chore(update): update version
+ * [2809145](https://github.com/easysoft/qucheng_cli/commit/28091456e3a2c9fc9bfcfc57c67e24f0e44a894d) feat(update): fix install version typo
+ * [b9d0ac6](https://github.com/easysoft/qucheng_cli/commit/b9d0ac6b1594580817daa831efcef36e2c20fed7) feat(update): fix get app api req path typo
+ * [70c133c](https://github.com/easysoft/qucheng_cli/commit/70c133c7ee3c441448bbb5da5e36d5c7742391ef) feat(update): update (#34)
+ * [0d7af12](https://github.com/easysoft/qucheng_cli/commit/0d7af125d7418b691aef92dab1ac0f35fdb16436) docs(install): fix install docs (#30)
+ * [94ff7df](https://github.com/easysoft/qucheng_cli/commit/94ff7df69b287b4bb6b919ecdcbdb92599bcade0) feat(upgrade): fix upgrade tools
+ * [77f32ca](https://github.com/easysoft/qucheng_cli/commit/77f32ca2b999c76f12c2751e55d69ae66e42886c) fix(typo): fix upgrade cleanup old res (#33)
+
+### Contributors
+
+ * ysicing
+ * 缘生
+
 ## v1.0.5-beta2 (2022-07-06)
 
  * [7dc0adc](https://github.com/easysoft/qucheng_cli/commit/7dc0adc589c94b61ed1e3d3780044b419258ef06) feat(install): fix install chart version (#29)
