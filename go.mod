@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/BeidouCloudPlatform/go-bindata/v4 v4.1.0
 	github.com/Masterminds/semver/v3 v3.1.1
-	github.com/cheggaaa/pb/v3 v3.0.8
+	github.com/cheggaaa/pb/v3 v3.1.0
 	github.com/containerd/continuity v0.3.0
 	github.com/docker/docker v20.10.17+incompatible
 	github.com/ergoapi/util v0.2.19
