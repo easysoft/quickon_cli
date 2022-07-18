@@ -14,6 +14,7 @@ import (
 	"os"
 	"strings"
 
+	gv "github.com/Masterminds/semver/v3"
 	"github.com/easysoft/qcadmin/common"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
@@ -131,14 +132,23 @@ func (p *Item) UnInstall() error {
 
 func (p *Item) Install() error {
 	pluginName := fmt.Sprintf("qc-plugin-%s", p.Type)
-	_, err := p.Client.GetSecret(context.TODO(), common.DefaultSystem, pluginName, metav1.GetOptions{})
+	oldSecret, err := p.Client.GetSecret(context.TODO(), common.DefaultSystem, pluginName, metav1.GetOptions{})
+	updatestatus := false
 	if err == nil {
-		p.log.Warnf("plugin %s is already installed", p.Type)
-		return nil
-	}
-	if !errors.IsNotFound(err) {
-		p.log.Debugf("get plugin secret failed: %v", err)
-		return fmt.Errorf("plugin %s install failed", p.Name)
+		nowversion := gv.MustParse(strings.TrimPrefix(p.Version, "v"))
+		oldversion := string(oldSecret.Data["version"])
+		p.log.Debugf("type: %s, old version: %s, now version: %s", p.Type, oldversion, nowversion)
+		needupgrade := nowversion.GreaterThan(gv.MustParse(oldversion))
+		if !needupgrade {
+			p.log.Warnf("plugin %s is the latest version", p.Type)
+			return nil
+		}
+		updatestatus = true
+	} else {
+		if !errors.IsNotFound(err) {
+			p.log.Debugf("get plugin secret failed: %v", err)
+			return fmt.Errorf("plugin %s install failed", p.Name)
+		}
 	}
 	if p.Tool == "helm" {
 		applycmd := qcexec.Command(os.Args[0], "experimental", "helm", "upgrade", "--name", p.Type, "--repo", common.DefaultHelmRepoName, "--chart", p.Path, "--namespace", common.DefaultSystem)
@@ -162,11 +172,21 @@ func (p *Item) Install() error {
 		"version":    p.Version,
 		"cliversion": common.Version,
 	}
-	_, err = p.Client.CreateSecret(context.TODO(), common.DefaultSystem, &corev1.Secret{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: pluginName,
-		},
-		StringData: plugindata,
-	}, metav1.CreateOptions{})
+	if updatestatus {
+		_, err = p.Client.UpdateSecret(context.TODO(), common.DefaultSystem, &corev1.Secret{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: pluginName,
+			},
+			StringData: plugindata,
+		}, metav1.UpdateOptions{})
+	} else {
+		_, err = p.Client.CreateSecret(context.TODO(), common.DefaultSystem, &corev1.Secret{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: pluginName,
+			},
+			StringData: plugindata,
+		}, metav1.CreateOptions{})
+	}
+
 	return err
 }

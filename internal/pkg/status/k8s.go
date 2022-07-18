@@ -152,8 +152,6 @@ func (k *K8sStatusCollector) quchengStatus(ctx context.Context, status *Status) 
 	k.deploymentStatus(ctx, "kube-system", "local-path-provisioner", "k8s", status)
 	// 业务层
 	k.deploymentStatus(ctx, common.DefaultSystem, common.DefaultQuchengName, "", status)
-	// 平台层
-	// k.deploymentStatus(ctx, common.DefaultSystem, common.DefaultCneAPIName, "", status)
 	// 数据库
 	k.deploymentStatus(ctx, common.DefaultSystem, common.DefaultDBName, "", status)
 
@@ -173,6 +171,11 @@ func (k *K8sStatusCollector) quchengPluginStatus(ctx context.Context, p plugin.M
 		stateCount.Disabled = true
 	} else {
 		stateCount.Disabled = false
+		if p.Type == "ingress" {
+			k.deploymentStatus(ctx, common.DefaultSystem, common.DefaultIngressName, "", status)
+		} else if p.Type == "cne-operator" {
+			k.deploymentStatus(ctx, common.DefaultSystem, common.DefaultCneOperatorName, "", status)
+		}
 	}
 	status.QStatus.PluginState[p.Type] = stateCount
 	return nil
