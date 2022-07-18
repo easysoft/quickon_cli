@@ -66,6 +66,13 @@ setup_tmp() {
     trap cleanup INT EXIT
 }
 
+setup_quickon() {
+  [ -d "/opt/quickon/backup" ] || (
+    mkdir -p /opt/quickon/backup
+    chmod 777 /opt/quickon/backup
+  )
+}
+
 # --- use desired qcadmin version if defined or find version from channel ---
 get_release_version() {
 		VERSION="edge"
@@ -142,6 +149,7 @@ download_and_verify() {
     setup_verify_arch
     verify_downloader curl || verify_downloader wget || fatal 'Can not find curl or wget for downloading files'
     setup_tmp
+    setup_quickon
     get_release_version
 		# Skip download if qcadmin binary exists, support upgrade
     download_binary
