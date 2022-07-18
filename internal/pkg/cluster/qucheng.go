@@ -143,7 +143,7 @@ func (p *Cluster) InstallQuCheng() error {
 	}
 	helmchan := common.GetChannel(p.QuchengVersion)
 	// helm upgrade -i nginx-ingress-controller bitnami/nginx-ingress-controller -n kube-system
-	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultChartName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultChartName, "--namespace", common.DefaultSystem, "--set", fmt.Sprintf("ingress.host=console.%s", p.Domain), "--set", "env.APP_DOMAIN=" + p.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
+	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultQuchengName, "--namespace", common.DefaultSystem, "--set", fmt.Sprintf("ingress.host=console.%s", p.Domain), "--set", "env.APP_DOMAIN=" + p.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
 	if helmchan != "stable" {
 		helmargs = append(helmargs, "--set", "env.PHP_DEBUG=2")
 	}
@@ -156,12 +156,6 @@ func (p *Cluster) InstallQuCheng() error {
 		p.Log.Errorf("upgrade install qucheng web failed: %s", string(output))
 		return err
 	}
-	// Deprecated CNE_API_TOKEN
-	// output, err = qcexec.Command(os.Args[0], "experimental", "helm", "upgrade", "--name", common.DefaultCneAPIName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultAPIChartName, "--namespace", common.DefaultSystem, "--set", "env.CNE_TOKEN="+token, "--set", "env.CNE_API_TOKEN="+token, "--set", "cloud.defaultChannel="+common.GetChannel(p.QuchengVersion)).CombinedOutput()
-	// if err != nil {
-	// p.Log.Errorf("upgrade install qucheng api failed: %s", string(output))
-	// 	return err
-	// }
 	p.Log.Done("install qucheng done")
 	p.Ready()
 	initfile := common.GetCustomConfig(common.InitFileName)
