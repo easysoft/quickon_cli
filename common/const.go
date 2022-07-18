@@ -9,6 +9,7 @@ package common
 import "time"
 
 const (
+	FileMode0777 = 0o777
 	FileMode0755 = 0o755
 	FileMode0644 = 0o644
 	FileMode0600 = 0o600
@@ -21,6 +22,7 @@ const (
 	DefaultBinDir     = ".qc/bin"
 	DefaultCfgDir     = ".qc/config"
 	DefaultCacheDir   = ".qc/cache"
+	DefaultQuickonDir = "/opt/quickon/backup"
 )
 
 const (

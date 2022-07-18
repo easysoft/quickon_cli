@@ -69,9 +69,9 @@
 				{
 					"name": "cne-operator",
 					"description": "渠成云原生应用交付平台控制器",
-					"version": "1.1.1",
+					"version": "1.1.2",
 					"home": "https://www.qucheng.com",
-					"appversion": "1.1.1",
+					"appversion": "1.1.2",
 					"path": "cne-operator",
 					"tool": "helm",
 					"builtin": true
