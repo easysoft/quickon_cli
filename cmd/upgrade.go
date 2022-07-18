@@ -15,9 +15,10 @@ import (
 func newCmdUpgrade(f factory.Factory) *cobra.Command {
 	up := &cobra.Command{
 		Use:     "upgrade",
-		Short:   "Upgrades the Q CLI to the newest version",
+		Short:   "Upgrades the Qucheng cli or plugin to the newest version",
 		Aliases: []string{"ug", "ugc"},
 	}
 	up.AddCommand(upgrade.NewUpgradeQ(f))
+	up.AddCommand(upgrade.NewUpgradeOperator(f))
 	return up
 }
