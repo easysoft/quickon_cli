@@ -71,7 +71,7 @@ build: ## build binary
 generate: ## generate
 	go generate ./...
 
-dev: ## dev test
+dev: generate ## dev test
 	GO_ENABLED=1 gox -osarch="linux/amd64" \
         -output="dist/{{.Dir}}_{{.OS}}_{{.Arch}}" \
     		-ldflags ${LDFLAGS}
