@@ -1,5 +1,26 @@
 # Changelog
 
+## v1.0.9 (2022-07-18)
+
+ * [2422953](https://github.com/easysoft/qucheng_cli/commit/2422953c616d53cb48dfabf9069d4b5fb5e6d279) fix(dir): fix dir perm (#41)
+
+### Contributors
+
+ * 缘生
+
+## v1.0.8 (2022-07-18)
+
+ * [14a4598](https://github.com/easysoft/qucheng_cli/commit/14a45987ecd7328d5629f486180f9d6be7dbd7b9) feat(version): support qucheng 1.1.1 (#39)
+ * [69ab1ad](https://github.com/easysoft/qucheng_cli/commit/69ab1ade2022935465660645b6c572f9652750d9) build(deps): bump github.com/imroc/req/v3 from 3.13.2 to 3.14.0 (#38)
+ * [6cd4c65](https://github.com/easysoft/qucheng_cli/commit/6cd4c65f14f10e68eefd11e4afdd2711f3bfe9f7) build(deps): bump github.com/cheggaaa/pb/v3 from 3.0.8 to 3.1.0 (#37)
+ * [6bc73c2](https://github.com/easysoft/qucheng_cli/commit/6bc73c2868cfdec343c1eef701e98b520e65b2d2) fix(typo): fix message typo
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+ * 缘生
+
 ## v1.0.7 (2022-07-08)
 
  * [b9b1a8f](https://github.com/easysoft/qucheng_cli/commit/b9b1a8f834f80cb096f92a0ee157156ec38b6302) fix(token): fix api token typo
