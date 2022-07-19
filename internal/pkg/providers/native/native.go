@@ -163,6 +163,7 @@ func (p *Native) Show() {
 		p.Log.Donef("web:: %s", fmt.Sprintf("http://%s:32379", p.Metadata.EIP))
 	}
 	p.Log.Donef("docs: %s", common.QuchengDocs)
+	p.Log.Done("support: 768721743(QQGroup)")
 }
 
 func (p *Native) SetLog(log log.Logger) {

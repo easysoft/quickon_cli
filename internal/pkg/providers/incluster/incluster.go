@@ -142,6 +142,7 @@ func (p *InCluster) Show() {
 	}
 
 	p.Log.Donef("docs: %s", common.QuchengDocs)
+	p.Log.Done("support: 768721743(QQGroup)")
 }
 
 func (p *InCluster) SetLog(log log.Logger) {

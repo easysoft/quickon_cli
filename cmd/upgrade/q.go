@@ -68,4 +68,6 @@ func (up option) DoQcadmin() {
 	up.log.Donef("Successfully updated ergo to version %s", lastversion)
 	up.log.Debugf("gen new version manifest")
 	up.log.Infof("Release note: \n\trelease %s ", lastversion)
+	up.log.Infof("Upgrade docs: \n\t https://github.com/easysoft/quickon_cli/wiki/upgrade")
+	up.log.Infof("Support QQGroup: \n\t 768721743")
 }

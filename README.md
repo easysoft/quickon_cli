@@ -113,6 +113,11 @@ q init --podsubnet 10.42.0.0/16 --svcsubnet 10.43.0.0/16
 
 [版本升级](https://github.com/easysoft/qucheng_cli/wiki/%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7)
 
+## 问题反馈
+
+* GitHub Issues
+* QQGroup: 768721743
+
 ## Contributors
 
 <!-- readme: collaborators,contributors -start -->
