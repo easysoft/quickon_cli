@@ -136,20 +136,19 @@ func (p *Native) GenerateManifest() []string {
 
 // Show show cluster info.
 func (p *Native) Show() {
-	loginip := p.Metadata.EIP
-	if len(loginip) <= 0 {
-		loginip = exnet.LocalIPs()[0]
+	if len(p.Metadata.EIP) <= 0 {
+		p.Metadata.EIP = exnet.LocalIPs()[0]
 	}
 	cfg, _ := config.LoadConfig()
 	domain := ""
 	if cfg != nil {
 		cfg.DB = "sqlite"
 		cfg.Token = kutil.GetNodeToken()
-		cfg.InitNode = loginip
+		cfg.InitNode = p.Metadata.EIP
 		cfg.Master = []config.Node{
 			{
 				Name: zos.GetHostname(),
-				Host: loginip,
+				Host: p.Metadata.EIP,
 				Init: true,
 			},
 		}
@@ -161,7 +160,7 @@ func (p *Native) Show() {
 	if len(domain) > 0 {
 		p.Log.Donef("web:: %s", fmt.Sprintf("http://console.%s", domain))
 	} else {
-		p.Log.Donef("web:: %s", fmt.Sprintf("http://%s:32379", loginip))
+		p.Log.Donef("web:: %s", fmt.Sprintf("http://%s:32379", p.Metadata.EIP))
 	}
 	p.Log.Donef("docs: %s", common.QuchengDocs)
 }

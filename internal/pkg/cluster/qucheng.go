@@ -18,6 +18,7 @@ import (
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/retry"
 	suffixdomain "github.com/easysoft/qcadmin/pkg/qucheng/domain"
+	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/expass"
 	"github.com/ergoapi/util/file"
@@ -88,20 +89,18 @@ func (p *Cluster) InstallQuCheng() error {
 	}
 	p.Log.Debug("start init qucheng")
 
-	// TODO 支持用户自定义域名
+	if len(p.Metadata.EIP) <= 0 {
+		p.Metadata.EIP = exnet.LocalIPs()[0]
+	}
 	if p.Domain == "" {
-		loginip := p.Metadata.EIP
-		if len(loginip) <= 0 {
-			loginip = exnet.LocalIPs()[0]
-		}
 		err := retry.Retry(time.Second*1, 3, func() (bool, error) {
-			domain, err := p.genSuffixHTTPHost(loginip)
+			domain, err := p.genSuffixHTTPHost(p.Metadata.EIP)
 			if err != nil {
 				return false, err
 			}
 			p.Domain = domain
 
-			p.Log.Infof("generate suffix domain: %s, ip: %v", p.Domain, loginip)
+			p.Log.Infof("generate suffix domain: %s, ip: %v", p.Domain, p.Metadata.EIP)
 			return true, nil
 		})
 		if err != nil {
@@ -109,7 +108,7 @@ func (p *Cluster) InstallQuCheng() error {
 			p.Log.Warn("gen suffix domain failed, reason: %v, use default domain: %s", err, p.Domain)
 		}
 	} else {
-		p.Log.Infof("use custom domain %s", p.Domain)
+		p.Log.Infof("use custom domain %s, you should add dns record to your domain: *.%s -> %s", p.Domain, color.SGreen(p.Domain), color.SGreen(p.Metadata.EIP))
 	}
 	token := p.genQuChengToken()
 	cfg, _ := config.LoadConfig()

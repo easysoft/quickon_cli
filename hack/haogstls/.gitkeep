@@ -1,0 +1,1 @@
+kubectl create secret tls tls-secret  --cert=hack/haogstls/certificate.crt --key=hack/haogstls/haogs.cn.key --dry-run=client -o yaml > hack/haogstls/haogs.yaml 

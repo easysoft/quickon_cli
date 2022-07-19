@@ -6,63 +6,16 @@
 			{
 				"name": "nginx-ingress-controller",
 				"description": "NGINX Ingress Controller is an Ingress controller that manages external access to HTTP services in a Kubernetes cluster using NGINX.",
-				"version": "1.2.1",
+				"version": "9.2.20",
 				"home": "https://github.com/bitnami/charts/tree/master/bitnami/nginx-ingress-controller",
-				"appversion": "1.2.1",
-				"path": "hack/manifests/plugins/nginx-ingress-controller.yaml",
-				"tool": "kubectl",
+				"appversion": "9.2.20",
+				"path": "nginx-ingress-controller",
+				"tool": "helm",
 				"builtin": true
 			}
 		]
 	},
 	{
-		"type": "monitoring",
-		"default": "monitoring",
-		"item": [
-			{
-				"name": "monitoring",
-				"description": "provides easy monitoring definitions for Kubernetes services and deployment and management of Monitoring instances.",
-				"version": "0.56.1",
-				"home": "https://github.com/bitnami/charts/tree/master/bitnami/kube-prometheus",
-				"appversion": "0.56.1",
-				"path": "kube-prometheus",
-				"tool": "helm",
-				"builtin": false
-			}
-		]
-	},
-	{
-		"type": "lb",
-		"default": "openelb",
-		"item": [
-			{
-				"name": "openelb",
-				"description": "Load Balancer Implementation for Kubernetes in Bare-Metal, Edge, and Virtualization Environments.",
-				"version": "0.4.4",
-				"home": "https://github.com/openelb/openelb",
-				"appversion": "0.4.4",
-				"path": "hack/manifests/plugins/openelb.yaml",
-				"tool": "kubectl",
-				"builtin": false
-			}
-		]
-	},
-		{
-			"type": "storage",
-			"default": "longhorn",
-			"item": [
-				{
-					"name": "longhorn",
-					"description": "Longhorn is a lightweight, reliable and easy-to-use distributed block storage system for Kubernetes.",
-					"version": "1.3.0",
-					"home": "https://longhorn.io",
-					"appversion": "1.3.0",
-					"path": "hack/manifests/plugins/storage-longhorn.yaml",
-					"tool": "kubectl",
-					"builtin": false
-				}
-			]
-		}, {
 			"type": "cne-operator",
 			"default": "cne-operator",
 			"item": [

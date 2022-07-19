@@ -16,13 +16,14 @@ const (
 )
 
 const (
-	DefaultDaemonPort = 60080
-	DefaultLogDir     = ".qc/log"
-	DefaultDataDir    = ".qc/data"
-	DefaultBinDir     = ".qc/bin"
-	DefaultCfgDir     = ".qc/config"
-	DefaultCacheDir   = ".qc/cache"
-	DefaultQuickonDir = "/opt/quickon/backup"
+	DefaultDaemonPort         = 60080
+	DefaultLogDir             = ".qc/log"
+	DefaultDataDir            = ".qc/data"
+	DefaultBinDir             = ".qc/bin"
+	DefaultCfgDir             = ".qc/config"
+	DefaultCacheDir           = ".qc/cache"
+	DefaultQuickonBackupDir   = "/opt/quickon/backup"
+	DefaultQuickonPlatformDir = "/opt/quickon/platform"
 )
 
 const (
