@@ -10,6 +10,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -134,6 +135,28 @@ func (p *Cluster) GetCreateExtOptions() []types.Flag {
 			Usage: "application custom domain name",
 		},
 	}
+}
+
+func (p *Cluster) AddHelmRepo() error {
+	output, err := qcexec.Command(os.Args[0], "experimental", "helm", "repo-add", "--name", common.DefaultHelmRepoName, "--url", common.GetChartRepo(p.QuchengVersion)).CombinedOutput()
+	if err != nil {
+		errmsg := string(output)
+		if !strings.Contains(errmsg, "exists") {
+			p.Log.Errorf("init qucheng install repo failed: %s", string(output))
+			return err
+		}
+		p.Log.Warn("qucheng install repo  already exists")
+	} else {
+		p.Log.Done("init qucheng install repo success")
+	}
+
+	output, err = qcexec.Command(os.Args[0], "experimental", "helm", "repo-update").CombinedOutput()
+	if err != nil {
+		p.Log.Errorf("update qucheng install repo failed: %s", string(output))
+		return err
+	}
+	p.Log.Done("update qucheng install repo success")
+	return nil
 }
 
 func (p *Cluster) InitCluster() error {

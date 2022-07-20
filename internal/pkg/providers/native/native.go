@@ -8,6 +8,7 @@ package native
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
@@ -93,7 +94,9 @@ func (p *Native) GetProviderName() string {
 
 // CreateCluster create cluster.
 func (p *Native) CreateCluster() (err error) {
-	p.Log.Info("start init cluster")
+	if p.AddHelmRepo() != nil {
+		return err
+	}
 	return p.InitCluster()
 }
 
@@ -158,7 +161,10 @@ func (p *Native) Show() {
 
 	p.Log.Info("----------------------------")
 	if len(domain) > 0 {
-		p.Log.Donef("web:: %s", fmt.Sprintf("http://console.%s", domain))
+		if !strings.HasSuffix(cfg.Domain, "haogs.cn") {
+			domain = fmt.Sprintf("console.%s", cfg.Domain)
+		}
+		p.Log.Donef("web:: %s", domain)
 	} else {
 		p.Log.Donef("web:: %s", fmt.Sprintf("http://%s:32379", p.Metadata.EIP))
 	}

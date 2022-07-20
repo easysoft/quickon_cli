@@ -107,8 +107,14 @@ func (p *Cluster) InstallQuCheng() error {
 			p.Domain = "demo.haogs.cn"
 			p.Log.Warn("gen suffix domain failed, reason: %v, use default domain: %s", err, p.Domain)
 		}
+		p.Log.Info("load default tls cert")
 	} else {
 		p.Log.Infof("use custom domain %s, you should add dns record to your domain: *.%s -> %s", p.Domain, color.SGreen(p.Domain), color.SGreen(p.Metadata.EIP))
+	}
+	if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/hack/haogstls/haogs.yaml", common.GetDefaultDataDir()), "-n", common.DefaultSystem).Run(); err != nil {
+		p.Log.Warn("load default tls cert failed, reason: %v", err)
+	} else {
+		p.Log.Done("load default tls cert success")
 	}
 	token := p.genQuChengToken()
 	cfg, _ := config.LoadConfig()
@@ -116,24 +122,6 @@ func (p *Cluster) InstallQuCheng() error {
 	cfg.APIToken = token
 	cfg.SaveConfig()
 
-	output, err := qcexec.Command(os.Args[0], "experimental", "helm", "repo-add", "--name", common.DefaultHelmRepoName, "--url", common.GetChartRepo(p.QuchengVersion)).CombinedOutput()
-	if err != nil {
-		errmsg := string(output)
-		if !strings.Contains(errmsg, "exists") {
-			p.Log.Errorf("init qucheng install repo failed: %s", string(output))
-			return err
-		}
-		p.Log.Warn("qucheng install repo  already exists")
-	} else {
-		p.Log.Done("init qucheng install repo done")
-	}
-
-	output, err = qcexec.Command(os.Args[0], "experimental", "helm", "repo-update").CombinedOutput()
-	if err != nil {
-		p.Log.Errorf("update qucheng install repo failed: %s", string(output))
-		return err
-	}
-	p.Log.Done("update qucheng install repo done")
 	p.Log.Info("start deploy cne operator")
 	if err := qcexec.CommandRun(os.Args[0], "manage", "plugins", "enable", "cne-operator"); err != nil {
 		p.Log.Warnf("deploy cne-operator err: %v", err)
@@ -142,15 +130,23 @@ func (p *Cluster) InstallQuCheng() error {
 	}
 	helmchan := common.GetChannel(p.QuchengVersion)
 	// helm upgrade -i nginx-ingress-controller bitnami/nginx-ingress-controller -n kube-system
-	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultQuchengName, "--namespace", common.DefaultSystem, "--set", fmt.Sprintf("ingress.host=console.%s", p.Domain), "--set", "env.APP_DOMAIN=" + p.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
+	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultQuchengName, "--namespace", common.DefaultSystem, "--set", "env.APP_DOMAIN=" + p.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
 	if helmchan != "stable" {
 		helmargs = append(helmargs, "--set", "env.PHP_DEBUG=2")
 	}
+	hostdomain := p.Domain
+	if strings.HasSuffix(hostdomain, "haogs.cn") {
+		helmargs = append(helmargs, "--set", "ingress.tls.enabled=true")
+		helmargs = append(helmargs, "--set", "ingress.tls.secretName=tls-haogs-cn")
+	} else {
+		hostdomain = fmt.Sprintf("console.%s", hostdomain)
+	}
+	helmargs = append(helmargs, "--set", fmt.Sprintf("ingress.host=%s", hostdomain))
 	chartversion := common.GetVersion(p.QuchengVersion)
 	if len(chartversion) > 0 {
 		helmargs = append(helmargs, "--version", chartversion)
 	}
-	output, err = qcexec.Command(os.Args[0], helmargs...).CombinedOutput()
+	output, err := qcexec.Command(os.Args[0], helmargs...).CombinedOutput()
 	if err != nil {
 		p.Log.Errorf("upgrade install qucheng web failed: %s", string(output))
 		return err

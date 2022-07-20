@@ -118,7 +118,10 @@ func (s *Status) Format() error {
 		}
 		consoleURL := ""
 		if len(domain) > 0 {
-			consoleURL = fmt.Sprintf("http://console.%s", domain)
+			if !strings.HasSuffix(domain, "haogs.cn") {
+				domain = fmt.Sprintf("console.%s", domain)
+			}
+			consoleURL = domain
 		} else {
 			consoleURL = fmt.Sprintf("http://%s:32379", loginip)
 		}
