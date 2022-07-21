@@ -31,8 +31,8 @@ func initRootDirectory() error {
 			return errors.Errorf("failed to mkdir %s, err: %s", dir, err)
 		}
 	}
-	if err := os.MkdirAll(common.DefaultQuickonDir, common.FileMode0777); err != nil {
-		return errors.Errorf("failed to mkdir %s, err: %s", common.DefaultQuickonDir, err)
+	if err := os.MkdirAll(common.GetDefaultQuickonDir(), common.FileMode0777); err != nil {
+		return errors.Errorf("failed to mkdir %s, err: %s", common.GetDefaultQuickonDir(), err)
 	}
 	return nil
 }

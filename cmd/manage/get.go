@@ -53,7 +53,7 @@ func NewCmdGetApp(f factory.Factory) *cobra.Command {
 			// if apidebug {
 			// 	spew.Dump(appdata)
 			// }
-			extargs := []string{"exp", "kubectl", "get", "-o", "wide", "pods,deploy,pvc,svc,ing", "-l", "release=" + appdata.K8Name, "-l", "app=" + appdata.Chart}
+			extargs := []string{"exp", "kubectl", "get", "-o", "wide", "pods,deploy,pvc,svc,ing", "-l", "release=" + appdata.K8Name}
 			// extargs = append(extargs, args...)
 			return qcexec.CommandRun(os.Args[0], extargs...)
 		},

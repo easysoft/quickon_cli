@@ -48,7 +48,10 @@ type AppData struct {
 func GetNameByURL(url string, debug bool) (*AppData, error) {
 	// 获取ID
 	k := strings.Split(url, "-")
-	key := strings.Trim(k[len(k)-1], ".html")
+	if len(k) < 3 {
+		return nil, fmt.Errorf("url err")
+	}
+	key := k[2]
 
 	cfg, _ := config.LoadConfig()
 	if cfg.APIToken == "" {
