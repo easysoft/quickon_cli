@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.0.10 (2022-07-21)
+
+ * [3dbd45d](https://github.com/easysoft/qucheng_cli/commit/3dbd45d940356a52cd011c6d061ff12f0b3668a2) feat(exec): add exec support
+
+### Contributors
+
+ * ysicing
+
 ## v1.0.9 (2022-07-18)
 
  * [2422953](https://github.com/easysoft/qucheng_cli/commit/2422953c616d53cb48dfabf9069d4b5fb5e6d279) fix(dir): fix dir perm (#41)
