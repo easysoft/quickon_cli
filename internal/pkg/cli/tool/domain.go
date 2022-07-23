@@ -27,21 +27,21 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func EmbedCommand(f factory.Factory) *cobra.Command {
-	dns := &cobra.Command{
-		Use:    "dns",
-		Short:  "dns manager",
+func EmbedDomainCommand(f factory.Factory) *cobra.Command {
+	domain := &cobra.Command{
+		Use:    "domain",
+		Short:  "domain manager",
 		Hidden: true,
 	}
-	dns.AddCommand(dnsClean(f))
-	dns.AddCommand(dnsAdd(f))
-	return dns
+	domain.AddCommand(domainClean(f))
+	domain.AddCommand(domainAdd(f))
+	return domain
 }
 
-func dnsClean(f factory.Factory) *cobra.Command {
+func domainClean(f factory.Factory) *cobra.Command {
 	dns := &cobra.Command{
 		Use:    "clean",
-		Short:  "clean dns",
+		Short:  "clean domain",
 		Hidden: true,
 		Run: func(cmd *cobra.Command, args []string) {
 			cfg, _ := config.LoadConfig()
@@ -71,12 +71,12 @@ func dnsClean(f factory.Factory) *cobra.Command {
 	return dns
 }
 
-func dnsAdd(f factory.Factory) *cobra.Command {
+func domainAdd(f factory.Factory) *cobra.Command {
 	log := f.GetLog()
 	var customdomain string
 	dns := &cobra.Command{
 		Use:    "init",
-		Short:  "init dns",
+		Short:  "init domain",
 		Hidden: true,
 		Run: func(cmd *cobra.Command, args []string) {
 			// load config

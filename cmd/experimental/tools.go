@@ -14,5 +14,12 @@ import (
 
 // ToolsCommand helm command.
 func ToolsCommand(f factory.Factory) *cobra.Command {
-	return tool.EmbedCommand(f)
+	tCmd := &cobra.Command{
+		Use:   "tools",
+		Short: "custom op tools",
+	}
+	tCmd.AddCommand(tool.EmbedDomainCommand(f))
+	tCmd.AddCommand(tool.EmbedHostsCommand(f))
+	tCmd.AddCommand(tool.EmbedRouteCommand())
+	return tCmd
 }
