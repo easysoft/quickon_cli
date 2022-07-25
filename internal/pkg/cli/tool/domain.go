@@ -109,7 +109,7 @@ func domainAdd(f factory.Factory) *cobra.Command {
 				id := cm.Data["uuid"]
 				auth := cm.Data["auth"]
 				ip := exnet.LocalIPs()[0]
-				domain, err = suffixdomain.GenerateDomain(ip, id, auth)
+				domain, _, err = suffixdomain.GenerateDomain(ip, id, auth, suffixdomain.GenCustomDomain())
 				if len(domain) == 0 {
 					log.Warnf("gen domain failed: %v, use default domain: demo.haogs.cn", err)
 					domain = "demo.haogs.cn"

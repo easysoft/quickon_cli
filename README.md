@@ -107,6 +107,8 @@ yum install qcadmin
 q init
 # create a k3s cluster with other cidr
 q init --podsubnet 10.42.0.0/16 --svcsubnet 10.43.0.0/16
+# custom domain
+q init --domain qucheng.example.com
 ```
 
 ## 相关文档

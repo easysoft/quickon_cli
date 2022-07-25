@@ -49,16 +49,17 @@ func (p *Cluster) getOrCreateUUIDAndAuth() (id, auth string, err error) {
 	return cm.Data["uuid"], cm.Data["auth"], nil
 }
 
-func (p *Cluster) genSuffixHTTPHost(ip string) (domain string, err error) {
+func (p *Cluster) genSuffixHTTPHost(ip string) (domain, tls string, err error) {
 	id, auth, err := p.getOrCreateUUIDAndAuth()
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-	domain, err = suffixdomain.GenerateDomain(ip, id, auth)
+
+	domain, tls, err = suffixdomain.GenerateDomain(ip, id, auth, suffixdomain.GenCustomDomain())
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-	return domain, nil
+	return domain, tls, nil
 }
 
 func (p *Cluster) InstallQuCheng() error {
@@ -94,7 +95,7 @@ func (p *Cluster) InstallQuCheng() error {
 	}
 	if p.Domain == "" {
 		err := retry.Retry(time.Second*1, 3, func() (bool, error) {
-			domain, err := p.genSuffixHTTPHost(p.Metadata.EIP)
+			domain, _, err := p.genSuffixHTTPHost(p.Metadata.EIP)
 			if err != nil {
 				return false, err
 			}
@@ -107,14 +108,32 @@ func (p *Cluster) InstallQuCheng() error {
 			p.Domain = "demo.haogs.cn"
 			p.Log.Warn("gen suffix domain failed, reason: %v, use default domain: %s", err, p.Domain)
 		}
-		p.Log.Info("load default tls cert")
+		p.Log.Infof("load %s tls cert", p.Domain)
+		defaultTLS := fmt.Sprintf("%s/tls-haogs-cn.yaml", common.GetDefaultCacheDir())
+		p.Log.StartWait(fmt.Sprintf("Start Issuing domain %s Certificate, may take 3-5min", p.Domain))
+		waittls := time.Now()
+		for {
+			if _, err := os.Stat(defaultTLS); err == nil {
+				p.Log.StopWait()
+				p.Log.Done("download tls cert success")
+				if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.DefaultSystem).Run(); err != nil {
+					p.Log.Warn("load default tls cert failed, reason: %v", err)
+				} else {
+					p.Log.Done("load default tls cert success")
+				}
+				break
+			}
+			qcexec.Command(os.Args[0], "experimental", "tools", "wget", "-t", fmt.Sprintf("https://pkg.qucheng.com/ssl/haogs.cn/%s/tls.yaml", p.Domain), "-d", defaultTLS).Run()
+			p.Log.Debug("wait for tls cert ready...")
+			time.Sleep(time.Second * 15)
+			trywaitsc := time.Now()
+			if trywaitsc.Sub(waittls) > time.Minute*3 {
+				// TODO  timeout
+				p.Log.Debugf("wait tls cert ready, timeout: %v", trywaitsc.Sub(waittls).Seconds())
+			}
+		}
 	} else {
 		p.Log.Infof("use custom domain %s, you should add dns record to your domain: *.%s -> %s", p.Domain, color.SGreen(p.Domain), color.SGreen(p.Metadata.EIP))
-	}
-	if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/hack/haogstls/haogs.yaml", common.GetDefaultDataDir()), "-n", common.DefaultSystem).Run(); err != nil {
-		p.Log.Warn("load default tls cert failed, reason: %v", err)
-	} else {
-		p.Log.Done("load default tls cert success")
 	}
 	token := p.genQuChengToken()
 	cfg, _ := config.LoadConfig()

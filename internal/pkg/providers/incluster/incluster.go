@@ -139,10 +139,12 @@ func (p *InCluster) Show() {
 	if len(domain) > 0 {
 		if !strings.HasSuffix(cfg.Domain, "haogs.cn") {
 			domain = fmt.Sprintf("console.%s", cfg.Domain)
+		} else {
+			domain = fmt.Sprintf("https://%s", cfg.Domain)
 		}
-		p.Log.Donef("web:: %s", domain)
+		p.Log.Donef("web: %s", domain)
 	} else {
-		p.Log.Donef("web:: %s", fmt.Sprintf("http://%s:32379", p.Metadata.EIP))
+		p.Log.Donef("web: %s", fmt.Sprintf("http://%s:32379", p.Metadata.EIP))
 	}
 
 	p.Log.Donef("docs: %s", common.QuchengDocs)

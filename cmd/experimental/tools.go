@@ -21,5 +21,6 @@ func ToolsCommand(f factory.Factory) *cobra.Command {
 	tCmd.AddCommand(tool.EmbedDomainCommand(f))
 	tCmd.AddCommand(tool.EmbedHostsCommand(f))
 	tCmd.AddCommand(tool.EmbedRouteCommand())
+	tCmd.AddCommand(tool.EmbedWgetCommand(f))
 	return tCmd
 }
