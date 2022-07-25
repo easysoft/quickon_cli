@@ -113,3 +113,10 @@ func GetAPI(path string) string {
 	path = strings.TrimLeft(path, "/")
 	return fmt.Sprintf("https://api.qucheng.com/%s", path)
 }
+
+func GetCustomQuickonDir(path string) string {
+	if zos.IsMacOS() {
+		return fmt.Sprintf("%v/%v", zos.GetHomeDir(), path)
+	}
+	return path
+}

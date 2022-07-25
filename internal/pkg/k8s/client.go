@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"github.com/ergoapi/util/exmap"
+	"golang.org/x/term"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
@@ -29,6 +30,8 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
+	"k8s.io/client-go/tools/remotecommand"
+	"k8s.io/kubectl/pkg/scheme"
 	metrics "k8s.io/metrics/pkg/client/clientset/versioned"
 )
 
@@ -43,11 +46,14 @@ type Client struct {
 }
 
 func NewSimpleClient() (*Client, error) {
-	dir, err := os.UserHomeDir()
-	if err != nil {
-		return nil, err
+	kubeconfig := os.Getenv("KUBECONFIG")
+	if kubeconfig == "" {
+		dir, err := os.UserHomeDir()
+		if err != nil {
+			return nil, err
+		}
+		kubeconfig = filepath.Join(dir, ".kube", "config")
 	}
-	kubeconfig := filepath.Join(dir, ".kube", "config")
 	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
 	if err != nil {
 		return nil, err
@@ -426,6 +432,42 @@ func (c *Client) ExecInPod(ctx context.Context, namespace, pod, container string
 	}
 
 	return result.Stdout, nil
+}
+
+func (c *Client) ExecPodWithTTY(ctx context.Context, namespace, podName, container string, command []string) error {
+	req := c.Clientset.CoreV1().RESTClient().Post().
+		Resource("pods").
+		Name(podName).
+		Namespace(namespace).
+		SubResource("exec").
+		VersionedParams(&corev1.PodExecOptions{
+			Command: command,
+			Stdin:   true,
+			Stdout:  true,
+			Stderr:  true,
+			TTY:     true,
+		}, scheme.ParameterCodec)
+	exec, err := remotecommand.NewSPDYExecutor(c.Config, "POST", req.URL())
+	if err != nil {
+		return err
+	}
+	if !term.IsTerminal(0) || !term.IsTerminal(1) {
+		return fmt.Errorf("stdin/stdout must be a terminal")
+	}
+	oldstate, _ := term.MakeRaw(0)
+	defer term.Restore(0, oldstate)
+	screen := struct {
+		io.Reader
+		io.Writer
+	}{os.Stdin, os.Stdout}
+
+	err = exec.Stream(remotecommand.StreamOptions{
+		Stdin:  screen,
+		Stdout: screen,
+		Stderr: screen,
+		Tty:    true,
+	})
+	return err
 }
 
 func (c *Client) CreateIngressClass(ctx context.Context, ingressClass *networkingv1.IngressClass, opts metav1.CreateOptions) (*networkingv1.IngressClass, error) {

@@ -33,3 +33,12 @@ func newCmdManageGet(f factory.Factory) *cobra.Command {
 	m.AddCommand(manage.NewCmdGetApp(f))
 	return m
 }
+
+func newCmdManageExec(f factory.Factory) *cobra.Command {
+	m := &cobra.Command{
+		Use:   "exec",
+		Short: "Execute a command in a app",
+	}
+	m.AddCommand(manage.NewCmdExecApp(f))
+	return m
+}

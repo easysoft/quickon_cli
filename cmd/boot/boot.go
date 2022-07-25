@@ -37,7 +37,7 @@ func initRootDirectory() error {
 		}
 	}
 	for _, dir := range qDirs {
-		if err := os.MkdirAll(dir, common.FileMode0777); err != nil {
+		if err := os.MkdirAll(common.GetCustomQuickonDir(dir), common.FileMode0777); err != nil {
 			return errors.Errorf("failed to mkdir %s, err: %s", dir, err)
 		}
 	}
