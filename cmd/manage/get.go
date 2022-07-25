@@ -41,7 +41,7 @@ func NewCmdGetApp(f factory.Factory) *cobra.Command {
 		Aliases: []string{"apps"},
 		Short:   "get app",
 		Args:    cobra.ExactArgs(1),
-		Example: `q get app http://console.efbb.haogs.cn/instance-view-39.html`,
+		Example: `q get app https://efbb.haogs.cn/instance-view-39.html`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			url := args[0]
 			apidebug := log.GetLevel() == logrus.DebugLevel

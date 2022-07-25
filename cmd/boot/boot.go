@@ -13,6 +13,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/static"
 )
 
 var rootDirs = []string{
@@ -23,16 +24,26 @@ var rootDirs = []string{
 	common.DefaultCacheDir,
 }
 
+var qDirs = []string{
+	common.DefaultQuickonPlatformDir,
+	common.DefaultQuickonBackupDir,
+}
+
 func initRootDirectory() error {
 	home := zos.GetHomeDir()
 	for _, dir := range rootDirs {
-		err := os.MkdirAll(home+"/"+dir, common.FileMode0755)
-		if err != nil {
+		if err := os.MkdirAll(home+"/"+dir, common.FileMode0755); err != nil {
 			return errors.Errorf("failed to mkdir %s, err: %s", dir, err)
 		}
 	}
-	if err := os.MkdirAll(common.GetDefaultQuickonDir(), common.FileMode0777); err != nil {
-		return errors.Errorf("failed to mkdir %s, err: %s", common.GetDefaultQuickonDir(), err)
+	for _, dir := range qDirs {
+		if err := os.MkdirAll(common.GetCustomQuickonDir(dir), common.FileMode0777); err != nil {
+			return errors.Errorf("failed to mkdir %s, err: %s", dir, err)
+		}
+	}
+
+	if err := static.StageFiles(); err != nil {
+		return errors.Errorf("failed to stage files, err: %s", err)
 	}
 	return nil
 }

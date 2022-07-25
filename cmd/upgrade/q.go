@@ -16,7 +16,6 @@ import (
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
-	"github.com/easysoft/qcadmin/internal/static"
 	"github.com/easysoft/qcadmin/pkg/selfupdate"
 	"github.com/spf13/cobra"
 )
@@ -67,9 +66,8 @@ func (up option) DoQcadmin() {
 		return
 	}
 	up.log.Donef("Successfully updated ergo to version %s", lastversion)
-	if err := static.UpgradeFiles(); err != nil {
-		up.log.Debugf("gen manifest err: %v", err)
-	}
 	up.log.Debugf("gen new version manifest")
 	up.log.Infof("Release note: \n\trelease %s ", lastversion)
+	up.log.Infof("Upgrade docs: \n\t https://github.com/easysoft/quickon_cli/wiki/upgrade")
+	up.log.Infof("Support QQGroup: \n\t 768721743")
 }

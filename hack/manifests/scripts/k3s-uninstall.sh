@@ -121,6 +121,7 @@ done
 [ -d "/run/flannel" ] && rm -rf /run/flannel
 [ -d "/var/lib/rancher/k3s" ] && rm -rf /var/lib/rancher/k3s
 [ -d "/var/lib/kubelet" ] && rm -rf /var/lib/kubelet
+[ -d "/opt/quickon" ] && rm -rf /opt/quickon
 
 # 暂时禁用selinux
 # if type yum >/dev/null 2>&1; then

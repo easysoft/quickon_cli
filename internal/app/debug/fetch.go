@@ -75,7 +75,9 @@ func GetNameByURL(url string, debug bool) (*AppData, error) {
 	if cfg.Domain == "" {
 		cfg.Domain = fmt.Sprintf("%s:32379", exnet.LocalIPs()[0])
 	} else {
-		cfg.Domain = fmt.Sprintf("console.%s", cfg.Domain)
+		if !strings.HasSuffix(cfg.Domain, "haogs.cn") {
+			cfg.Domain = fmt.Sprintf("console.%s", cfg.Domain)
+		}
 	}
 
 	client := req.C()

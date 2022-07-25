@@ -11,7 +11,6 @@ import (
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/providers"
-	"github.com/easysoft/qcadmin/internal/static"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/file"
 	"github.com/spf13/cobra"
@@ -61,10 +60,6 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 		}
 	}
 	initCmd.Run = func(cmd *cobra.Command, args []string) {
-		if err := static.StageFiles(); err != nil {
-			log.Fatalf("failed to stage files: %s", err)
-			return
-		}
 		cp.SetLog(log)
 		if name != "incluster" {
 			if err := cp.PreSystemInit(); err != nil {

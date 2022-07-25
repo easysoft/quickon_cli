@@ -8,6 +8,7 @@ package incluster
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
@@ -76,7 +77,7 @@ func (p *InCluster) GetProviderName() string {
 // CreateCluster create cluster.
 func (p *InCluster) CreateCluster() (err error) {
 	p.Log.Warn("exists cluster, check cluster status")
-	return nil
+	return p.AddHelmRepo()
 }
 
 // JoinNode join node.
@@ -115,9 +116,8 @@ func (p *InCluster) GenerateManifest() []string {
 
 // Show show cluster info.
 func (p *InCluster) Show() {
-	loginip := p.Metadata.EIP
-	if len(loginip) <= 0 {
-		loginip = exnet.LocalIPs()[0]
+	if len(p.Metadata.EIP) <= 0 {
+		p.Metadata.EIP = exnet.LocalIPs()[0]
 	}
 	cfg, _ := config.LoadConfig()
 	domain := ""
@@ -127,7 +127,7 @@ func (p *InCluster) Show() {
 		cfg.Master = []config.Node{
 			{
 				Name: zos.GetHostname(),
-				Host: loginip,
+				Host: p.Metadata.EIP,
 				Init: true,
 			},
 		}
@@ -137,12 +137,18 @@ func (p *InCluster) Show() {
 
 	p.Log.Info("----------------------------")
 	if len(domain) > 0 {
-		p.Log.Donef("web:: %s", fmt.Sprintf("http://console.%s", domain))
+		if !strings.HasSuffix(cfg.Domain, "haogs.cn") {
+			domain = fmt.Sprintf("console.%s", cfg.Domain)
+		} else {
+			domain = fmt.Sprintf("https://%s", cfg.Domain)
+		}
+		p.Log.Donef("web: %s", domain)
 	} else {
-		p.Log.Donef("web:: %s", fmt.Sprintf("http://%s:32379", loginip))
+		p.Log.Donef("web: %s", fmt.Sprintf("http://%s:32379", p.Metadata.EIP))
 	}
 
 	p.Log.Donef("docs: %s", common.QuchengDocs)
+	p.Log.Done("support: 768721743(QQGroup)")
 }
 
 func (p *InCluster) SetLog(log log.Logger) {

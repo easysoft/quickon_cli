@@ -10,6 +10,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -21,7 +22,6 @@ import (
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/initsystem"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
-	"github.com/easysoft/qcadmin/internal/static/deploy"
 	"github.com/ergoapi/util/environ"
 	"github.com/ergoapi/util/excmd"
 	"github.com/ergoapi/util/exnet"
@@ -137,19 +137,41 @@ func (p *Cluster) GetCreateExtOptions() []types.Flag {
 	}
 }
 
+func (p *Cluster) AddHelmRepo() error {
+	output, err := qcexec.Command(os.Args[0], "experimental", "helm", "repo-add", "--name", common.DefaultHelmRepoName, "--url", common.GetChartRepo(p.QuchengVersion)).CombinedOutput()
+	if err != nil {
+		errmsg := string(output)
+		if !strings.Contains(errmsg, "exists") {
+			p.Log.Errorf("init qucheng install repo failed: %s", string(output))
+			return err
+		}
+		p.Log.Warn("qucheng install repo  already exists")
+	} else {
+		p.Log.Done("init qucheng install repo success")
+	}
+
+	output, err = qcexec.Command(os.Args[0], "experimental", "helm", "repo-update").CombinedOutput()
+	if err != nil {
+		p.Log.Errorf("update qucheng install repo failed: %s", string(output))
+		return err
+	}
+	p.Log.Done("update qucheng install repo success")
+	return nil
+}
+
 func (p *Cluster) InitCluster() error {
 	p.Status.Status = common.StatusCreating
 	if err := p.InitK3sCluster(); err != nil {
 		return err
 	}
 	p.Status.Status = common.StatusRunning
-	dataDir := common.GetDefaultDataDir()
-	templateVars := map[string]string{
-		"%{NAMESPACE}%": common.DefaultSystem,
-	}
-	if err := deploy.StageFunc(dataDir, templateVars); err != nil {
-		return err
-	}
+	// dataDir := common.GetDefaultDataDir()
+	// templateVars := map[string]string{
+	// 	"%{NAMESPACE}%": common.DefaultSystem,
+	// }
+	// if err := deploy.StageFunc(dataDir, templateVars); err != nil {
+	// 	return err
+	// }
 	if p.Metadata.DisableIngress {
 		p.Log.Warn("disable ingress controller")
 	} else {
@@ -278,14 +300,14 @@ func (p *Cluster) configCommonOptions() []string {
 			args = append(args, "--kubelet-arg=cgroup-driver=systemd")
 		}
 	}
-	if len(p.EIP) != 0 {
-		args = append(args, fmt.Sprintf("--node-external-ip=%v", p.EIP))
-	}
+	// if len(p.EIP) != 0 {
+	// 	args = append(args, fmt.Sprintf("--node-external-ip=%v", p.EIP))
+	// }
 	args = append(args, "--kubelet-arg=max-pods=220",
 		"--kube-proxy-arg=proxy-mode=ipvs",
 		"--kube-proxy-arg=masquerade-all=true",
 		"--kube-proxy-arg=metrics-bind-address=0.0.0.0",
-		// "--token=a1b2c3d4", // TODO 随机生成
+		"--data-dir=/opt/quickon/platform",
 		"--pause-image=hub.qucheng.com/library/k3s-pause:3.6")
 
 	return args

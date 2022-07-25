@@ -13,7 +13,6 @@ import (
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/providers"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
-	"github.com/easysoft/qcadmin/internal/static"
 	"github.com/spf13/cobra"
 )
 
@@ -41,10 +40,6 @@ func newCmdJoin(f factory.Factory) *cobra.Command {
 	joinCmd.Flags().AddFlagSet(flags.ConvertFlags(joinCmd, jp.GetJoinFlags()))
 	joinCmd.Example = jp.GetUsageExample("join")
 	joinCmd.Run = func(cmd *cobra.Command, args []string) {
-		if err := static.StageFiles(); err != nil {
-			log.Fatalf("failed to stage files: %s", err)
-			return
-		}
 		if err := jp.PreSystemInit(); err != nil {
 			log.Fatalf("presystem init err, reason: %s", err)
 		}

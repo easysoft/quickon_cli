@@ -9,11 +9,13 @@ package tool
 import (
 	"context"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
 	"github.com/easysoft/qcadmin/pkg/qucheng/domain"
@@ -107,7 +109,7 @@ func domainAdd(f factory.Factory) *cobra.Command {
 				id := cm.Data["uuid"]
 				auth := cm.Data["auth"]
 				ip := exnet.LocalIPs()[0]
-				domain, err = suffixdomain.GenerateDomain(ip, id, auth)
+				domain, _, err = suffixdomain.GenerateDomain(ip, id, auth, suffixdomain.GenCustomDomain())
 				if len(domain) == 0 {
 					log.Warnf("gen domain failed: %v, use default domain: demo.haogs.cn", err)
 					domain = "demo.haogs.cn"
@@ -123,9 +125,22 @@ func domainAdd(f factory.Factory) *cobra.Command {
 			if err := helmClient.UpdateRepo(); err != nil {
 				log.Warn("update repo failed, reason: %v", err)
 			}
+			if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/hack/haogstls/haogs.yaml", common.GetDefaultDataDir()), "-n", common.DefaultSystem).Run(); err != nil {
+				log.Warn("load default tls cert failed, reason: %v", err)
+			} else {
+				log.Done("load default tls cert success")
+			}
 			defaultValue, _ := helmClient.GetValues(common.DefaultQuchengName)
+			var values []string
+			host := cfg.Domain
+			if strings.HasSuffix(host, "haogs.cn") {
+				values = append(values, "ingress.tls.enabled=true")
+				values = append(values, "ingress.tls.secretName=tls-haogs-cn")
+			} else {
+				host = fmt.Sprintf("console.%s", host)
+			}
+			values = append(values, fmt.Sprintf("ingress.host=%s", host), fmt.Sprintf("env.APP_DOMAIN=%s", cfg.Domain))
 			base := map[string]interface{}{}
-			values := []string{fmt.Sprintf("env.APP_DOMAIN=%s", cfg.Domain), fmt.Sprintf("ingress.host=console.%s", cfg.Domain)}
 			for _, value := range values {
 				strvals.ParseInto(value, base)
 			}

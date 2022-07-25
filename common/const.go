@@ -16,13 +16,14 @@ const (
 )
 
 const (
-	DefaultDaemonPort = 60080
-	DefaultLogDir     = ".qc/log"
-	DefaultDataDir    = ".qc/data"
-	DefaultBinDir     = ".qc/bin"
-	DefaultCfgDir     = ".qc/config"
-	DefaultCacheDir   = ".qc/cache"
-	DefaultQuickonDir = "/opt/quickon/backup"
+	DefaultDaemonPort         = 60080
+	DefaultLogDir             = ".qc/log"
+	DefaultDataDir            = ".qc/data"
+	DefaultBinDir             = ".qc/bin"
+	DefaultCfgDir             = ".qc/config"
+	DefaultCacheDir           = ".qc/cache"
+	DefaultQuickonBackupDir   = "/opt/quickon/backup"
+	DefaultQuickonPlatformDir = "/opt/quickon/platform"
 )
 
 const (
@@ -58,12 +59,12 @@ const (
 )
 
 const (
-	DefaultQuchengVersion  = "stable-1.1.1"
+	DefaultQuchengVersion  = "stable-1.2.0"
 	K3sBinName             = "k3s"
 	K3sBinPath             = "/usr/local/bin/k3s"
 	HelmBinName            = "helm"
 	HelmBinPath            = "/usr/local/bin/helm"
-	K3sBinVersion          = "v1.23.8+k3s1"
+	K3sBinVersion          = "v1.23.9+k3s1"
 	K3sBinURL              = "https://github.com/k3s-io/k3s/releases/download"
 	K3sAgentEnv            = "/etc/systemd/system/k3s-agent.service.env"
 	K3sKubeConfig          = "/etc/rancher/k3s/k3s.yaml"

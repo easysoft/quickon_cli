@@ -21,7 +21,6 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/gofrs/flock"
 	"github.com/pkg/errors"
-	"gopkg.in/yaml.v2"
 	"helm.sh/helm/v3/cmd/helm/search"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/chart/loader"
@@ -31,6 +30,7 @@ import (
 	"helm.sh/helm/v3/pkg/release"
 	"helm.sh/helm/v3/pkg/repo"
 	"helm.sh/helm/v3/pkg/storage/driver"
+	"sigs.k8s.io/yaml"
 )
 
 const (

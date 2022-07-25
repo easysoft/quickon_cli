@@ -114,9 +114,9 @@ func GetAPI(path string) string {
 	return fmt.Sprintf("https://api.qucheng.com/%s", path)
 }
 
-func GetDefaultQuickonDir() string {
+func GetCustomQuickonDir(path string) string {
 	if zos.IsMacOS() {
-		return fmt.Sprintf("%v/%v", zos.GetHomeDir(), DefaultQuickonDir)
+		return fmt.Sprintf("%v/%v", zos.GetHomeDir(), path)
 	}
-	return DefaultQuickonDir
+	return path
 }

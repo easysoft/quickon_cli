@@ -8,6 +8,7 @@ package native
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
@@ -93,7 +94,9 @@ func (p *Native) GetProviderName() string {
 
 // CreateCluster create cluster.
 func (p *Native) CreateCluster() (err error) {
-	p.Log.Info("start init cluster")
+	if p.AddHelmRepo() != nil {
+		return err
+	}
 	return p.InitCluster()
 }
 
@@ -136,20 +139,19 @@ func (p *Native) GenerateManifest() []string {
 
 // Show show cluster info.
 func (p *Native) Show() {
-	loginip := p.Metadata.EIP
-	if len(loginip) <= 0 {
-		loginip = exnet.LocalIPs()[0]
+	if len(p.Metadata.EIP) <= 0 {
+		p.Metadata.EIP = exnet.LocalIPs()[0]
 	}
 	cfg, _ := config.LoadConfig()
 	domain := ""
 	if cfg != nil {
 		cfg.DB = "sqlite"
 		cfg.Token = kutil.GetNodeToken()
-		cfg.InitNode = loginip
+		cfg.InitNode = p.Metadata.EIP
 		cfg.Master = []config.Node{
 			{
 				Name: zos.GetHostname(),
-				Host: loginip,
+				Host: p.Metadata.EIP,
 				Init: true,
 			},
 		}
@@ -159,11 +161,17 @@ func (p *Native) Show() {
 
 	p.Log.Info("----------------------------")
 	if len(domain) > 0 {
-		p.Log.Donef("web:: %s", fmt.Sprintf("http://console.%s", domain))
+		if !strings.HasSuffix(cfg.Domain, "haogs.cn") {
+			domain = fmt.Sprintf("console.%s", cfg.Domain)
+		} else {
+			domain = fmt.Sprintf("https://%s", cfg.Domain)
+		}
+		p.Log.Donef("web: %s", domain)
 	} else {
-		p.Log.Donef("web:: %s", fmt.Sprintf("http://%s:32379", loginip))
+		p.Log.Donef("web: %s", fmt.Sprintf("http://%s:32379", p.Metadata.EIP))
 	}
 	p.Log.Donef("docs: %s", common.QuchengDocs)
+	p.Log.Done("support: 768721743(QQGroup)")
 }
 
 func (p *Native) SetLog(log log.Logger) {

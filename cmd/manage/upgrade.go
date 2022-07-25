@@ -14,7 +14,6 @@ import (
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
-	"github.com/easysoft/qcadmin/internal/static"
 	"github.com/easysoft/qcadmin/pkg/qucheng/upgrade"
 	"github.com/spf13/cobra"
 )
@@ -48,9 +47,6 @@ func NewUpgradeQucheg(f factory.Factory) *cobra.Command {
 func (cmd *UpgradeCmd) Run() error {
 	// Run the upgrade command
 	cmd.log.Info("check update...")
-	if err := static.UpgradeFiles(); err != nil {
-		cmd.log.Debugf("gen manifest err: %v", err)
-	}
 	cmd.log.Debugf("gen new version manifest")
 	err := upgrade.Upgrade(cmd.Version, cmd.log)
 	if err != nil {

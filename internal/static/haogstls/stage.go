@@ -4,7 +4,7 @@
 // (2) Affero General Public License 3.0 (AGPL 3.0)
 // license that can be found in the LICENSE file.
 
-package deploy
+package haogstls
 
 import (
 	"io/ioutil"
@@ -29,24 +29,3 @@ func Stage(dataDir string) error {
 	}
 	return nil
 }
-
-// func StageFunc(dataDir string, templateVars map[string]string) error {
-// 	log := log.GetInstance()
-// 	log.Debugf("writing manifest: %s/hack/manifests/plugins", dataDir)
-// 	for _, name := range AssetNames() {
-// 		content, err := Asset(name)
-// 		if err != nil {
-// 			return err
-// 		}
-// 		for k, v := range templateVars {
-// 			content = bytes.Replace(content, []byte(k), []byte(v), -1)
-// 		}
-// 		p := filepath.Join(dataDir, name)
-// 		os.MkdirAll(filepath.Dir(p), 0700)
-
-// 		if err := ioutil.WriteFile(p, content, 0600); err != nil {
-// 			return errors.Wrapf(err, "failed to write to %s", name)
-// 		}
-// 	}
-// 	return nil
-// }

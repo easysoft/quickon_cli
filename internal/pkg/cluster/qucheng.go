@@ -18,6 +18,7 @@ import (
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/retry"
 	suffixdomain "github.com/easysoft/qcadmin/pkg/qucheng/domain"
+	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/expass"
 	"github.com/ergoapi/util/file"
@@ -48,16 +49,17 @@ func (p *Cluster) getOrCreateUUIDAndAuth() (id, auth string, err error) {
 	return cm.Data["uuid"], cm.Data["auth"], nil
 }
 
-func (p *Cluster) genSuffixHTTPHost(ip string) (domain string, err error) {
+func (p *Cluster) genSuffixHTTPHost(ip string) (domain, tls string, err error) {
 	id, auth, err := p.getOrCreateUUIDAndAuth()
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-	domain, err = suffixdomain.GenerateDomain(ip, id, auth)
+
+	domain, tls, err = suffixdomain.GenerateDomain(ip, id, auth, suffixdomain.GenCustomDomain())
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-	return domain, nil
+	return domain, tls, nil
 }
 
 func (p *Cluster) InstallQuCheng() error {
@@ -88,28 +90,50 @@ func (p *Cluster) InstallQuCheng() error {
 	}
 	p.Log.Debug("start init qucheng")
 
-	// TODO 支持用户自定义域名
+	if len(p.Metadata.EIP) <= 0 {
+		p.Metadata.EIP = exnet.LocalIPs()[0]
+	}
 	if p.Domain == "" {
-		loginip := p.Metadata.EIP
-		if len(loginip) <= 0 {
-			loginip = exnet.LocalIPs()[0]
-		}
 		err := retry.Retry(time.Second*1, 3, func() (bool, error) {
-			domain, err := p.genSuffixHTTPHost(loginip)
+			domain, _, err := p.genSuffixHTTPHost(p.Metadata.EIP)
 			if err != nil {
 				return false, err
 			}
 			p.Domain = domain
 
-			p.Log.Infof("generate suffix domain: %s, ip: %v", p.Domain, loginip)
+			p.Log.Infof("generate suffix domain: %s, ip: %v", p.Domain, p.Metadata.EIP)
 			return true, nil
 		})
 		if err != nil {
 			p.Domain = "demo.haogs.cn"
 			p.Log.Warn("gen suffix domain failed, reason: %v, use default domain: %s", err, p.Domain)
 		}
+		p.Log.Infof("load %s tls cert", p.Domain)
+		defaultTLS := fmt.Sprintf("%s/tls-haogs-cn.yaml", common.GetDefaultCacheDir())
+		p.Log.StartWait(fmt.Sprintf("Start Issuing domain %s Certificate, may take 3-5min", p.Domain))
+		waittls := time.Now()
+		for {
+			if _, err := os.Stat(defaultTLS); err == nil {
+				p.Log.StopWait()
+				p.Log.Done("download tls cert success")
+				if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.DefaultSystem).Run(); err != nil {
+					p.Log.Warn("load default tls cert failed, reason: %v", err)
+				} else {
+					p.Log.Done("load default tls cert success")
+				}
+				break
+			}
+			qcexec.Command(os.Args[0], "experimental", "tools", "wget", "-t", fmt.Sprintf("https://pkg.qucheng.com/ssl/haogs.cn/%s/tls.yaml", p.Domain), "-d", defaultTLS).Run()
+			p.Log.Debug("wait for tls cert ready...")
+			time.Sleep(time.Second * 15)
+			trywaitsc := time.Now()
+			if trywaitsc.Sub(waittls) > time.Minute*3 {
+				// TODO  timeout
+				p.Log.Debugf("wait tls cert ready, timeout: %v", trywaitsc.Sub(waittls).Seconds())
+			}
+		}
 	} else {
-		p.Log.Infof("use custom domain %s", p.Domain)
+		p.Log.Infof("use custom domain %s, you should add dns record to your domain: *.%s -> %s", p.Domain, color.SGreen(p.Domain), color.SGreen(p.Metadata.EIP))
 	}
 	token := p.genQuChengToken()
 	cfg, _ := config.LoadConfig()
@@ -117,24 +141,6 @@ func (p *Cluster) InstallQuCheng() error {
 	cfg.APIToken = token
 	cfg.SaveConfig()
 
-	output, err := qcexec.Command(os.Args[0], "experimental", "helm", "repo-add", "--name", common.DefaultHelmRepoName, "--url", common.GetChartRepo(p.QuchengVersion)).CombinedOutput()
-	if err != nil {
-		errmsg := string(output)
-		if !strings.Contains(errmsg, "exists") {
-			p.Log.Errorf("init qucheng install repo failed: %s", string(output))
-			return err
-		}
-		p.Log.Warn("qucheng install repo  already exists")
-	} else {
-		p.Log.Done("init qucheng install repo done")
-	}
-
-	output, err = qcexec.Command(os.Args[0], "experimental", "helm", "repo-update").CombinedOutput()
-	if err != nil {
-		p.Log.Errorf("update qucheng install repo failed: %s", string(output))
-		return err
-	}
-	p.Log.Done("update qucheng install repo done")
 	p.Log.Info("start deploy cne operator")
 	if err := qcexec.CommandRun(os.Args[0], "manage", "plugins", "enable", "cne-operator"); err != nil {
 		p.Log.Warnf("deploy cne-operator err: %v", err)
@@ -143,15 +149,23 @@ func (p *Cluster) InstallQuCheng() error {
 	}
 	helmchan := common.GetChannel(p.QuchengVersion)
 	// helm upgrade -i nginx-ingress-controller bitnami/nginx-ingress-controller -n kube-system
-	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultQuchengName, "--namespace", common.DefaultSystem, "--set", fmt.Sprintf("ingress.host=console.%s", p.Domain), "--set", "env.APP_DOMAIN=" + p.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
+	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultQuchengName, "--namespace", common.DefaultSystem, "--set", "env.APP_DOMAIN=" + p.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
 	if helmchan != "stable" {
 		helmargs = append(helmargs, "--set", "env.PHP_DEBUG=2")
 	}
+	hostdomain := p.Domain
+	if strings.HasSuffix(hostdomain, "haogs.cn") {
+		helmargs = append(helmargs, "--set", "ingress.tls.enabled=true")
+		helmargs = append(helmargs, "--set", "ingress.tls.secretName=tls-haogs-cn")
+	} else {
+		hostdomain = fmt.Sprintf("console.%s", hostdomain)
+	}
+	helmargs = append(helmargs, "--set", fmt.Sprintf("ingress.host=%s", hostdomain))
 	chartversion := common.GetVersion(p.QuchengVersion)
 	if len(chartversion) > 0 {
 		helmargs = append(helmargs, "--version", chartversion)
 	}
-	output, err = qcexec.Command(os.Args[0], helmargs...).CombinedOutput()
+	output, err := qcexec.Command(os.Args[0], helmargs...).CombinedOutput()
 	if err != nil {
 		p.Log.Errorf("upgrade install qucheng web failed: %s", string(output))
 		return err

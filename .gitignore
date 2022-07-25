@@ -1,6 +1,8 @@
 dist/
 hack/bin/*-linux-*
+hack/haogstls/haogs*
 internal/static/*/zz_generated_bindata*
+!internal/static/haogstls/zz_generated_bindata*
 !internal/pkg/cli/dockercgroup/*.go
 *.deb
 *.rpm
