@@ -151,6 +151,10 @@ if [ -d "/root/.qc/config" ]; then
 	rm -rf /root/.qc/config
 fi
 
+if [ -d "/root/.qc/cache" ]; then
+	rm -rf /root/.qc/cache
+fi
+
 if command_exists docker && [ -e /var/run/docker.sock ]; then
 		(
 			rm_ctns=$(docker ps -a -q --filter 'name=k8s')

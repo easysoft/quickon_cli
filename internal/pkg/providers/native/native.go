@@ -127,7 +127,7 @@ func (p *Native) PreSystemInit() error {
 	if err := p.SystemInit(); err != nil {
 		return err
 	}
-	p.Log.Done("system init passed")
+	p.Log.Done("system init success")
 	return nil
 }
 

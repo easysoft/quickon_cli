@@ -49,7 +49,7 @@ func Execute() {
 		}
 		if !strings.Contains(err.Error(), "unknown command") {
 			f.GetLog().Info("----------------------------")
-			bugmsg := "found bug: submit the error message to Github or Gitee\n\t Github: https://github.com/easysoft/qucheng_cli/issues/new?assignees=&labels=&template=bug-report.md\n\t Gitee: https://gitee.com/wwccss/qucheng_cli/issues"
+			bugmsg := "found bug: submit the error message to Github or Gitee\n\t Github: https://github.com/easysoft/quickon_cli/issues/new?assignees=&labels=&template=bug-report.md\n\t Gitee: https://gitee.com/wwccss/qucheng_cli/issues"
 			f.GetLog().Info(bugmsg)
 		}
 	}

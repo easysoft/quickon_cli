@@ -54,8 +54,8 @@ func (p *Cluster) genSuffixHTTPHost(ip string) (domain, tls string, err error) {
 	if err != nil {
 		return "", "", err
 	}
-
-	domain, tls, err = suffixdomain.GenerateDomain(ip, id, auth, suffixdomain.GenCustomDomain())
+	defaultDomain := suffixdomain.SearchCustomDomain(ip, id, auth)
+	domain, tls, err = suffixdomain.GenerateDomain(ip, id, auth, suffixdomain.GenCustomDomain(defaultDomain))
 	if err != nil {
 		return "", "", err
 	}
@@ -125,7 +125,7 @@ func (p *Cluster) InstallQuCheng() error {
 			}
 			qcexec.Command(os.Args[0], "experimental", "tools", "wget", "-t", fmt.Sprintf("https://pkg.qucheng.com/ssl/haogs.cn/%s/tls.yaml", p.Domain), "-d", defaultTLS).Run()
 			p.Log.Debug("wait for tls cert ready...")
-			time.Sleep(time.Second * 15)
+			time.Sleep(time.Second * 5)
 			trywaitsc := time.Now()
 			if trywaitsc.Sub(waittls) > time.Minute*3 {
 				// TODO  timeout

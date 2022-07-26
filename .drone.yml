@@ -117,20 +117,20 @@ steps:
       event:
       - tag
 
-  - name: release edge version
-    image: ysicing/drone-plugin-rv
-    privileged: true
-    pull: always
-    settings:
-      name: qcadmin
-      url:
-        from_secret: rv-url
-      token:
-        from_secret: qc-token
-      type: edge
-    when:
-      branch:
-      - master
+  # - name: release edge version
+  #   image: ysicing/drone-plugin-rv
+  #   privileged: true
+  #   pull: always
+  #   settings:
+  #     name: qcadmin
+  #     url:
+  #       from_secret: rv-url
+  #     token:
+  #       from_secret: qc-token
+  #     type: edge
+  #   when:
+  #     branch:
+  #     - master
 
 # services:
 #   - name: docker daemon

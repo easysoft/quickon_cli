@@ -7,6 +7,9 @@
 package domain
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/ergoapi/util/color"
@@ -14,6 +17,7 @@ import (
 	"github.com/imroc/req/v3"
 	"github.com/manifoldco/promptui"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/validation"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -21,30 +25,46 @@ type ReqBody struct {
 	IP        string `json:"ip"`
 	UUID      string `json:"uuid"`
 	SecretKey string `json:"secretKey"`
-	Domain    string `json:"domain"`
+	Domain    string `json:"domain,omitempty"`
+}
+
+type RespBody struct {
+	Code int `json:"code"`
+	Data struct {
+		Domain string `json:"domain"`
+		TLS    string `json:"tls,omitempty"`
+	} `json:"data"`
+	Message   string `json:"message"`
+	Timestamp int    `json:"timestamp"`
+}
+
+func SearchCustomDomain(iip, id, secretKey string) string {
+	var respbody RespBody
+	reqbody := ReqBody{
+		IP:        iip,
+		UUID:      id,
+		SecretKey: secretKey,
+	}
+	client := req.C().SetUserAgent(common.GetUG())
+	_, err := client.R().
+		SetHeader("Content-Type", "application/json").
+		SetResult(&respbody).
+		SetBody(&reqbody).
+		Post(common.GetAPI("/api/qdns/oss/custom"))
+
+	if err != nil {
+		return ""
+	}
+	return respbody.Data.Domain
 }
 
 // GenerateDomain generate suffix domain
 func GenerateDomain(iip, id, secretKey, domain string) (string, string, error) {
 	log := log.GetInstance()
-	var respbody struct {
-		Code int `json:"code"`
-		Data struct {
-			Domain string `json:"domain"`
-			TLS    string `json:"tls"`
-		} `json:"data"`
-		Message   string `json:"message"`
-		Timestamp int    `json:"timestamp"`
+	var respbody RespBody
+	if strings.HasSuffix(domain, ".haogs.cn") {
+		domain = strings.TrimSuffix(domain, ".haogs.cn")
 	}
-	// reqbody := struct {
-	// 	IP        string `json:"ip"`
-	// 	UUID      string `json:"uuid"`
-	// 	SecretKey string `json:"secretKey"`
-	// }{
-	// 	IP:        iip,
-	// 	UUID:      id,
-	// 	SecretKey: secretKey,
-	// }
 	reqbody := ReqBody{
 		IP:        iip,
 		UUID:      id,
@@ -63,8 +83,8 @@ func GenerateDomain(iip, id, secretKey, domain string) (string, string, error) {
 	}
 	if len(respbody.Data.Domain) == 0 {
 		if len(reqbody.Domain) > 0 {
-			log.Warnf("current domain %s is unavailable, please try again", color.SRed("%s.haogs,cn", reqbody.Domain))
-			return GenerateDomain(iip, id, secretKey, GenCustomDomain())
+			log.Warnf("current domain %s is unavailable, please try again", color.SRed("%s.haogs.cn", reqbody.Domain))
+			return GenerateDomain(iip, id, secretKey, GenCustomDomain(domain))
 		}
 	}
 	return respbody.Data.Domain, respbody.Data.TLS, nil
@@ -85,17 +105,36 @@ func GenerateSuffixConfigMap(name, namespace string) *corev1.ConfigMap {
 	return cm
 }
 
-func GenCustomDomain() string {
+func GenCustomDomain(defaultDomain string) string {
 	log := log.GetInstance()
 	prompt := promptui.Prompt{
-		Label:   "config custom alias domain for haogs.cn, like: <custom>.haogs.cn",
-		Default: "",
+		Label:   "config custom subdomain for haogs.cn, like: <custom>.haogs.cn.\t",
+		Default: defaultDomain,
+		Templates: &promptui.PromptTemplates{
+			Prompt:  "{{ . }}",
+			Valid:   "{{ . | green }}",
+			Invalid: "{{ . | red }}",
+			Success: "{{ . | bold }}",
+		},
+		Validate: func(input string) error {
+			if !strings.HasSuffix(input, ".haogs.cn") {
+				input = fmt.Sprintf("%s.haogs.cn", input)
+			}
+			if len(input) < 13 {
+				return fmt.Errorf("subdomain must be at least 4 characters, like %s", defaultDomain)
+			}
+			if msgs := validation.NameIsDNSSubdomain(input, false); len(msgs) != 0 {
+				return fmt.Errorf("%s", msgs[0])
+			}
+			return nil
+		},
 	}
 	result, _ := prompt.Run()
 	if result == "" {
-		log.Info("Platform random generation")
-		return ""
+		log.Donef("use default domain: %s", color.SGreen(defaultDomain))
+		result = defaultDomain
 	}
-	log.Info("Check domain name availability")
+	result = strings.ReplaceAll(result, ".haogs.cn", "")
+	log.Infof("check subdomain %s availability", result)
 	return result
 }

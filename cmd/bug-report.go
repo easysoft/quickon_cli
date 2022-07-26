@@ -44,7 +44,7 @@ func (br bugReportCmd) BugReport() error {
 	if err := qcexec.CommandRun("/bin/bash", debugShell, os.Args[0]); err != nil {
 		return err
 	}
-	bugmsg := "found bug: submit the error message to Github or Gitee\n\t Github: https://github.com/easysoft/qucheng_cli/issues/new?assignees=&labels=&template=bug-report.md\n\t Gitee: https://gitee.com/wwccss/qucheng_cli/issues\n"
+	bugmsg := "found bug: submit the error message to Github or Gitee\n\t Github: https://github.com/easysoft/quickon_cli/issues/new?assignees=&labels=&template=bug-report.md\n\t Gitee: https://gitee.com/wwccss/qucheng_cli/issues\n"
 	br.log.Info(bugmsg)
 	return nil
 }
