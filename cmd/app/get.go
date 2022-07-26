@@ -4,7 +4,7 @@
 // (2) Affero General Public License 3.0 (AGPL 3.0)
 // license that can be found in the LICENSE file.
 
-package manage
+package app
 
 import (
 	"os"
@@ -16,30 +16,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func NewCmdGetNode(f factory.Factory) *cobra.Command {
-	node := &cobra.Command{
-		Use:     "node",
-		Aliases: []string{"no", "nodes"},
-		Short:   "get nodes",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			// node id为0 list
-			if len(args) == 0 {
-				return qcexec.CommandRun(os.Args[0], "status", "node")
-			}
-			extargs := []string{"exp", "kubectl", "get", "-o", "wide", "nodes"}
-			extargs = append(extargs, args...)
-			return qcexec.CommandRun(os.Args[0], extargs...)
-		},
-	}
-	return node
-}
-
-func NewCmdGetApp(f factory.Factory) *cobra.Command {
+func NewCmdAppGet(f factory.Factory) *cobra.Command {
 	log := f.GetLog()
 	app := &cobra.Command{
-		Use:     "app",
-		Aliases: []string{"apps"},
-		Short:   "get app",
+		Use:     "get",
+		Short:   "get app info",
 		Args:    cobra.ExactArgs(1),
 		Example: `q get app https://efbb.haogs.cn/instance-view-39.html`,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -50,9 +31,6 @@ func NewCmdGetApp(f factory.Factory) *cobra.Command {
 			if err != nil {
 				return err
 			}
-			// if apidebug {
-			// 	spew.Dump(appdata)
-			// }
 			extargs := []string{"exp", "kubectl", "get", "-o", "wide", "pods,deploy,pvc,svc,ing", "-l", "release=" + appdata.K8Name}
 			// extargs = append(extargs, args...)
 			return qcexec.CommandRun(os.Args[0], extargs...)

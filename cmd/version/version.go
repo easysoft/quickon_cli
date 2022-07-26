@@ -174,7 +174,7 @@ func ShowVersion(log logpkg.Logger) {
 				}
 			}
 			vd.Server.CanUpgrade = canUpgrade
-			vd.Server.UpgradeMessage = fmt.Sprintf("Now you can use %s to upgrade qucheng to the latest version", color.SGreen("%s manage upgrade", os.Args[0]))
+			vd.Server.UpgradeMessage = fmt.Sprintf("Now you can use %s to upgrade quickon to the latest version", color.SGreen("%s upgrade quickon", os.Args[0]))
 		}
 	}
 	if err := prettyPrintVersion(vd, tmpl); err != nil {
