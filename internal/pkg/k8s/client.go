@@ -7,6 +7,7 @@
 package k8s
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"fmt"
@@ -392,6 +393,36 @@ func (c *Client) GetLogs(ctx context.Context, namespace, name, container string,
 		return "", err
 	}
 	return b.String(), nil
+}
+
+func (c *Client) GetFollowLogs(ctx context.Context, namespace, name, container string, previous bool) error {
+	// t := metav1.NewTime(sinceTime)
+	o := corev1.PodLogOptions{
+		Container:  container,
+		Follow:     true,
+		// LimitBytes: &limitBytes,
+		Previous:   previous,
+		// SinceTime:  &t,
+		Timestamps: true,
+	}
+	r := c.Clientset.CoreV1().Pods(namespace).GetLogs(name, &o)
+	s, err := r.Stream(ctx)
+	if err != nil {
+		return err
+	}
+	defer s.Close()
+	scanlogs := bufio.NewReader(s)
+	for {
+		bytes, err := scanlogs.ReadBytes('\n')
+		fmt.Println(string(bytes))
+		if err != nil {
+			if err != io.EOF {
+				return err
+			}
+			return nil
+		}
+	}
+	return nil
 }
 
 func (c *Client) ExecInPodWithStderr(ctx context.Context, namespace, pod, container string, command []string) (bytes.Buffer, bytes.Buffer, error) {

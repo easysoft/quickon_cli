@@ -9,3 +9,4 @@ internal/static/*/zz_generated_bindata*
 completions
 manpages
 internal/pkg/cli/test/*.go
+patch.diff

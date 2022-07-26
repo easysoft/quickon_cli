@@ -90,10 +90,10 @@ func GetNameByURL(url string, debug bool) (*AppData, error) {
 		SetHeader("TOKEN", cfg.APIToken).
 		Get(fmt.Sprintf("http://%s/instance-apidetail-%s.html", cfg.Domain, key))
 	if err != nil {
-		return nil, fmt.Errorf("update password failed, reason: %v", err)
+		return nil, fmt.Errorf("fetch api failed, reason: %v", err)
 	}
 	if !resp.IsSuccess() {
-		return nil, fmt.Errorf("update password failed, reason: bad response status %v", resp.Status)
+		return nil, fmt.Errorf("fetch api failed, reason: bad response status %v", resp.Status)
 	}
 	json.Unmarshal([]byte(resp.String()), &result)
 	return &result.Data, nil

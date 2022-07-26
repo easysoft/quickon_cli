@@ -1,9 +1,3 @@
-// Copyright (c) 2021-2022 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
-// Use of this source code is covered by the following dual licenses:
-// (1) Z PUBLIC LICENSE 1.2 (ZPL 1.2)
-// (2) Affero General Public License 3.0 (AGPL 3.0)
-// license that can be found in the LICENSE file.
-
 package app
 
 import (
@@ -20,17 +14,19 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 )
 
-func NewCmdAppExec(f factory.Factory) *cobra.Command {
+func NewCmdAppLogs(f factory.Factory) *cobra.Command {
+	var previous bool
 	log := f.GetLog()
 	app := &cobra.Command{
-		Use:     "exec",
-		Short:   "exec app",
+		Use:     "logs",
+		Aliases: []string{"log"},
+		Short:   "logs app",
 		Args:    cobra.ExactArgs(1),
 		Example: `q app exec http://console.efbb.haogs.cn/instance-view-39.html`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			url := args[0]
 			apidebug := log.GetLevel() == logrus.DebugLevel
-			log.Infof("start exec app: %s", url)
+			log.Infof("start logs app: %s", url)
 			appdata, err := debug.GetNameByURL(url, apidebug)
 			if err != nil {
 				return err
@@ -63,9 +59,9 @@ func NewCmdAppExec(f factory.Factory) *cobra.Command {
 				Size:      5,
 			}
 			it, _, _ := prompt.Run()
-
-			return k8sClient.ExecPodWithTTY(ctx, "default", podlist.Items[it].Name, podlist.Items[it].Spec.Containers[0].Name, []string{"/bin/sh", "-c", "sh"})
+			return k8sClient.GetFollowLogs(ctx, "default", podlist.Items[it].Name, podlist.Items[it].Spec.Containers[0].Name, previous)
 		},
 	}
+	app.Flags().BoolVarP(&previous, "previous", "p", false, " If true, print the logs for the previous instance of the container in a pod if it exists.")
 	return app
 }

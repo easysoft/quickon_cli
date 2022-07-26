@@ -125,7 +125,7 @@ func (p *Item) UnInstall() error {
 			return err
 		}
 	}
-	p.log.Donef("uninstall %s plugin done", p.Type)
+	p.log.Donef("uninstall %s plugin success.", p.Type)
 	p.Client.DeleteSecret(context.TODO(), common.DefaultSystem, pluginName, metav1.DeleteOptions{})
 	return nil
 }
@@ -165,7 +165,7 @@ func (p *Item) Install() error {
 		}
 	}
 
-	p.log.Donef("upgrade install %s plugin %s done", p.Type, p.Name)
+	p.log.Donef("upgrade install %s plugin %s success.", p.Type, p.Name)
 	plugindata := map[string]string{
 		"type":       p.Type,
 		"name":       p.Name,

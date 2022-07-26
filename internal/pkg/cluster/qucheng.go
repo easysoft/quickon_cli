@@ -110,7 +110,7 @@ func (p *Cluster) InstallQuCheng() error {
 		}
 		p.Log.Infof("load %s tls cert", p.Domain)
 		defaultTLS := fmt.Sprintf("%s/tls-haogs-cn.yaml", common.GetDefaultCacheDir())
-		p.Log.StartWait(fmt.Sprintf("Start Issuing domain %s Certificate, may take 3-5min", p.Domain))
+		p.Log.StartWait(fmt.Sprintf("start issuing domain %s certificate, may take 3-5min", p.Domain))
 		waittls := time.Now()
 		for {
 			if _, err := os.Stat(defaultTLS); err == nil {
@@ -170,7 +170,7 @@ func (p *Cluster) InstallQuCheng() error {
 		p.Log.Errorf("upgrade install qucheng web failed: %s", string(output))
 		return err
 	}
-	p.Log.Done("install qucheng done")
+	p.Log.Done("install qucheng success")
 	p.Ready()
 	initfile := common.GetCustomConfig(common.InitFileName)
 	if err := file.Writefile(initfile, "init done"); err != nil {
