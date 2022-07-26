@@ -398,10 +398,10 @@ func (c *Client) GetLogs(ctx context.Context, namespace, name, container string,
 func (c *Client) GetFollowLogs(ctx context.Context, namespace, name, container string, previous bool) error {
 	// t := metav1.NewTime(sinceTime)
 	o := corev1.PodLogOptions{
-		Container:  container,
-		Follow:     true,
+		Container: container,
+		Follow:    true,
 		// LimitBytes: &limitBytes,
-		Previous:   previous,
+		Previous: previous,
 		// SinceTime:  &t,
 		Timestamps: true,
 	}
@@ -422,7 +422,6 @@ func (c *Client) GetFollowLogs(ctx context.Context, namespace, name, container s
 			return nil
 		}
 	}
-	return nil
 }
 
 func (c *Client) ExecInPodWithStderr(ctx context.Context, namespace, pod, container string, command []string) (bytes.Buffer, bytes.Buffer, error) {
