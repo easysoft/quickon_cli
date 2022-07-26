@@ -4,7 +4,7 @@
 // (2) Affero General Public License 3.0 (AGPL 3.0)
 // license that can be found in the LICENSE file.
 
-package manage
+package app
 
 import (
 	"context"
@@ -20,14 +20,13 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 )
 
-func NewCmdExecApp(f factory.Factory) *cobra.Command {
+func NewCmdAppExec(f factory.Factory) *cobra.Command {
 	log := f.GetLog()
 	app := &cobra.Command{
-		Use:     "app",
-		Aliases: []string{"apps"},
+		Use:     "exec",
 		Short:   "exec app",
 		Args:    cobra.ExactArgs(1),
-		Example: `q exec app http://console.efbb.haogs.cn/instance-view-39.html`,
+		Example: `q app exec http://console.efbb.haogs.cn/instance-view-39.html`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			url := args[0]
 			apidebug := log.GetLevel() == logrus.DebugLevel

@@ -4,7 +4,7 @@
 // (2) Affero General Public License 3.0 (AGPL 3.0)
 // license that can be found in the LICENSE file.
 
-package manage
+package upgrade
 
 import (
 	"fmt"
@@ -18,20 +18,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// UpgradeCmd is a struct that defines a command call for "upgrade"
-type UpgradeCmd struct {
+// Option is a struct that defines a command call for "upgrade"
+type Option struct {
 	Version string
 	log     log.Logger
 }
 
-func NewUpgradeQucheg(f factory.Factory) *cobra.Command {
-	upcmd := &UpgradeCmd{
+func NewUpgradeQucheng(f factory.Factory) *cobra.Command {
+	upcmd := &Option{
 		log: f.GetLog(),
 	}
 	up := &cobra.Command{
-		Use:   "upgrade",
-		Short: "Upgrades the QuCheng to the newest version",
-		Args:  cobra.NoArgs,
+		Use:     "quickon",
+		Aliases: []string{"qc", "qucheng"},
+		Short:   "Upgrades the QuCheng to the newest version",
+		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return upcmd.Run()
 		},
@@ -44,7 +45,7 @@ func NewUpgradeQucheg(f factory.Factory) *cobra.Command {
 }
 
 // Run executes the command logic
-func (cmd *UpgradeCmd) Run() error {
+func (cmd *Option) Run() error {
 	// Run the upgrade command
 	cmd.log.Info("check update...")
 	cmd.log.Debugf("gen new version manifest")
@@ -56,7 +57,7 @@ func (cmd *UpgradeCmd) Run() error {
 }
 
 // Clean executes the command logic
-func (cmd *UpgradeCmd) CleanOrInstall() error {
+func (cmd *Option) CleanOrInstall() error {
 	cmd.log.Info("cleanup deprecated resources")
 	if err := qcexec.CommandRun(os.Args[0], "exp", "helm", "uninstall", "--name", "cne-api", "--namespace", common.DefaultSystem); err != nil {
 		cmd.log.Errorf("clean cne-api err: %v", err)

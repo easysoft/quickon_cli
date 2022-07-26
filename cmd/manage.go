@@ -20,25 +20,5 @@ func newCmdManage(f factory.Factory) *cobra.Command {
 	}
 	m.AddCommand(manage.NewCmdPlugin(f))
 	m.AddCommand(manage.NewResetPassword(f))
-	m.AddCommand(manage.NewUpgradeQucheg(f))
-	return m
-}
-
-func newCmdManageGet(f factory.Factory) *cobra.Command {
-	m := &cobra.Command{
-		Use:   "get",
-		Short: "Display one or many resources.",
-	}
-	m.AddCommand(manage.NewCmdGetNode(f))
-	m.AddCommand(manage.NewCmdGetApp(f))
-	return m
-}
-
-func newCmdManageExec(f factory.Factory) *cobra.Command {
-	m := &cobra.Command{
-		Use:   "exec",
-		Short: "Execute a command in a app",
-	}
-	m.AddCommand(manage.NewCmdExecApp(f))
 	return m
 }

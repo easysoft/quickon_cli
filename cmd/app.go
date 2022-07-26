@@ -7,19 +7,18 @@
 package cmd
 
 import (
-	"github.com/easysoft/qcadmin/cmd/upgrade"
+	"github.com/easysoft/qcadmin/cmd/app"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/spf13/cobra"
 )
 
-func newCmdUpgrade(f factory.Factory) *cobra.Command {
-	up := &cobra.Command{
-		Use:     "upgrade",
-		Short:   "Upgrades the Qucheng cli or plugin to the newest version",
-		Aliases: []string{"ug", "ugc"},
+func newCmdApp(f factory.Factory) *cobra.Command {
+	appCmd := &cobra.Command{
+		Use:    "app",
+		Short:  " Manage applications",
+		Hidden: false,
 	}
-	up.AddCommand(upgrade.NewUpgradeQ(f))
-	up.AddCommand(upgrade.NewUpgradeOperator(f))
-	up.AddCommand(upgrade.NewUpgradeQucheng(f))
-	return up
+	appCmd.AddCommand(app.NewCmdAppExec(f))
+	appCmd.AddCommand(app.NewCmdAppGet(f))
+	return appCmd
 }
