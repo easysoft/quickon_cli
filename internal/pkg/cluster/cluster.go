@@ -307,7 +307,7 @@ func (p *Cluster) configCommonOptions() []string {
 		"--kube-proxy-arg=proxy-mode=ipvs",
 		"--kube-proxy-arg=masquerade-all=true",
 		"--kube-proxy-arg=metrics-bind-address=0.0.0.0",
-		"--data-dir=/opt/quickon/platform",
+		"--data-dir="+common.DefaultQuickonPlatformDir,
 		"--pause-image=hub.qucheng.com/library/k3s-pause:3.6")
 
 	return args

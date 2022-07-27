@@ -31,7 +31,7 @@ type ReqBody struct {
 type RespBody struct {
 	Code int `json:"code"`
 	Data struct {
-		Domain string `json:"domain"`
+		Domain string `json:"domain,omitempty"`
 		TLS    string `json:"tls,omitempty"`
 	} `json:"data"`
 	Message   string `json:"message"`
@@ -56,6 +56,27 @@ func SearchCustomDomain(iip, id, secretKey string) string {
 		return ""
 	}
 	return respbody.Data.Domain
+}
+
+// UpgradeTLSDDomain tls domain
+func UpgradeTLSDDomain(iip, id, secretKey, domain string) error {
+	var respbody RespBody
+	if strings.HasSuffix(domain, ".haogs.cn") {
+		domain = strings.TrimSuffix(domain, ".haogs.cn")
+	}
+	reqbody := ReqBody{
+		IP:        iip,
+		UUID:      id,
+		SecretKey: secretKey,
+		Domain:    domain,
+	}
+	client := req.C().SetUserAgent(common.GetUG())
+	_, err := client.R().
+		SetHeader("Content-Type", "application/json").
+		SetResult(&respbody).
+		SetBody(&reqbody).
+		Get(common.GetAPI("/api/qdns/oss/record"))
+	return err
 }
 
 // GenerateDomain generate suffix domain

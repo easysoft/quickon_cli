@@ -68,6 +68,7 @@ const (
 	K3sBinURL              = "https://github.com/k3s-io/k3s/releases/download"
 	K3sAgentEnv            = "/etc/systemd/system/k3s-agent.service.env"
 	K3sKubeConfig          = "/etc/rancher/k3s/k3s.yaml"
+	K3sDefaultDir          = "/var/lib/rancher/k3s"
 	KubeQPS                = 5.0
 	KubeBurst              = 10
 	KubectlBinPath         = "/usr/local/bin/kubectl"

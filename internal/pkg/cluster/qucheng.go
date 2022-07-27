@@ -106,7 +106,7 @@ func (p *Cluster) InstallQuCheng() error {
 		})
 		if err != nil {
 			p.Domain = "demo.haogs.cn"
-			p.Log.Warn("gen suffix domain failed, reason: %v, use default domain: %s", err, p.Domain)
+			p.Log.Warnf("gen suffix domain failed, reason: %v, use default domain: %s", err, p.Domain)
 		}
 		p.Log.Infof("load %s tls cert", p.Domain)
 		defaultTLS := fmt.Sprintf("%s/tls-haogs-cn.yaml", common.GetDefaultCacheDir())
@@ -117,10 +117,11 @@ func (p *Cluster) InstallQuCheng() error {
 				p.Log.StopWait()
 				p.Log.Done("download tls cert success")
 				if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.DefaultSystem).Run(); err != nil {
-					p.Log.Warn("load default tls cert failed, reason: %v", err)
+					p.Log.Warnf("load default tls cert failed, reason: %v", err)
 				} else {
 					p.Log.Done("load default tls cert success")
 				}
+				qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", "default").Run()
 				break
 			}
 			qcexec.Command(os.Args[0], "experimental", "tools", "wget", "-t", fmt.Sprintf("https://pkg.qucheng.com/ssl/haogs.cn/%s/tls.yaml", p.Domain), "-d", defaultTLS).Run()

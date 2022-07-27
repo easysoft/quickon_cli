@@ -17,6 +17,7 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/selfupdate"
+	"github.com/ergoapi/util/file"
 	"github.com/spf13/cobra"
 )
 
@@ -65,6 +66,10 @@ func (up option) DoQcadmin() {
 		up.log.Errorf("upgrade failed, reason: %v", err)
 		return
 	}
+	if !file.CheckFileExists(fmt.Sprintf("%s/storage", common.DefaultQuickonPlatformDir)) {
+		os.Symlink(common.K3sDefaultDir, common.DefaultQuickonPlatformDir)
+	}
+	os.Chmod(common.DefaultQuickonBackupDir, common.FileMode0777)
 	up.log.Donef("Successfully updated ergo to version %s", lastversion)
 	up.log.Debugf("gen new version manifest")
 	up.log.Infof("Release note: \n\trelease %s ", lastversion)

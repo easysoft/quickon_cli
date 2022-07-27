@@ -123,12 +123,17 @@ func domainAdd(f factory.Factory) *cobra.Command {
 			// upgrade qucheng
 			helmClient, _ := helm.NewClient(&helm.Config{Namespace: common.DefaultSystem})
 			if err := helmClient.UpdateRepo(); err != nil {
-				log.Warn("update repo failed, reason: %v", err)
+				log.Warnf("update repo failed, reason: %v", err)
 			}
 			if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/hack/haogstls/haogs.yaml", common.GetDefaultDataDir()), "-n", common.DefaultSystem).Run(); err != nil {
-				log.Warn("load default tls cert failed, reason: %v", err)
+				log.Warnf("load tls cert for %s failed, reason: %v", common.DefaultSystem, err)
 			} else {
-				log.Done("load default tls cert success")
+				log.Donef("load tls cert for %s success", common.DefaultSystem)
+			}
+			if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/hack/haogstls/haogs.yaml", common.GetDefaultDataDir()), "-n", "default").Run(); err != nil {
+				log.Warnf("load tls cert for default failed, reason: %v", err)
+			} else {
+				log.Done("load tls cert for default success")
 			}
 			defaultValue, _ := helmClient.GetValues(common.DefaultQuchengName)
 			var values []string
