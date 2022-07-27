@@ -77,7 +77,7 @@ dev: generate ## dev test
     		-ldflags ${LDFLAGS}
 
 local: ## dev test
-	GO_ENABLED=1 gox -os="darwin" -arch="arm64" -output="dist/{{.Dir}}_{{.OS}}_{{.Arch}}" -ldflags ${LDFLAGS}
+	GO_ENABLED=1 gox -os="darwin" -arch="amd64" -output="dist/{{.Dir}}_{{.OS}}_{{.Arch}}" -ldflags ${LDFLAGS}
 
 clean: ## clean
 	rm -rf dist

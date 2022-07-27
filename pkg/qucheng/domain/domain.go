@@ -72,10 +72,9 @@ func UpgradeTLSDDomain(iip, id, secretKey, domain string) error {
 	}
 	client := req.C().SetUserAgent(common.GetUG())
 	_, err := client.R().
-		SetHeader("Content-Type", "application/json").
 		SetResult(&respbody).
 		SetBody(&reqbody).
-		Get(common.GetAPI("/api/qdns/oss/record"))
+		Post(common.GetAPI("/api/qdns/oss/tls"))
 	return err
 }
 

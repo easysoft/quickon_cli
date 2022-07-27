@@ -125,7 +125,7 @@ func (s *Status) Format() error {
 		} else {
 			consoleURL = fmt.Sprintf("http://%s:32379", loginip)
 		}
-		fmt.Fprintf(w, "  console: %s\n", color.SGreen(consoleURL))
+		fmt.Fprintf(w, "  console:      %s\n", color.SGreen(consoleURL))
 		quchengOK := true
 		fmt.Fprintf(w, "  component status: \n")
 		for name, state := range s.QStatus.PodState {
