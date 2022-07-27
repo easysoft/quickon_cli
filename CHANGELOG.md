@@ -1,5 +1,24 @@
 # Changelog
 
+## v1.1.0 (2022-07-27)
+
+ * [997b4a0](https://github.com/easysoft/qucheng_cli/commit/997b4a06ba0b1b1bdbb4cb43b3a8492a2fedf73c) docs(docs): update docs
+ * [6daa640](https://github.com/easysoft/qucheng_cli/commit/6daa640b50c7e4591a1b7aa60a9088f7f25ad927) fix(upgrade): fix upgrade domain tls
+ * [f675a8d](https://github.com/easysoft/qucheng_cli/commit/f675a8d23ddf4ba036605bf893b521fa61955c37) feat(upgrade): fix upgrade
+ * [20bb66e](https://github.com/easysoft/qucheng_cli/commit/20bb66e89e8d12da816654861694bd573b04ecb6) feat(app): add app list
+ * [a25e2fb](https://github.com/easysoft/qucheng_cli/commit/a25e2fbb9bb70998848c5e337083c3348905985b) feat(app): add app log subcmd
+ * [da70194](https://github.com/easysoft/qucheng_cli/commit/da70194fca77671d946e06c431238dd037085a20) feat(cli): update cli (#45)
+ * [64b8c9b](https://github.com/easysoft/qucheng_cli/commit/64b8c9bf084293fe9cfcb7433e2be490955bdfd8) feat(domain): imp domain operation
+ * [f8511a6](https://github.com/easysoft/qucheng_cli/commit/f8511a6bcc002f1701acd23c750bce730c18eca6) feat(1.1): support 1.1 release (#42)
+ * [a2c8e4c](https://github.com/easysoft/qucheng_cli/commit/a2c8e4cdd2a489bb90e22b15fd64bb3ae1601e0e) feat(merge): merge old code (#21)
+ * [7805969](https://github.com/easysoft/qucheng_cli/commit/7805969b02b064d63e3e1848f67050a8a19a1c23) build(deps): bump github.com/sirupsen/logrus from 1.8.1 to 1.9.0 (#43)
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+ * 缘生
+
 ## v1.0.10 (2022-07-21)
 
  * [3dbd45d](https://github.com/easysoft/qucheng_cli/commit/3dbd45d940356a52cd011c6d061ff12f0b3668a2) feat(exec): add exec support
