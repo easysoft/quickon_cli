@@ -40,6 +40,7 @@ gencopyright: ## add copyright
 
 doc: ## gen docs
 	go run ./docs/docs.go
+	cp -a README.md docs/index.md
 
 fmt: ## fmt code
 	gofmt -s -w .

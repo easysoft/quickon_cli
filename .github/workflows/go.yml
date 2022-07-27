@@ -98,3 +98,11 @@ jobs:
           # make upx
           ./dist/qcadmin_linux_amd64 version
           sudo ./dist/qcadmin_linux_amd64 init -q test --domain q.local --skip-precheck  --debug
+      - name: build docs
+        run: |
+          make doc
+      - name: docs
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          publish_dir: ./docs
