@@ -16,6 +16,8 @@ import (
 	"path/filepath"
 	"time"
 
+	quchengclientset "github.com/easysoft/quikon-api/client/clientset/versioned"
+	quchengv1beta1 "github.com/easysoft/quikon-api/qucheng/v1beta1"
 	"github.com/ergoapi/util/exmap"
 	"golang.org/x/term"
 	appsv1 "k8s.io/api/apps/v1"
@@ -44,6 +46,35 @@ type Client struct {
 	RawConfig        clientcmdapi.Config
 	restClientGetter genericclioptions.RESTClientGetter
 	contextName      string
+	QClient          *quchengclientset.Clientset
+}
+
+func NewSimpleQClient() (*Client, error) {
+	kubeconfig := os.Getenv("KUBECONFIG")
+	if kubeconfig == "" {
+		dir, err := os.UserHomeDir()
+		if err != nil {
+			return nil, err
+		}
+		kubeconfig = filepath.Join(dir, ".kube", "config")
+	}
+	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
+	if err != nil {
+		return nil, err
+	}
+	client, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		return nil, err
+	}
+	qclient, err := quchengclientset.NewForConfig(config)
+	if err != nil {
+		return nil, err
+	}
+	return &Client{
+		Clientset: client,
+		Config:    config,
+		QClient:   qclient,
+	}, nil
 }
 
 func NewSimpleClient() (*Client, error) {
@@ -506,4 +537,8 @@ func (c *Client) CreateIngressClass(ctx context.Context, ingressClass *networkin
 
 func (c *Client) DeleteIngressClass(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	return c.Clientset.NetworkingV1().IngressClasses().Delete(ctx, name, opts)
+}
+
+func (c *Client) ListQuchengDBSvc(ctx context.Context, namespace string, opts metav1.ListOptions) (*quchengv1beta1.DbServiceList, error) {
+	return c.QClient.QuchengV1beta1().DbServices(namespace).List(ctx, opts)
 }
