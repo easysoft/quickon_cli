@@ -13,11 +13,12 @@ import (
 )
 
 type Metadata struct {
-	Name     string `json:"name" yaml:"name"`
-	Provider string `json:"provider" yaml:"provider"`
-	Master   string `json:"master" yaml:"master"`
-	Worker   string `json:"worker" yaml:"worker"`
-	// Token           string      `json:"token,omitempty" yaml:"token,omitempty"`
+	Name            string      `json:"name" yaml:"name"`
+	Provider        string      `json:"provider" yaml:"provider"`
+	Master          string      `json:"master" yaml:"master"`
+	Worker          string      `json:"worker" yaml:"worker"`
+	KubeToken       string      `json:"kube-token,omitempty" yaml:"kube-token,omitempty"`
+	DataSource      string      `json:"data-source,omitempty" yaml:"data-source,omitempty"`
 	IP              string      `json:"ip,omitempty" yaml:"ip,omitempty"`
 	EIP             string      `json:"eip,omitempty" yaml:"eip,omitempty"`
 	TLSSans         StringArray `json:"tls-sans,omitempty" yaml:"tls-sans,omitempty"`

@@ -80,6 +80,7 @@ func (p *Native) GetUsageExample(action string) string {
 func (p *Native) GetCreateFlags() []types.Flag {
 	fs := p.GetCreateOptions()
 	fs = append(fs, p.GetCreateExtOptions()...)
+	fs = append(fs, p.GetCreateNativeOptions()...)
 	return fs
 }
 
