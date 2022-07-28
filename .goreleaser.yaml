@@ -1,5 +1,7 @@
 # This is an example .goreleaser.yml file with some sensible defaults.
 # Make sure to check the documentation at https://goreleaser.com
+project_name: qcadmin
+
 env:
   - GO111MODULE=on
 
@@ -97,7 +99,7 @@ archives:
 checksum:
   name_template: 'checksums.txt'
 snapshot:
-  name_template: "{{ .Version }}-snapshot-{{.ShortCommit}}"
+  name_template: "{{ .Version }}-snapshot-{{ .ShortCommit }}"
 
 nfpms:
 - file_name_template: 'qcadmin_{{ .Tag }}_{{ .Os }}_{{ .Arch }}'
@@ -206,10 +208,8 @@ changelog:
 release:
   # If set to true, will not auto-publish the release.
   # Default is false.
-  draft: false
+  github:
+    owner: easysoft
+    name: qucheng_cli
 
-  # If set to auto, will mark the release as not ready for production
-  # in case there is an indicator for this in the tag e.g. v1.0.0-rc1
-  # If set to true, will mark the release as not ready for production.
-  # Default is false.
-  prerelease: auto
+  name_template: "v{{ .Version }}"
