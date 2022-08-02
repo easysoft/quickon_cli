@@ -320,8 +320,8 @@ func (p *Cluster) configCommonOptions() []string {
 	// if len(p.EIP) != 0 {
 	// 	args = append(args, fmt.Sprintf("--node-external-ip=%v", p.EIP))
 	// }
-	if len(p.Token) != 0 {
-		args = append(args, "--token="+p.Token)
+	if len(p.KubeToken) != 0 {
+		args = append(args, "--token="+p.KubeToken)
 	}
 	args = append(args, "--kubelet-arg=max-pods=220",
 		"--kube-proxy-arg=proxy-mode=ipvs",
