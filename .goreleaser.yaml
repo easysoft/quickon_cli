@@ -182,8 +182,6 @@ nfpms:
         group: notRoot
 changelog:
   sort: asc
-  skip: false
-  use: github
   filters:
     exclude:
       - '^docs:'

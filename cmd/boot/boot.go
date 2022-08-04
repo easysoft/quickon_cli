@@ -42,6 +42,8 @@ func initRootDirectory() error {
 		}
 	}
 
+	os.Chmod(common.DefaultQuickonBackupDir, common.FileMode0777)
+
 	if err := static.StageFiles(); err != nil {
 		return errors.Errorf("failed to stage files, err: %s", err)
 	}

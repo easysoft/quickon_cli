@@ -55,6 +55,23 @@ func NewCluster() *Cluster {
 	}
 }
 
+func (p *Cluster) GetCreateNativeOptions() []types.Flag {
+	return []types.Flag{
+		{
+			Name:  "kube-token",
+			P:     &p.KubeToken,
+			V:     p.KubeToken,
+			Usage: "token to use for cluster authentication",
+		},
+		{
+			Name:  "cluster-data-source",
+			P:     &p.DataSource,
+			V:     p.DataSource,
+			Usage: "data source for cluster, default is sqlite",
+		},
+	}
+}
+
 func (p *Cluster) GetCreateOptions() []types.Flag {
 	return []types.Flag{
 		// {
@@ -280,6 +297,8 @@ func (p *Cluster) InitK3sCluster() error {
 	d := common.GetDefaultKubeConfig()
 	os.Symlink(common.K3sKubeConfig, d)
 	p.Log.Donef("create kubeconfig soft link %v ---> %v", common.K3sKubeConfig, d)
+	os.Symlink(common.DefaultQuickonPlatformDir, common.K3sDefaultDir)
+	p.Log.Donef("create kubeconfig soft link %v ---> %v", common.DefaultQuickonPlatformDir, common.K3sDefaultDir)
 	kclient, _ := k8s.NewSimpleClient()
 	if kclient != nil {
 		_, err = kclient.CreateNamespace(context.TODO(), common.DefaultSystem, metav1.CreateOptions{})
@@ -303,6 +322,9 @@ func (p *Cluster) configCommonOptions() []string {
 	// if len(p.EIP) != 0 {
 	// 	args = append(args, fmt.Sprintf("--node-external-ip=%v", p.EIP))
 	// }
+	if len(p.KubeToken) != 0 {
+		args = append(args, "--token="+p.KubeToken)
+	}
 	args = append(args, "--kubelet-arg=max-pods=220",
 		"--kube-proxy-arg=proxy-mode=ipvs",
 		"--kube-proxy-arg=masquerade-all=true",
@@ -350,10 +372,16 @@ func (p *Cluster) configServerOptions() []string {
 	args = append(args, fmt.Sprintf("--cluster-cidr=%v", p.ClusterCidr))
 	args = append(args, fmt.Sprintf("--service-cidr=%v", p.ServiceCidr))
 	// args = append(args, fmt.Sprintf("--cluster-dns=%v", p.DnSSvcIP))
-	// if len(p.Token) != 0 {
-	// 	args = append(args, "--token="+p.Token)
-	// }
-	// args = append(args, p.Args...)
+
+	if len(p.DataSource) != 0 {
+		if p.DataSource == "init-etcd" {
+			args = append(args, "--cluster-init")
+		} else if strings.HasPrefix(p.DataSource, "postgres") || strings.HasPrefix(p.DataSource, "mysql") {
+			args = append(args, "--datastore-endpoint="+p.DataSource)
+		} else if strings.HasPrefix(p.DataSource, "etcd") {
+			args = append(args, "--datastore-endpoint="+strings.ReplaceAll(p.DataSource, "etcd://", "http://"))
+		}
+	}
 	return args
 }
 
