@@ -4,7 +4,6 @@
 ![GitHub Workflow Status (event)](https://img.shields.io/github/workflow/status/easysoft/qucheng_cli/Release?style=flat-square)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/easysoft/qucheng_cli?style=flat-square)
 ![GitHub](https://img.shields.io/badge/license-ZPL%20%2B%20AGPL-blue)
-[![codecov](https://codecov.io/gh/easysoft/qucheng_cli/branch/master/graph/badge.svg)](https://codecov.io/gh/easysoft/qucheng_cli)
 [![Go Report Card](https://goreportcard.com/badge/github.com/easysoft/qucheng_cli)](https://goreportcard.com/report/github.com/easysoft/qucheng_cli)
 [![Releases](https://img.shields.io/github/release-pre/easysoft/qucheng_cli.svg)](https://github.com/easysoft/qucheng_cli/releases)
 [![TODOs](https://img.shields.io/endpoint?url=https://api.tickgit.com/badge?repo=github.com/easysoft/qucheng_cli)](https://www.tickgit.com/browse?repo=github.com/easysoft/qucheng_cli)
@@ -113,7 +112,7 @@ q init --domain qucheng.example.com
 
 ## 相关文档
 
-[文档](/docs/)
+[文档](./docs/index.md)
 [版本升级](https://github.com/easysoft/qucheng_cli/wiki/%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7)
 
 ## 问题反馈

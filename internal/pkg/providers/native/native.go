@@ -55,6 +55,13 @@ const (
  			--svcsubnet "10.43.0.0/16" \
 			--eip 1.1.1.1  \
 			--san kubeapi.k8s.io
+
+	create ha cluster with mysql 5.7
+		q init --podsubnet "10.42.0.0/16" \
+			--svcsubnet "10.43.0.0/16" \
+			--eip 1.1.1.1  \
+			--san kubeapi.k8s.io \
+			--cluster-data-source "mysql://username:password@tcp(hostname:3306)/database-name"
 `
 	joinUsageExample = `
 	join node to cluster:
