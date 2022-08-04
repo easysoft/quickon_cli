@@ -42,9 +42,11 @@ jobs:
       - name: Cache Go Dependencies
         uses: actions/cache@v3
         with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go
-          restore-keys: ${{ runner.os }}-go
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: ${{ runner.os }}-go-
       - name: install addlicense
         run: |
           echo "install addlicense"
@@ -73,12 +75,6 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ${{ env.GO_VERSION }}
-      - name: Cache Go Dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go
-          restore-keys: ${{ runner.os }}-go
       - name: Run Linter
         run: make lint
 
@@ -94,9 +90,11 @@ jobs:
       - name: Cache Go Dependencies
         uses: actions/cache@v3
         with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go
-          restore-keys: ${{ runner.os }}-go
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: ${{ runner.os }}-go-
       - name: install gox
         run: |
           echo "install gox"
