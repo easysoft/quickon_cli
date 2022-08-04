@@ -19,30 +19,21 @@ qcadmin init [flags]
 			--eip 1.1.1.1  \
 			--san kubeapi.k8s.io
 
-	create ha cluster with mysql 5.7
-		q init --podsubnet "10.42.0.0/16" \
-			--svcsubnet "10.43.0.0/16" \
-			--eip 1.1.1.1  \
-			--san kubeapi.k8s.io \
-			--cluster-data-source "mysql://username:password@tcp(hostname:3306)/database-name"
-
 ```
 
 ### Options
 
 ```
-      --cluster-data-source string   data source for cluster, default is sqlite
-      --disable-ingress              disable nginx ingress plugins
-      --domain string                application custom domain name
-      --eip string                   external IP addresses to advertise for node
-  -h, --help                         help for init
-      --kube-token string            token to use for cluster authentication
-      --network string               network cni (default "flannel")
-      --podsubnet string             pod subnet (default "10.42.0.0/16")
-  -q, --qucheng-version string       qucheng version (default "stable-1.2.0")
-      --san stringArray              kube api custom domain (default [])
-      --skip-precheck                skip precheck
-      --svcsubnet string             service subnet (default "10.43.0.0/16")
+      --disable-ingress          disable nginx ingress plugins
+      --domain string            application custom domain name
+      --eip string               external IP addresses to advertise for node
+  -h, --help                     help for init
+      --network string           network cni (default "flannel")
+      --podsubnet string         pod subnet (default "10.42.0.0/16")
+  -q, --qucheng-version string   qucheng version (default "stable-1.2.0")
+      --san stringArray          kube api custom domain (default [])
+      --skip-precheck            skip precheck
+      --svcsubnet string         service subnet (default "10.43.0.0/16")
 ```
 
 ### Options inherited from parent commands
