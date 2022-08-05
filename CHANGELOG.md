@@ -1,5 +1,24 @@
 # Changelog
 
+## v1.1.1 (2022-08-05)
+
+ * [f285675](https://github.com/easysoft/qucheng_cli/commit/f28567577d33e53f3d5e1f8aa598d14fa0163b76) style(error): update error package
+ * [d5c8a98](https://github.com/easysoft/qucheng_cli/commit/d5c8a98c7f52eda43652ac71c0d3daf652300c87) build(deps): bump github.com/imroc/req/v3 from 3.14.2 to 3.14.4 (#55)
+ * [773c108](https://github.com/easysoft/qucheng_cli/commit/773c108af4bae05dee1446ee242c0e96f12680d2) build(deps): bump github.com/ergoapi/util from 0.2.19 to 0.2.20 (#51)
+ * [6cb4e95](https://github.com/easysoft/qucheng_cli/commit/6cb4e9590dd968e4bdc0ceefa415e41221746663) support k3s datastore endpoint (#49)
+ * [3830c4c](https://github.com/easysoft/qucheng_cli/commit/3830c4ca85bd7a1b21cf1f53801ee408ed4308e1) fix(ci): imp cache path
+ * [fafed7c](https://github.com/easysoft/qucheng_cli/commit/fafed7c17d2e184b2e28e9571806a7d62ac641cc) chore(cache): fix go cache (#52)
+ * [9fbece2](https://github.com/easysoft/qucheng_cli/commit/9fbece22a2397633d90844efe1b48e0e1006cb74) build(deps): bump github.com/imroc/req/v3 from 3.14.1 to 3.14.2 (#50)
+ * [d12e97a](https://github.com/easysoft/qucheng_cli/commit/d12e97a736c4324adad99d9c0109efb091f7335b) build(deps): bump github.com/imroc/req/v3 from 3.14.0 to 3.14.1 (#48)
+ * [84df220](https://github.com/easysoft/qucheng_cli/commit/84df2208922c60cc2824c34f6f20554bd9ca257b) feat(gdb): add gdb list & update build package (#47)
+ * [d01f1f0](https://github.com/easysoft/qucheng_cli/commit/d01f1f065f52c95f0e686385785b469f462d5463) docs(update): update docs
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+ * 缘生
+
 ## v1.1.0 (2022-07-27)
 
  * [997b4a0](https://github.com/easysoft/qucheng_cli/commit/997b4a06ba0b1b1bdbb4cb43b3a8492a2fedf73c) docs(docs): update docs
