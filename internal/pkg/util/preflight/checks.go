@@ -28,9 +28,9 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/cockroachdb/errors"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
-	"github.com/pkg/errors"
 
 	netutil "k8s.io/apimachinery/pkg/util/net"
 	"k8s.io/apimachinery/pkg/util/validation"
@@ -69,7 +69,7 @@ type ServiceCheck struct {
 
 // Name returns label for ServiceCheck. If not provided, will return based on the service parameter
 func (sc ServiceCheck) Name() string {
-	return fmt.Sprintf("Service-%s", strings.Title(sc.Service))
+	return fmt.Sprintf("Service-%s", strings.ToUpper(sc.Service))
 }
 
 // Check validates if the service is enabled and active.
@@ -717,17 +717,4 @@ func RunChecks(checks []Checker, ww io.Writer, ignorePreflightErrors bool) error
 		}
 	}
 	return nil
-}
-
-// normalizeURLString returns the normalized string, or an error if it can't be parsed into an URL object.
-// It takes an URL string as input.
-func normalizeURLString(s string) (string, error) {
-	u, err := url.Parse(s)
-	if err != nil {
-		return "", err
-	}
-	if len(u.Path) > 0 {
-		u.Path = strings.ReplaceAll(u.Path, "//", "/")
-	}
-	return u.String(), nil
 }

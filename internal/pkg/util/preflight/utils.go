@@ -20,7 +20,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/pkg/errors"
+	"github.com/cockroachdb/errors"
 
 	"k8s.io/apimachinery/pkg/util/version"
 	utilsexec "k8s.io/utils/exec"

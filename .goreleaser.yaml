@@ -208,6 +208,6 @@ release:
   # Default is false.
   github:
     owner: easysoft
-    name: qucheng_cli
+    name: quickon_cli
 
   name_template: "v{{ .Version }}"

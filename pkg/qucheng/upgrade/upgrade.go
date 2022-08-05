@@ -16,13 +16,13 @@ import (
 	"github.com/easysoft/qcadmin/internal/app/config"
 	suffixdomain "github.com/easysoft/qcadmin/pkg/qucheng/domain"
 
+	"github.com/cockroachdb/errors"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/ergoapi/util/exid"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/version"
-	"github.com/pkg/errors"
 )
 
 type Option struct {

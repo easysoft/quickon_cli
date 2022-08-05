@@ -17,10 +17,10 @@ import (
 	"time"
 
 	"github.com/Masterminds/semver/v3"
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/gofrs/flock"
-	"github.com/pkg/errors"
 	"helm.sh/helm/v3/cmd/helm/search"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/chart/loader"

@@ -22,7 +22,7 @@ package preflight
 import (
 	"os"
 
-	"github.com/pkg/errors"
+	"github.com/cockroachdb/errors"
 )
 
 // Check validates if an user has elevated (root) privileges.

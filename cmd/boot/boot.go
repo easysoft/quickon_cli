@@ -10,7 +10,7 @@ import (
 	"os"
 
 	"github.com/ergoapi/util/zos"
-	"github.com/pkg/errors"
+	"github.com/cockroachdb/errors"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/static"

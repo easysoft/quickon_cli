@@ -7,7 +7,7 @@
 package helm
 
 import (
-	"github.com/pkg/errors"
+	"github.com/cockroachdb/errors"
 	"helm.sh/helm/v3/pkg/strvals"
 )
 

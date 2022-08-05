@@ -77,7 +77,7 @@ func (p *Cluster) InstallQuCheng() error {
 		time.Sleep(time.Second * 5)
 		trywaitsc := time.Now()
 		if trywaitsc.Sub(waitsc) > time.Minute*3 {
-			p.Log.Warnf("wait storage %s ready, timeout: %v", sc.Name, trywaitsc.Sub(waitsc).Seconds())
+			p.Log.Warnf("wait storage ready, timeout: %v", trywaitsc.Sub(waitsc).Seconds())
 			break
 		}
 	}

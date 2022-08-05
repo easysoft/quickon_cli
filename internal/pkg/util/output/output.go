@@ -18,8 +18,8 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/cockroachdb/errors"
 	"github.com/gosuri/uitable"
-	"github.com/pkg/errors"
 	"sigs.k8s.io/yaml"
 )
 

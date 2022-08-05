@@ -22,7 +22,7 @@ import (
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/file"
 	"github.com/imroc/req/v3"
-	"github.com/pkg/errors"
+	"github.com/cockroachdb/errors"
 )
 
 var versionTpl = `{{with .Client -}}

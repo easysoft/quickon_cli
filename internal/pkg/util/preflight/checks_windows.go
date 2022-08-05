@@ -22,8 +22,8 @@ package preflight
 import (
 	"os/user"
 
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
-	"github.com/pkg/errors"
 )
 
 // The "Well-known SID" of Administrator group

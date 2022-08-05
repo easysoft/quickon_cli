@@ -11,8 +11,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/common"
-	"github.com/pkg/errors"
 )
 
 func Stage(dataDir string) error {

@@ -19,7 +19,7 @@ package preflight
 import (
 	"testing"
 
-	"github.com/pkg/errors"
+	"github.com/cockroachdb/errors"
 
 	utilsexec "k8s.io/utils/exec"
 	fakeexec "k8s.io/utils/exec/testing"
