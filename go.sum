@@ -793,8 +793,8 @@ github.com/imdario/mergo v0.3.11/go.mod h1:jmQim1M+e3UYxmgPu/WyfjB3N3VflVyUjjjwH
 github.com/imdario/mergo v0.3.12 h1:b6R2BslTbIEToALKP7LxUvijTsNI9TAe80pLWN2g/HU=
 github.com/imdario/mergo v0.3.12/go.mod h1:jmQim1M+e3UYxmgPu/WyfjB3N3VflVyUjjjwH0dnCYA=
 github.com/imkira/go-interpol v1.1.0/go.mod h1:z0h2/2T3XF8kyEPpRgJ3kmNv+C43p+I/CoI+jC3w2iA=
-github.com/imroc/req/v3 v3.16.0 h1:KPOPuokHLEokYwvVf+ajU7yKTiR87cV+vGD/l8lpe8M=
-github.com/imroc/req/v3 v3.16.0/go.mod h1:EluRnkfh8A39BmrCARYhcUrfGyR8qPw+O0BZyTy4j9k=
+github.com/imroc/req/v3 v3.17.2 h1:eA0mcwg81wBCrTORWSrKe4uTYOwQHI66ep9BEOvuHBs=
+github.com/imroc/req/v3 v3.17.2/go.mod h1:EluRnkfh8A39BmrCARYhcUrfGyR8qPw+O0BZyTy4j9k=
 github.com/inconshreveable/go-update v0.0.0-20160112193335-8152e7eb6ccf h1:WfD7VjIE6z8dIvMsI4/s+1qr5EL+zoIGev1BQj1eoJ8=
 github.com/inconshreveable/go-update v0.0.0-20160112193335-8152e7eb6ccf/go.mod h1:hyb9oH7vZsitZCiBt0ZvifOrB+qc8PS5IiilCIb87rg=
 github.com/inconshreveable/mousetrap v1.0.0 h1:Z8tu5sraLXCXIcARxBp/8cbvlwVa7Z1NHg9XEKhtSvM=
