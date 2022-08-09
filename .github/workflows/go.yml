@@ -40,13 +40,9 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
       - name: Cache Go Dependencies
-        uses: actions/cache@v3
+        uses: magnetikonline/action-golang-cache@v3
         with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: ${{ runner.os }}-go-
+          go-version-file: go.mod
       - name: install addlicense
         run: |
           echo "install addlicense"
@@ -76,13 +72,9 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
       - name: Cache Go Dependencies
-        uses: actions/cache@v3
+        uses: magnetikonline/action-golang-cache@v3
         with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: ${{ runner.os }}-go-
+          go-version-file: go.mod
       - name: Run Linter
         run: make lint
 
@@ -96,13 +88,9 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
       - name: Cache Go Dependencies
-        uses: actions/cache@v3
+        uses: magnetikonline/action-golang-cache@v3
         with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: ${{ runner.os }}-go-
+          go-version-file: go.mod
       - name: install gox
         run: |
           echo "install gox"
