@@ -1,5 +1,26 @@
 # Changelog
 
+## v1.1.3 (2022-08-09)
+
+ * [8b3b9e3](https://github.com/easysoft/qucheng_cli/commit/8b3b9e3cdea6bd63ffa45a375961109825e1a409) fix(bug-report): fix bug-report script
+ * [30477c4](https://github.com/easysoft/qucheng_cli/commit/30477c4a504c515946b4860a5fdf0186d63c98da) chore(action): update action cache
+
+### Contributors
+
+ * ysicing
+
+## v1.1.2 (2022-08-09)
+
+ * [9f0fc16](https://github.com/easysoft/qucheng_cli/commit/9f0fc16de0b37bbacd76334085ffa6823ace347b) feat(1.1.2): release 1.1.2 support qucheng 1.3
+ * [0b242b2](https://github.com/easysoft/qucheng_cli/commit/0b242b241f723815f065dbf05211b2aa57518aa0) build(deps): bump github.com/imroc/req/v3 from 3.16.0 to 3.17.2 (#57)
+ * [5897b20](https://github.com/easysoft/qucheng_cli/commit/5897b2057ac1bcd4c02fcfe85a828d8714dd9e55) feat(update qucheng 1.3 to stable): release qucheng 1.3
+ * [0d8beca](https://github.com/easysoft/qucheng_cli/commit/0d8becadea7fce4a44400c9fcb3bce036f951654) build(deps): bump github.com/imroc/req/v3 from 3.14.4 to 3.16.0 (#56)
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v1.1.1 (2022-08-05)
 
  * [f285675](https://github.com/easysoft/qucheng_cli/commit/f28567577d33e53f3d5e1f8aa598d14fa0163b76) style(error): update error package
