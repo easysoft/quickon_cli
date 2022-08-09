@@ -297,6 +297,7 @@ func (p *Cluster) InitK3sCluster() error {
 	d := common.GetDefaultKubeConfig()
 	os.Symlink(common.K3sKubeConfig, d)
 	p.Log.Donef("create kubeconfig soft link %v ---> %v", common.K3sKubeConfig, d)
+	os.Rename(common.K3sDefaultDir, common.K3sDefaultDir+"_"+time.Now().Format("20060102150405"))
 	os.Symlink(common.DefaultQuickonPlatformDir, common.K3sDefaultDir)
 	p.Log.Donef("create kubeconfig soft link %v ---> %v", common.DefaultQuickonPlatformDir, common.K3sDefaultDir)
 	kclient, _ := k8s.NewSimpleClient()

@@ -21,6 +21,10 @@ run() {
     echo "------------End of ${1}----------------"
 }
 
+os_env() {
+  run env | tee $diagnose_dir/os_env
+}
+
 get_distribution() {
     cat /etc/issue*
     if [ -r /etc/os-release ]; then
@@ -271,4 +275,4 @@ pd_collect() {
 
 pd_collect
 
-echo "请上传 $tmpdir/diagnose_${timestamp}.tar.gz"
+echo "诊断信息: $tmpdir/diagnose_${timestamp}.tar.gz"
