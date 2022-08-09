@@ -91,16 +91,16 @@ func (k *K8sStatusCollector) status(ctx context.Context) *Status {
 	return status
 }
 
-func (k *K8sStatusCollector) deploymentStatus(ctx context.Context, ns, name, t string, status *Status) (bool, error) {
-	k.option.Log.Debugf("check cm %s status", name)
+func (k *K8sStatusCollector) deploymentStatus(ctx context.Context, ns, name, aliasname, t string, status *Status) (bool, error) {
+	k.option.Log.Debugf("check cm %s status", aliasname)
 	stateCount := PodStateCount{Type: "Deployment"}
 	d, err := k.client.GetDeployment(ctx, ns, name, metav1.GetOptions{})
 	if errors.IsNotFound(err) {
 		stateCount.Disabled = true
 		if t == "k8s" {
-			status.KubeStatus.PodState[name] = stateCount
+			status.KubeStatus.PodState[aliasname] = stateCount
 		} else {
-			status.QStatus.PodState[name] = stateCount
+			status.QStatus.PodState[aliasname] = stateCount
 		}
 		return true, nil
 	}
@@ -108,9 +108,9 @@ func (k *K8sStatusCollector) deploymentStatus(ctx context.Context, ns, name, t s
 	if err != nil {
 		stateCount.Disabled = false
 		if t == "k8s" {
-			status.KubeStatus.PodState[name] = stateCount
+			status.KubeStatus.PodState[aliasname] = stateCount
 		} else {
-			status.QStatus.PodState[name] = stateCount
+			status.QStatus.PodState[aliasname] = stateCount
 		}
 		return false, err
 	}
@@ -118,11 +118,11 @@ func (k *K8sStatusCollector) deploymentStatus(ctx context.Context, ns, name, t s
 	if d == nil {
 		stateCount.Disabled = false
 		if t == "k8s" {
-			status.KubeStatus.PodState[name] = stateCount
+			status.KubeStatus.PodState[aliasname] = stateCount
 		} else {
-			status.QStatus.PodState[name] = stateCount
+			status.QStatus.PodState[aliasname] = stateCount
 		}
-		return false, fmt.Errorf("component %s is not available", name)
+		return false, fmt.Errorf("component %s is not available", aliasname)
 	}
 
 	stateCount.Desired = int(d.Status.Replicas)
@@ -131,9 +131,9 @@ func (k *K8sStatusCollector) deploymentStatus(ctx context.Context, ns, name, t s
 	stateCount.Unavailable = int(d.Status.UnavailableReplicas)
 	stateCount.Disabled = false
 	if t == "k8s" {
-		status.KubeStatus.PodState[name] = stateCount
+		status.KubeStatus.PodState[aliasname] = stateCount
 	} else {
-		status.QStatus.PodState[name] = stateCount
+		status.QStatus.PodState[aliasname] = stateCount
 	}
 	notReady := stateCount.Desired - stateCount.Ready
 	if notReady > 0 {
@@ -147,13 +147,13 @@ func (k *K8sStatusCollector) deploymentStatus(ctx context.Context, ns, name, t s
 
 func (k *K8sStatusCollector) quchengStatus(ctx context.Context, status *Status) error {
 	// 集群
-	k.deploymentStatus(ctx, "kube-system", "coredns", "k8s", status)
-	k.deploymentStatus(ctx, "kube-system", "metrics-server", "k8s", status)
-	k.deploymentStatus(ctx, "kube-system", "local-path-provisioner", "k8s", status)
+	k.deploymentStatus(ctx, "kube-system", "coredns", "coredns", "k8s", status)
+	k.deploymentStatus(ctx, "kube-system", "metrics-server", "metrics-server", "k8s", status)
+	k.deploymentStatus(ctx, "kube-system", "local-path-provisioner", "local-path-provisioner", "k8s", status)
 	// 业务层
-	k.deploymentStatus(ctx, common.DefaultSystem, common.DefaultQuchengName, "", status)
+	k.deploymentStatus(ctx, common.DefaultSystem, common.DefaultQuchengName, common.DefaultQuchengName, "", status)
 	// 数据库
-	k.deploymentStatus(ctx, common.DefaultSystem, common.DefaultDBName, "", status)
+	k.deploymentStatus(ctx, common.DefaultSystem, common.DefaultDBName, common.DefaultDBName, "", status)
 
 	// 插件状态
 	plugins, _ := plugin.GetMaps()
@@ -172,9 +172,9 @@ func (k *K8sStatusCollector) quchengPluginStatus(ctx context.Context, p plugin.M
 	} else {
 		stateCount.Disabled = false
 		if p.Type == "ingress" {
-			k.deploymentStatus(ctx, common.DefaultSystem, common.DefaultIngressName, "", status)
+			k.deploymentStatus(ctx, common.DefaultSystem, fmt.Sprintf("ingress-%s", common.DefaultIngressName), common.DefaultIngressName, "", status)
 		} else if p.Type == "cne-operator" {
-			k.deploymentStatus(ctx, common.DefaultSystem, common.DefaultCneOperatorName, "", status)
+			k.deploymentStatus(ctx, common.DefaultSystem, common.DefaultCneOperatorName, common.DefaultCneOperatorName, "", status)
 		}
 	}
 	status.QStatus.PluginState[p.Type] = stateCount

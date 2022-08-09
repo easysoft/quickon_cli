@@ -9,8 +9,8 @@ package boot
 import (
 	"os"
 
-	"github.com/ergoapi/util/zos"
 	"github.com/cockroachdb/errors"
+	"github.com/ergoapi/util/zos"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/static"

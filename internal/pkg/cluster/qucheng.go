@@ -149,7 +149,6 @@ func (p *Cluster) InstallQuCheng() error {
 		p.Log.Done("deployed cne-operator success")
 	}
 	helmchan := common.GetChannel(p.QuchengVersion)
-	// helm upgrade -i nginx-ingress-controller bitnami/nginx-ingress-controller -n kube-system
 	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultQuchengName, "--namespace", common.DefaultSystem, "--set", "env.APP_DOMAIN=" + p.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
 	if helmchan != "stable" {
 		helmargs = append(helmargs, "--set", "env.PHP_DEBUG=2")
