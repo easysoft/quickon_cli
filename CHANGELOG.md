@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.1.4 (2022-08-17)
+
+ * [a210697](https://github.com/easysoft/qucheng_cli/commit/a210697452598eda28f049f04302a4c41e37a417) feat(1.3.1): release 1.3.1
+ * [1cb3932](https://github.com/easysoft/qucheng_cli/commit/1cb393260961a196d21db4625c8d7e95c7990d1b) build(deps): bump github.com/imroc/req/v3 from 3.17.2 to 3.17.4 (#59)
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v1.1.3 (2022-08-09)
 
  * [8b3b9e3](https://github.com/easysoft/qucheng_cli/commit/8b3b9e3cdea6bd63ffa45a375961109825e1a409) fix(bug-report): fix bug-report script
