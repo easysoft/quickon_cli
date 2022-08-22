@@ -20,7 +20,7 @@ qcadmin init [flags]
 ```
       --domain string            application custom domain name
   -h, --help                     help for init
-  -q, --qucheng-version string   qucheng version (default "stable-1.3.1")
+  -q, --qucheng-version string   qucheng version (default "stable-1.3.2")
       --skip-precheck            skip precheck
 ```
 

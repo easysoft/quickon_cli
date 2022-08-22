@@ -8,6 +8,7 @@
 [![Releases](https://img.shields.io/github/release-pre/easysoft/quickon_cli.svg)](https://github.com/easysoft/quickon_cli/releases)
 [![TODOs](https://img.shields.io/endpoint?url=https://api.tickgit.com/badge?repo=github.com/easysoft/quickon_cli)](https://www.tickgit.com/browse?repo=github.com/easysoft/quickon_cli)
 [![docs](https://img.shields.io/badge/docs-done-green)](https://www.qucheng.com/)
+[![Chat on QQ](https://img.shields.io/badge/chat-768721743-blueviolet?logo=TencentQQ)](https://img.qucheng.com/group/qq.jpg)
 
 > 中文 | [English](README-EN.md)
 
