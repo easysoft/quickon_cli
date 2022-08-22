@@ -1,13 +1,14 @@
 # qcadmin(q)
 
-![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/easysoft/qucheng_cli?filename=go.mod&style=flat-square)
-![GitHub Workflow Status (event)](https://img.shields.io/github/workflow/status/easysoft/qucheng_cli/Release?style=flat-square)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/w/easysoft/qucheng_cli?style=flat-square)
+![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/easysoft/quickon_cli?filename=go.mod&style=flat-square)
+![GitHub Workflow Status (event)](https://img.shields.io/github/workflow/status/easysoft/quickon_cli/Release?style=flat-square)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/easysoft/quickon_cli?style=flat-square)
 ![GitHub](https://img.shields.io/badge/license-ZPL%20%2B%20AGPL-blue)
-[![Go Report Card](https://goreportcard.com/badge/github.com/easysoft/qucheng_cli)](https://goreportcard.com/report/github.com/easysoft/qucheng_cli)
-[![Releases](https://img.shields.io/github/release-pre/easysoft/qucheng_cli.svg)](https://github.com/easysoft/qucheng_cli/releases)
-[![TODOs](https://img.shields.io/endpoint?url=https://api.tickgit.com/badge?repo=github.com/easysoft/qucheng_cli)](https://www.tickgit.com/browse?repo=github.com/easysoft/qucheng_cli)
+[![Go Report Card](https://goreportcard.com/badge/github.com/easysoft/quickon_cli)](https://goreportcard.com/report/github.com/easysoft/quickon_cli)
+[![Releases](https://img.shields.io/github/release-pre/easysoft/quickon_cli.svg)](https://github.com/easysoft/quickon_cli/releases)
+[![TODOs](https://img.shields.io/endpoint?url=https://api.tickgit.com/badge?repo=github.com/easysoft/quickon_cli)](https://www.tickgit.com/browse?repo=github.com/easysoft/quickon_cli)
 [![docs](https://img.shields.io/badge/docs-done-green)](https://www.qucheng.com/)
+[![Chat on QQ](https://img.shields.io/badge/chat-768721743-blueviolet?logo=TencentQQ)](https://img.qucheng.com/group/qq.jpg)
 
 > 中文 | [English](README-EN.md)
 
@@ -53,7 +54,7 @@
 
 #### 1. 从源码安装
 
-> 需要go环境，推荐使用`1.18`
+> 需要go环境，推荐使用`1.19`
 
 ```bash
 # Clone the repo
@@ -113,7 +114,7 @@ q init --domain qucheng.example.com
 ## 相关文档
 
 [文档](./docs/index.md)
-[版本升级](https://github.com/easysoft/qucheng_cli/wiki/%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7)
+[版本升级](https://github.com/easysoft/quickon_cli/wiki/%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7)
 
 ## 问题反馈
 
@@ -124,6 +125,6 @@ q init --domain qucheng.example.com
 
 <!-- readme: collaborators,contributors -start -->
 <!-- readme: collaborators,contributors -end -->
-<a href="https://github.com/easysoft/qucheng_cli/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=easysoft/qucheng_cli" />
+<a href="https://github.com/easysoft/quickon_cli/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=easysoft/quickon_cli" />
 </a>

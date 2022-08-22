@@ -39,7 +39,7 @@ qcadmin init [flags]
       --kube-token string            token to use for cluster authentication
       --network string               network cni (default "flannel")
       --podsubnet string             pod subnet (default "10.42.0.0/16")
-  -q, --qucheng-version string       qucheng version (default "stable-1.3.1")
+  -q, --qucheng-version string       qucheng version (default "stable-1.3.2")
       --san stringArray              kube api custom domain (default [])
       --skip-precheck                skip precheck
       --svcsubnet string             service subnet (default "10.43.0.0/16")
