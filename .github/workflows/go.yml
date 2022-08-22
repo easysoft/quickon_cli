@@ -14,12 +14,14 @@ on:
     paths:
       - '**.go'
       - 'go.mod'
-      - '.github/workflows/go.yml'
+      - '.github/**'
   pull_request:
     branches:
       - "*"
     paths:
       - '**.go'
+      - 'go.mod'
+      - '.github/**'
     # paths-ignore:
     #   - 'docs/**'
     #   - '*.md'
