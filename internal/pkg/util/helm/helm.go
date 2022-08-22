@@ -9,7 +9,6 @@ package helm
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -306,7 +305,7 @@ func (c Client) AddRepo(name, url, username, password string) error {
 		return err
 	}
 
-	b, err := ioutil.ReadFile(repoFile)
+	b, err := os.ReadFile(repoFile)
 	if err != nil && !os.IsNotExist(err) {
 		return err
 	}

@@ -13,7 +13,6 @@ import (
 	"compress/gzip"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -74,7 +73,7 @@ func UncompressCommand(log log.Logger, src io.Reader, url, cmd string) (io.Reade
 
 		// Zip format requires its file size for uncompressing.
 		// So we need to read the HTTP response into a buffer at first.
-		buf, err := ioutil.ReadAll(src)
+		buf, err := io.ReadAll(src)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create buffer for zip file: %s", err)
 		}

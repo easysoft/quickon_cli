@@ -152,6 +152,8 @@ func (p *Cluster) InstallQuCheng() error {
 	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultQuchengName, "--namespace", common.DefaultSystem, "--set", "env.APP_DOMAIN=" + p.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
 	if helmchan != "stable" {
 		helmargs = append(helmargs, "--set", "env.PHP_DEBUG=2")
+		helmargs = append(helmargs, "--set", "cloud.switchChannel=true")
+		helmargs = append(helmargs, "--set", "cloud.selectVersion=true")
 	}
 	hostdomain := p.Domain
 	if strings.HasSuffix(hostdomain, "haogs.cn") {

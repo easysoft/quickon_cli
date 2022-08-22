@@ -9,7 +9,6 @@ package downloader
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"os/exec"
@@ -68,7 +67,7 @@ func Download(remote, local string) (*Result, error) {
 		}
 		return res, nil
 	}
-	temp, _ := ioutil.TempFile("", "")
+	temp, _ := os.CreateTemp("", "")
 	defer func() {
 		os.Remove(temp.Name())
 	}()

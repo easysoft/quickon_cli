@@ -76,7 +76,7 @@ retry:
 }
 
 func (k *K8sStatusCollector) statusIsReady(s *Status) bool {
-	// TODO
+	// TODO Check status
 	return true
 }
 

@@ -19,8 +19,8 @@ import (
 	"time"
 )
 
-//nolint
-//RetryError -
+// nolint
+// RetryError -
 type RetryError struct {
 	n int
 }
@@ -29,13 +29,13 @@ func (e *RetryError) Error() string {
 	return fmt.Sprintf("still failing after %d retries", e.n)
 }
 
-//IsRetryFailure -
+// IsRetryFailure -
 func IsRetryFailure(err error) bool {
 	_, ok := err.(*RetryError)
 	return ok
 }
 
-//ConditionFunc -
+// ConditionFunc -
 type ConditionFunc func() (bool, error)
 
 // Retry retries f every interval until after maxRetries.

@@ -8,7 +8,6 @@ package kutil
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"time"
 
@@ -23,7 +22,7 @@ const (
 )
 
 func GetNodeToken() string {
-	b, err := ioutil.ReadFile(NodeToken)
+	b, err := os.ReadFile(NodeToken)
 	if err != nil {
 		return ""
 	}

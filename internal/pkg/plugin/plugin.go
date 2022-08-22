@@ -10,7 +10,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -28,7 +27,7 @@ func GetAll() ([]Meta, error) {
 	var plugins []Meta
 	pf := fmt.Sprintf("%s/hack/manifests/plugins/plugins.json", common.GetDefaultDataDir())
 	log.Debug("load local plugin config from", pf)
-	content, err := ioutil.ReadFile(pf)
+	content, err := os.ReadFile(pf)
 	if err != nil {
 		return nil, err
 	}

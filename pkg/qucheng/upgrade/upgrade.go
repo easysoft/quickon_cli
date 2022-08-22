@@ -43,7 +43,6 @@ func (opt *Option) Fetch(ns, name string) (ComponentVersion, error) {
 	if err := opt.client.UpdateRepo(); err != nil {
 		opt.log.Warn("update helm repo failed")
 	}
-	// TODO fetch local version
 	localcv, localav, err := opt.fetchDeploy(ns, name)
 	if err != nil {
 		opt.log.Debugf("fecth local %s failed, reason: %v", name, err)

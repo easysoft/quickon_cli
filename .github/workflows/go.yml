@@ -2,7 +2,7 @@ name: go
 
 env:
   # Common versions
-  GO_VERSION: '1.18'
+  GO_VERSION: '1.19'
 
 permissions:
   contents: read
@@ -14,71 +14,21 @@ on:
     paths:
       - '**.go'
       - 'go.mod'
-      - '.golangci.yml'
       - '.github/workflows/go.yml'
   pull_request:
     branches:
       - "*"
     paths:
       - '**.go'
-      - 'go.mod'
-      - '.golangci.yml'
-      - '.github/workflows/go.yml'
     # paths-ignore:
     #   - 'docs/**'
     #   - '*.md'
     #   - '*.yml'
 
 jobs:
-  check-license:
-    runs-on: ubuntu-18.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: ${{ env.GO_VERSION }}
-      - name: Cache Go Dependencies
-        uses: magnetikonline/action-golang-cache@v3
-        with:
-          go-version-file: go.mod
-      - name: install addlicense
-        run: |
-          echo "install addlicense"
-          go install github.com/google/addlicense@latest
-      - name: Run Check License
-        run: |
-          export TZ='Asia/Shanghai'
-          export PATH=$PATH:$(go env GOPATH)/bin
-          make gencopyright
-          modifyCode=$(git status  -s | grep M | wc -l)
-          git status  -s
-          if [ $modifyCode -eq 0 ] ; then
-             echo "Lic check ok"
-          else
-             echo "Failed git modify files num is $modifyCode. Lic check error,please exec 'make gencopyright' in your code "
-             exit -1
-          fi
-  lint:
-    runs-on: ubuntu-18.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          submodules: true
-      - name: Setup Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: ${{ env.GO_VERSION }}
-      - name: Cache Go Dependencies
-        uses: magnetikonline/action-golang-cache@v3
-        with:
-          go-version-file: go.mod
-      - name: Run Linter
-        run: make lint
-
-  build-binaries:
+  build:
+    name: "PreBuild"
+    timeout-minutes: 20
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
@@ -108,12 +58,22 @@ jobs:
           make build
           # make upx
           ./dist/qcadmin_linux_amd64 version
-          sudo ./dist/qcadmin_linux_amd64 init -q test --domain q.local --skip-precheck  --debug
-      - name: build docs
+      - name: "Upload Binary"
+        uses: actions/upload-artifact@v2
+        with: { name: qcadmin_linux_amd64, path: dist/qcadmin_linux_amd64 }
+
+  test:
+    name: "Smoke Test"
+    needs: prep
+    timeout-minutes: 20
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Download Binary"
+        uses: actions/download-artifact@v2
+        with: { name: qcadmin_linux_amd64, path: dist/artifacts/ }
+      - name: test qcadmin
+        working-directory: dist/artifacts/
         run: |
-          make doc
-      - name: docs
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GH_TOKEN }}
-          publish_dir: ./docs
+          chmod +x qcadmin_linux_amd64
+          sudo ./qcadmin_linux_amd64 init -q test --domain q.local --skip-precheck  --debug

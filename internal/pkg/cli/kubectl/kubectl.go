@@ -26,7 +26,6 @@ func Main() {
 	// 	}
 	// }
 	// if kubenv == "" {
-	// 	// TODO: use default kubeconfig
 	// 	kubenv = filepath.Join(homedir.HomeDir(), ".kube", "config")
 	// }
 

@@ -102,7 +102,7 @@ type PodAllocatedResources struct {
 	MemoryLimits *MemoryResource
 }
 
-//NodeCapacity
+// NodeCapacity
 func NodeCapacity(node *v1.Node) v1.ResourceList {
 	allocatable := node.Status.Capacity
 	if len(node.Status.Allocatable) > 0 {
@@ -137,7 +137,7 @@ func getNodeMetricsByNodeName(nodeMetricsList *metricsapi.NodeMetricsList) map[s
 // 	return podMetrics
 // }
 
-//getNodeAllocatedResources https://github.com/kubernetes/dashboard/blob/d386ff60597b6eab0222f2c3c4aecf8e49b3014e/src/app/backend/resource/node/detail.go\#L171
+// getNodeAllocatedResources https://github.com/kubernetes/dashboard/blob/d386ff60597b6eab0222f2c3c4aecf8e49b3014e/src/app/backend/resource/node/detail.go\#L171
 func getNodeAllocatedResources(node v1.Node, podList *v1.PodList, nodeMetricsList *metricsapi.NodeMetricsList) (NodeAllocatedResources, error) {
 	reqs, limits := map[v1.ResourceName]resource.Quantity{}, map[v1.ResourceName]resource.Quantity{}
 

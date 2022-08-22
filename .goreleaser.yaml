@@ -109,7 +109,7 @@ nfpms:
     Cloud Native application delivery platform cli
   maintainer: qucheng
   license: MIT
-  vendor: https://github.com/easysoft/qucheng_cli
+  vendor: https://github.com/easysoft/quickon_cli
   formats:
   # - apk
   - deb

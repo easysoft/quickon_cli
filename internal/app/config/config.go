@@ -7,7 +7,7 @@
 package config
 
 import (
-	"io/ioutil"
+	"os"
 	"time"
 
 	"github.com/easysoft/qcadmin/common"
@@ -46,7 +46,7 @@ func LoadConfig() (*Config, error) {
 	path := common.GetDefaultConfig()
 	r := new(Config)
 	if file.CheckFileExists(path) {
-		b, _ := ioutil.ReadFile(path)
+		b, _ := os.ReadFile(path)
 		_ = yaml.Unmarshal(b, r)
 	}
 	return r, nil
@@ -58,7 +58,7 @@ func (r *Config) SaveConfig() error {
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(path, b, common.FileMode0644)
+	err = os.WriteFile(path, b, common.FileMode0644)
 	if err != nil {
 		return err
 	}
