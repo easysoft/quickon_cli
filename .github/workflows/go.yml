@@ -61,7 +61,7 @@ jobs:
           # make upx
           ./dist/qcadmin_linux_amd64 version
       - name: "Upload Binary"
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with: { name: qcadmin_linux_amd64, path: dist/qcadmin_linux_amd64 }
 
   test:
