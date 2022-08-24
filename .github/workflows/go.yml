@@ -72,7 +72,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: "Download Binary"
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with: { name: qcadmin_linux_amd64, path: dist/artifacts/ }
       - name: test qcadmin
         working-directory: dist/artifacts/
