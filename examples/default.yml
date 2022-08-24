@@ -1,0 +1,19 @@
+---
+apiVersion: qucheng.easycorp.io/v1alpha1
+kind: ClusterConfig
+metadata:
+  name: cluster-1
+spec:
+  cni:
+    provide: default
+    cidr: "10.100.0.0/16"
+    subnets:
+      pod:
+        cidr: "10.100.0.0/19"
+      svc:
+        cidr: "10.100.64.0/19"
+  csi:
+    provide: default
+  cri:
+    # docker, containerd(default)
+    provide: default
