@@ -1,5 +1,23 @@
 # Changelog
 
+## v1.1.6 (2022-09-01)
+
+ * [c012c9d](https://github.com/easysoft/quickon_cli/commit/c012c9d60aa8ba6402437efd50403b363a357dd3) feat(1.4): release 1.4
+ * [61f3e11](https://github.com/easysoft/quickon_cli/commit/61f3e11d5ed5435c403c51a6156aadbf787954a3) build(deps): bump github.com/imroc/req/v3 from 3.21.1 to 3.22.0 (#74)
+ * [b25ea38](https://github.com/easysoft/quickon_cli/commit/b25ea3881da219ada8ef6b3d2483e043908cab15) build(deps): bump github.com/imroc/req/v3 from 3.21.0 to 3.21.1 (#73)
+ * [33308c9](https://github.com/easysoft/quickon_cli/commit/33308c98bc542b6b472f7ea6ee719def2a15bb6a) build(deps): bump github.com/imroc/req/v3 from 3.20.0 to 3.21.0 (#72)
+ * [a13204c](https://github.com/easysoft/quickon_cli/commit/a13204c3e115d9ddad37ac220f221dcdc2896a74) feat(update): update k3s version
+ * [8568bbc](https://github.com/easysoft/quickon_cli/commit/8568bbc38058ef75a016c858aa69898c14c373a7) build(deps): bump github.com/imroc/req/v3 from 3.19.1 to 3.20.0 (#71)
+ * [9ccb54d](https://github.com/easysoft/quickon_cli/commit/9ccb54de28aa3aa071127e3f5f3b932ae4e7335c) feat(update): update
+ * [e77e43e](https://github.com/easysoft/quickon_cli/commit/e77e43ecd884ed9137188a06da7ac54c466355f2) build(deps): bump actions/download-artifact from 2 to 3 (#70)
+ * [33989c0](https://github.com/easysoft/quickon_cli/commit/33989c06b8ac1238e36862204f995b01be3abd4f) build(deps): bump actions/upload-artifact from 2 to 3 (#68)
+ * [16b419e](https://github.com/easysoft/quickon_cli/commit/16b419e2050e5881d7e0572805c228a15803a6f1) build(deps): bump github.com/imroc/req/v3 from 3.17.4 to 3.19.1 (#69)
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v1.1.5 (2022-08-22)
 
  * [dc792c5](https://github.com/easysoft/quickon_cli/commit/dc792c5ccce8084265a997531358f9876bd9d86c) feat(1.3.2): release 1.3.2
