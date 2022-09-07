@@ -18,6 +18,7 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/internal/pkg/util/preflight"
+	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/zos"
 
@@ -174,10 +175,11 @@ func (p *Native) Show() {
 		} else {
 			domain = fmt.Sprintf("https://%s", cfg.Domain)
 		}
-		p.Log.Donef("web: %s", domain)
 	} else {
-		p.Log.Donef("web: %s", fmt.Sprintf("http://%s:32379", p.Metadata.EIP))
+		domain = fmt.Sprintf("http://%s:32379", p.Metadata.EIP)
 	}
+	p.Log.Donef("web: %s, username: %s, password: %s",
+		color.SGreen(domain), color.SGreen(common.QuchengDefaultUser), color.SGreen(common.QuchengDefaultPass))
 	p.Log.Donef("docs: %s", common.QuchengDocs)
 	p.Log.Done("support: 768721743(QQGroup)")
 }

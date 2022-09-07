@@ -59,7 +59,7 @@ const (
 )
 
 const (
-	DefaultQuchengVersion  = "stable-1.4"
+	DefaultQuchengVersion  = "stable-1.5"
 	K3sBinName             = "k3s"
 	K3sBinPath             = "/usr/local/bin/k3s"
 	HelmBinName            = "helm"
@@ -87,6 +87,8 @@ const (
 )
 
 const (
-	DownloadAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4688.0 Safari/537.36"
-	QuchengDocs   = "https://www.qucheng.com"
+	DownloadAgent      = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4688.0 Safari/537.36"
+	QuchengDocs        = "https://www.qucheng.com"
+	QuchengDefaultUser = "admin"
+	QuchengDefaultPass = "pass4Quickon"
 )
