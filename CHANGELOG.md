@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.2.0 (2022-09-08)
+
+ * [c47f4fc](https://github.com/easysoft/quickon_cli/commit/c47f4fcad39f34ed646ecde8c9db8d7617237e69) feat(app): support cli install app or install app from market
+ * [28cd5b8](https://github.com/easysoft/quickon_cli/commit/28cd5b81680abcd353675654949482fb9dcc020b) feat(update): support install app
+
+### Contributors
+
+ * ysicing
+
 ## v1.1.6 (2022-09-01)
 
  * [c012c9d](https://github.com/easysoft/quickon_cli/commit/c012c9d60aa8ba6402437efd50403b363a357dd3) feat(1.4): release 1.4
