@@ -51,6 +51,9 @@ const (
 	create default cluster:
 		q init
 
+	create custom domain:
+		q init --domain example.com
+
 	create custom cluster
 		q init --podsubnet "10.42.0.0/16" \
  			--svcsubnet "10.43.0.0/16" \
@@ -168,7 +171,7 @@ func (p *Native) Show() {
 		cfg.SaveConfig()
 	}
 
-	p.Log.Info("----------------------------")
+	p.Log.Info("----------------------------\t")
 	if len(domain) > 0 {
 		if !strings.HasSuffix(cfg.Domain, "haogs.cn") {
 			domain = fmt.Sprintf("console.%s", cfg.Domain)
@@ -178,7 +181,7 @@ func (p *Native) Show() {
 	} else {
 		domain = fmt.Sprintf("http://%s:32379", p.Metadata.EIP)
 	}
-	p.Log.Donef("web: %s, username: %s, password: %s",
+	p.Log.Donef("console: %s, username: %s, password: %s",
 		color.SGreen(domain), color.SGreen(common.QuchengDefaultUser), color.SGreen(common.QuchengDefaultPass))
 	p.Log.Donef("docs: %s", common.QuchengDocs)
 	p.Log.Done("support: 768721743(QQGroup)")

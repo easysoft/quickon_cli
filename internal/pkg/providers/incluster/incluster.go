@@ -136,7 +136,7 @@ func (p *InCluster) Show() {
 		cfg.SaveConfig()
 	}
 
-	p.Log.Info("----------------------------")
+	p.Log.Info("----------------------------\t")
 	if len(domain) > 0 {
 		if !strings.HasSuffix(cfg.Domain, "haogs.cn") {
 			domain = fmt.Sprintf("console.%s", cfg.Domain)
@@ -146,7 +146,7 @@ func (p *InCluster) Show() {
 	} else {
 		domain = fmt.Sprintf("http://%s:32379", p.Metadata.EIP)
 	}
-	p.Log.Donef("web: %s, username: %s, password: %s",
+	p.Log.Donef("console: %s, username: %s, password: %s",
 		color.SGreen(domain), color.SGreen(common.QuchengDefaultUser), color.SGreen(common.QuchengDefaultPass))
 
 	p.Log.Donef("docs: %s", common.QuchengDocs)

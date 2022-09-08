@@ -23,5 +23,6 @@ func newCmdApp(f factory.Factory) *cobra.Command {
 	appCmd.AddCommand(app.NewCmdAppLogs(f))
 	appCmd.AddCommand(app.NewCmdAppList(f))
 	appCmd.AddCommand(app.NewCmdAppInstall(f))
+	appCmd.AddCommand(app.NewCmdAppMarket(f))
 	return appCmd
 }

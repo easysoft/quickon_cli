@@ -1,9 +1,16 @@
+// Copyright (c) 2021-2022 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
+// Use of this source code is covered by the following dual licenses:
+// (1) Z PUBLIC LICENSE 1.2 (ZPL 1.2)
+// (2) Affero General Public License 3.0 (AGPL 3.0)
+// license that can be found in the LICENSE file.
+
 package app
 
 import (
 	"fmt"
 	"strings"
 
+	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/ergoapi/util/color"
@@ -28,6 +35,7 @@ type Body struct {
 
 func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 	var name, domain string
+	var useip bool
 	log := f.GetLog()
 	app := &cobra.Command{
 		Use:     "install",
@@ -43,20 +51,22 @@ func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 			}
 			cfg, _ := config.LoadConfig()
 			apiHost := cfg.Domain
-			if apiHost == "" {
+			if useip || apiHost == "" {
 				apiHost = fmt.Sprintf("%s:32379", exnet.LocalIPs()[0])
 			} else if !strings.HasSuffix(apiHost, "haogs.cn") && !strings.HasSuffix(apiHost, "corp.cc") {
 				apiHost = fmt.Sprintf("console.%s", cfg.Domain)
 			}
-			log.Infof("install app %s, domain: %s.%s", name, domain, cfg.Domain)
-			client := req.C()
-			if log.GetLevel() > logrus.InfoLevel {
+			log.Debugf("install app %s, domain: %s.%s", name, domain, cfg.Domain)
+			client := req.C().SetLogger(nil)
+			if log.GetLevel() == logrus.DebugLevel {
 				client = client.DevMode().EnableDumpAll()
 			}
+			var result Result
 			resp, err := client.R().
 				SetHeader("accept", "application/json").
 				SetHeader("TOKEN", cfg.APIToken).
 				SetBody(&Body{Chart: name, Domain: domain}).
+				SetResult(&result).
 				Post(fmt.Sprintf("http://%s/instance-apiInstall.html", apiHost))
 			if err != nil {
 				log.Errorf("install app %s failed, reason: %v", name, err)
@@ -66,12 +76,18 @@ func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 				log.Errorf("install app %s failed, reason: bad response status %v", name, resp.Status)
 				return fmt.Errorf("install app %s failed, reason: bad response status %v", name, resp.Status)
 			}
+			if result.Code != 200 {
+				log.Errorf("install app %s failed, reason: %s", name, result.Message)
+				return fmt.Errorf("install app %s failed, reason: %s", name, result.Message)
+			}
 			log.Donef("app %s install success.", name)
 			log.Infof("please wait, the app is starting. \n\t app url: %s", color.SGreen(fmt.Sprintf("%s.%s", domain, cfg.Domain)))
+			log.Infof("app default account: %s/%s", color.SBlue(common.QuchengDefaultUser), color.SBlue(common.QuchengDefaultUser))
 			return nil
 		},
 	}
 	app.Flags().StringVarP(&name, "name", "n", "zentao-open", "app name")
 	app.Flags().StringVarP(&domain, "domain", "d", "", "app subdomain")
+	app.Flags().BoolVar(&useip, "api-useip", false, "api use ip")
 	return app
 }

@@ -45,11 +45,12 @@ type Cluster struct {
 func NewCluster() *Cluster {
 	return &Cluster{
 		Metadata: types.Metadata{
-			ClusterCidr:    "10.42.0.0/16",
-			ServiceCidr:    "10.43.0.0/16",
-			Network:        "flannel",
-			QuchengVersion: common.DefaultQuchengVersion,
-			DisableIngress: false,
+			ClusterCidr:      "10.42.0.0/16",
+			ServiceCidr:      "10.43.0.0/16",
+			Network:          "flannel",
+			QuchengVersion:   common.DefaultQuchengVersion,
+			DisableIngress:   false,
+			ImportDefaultApp: "zentao-open",
 		},
 		M: new(syncmap.Map),
 	}
@@ -150,6 +151,12 @@ func (p *Cluster) GetCreateExtOptions() []types.Flag {
 			P:     &p.Domain,
 			V:     p.Domain,
 			Usage: "application custom domain name",
+		},
+		{
+			Name:  "app",
+			P:     &p.ImportDefaultApp,
+			V:     p.ImportDefaultApp,
+			Usage: "install default app",
 		},
 	}
 }

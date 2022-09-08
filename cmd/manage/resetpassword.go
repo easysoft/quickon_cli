@@ -8,7 +8,6 @@ package manage
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
 	"github.com/easysoft/qcadmin/common"
@@ -85,6 +84,7 @@ func NewResetPassword(f factory.Factory) *cobra.Command {
 				SetHeader("accept", "application/json").
 				SetHeader("TOKEN", cfg.APIToken).
 				SetBody(&Body{Password: password}).
+				SetResult(&result).
 				Post(fmt.Sprintf("http://%s/admin-resetpassword.html", cfg.Domain))
 			if err != nil {
 				log.Errorf("update password failed, reason: %v", err)
@@ -94,7 +94,10 @@ func NewResetPassword(f factory.Factory) *cobra.Command {
 				log.Errorf("update password failed, reason: bad response status %v", resp.Status)
 				return
 			}
-			json.Unmarshal([]byte(resp.String()), &result)
+			if result.Code != 200 {
+				log.Errorf("update password failed, reason: %s", result.Message)
+				return
+			}
 			log.Donef("update superadmin %s password %s success.", color.SGreen(result.Data.Account), color.SGreen(password))
 		},
 	}

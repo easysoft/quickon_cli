@@ -238,7 +238,7 @@ func (c Client) ListRepo() ([]*repo.Entry, error) {
 	return f.Repositories, nil
 }
 
-func (c Client) ListCharts(repoName, pattern string) ([]*search.Result, error) {
+func (c Client) ListCharts(repoName, pattern string, all bool) ([]*search.Result, error) {
 	repos, err := c.ListRepo()
 	if err != nil {
 		return nil, fmt.Errorf("list chart failed: %v", err)
@@ -255,7 +255,7 @@ func (c Client) ListCharts(repoName, pattern string) ([]*search.Result, error) {
 		if err != nil {
 			return nil, fmt.Errorf("list chart failed: %v", err)
 		}
-		i.AddRepo(re.Name, indexFile, true)
+		i.AddRepo(re.Name, indexFile, all)
 	}
 	var result []*search.Result
 	if pattern != "" {
@@ -343,7 +343,7 @@ func (c Client) AddRepo(name, url, username, password string) error {
 }
 
 func (c Client) GetCharts(repoName, name string) ([]*search.Result, error) {
-	charts, err := c.ListCharts(repoName, name)
+	charts, err := c.ListCharts(repoName, name, true)
 	if err != nil {
 		return nil, err
 	}

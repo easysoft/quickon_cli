@@ -178,5 +178,6 @@ func (p *Cluster) InstallQuCheng() error {
 	if err := file.Writefile(initfile, "init done"); err != nil {
 		p.Log.Warnf("write init done file failed, reason: %v.\n\t please run: touch %s", err, initfile)
 	}
+	p.defaultAppInstall()
 	return nil
 }
