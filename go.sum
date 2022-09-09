@@ -450,8 +450,8 @@ github.com/docker/libtrust v0.0.0-20150114040149-fa567046d9b1/go.mod h1:cyGadeNE
 github.com/docopt/docopt-go v0.0.0-20180111231733-ee0de3bc6815/go.mod h1:WwZ+bS3ebgob9U8Nd0kOddGdZWjyMGR8Wziv+TBNwSE=
 github.com/dustin/go-humanize v0.0.0-20171111073723-bb3d318650d4/go.mod h1:HtrtbFcZ19U5GC7JDqmcUSB87Iq5E25KnS6fMYU6eOk=
 github.com/dustin/go-humanize v1.0.0/go.mod h1:HtrtbFcZ19U5GC7JDqmcUSB87Iq5E25KnS6fMYU6eOk=
-github.com/easysoft/quikon-api v0.2.1 h1:XHpAevwcawJNQ/HDuW21G/8YzSQOCp96flNIwqhtteQ=
-github.com/easysoft/quikon-api v0.2.1/go.mod h1:JcH7SjswC+TdpaiG/bLO8MBb1ekkTdFcs7i4CGMjwzg=
+github.com/easysoft/quikon-api v0.5.0 h1:O8b5tJ0/54XRkaURQcgiTLi0t3AVpNDPItF/e+ooxWU=
+github.com/easysoft/quikon-api v0.5.0/go.mod h1:JcH7SjswC+TdpaiG/bLO8MBb1ekkTdFcs7i4CGMjwzg=
 github.com/eknkc/amber v0.0.0-20171010120322-cdade1c07385/go.mod h1:0vRUJqYpeSZifjYj7uP3BG/gKcuzL9xWVV/Y+cK33KM=
 github.com/elazarl/goproxy v0.0.0-20180725130230-947c36da3153 h1:yUdfgN0XgIJw7foRItutHYUIhlcKzcSf5vDpdhQAKTc=
 github.com/elazarl/goproxy v0.0.0-20180725130230-947c36da3153/go.mod h1:/Zj4wYkgs4iZTTu3o/KG3Itv/qCCa8VVMlb3i9OVuzc=

@@ -9,7 +9,7 @@ require (
 	github.com/cockroachdb/errors v1.9.0
 	github.com/containerd/continuity v0.3.0
 	github.com/docker/docker v20.10.17+incompatible
-	github.com/easysoft/quikon-api v0.2.1
+	github.com/easysoft/quikon-api v0.5.0
 	github.com/emirpasic/gods v1.18.1
 	github.com/ergoapi/util v0.2.21
 	github.com/gofrs/flock v0.8.1
