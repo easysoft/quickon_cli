@@ -26,14 +26,15 @@ type Node struct {
 
 // Config
 type Config struct {
-	Generated time.Time `json:"-" yaml:"-"`
-	DB        string    `yaml:"db" json:"db"`
-	Domain    string    `yaml:"domain" json:"domain"`
-	APIToken  string    `yaml:"api_token" json:"api_token"`
-	InitNode  string    `yaml:"init_node" json:"init_node"`
-	Token     string    `yaml:"token" json:"token"`
-	Master    []Node    `yaml:"master" json:"master"`
-	Worker    []Node    `yaml:"worker" json:"worker"`
+	Generated       time.Time `json:"-" yaml:"-"`
+	ConsolePassword string    `yaml:"console-password,omitempty" json:"console-password,omitempty"`
+	DB              string    `yaml:"db" json:"db"`
+	Domain          string    `yaml:"domain" json:"domain"`
+	APIToken        string    `yaml:"api_token" json:"api_token"`
+	InitNode        string    `yaml:"init_node" json:"init_node"`
+	Token           string    `yaml:"token" json:"token"`
+	Master          []Node    `yaml:"master" json:"master"`
+	Worker          []Node    `yaml:"worker" json:"worker"`
 }
 
 func NewConfig() *Config {

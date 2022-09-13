@@ -14,6 +14,7 @@ import (
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/expass"
@@ -38,6 +39,7 @@ type Body struct {
 func NewResetPassword(f factory.Factory) *cobra.Command {
 	log := f.GetLog()
 	var password string
+	var useip bool
 	rp := &cobra.Command{
 		Use:     "reset-password",
 		Short:   "reset qucheng superadmin password",
@@ -61,21 +63,25 @@ func NewResetPassword(f factory.Factory) *cobra.Command {
 						break
 					}
 				}
-				cfg.SaveConfig()
 			}
 
-			if cfg.Domain == "" {
-				cfg.Domain = fmt.Sprintf("%s:32379", exnet.LocalIPs()[0])
+			apiHost := cfg.Domain
+			if useip || apiHost == "" {
+				apiHost = fmt.Sprintf("http://%s:32379", exnet.LocalIPs()[0])
+			} else if !kutil.IsLegalDomain(apiHost) {
+				apiHost = fmt.Sprintf("http://console.%s", cfg.Domain)
+			} else {
+				apiHost = fmt.Sprintf("https://%s", apiHost)
 			}
 
 			log.Debug("fetch api token")
 			// 更新密码
 			if len(password) == 0 {
 				log.Warn("not found password, will generate random password")
-				password = expass.SaltMd5Pass(cfg.APIToken, expass.RandomPassword(16))
+				password = expass.PwGenAlphaNumSymbols(16)
 			}
-			log.Infof("update superadmin password: %s", "")
-			client := req.C()
+			log.Debugf("update superadmin password: %s", password)
+			client := req.C().SetLogger(nil)
 			if log.GetLevel() > logrus.InfoLevel {
 				client = client.DevMode().EnableDumpAll()
 			}
@@ -85,7 +91,7 @@ func NewResetPassword(f factory.Factory) *cobra.Command {
 				SetHeader("TOKEN", cfg.APIToken).
 				SetBody(&Body{Password: password}).
 				SetResult(&result).
-				Post(fmt.Sprintf("http://%s/admin-resetpassword.html", cfg.Domain))
+				Post(fmt.Sprintf("%s/admin-resetpassword.html", apiHost))
 			if err != nil {
 				log.Errorf("update password failed, reason: %v", err)
 				return
@@ -98,9 +104,12 @@ func NewResetPassword(f factory.Factory) *cobra.Command {
 				log.Errorf("update password failed, reason: %s", result.Message)
 				return
 			}
+			cfg.ConsolePassword = password
+			cfg.SaveConfig()
 			log.Donef("update superadmin %s password %s success.", color.SGreen(result.Data.Account), color.SGreen(password))
 		},
 	}
 	rp.Flags().StringVarP(&password, "password", "p", "", "superadmin password")
+	rp.Flags().BoolVar(&useip, "api-useip", true, "api use ip")
 	return rp
 }

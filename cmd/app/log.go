@@ -21,7 +21,7 @@ import (
 )
 
 func NewCmdAppLogs(f factory.Factory) *cobra.Command {
-	var previous bool
+	var previous, useip bool
 	log := f.GetLog()
 	app := &cobra.Command{
 		Use:     "logs",
@@ -33,7 +33,7 @@ func NewCmdAppLogs(f factory.Factory) *cobra.Command {
 			url := args[0]
 			apidebug := log.GetLevel() == logrus.DebugLevel
 			log.Infof("start logs app: %s", url)
-			appdata, err := debug.GetNameByURL(url, apidebug)
+			appdata, err := debug.GetNameByURL(url, apidebug, useip)
 			if err != nil {
 				return err
 			}
@@ -69,5 +69,6 @@ func NewCmdAppLogs(f factory.Factory) *cobra.Command {
 		},
 	}
 	app.Flags().BoolVarP(&previous, "previous", "p", false, " If true, print the logs for the previous instance of the container in a pod if it exists.")
+	app.Flags().BoolVar(&useip, "api-useip", false, "api use ip")
 	return app
 }

@@ -46,7 +46,7 @@ func SearchCustomDomain(iip, id, secretKey string) string {
 		UUID:      id,
 		SecretKey: secretKey,
 	}
-	client := req.C().SetUserAgent(common.GetUG())
+	client := req.C().SetLogger(nil).SetUserAgent(common.GetUG())
 	_, err := client.R().
 		SetHeader("Content-Type", "application/json").
 		SetResult(&respbody).
@@ -72,7 +72,7 @@ func UpgradeTLSDDomain(iip, id, secretKey, domain string) error {
 		SecretKey: secretKey,
 		Domain:    domain,
 	}
-	client := req.C().SetUserAgent(common.GetUG())
+	client := req.C().SetLogger(nil).SetUserAgent(common.GetUG())
 	_, err := client.R().
 		SetResult(&respbody).
 		SetBody(&reqbody).
@@ -94,7 +94,7 @@ func GenerateDomain(iip, id, secretKey, domain string) (string, string, error) {
 		SecretKey: secretKey,
 		Domain:    domain,
 	}
-	client := req.C().SetUserAgent(common.GetUG())
+	client := req.C().SetLogger(nil).SetUserAgent(common.GetUG())
 	_, err := client.R().
 		SetHeader("Content-Type", "application/json").
 		SetResult(&respbody).

@@ -46,7 +46,7 @@ type AppData struct {
 	Deleted    string `json:"deleted"`
 }
 
-func GetNameByURL(url string, debug bool) (*AppData, error) {
+func GetNameByURL(url string, debug, useip bool) (*AppData, error) {
 	// 获取ID
 	k := strings.Split(url, "-")
 	if len(k) < 3 {
@@ -73,15 +73,16 @@ func GetNameByURL(url string, debug bool) (*AppData, error) {
 		cfg.SaveConfig()
 	}
 
-	if cfg.Domain == "" {
-		cfg.Domain = fmt.Sprintf("%s:32379", exnet.LocalIPs()[0])
+	apiHost := cfg.Domain
+	if useip || apiHost == "" {
+		apiHost = fmt.Sprintf("http://%s:32379", exnet.LocalIPs()[0])
+	} else if !kutil.IsLegalDomain(apiHost) {
+		apiHost = fmt.Sprintf("http://console.%s", cfg.Domain)
 	} else {
-		if !kutil.IsLegalDomain(cfg.Domain) {
-			cfg.Domain = fmt.Sprintf("console.%s", cfg.Domain)
-		}
+		apiHost = fmt.Sprintf("https://%s", apiHost)
 	}
 
-	client := req.C()
+	client := req.C().SetLogger(nil)
 	if debug {
 		client = client.DevMode().EnableDumpAll()
 	}
@@ -89,7 +90,7 @@ func GetNameByURL(url string, debug bool) (*AppData, error) {
 	resp, err := client.R().
 		SetHeader("accept", "application/json").
 		SetHeader("TOKEN", cfg.APIToken).
-		Get(fmt.Sprintf("http://%s/instance-apidetail-%s.html", cfg.Domain, key))
+		Get(fmt.Sprintf("%s/instance-apidetail-%s.html", apiHost, key))
 	if err != nil {
 		return nil, fmt.Errorf("fetch api failed, reason: %v", err)
 	}

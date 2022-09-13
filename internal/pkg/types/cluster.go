@@ -35,7 +35,8 @@ type Metadata struct {
 	CNEAPI           string `json:"cne-api,omitempty" yaml:"cne-api,omitempty"`
 	CNEToken         string `json:"cne-token,omitempty" yaml:"cne-token,omitempty"`
 	Domain           string `json:"domain,omitempty" yaml:"domain,omitempty"`
-	ImportDefaultApp string `json:"import-default-app,omitempty" yaml:"import-default-app,omitempty" `
+	ImportDefaultApp string `json:"import-default-app,omitempty" yaml:"import-default-app,omitempty"`
+	ConsolePassword  string `json:"console-password,omitempty" yaml:"console-password,omitempty"`
 }
 
 type Status struct {

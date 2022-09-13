@@ -18,6 +18,7 @@ import (
 
 func NewCmdAppGet(f factory.Factory) *cobra.Command {
 	log := f.GetLog()
+	var useip bool
 	app := &cobra.Command{
 		Use:     "get",
 		Short:   "get app info",
@@ -27,7 +28,7 @@ func NewCmdAppGet(f factory.Factory) *cobra.Command {
 			url := args[0]
 			apidebug := log.GetLevel() == logrus.DebugLevel
 			log.Infof("start fetch app: %s", url)
-			appdata, err := debug.GetNameByURL(url, apidebug)
+			appdata, err := debug.GetNameByURL(url, apidebug, useip)
 			if err != nil {
 				return err
 			}
@@ -36,5 +37,6 @@ func NewCmdAppGet(f factory.Factory) *cobra.Command {
 			return qcexec.CommandRun(os.Args[0], extargs...)
 		},
 	}
+	app.Flags().BoolVar(&useip, "api-useip", false, "api use ip")
 	return app
 }

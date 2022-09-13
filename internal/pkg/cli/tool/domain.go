@@ -61,7 +61,7 @@ func domainClean(f factory.Factory) *cobra.Command {
 				UUID:      cm.Data["uuid"],
 				SecretKey: cm.Data["auth"],
 			}
-			client := req.C().SetUserAgent(common.GetUG())
+			client := req.C().SetLogger(nil).SetUserAgent(common.GetUG())
 			if _, err := client.R().
 				SetHeader("Content-Type", "application/json").
 				SetBody(&reqbody).

@@ -22,6 +22,7 @@ import (
 
 func NewCmdAppExec(f factory.Factory) *cobra.Command {
 	log := f.GetLog()
+	var useip bool
 	app := &cobra.Command{
 		Use:     "exec",
 		Short:   "exec app",
@@ -31,7 +32,7 @@ func NewCmdAppExec(f factory.Factory) *cobra.Command {
 			url := args[0]
 			apidebug := log.GetLevel() == logrus.DebugLevel
 			log.Infof("start exec app: %s", url)
-			appdata, err := debug.GetNameByURL(url, apidebug)
+			appdata, err := debug.GetNameByURL(url, apidebug, useip)
 			if err != nil {
 				return err
 			}
@@ -67,5 +68,6 @@ func NewCmdAppExec(f factory.Factory) *cobra.Command {
 			return k8sClient.ExecPodWithTTY(ctx, "default", podlist.Items[it].Name, podlist.Items[it].Spec.Containers[0].Name, []string{"/bin/sh", "-c", "sh"})
 		},
 	}
+	app.Flags().BoolVar(&useip, "api-useip", false, "api use ip")
 	return app
 }

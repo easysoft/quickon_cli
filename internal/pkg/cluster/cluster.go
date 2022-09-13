@@ -25,6 +25,7 @@ import (
 	"github.com/ergoapi/util/environ"
 	"github.com/ergoapi/util/excmd"
 	"github.com/ergoapi/util/exnet"
+	"github.com/ergoapi/util/expass"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/ztime"
 	"github.com/imroc/req/v3"
@@ -51,6 +52,7 @@ func NewCluster() *Cluster {
 			QuchengVersion:   common.DefaultQuchengVersion,
 			DisableIngress:   false,
 			ImportDefaultApp: "zentao-open",
+			ConsolePassword:  expass.PwGenAlphaNumSymbols(16),
 		},
 		M: new(syncmap.Map),
 	}
@@ -69,6 +71,12 @@ func (p *Cluster) GetCreateNativeOptions() []types.Flag {
 			P:     &p.DataSource,
 			V:     p.DataSource,
 			Usage: "data source for cluster, default is sqlite",
+		},
+		{
+			Name:  "console-password",
+			P:     &p.ConsolePassword,
+			V:     p.ConsolePassword,
+			Usage: "qucheng console default password",
 		},
 	}
 }
@@ -509,7 +517,7 @@ func (p *Cluster) Ready() {
 
 func (p *Cluster) ready(ctx context.Context) error {
 	t1 := ztime.NowUnix()
-	client := req.C().SetUserAgent(common.GetUG()).SetTimeout(time.Second * 1)
+	client := req.C().SetLogger(nil).SetUserAgent(common.GetUG()).SetTimeout(time.Second * 1)
 	p.Log.StartWait("waiting for qucheng ready")
 	status := false
 	for {

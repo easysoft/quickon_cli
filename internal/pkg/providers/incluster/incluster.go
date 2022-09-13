@@ -8,6 +8,7 @@ package incluster
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
@@ -15,6 +16,7 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/providers"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/ergoapi/util/color"
@@ -119,10 +121,13 @@ func (p *InCluster) Show() {
 	if len(p.Metadata.EIP) <= 0 {
 		p.Metadata.EIP = exnet.LocalIPs()[0]
 	}
+	resetPassArgs := []string{"manage", "reset-password", "--password", p.Metadata.ConsolePassword}
+	qcexec.CommandRun(os.Args[0], resetPassArgs...)
 	cfg, _ := config.LoadConfig()
 	domain := ""
 	if cfg != nil {
 		cfg.DB = "sqlite"
+		cfg.ConsolePassword = p.Metadata.ConsolePassword
 		cfg.Token = kutil.GetNodeToken()
 		cfg.Master = []config.Node{
 			{
@@ -146,7 +151,7 @@ func (p *InCluster) Show() {
 		domain = fmt.Sprintf("http://%s:32379", p.Metadata.EIP)
 	}
 	p.Log.Donef("console: %s, username: %s, password: %s",
-		color.SGreen(domain), color.SGreen(common.QuchengDefaultUser), color.SGreen(common.QuchengDefaultPass))
+		color.SGreen(domain), color.SGreen(common.QuchengDefaultUser), color.SGreen(p.Metadata.ConsolePassword))
 
 	p.Log.Donef("docs: %s", common.QuchengDocs)
 	p.Log.Done("support: 768721743(QQGroup)")

@@ -53,9 +53,11 @@ func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 			cfg, _ := config.LoadConfig()
 			apiHost := cfg.Domain
 			if useip || apiHost == "" {
-				apiHost = fmt.Sprintf("%s:32379", exnet.LocalIPs()[0])
+				apiHost = fmt.Sprintf("http://%s:32379", exnet.LocalIPs()[0])
 			} else if !kutil.IsLegalDomain(apiHost) {
-				apiHost = fmt.Sprintf("console.%s", cfg.Domain)
+				apiHost = fmt.Sprintf("http://console.%s", cfg.Domain)
+			} else {
+				apiHost = fmt.Sprintf("https://%s", apiHost)
 			}
 			log.Debugf("install app %s, domain: %s.%s", name, domain, cfg.Domain)
 			client := req.C().SetLogger(nil)
@@ -68,7 +70,7 @@ func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 				SetHeader("TOKEN", cfg.APIToken).
 				SetBody(&Body{Chart: name, Domain: domain}).
 				SetResult(&result).
-				Post(fmt.Sprintf("http://%s/instance-apiInstall.html", apiHost))
+				Post(fmt.Sprintf("%s/instance-apiInstall.html", apiHost))
 			if err != nil {
 				log.Errorf("install app %s failed, reason: %v", name, err)
 				return fmt.Errorf("install app %s failed, reason: %v", name, err)
@@ -122,7 +124,7 @@ func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 	}
 	app.Flags().StringVarP(&name, "name", "n", "zentao-open", "app name")
 	app.Flags().StringVarP(&domain, "domain", "d", "", "app subdomain")
-	app.Flags().BoolVar(&useip, "api-useip", false, "api use ip")
+	app.Flags().BoolVar(&useip, "api-useip", true, "api use ip")
 	return app
 }
 
