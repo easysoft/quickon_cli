@@ -8,7 +8,6 @@ package native
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
@@ -173,8 +172,8 @@ func (p *Native) Show() {
 
 	p.Log.Info("----------------------------\t")
 	if len(domain) > 0 {
-		if !strings.HasSuffix(cfg.Domain, "haogs.cn") {
-			domain = fmt.Sprintf("console.%s", cfg.Domain)
+		if !kutil.IsLegalDomain(cfg.Domain) {
+			domain = fmt.Sprintf("http://console.%s", cfg.Domain)
 		} else {
 			domain = fmt.Sprintf("https://%s", cfg.Domain)
 		}

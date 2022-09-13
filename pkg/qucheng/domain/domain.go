@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/exid"
@@ -61,8 +62,9 @@ func SearchCustomDomain(iip, id, secretKey string) string {
 // UpgradeTLSDDomain tls domain
 func UpgradeTLSDDomain(iip, id, secretKey, domain string) error {
 	var respbody RespBody
-	if strings.HasSuffix(domain, ".haogs.cn") {
+	if kutil.IsLegalDomain(domain) {
 		domain = strings.TrimSuffix(domain, ".haogs.cn")
+		domain = strings.TrimSuffix(domain, ".corp.cc")
 	}
 	reqbody := ReqBody{
 		IP:        iip,
@@ -82,8 +84,9 @@ func UpgradeTLSDDomain(iip, id, secretKey, domain string) error {
 func GenerateDomain(iip, id, secretKey, domain string) (string, string, error) {
 	log := log.GetInstance()
 	var respbody RespBody
-	if strings.HasSuffix(domain, ".haogs.cn") {
+	if kutil.IsLegalDomain(domain) {
 		domain = strings.TrimSuffix(domain, ".haogs.cn")
+		domain = strings.TrimSuffix(domain, ".corp.cc")
 	}
 	reqbody := ReqBody{
 		IP:        iip,
@@ -137,7 +140,7 @@ func GenCustomDomain(defaultDomain string) string {
 			Success: "{{ . | bold }}",
 		},
 		Validate: func(input string) error {
-			if !strings.HasSuffix(input, ".haogs.cn") {
+			if !kutil.IsLegalDomain(input) {
 				input = fmt.Sprintf("%s.haogs.cn", input)
 			}
 			if len(input) < 13 {

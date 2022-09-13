@@ -9,7 +9,6 @@ package upgrade
 import (
 	"fmt"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/easysoft/qcadmin/common"
@@ -19,6 +18,7 @@ import (
 	"github.com/cockroachdb/errors"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
+	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/ergoapi/util/exid"
 	"github.com/ergoapi/util/file"
@@ -106,7 +106,7 @@ func Upgrade(flagVersion string, log log.Logger) error {
 			if cv.Name == "qucheng" || cv.Name == "quickon" {
 				cfg, _ := config.LoadConfig()
 				domain := cfg.Domain
-				if strings.HasSuffix(domain, "haogs.cn") {
+				if kutil.IsLegalDomain(domain) {
 					log.Infof("load %s tls cert", domain)
 					defaultTLS := fmt.Sprintf("%s/tls-haogs-cn.yaml", common.GetDefaultCacheDir())
 					if !file.CheckFileExists(defaultTLS) {

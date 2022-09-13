@@ -9,6 +9,7 @@ package kutil
 import (
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/easysoft/qcadmin/common"
@@ -45,4 +46,12 @@ func NeedCacheHelmFile() bool {
 	}
 	file.Writefile(cachefile, ztime.NowUnixString())
 	return true
+}
+
+// IsLegalDomain check domain legal
+func IsLegalDomain(host string) bool {
+	if strings.HasSuffix(host, "corp.cc") || strings.HasSuffix(host, "haogs.cn") {
+		return true
+	}
+	return false
 }

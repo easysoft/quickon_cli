@@ -10,12 +10,12 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
+	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/easysoft/qcadmin/internal/pkg/util/retry"
 	suffixdomain "github.com/easysoft/qcadmin/pkg/qucheng/domain"
 	"github.com/ergoapi/util/color"
@@ -156,7 +156,7 @@ func (p *Cluster) InstallQuCheng() error {
 		helmargs = append(helmargs, "--set", "cloud.selectVersion=true")
 	}
 	hostdomain := p.Domain
-	if strings.HasSuffix(hostdomain, "haogs.cn") {
+	if kutil.IsLegalDomain(hostdomain) {
 		helmargs = append(helmargs, "--set", "ingress.tls.enabled=true")
 		helmargs = append(helmargs, "--set", "ingress.tls.secretName=tls-haogs-cn")
 	} else {

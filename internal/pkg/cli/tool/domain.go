@@ -10,7 +10,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
@@ -18,6 +17,7 @@ import (
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
+	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/easysoft/qcadmin/pkg/qucheng/domain"
 	suffixdomain "github.com/easysoft/qcadmin/pkg/qucheng/domain"
 	"github.com/ergoapi/util/exmap"
@@ -48,7 +48,7 @@ func domainClean(f factory.Factory) *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			cfg, _ := config.LoadConfig()
 			if cfg != nil {
-				if !strings.HasSuffix(cfg.Domain, "haogs.cn") {
+				if !kutil.IsLegalDomain(cfg.Domain) {
 					return
 				}
 			}
@@ -138,7 +138,7 @@ func domainAdd(f factory.Factory) *cobra.Command {
 			defaultValue, _ := helmClient.GetValues(common.DefaultQuchengName)
 			var values []string
 			host := cfg.Domain
-			if strings.HasSuffix(host, "haogs.cn") {
+			if kutil.IsLegalDomain(host) {
 				values = append(values, "ingress.tls.enabled=true")
 				values = append(values, "ingress.tls.secretName=tls-haogs-cn")
 			} else {

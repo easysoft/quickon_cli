@@ -8,12 +8,12 @@ package app
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
+	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/exnet"
 	"github.com/imroc/req/v3"
@@ -54,7 +54,7 @@ func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 			apiHost := cfg.Domain
 			if useip || apiHost == "" {
 				apiHost = fmt.Sprintf("%s:32379", exnet.LocalIPs()[0])
-			} else if !strings.HasSuffix(apiHost, "haogs.cn") && !strings.HasSuffix(apiHost, "corp.cc") {
+			} else if !kutil.IsLegalDomain(apiHost) {
 				apiHost = fmt.Sprintf("console.%s", cfg.Domain)
 			}
 			log.Debugf("install app %s, domain: %s.%s", name, domain, cfg.Domain)
@@ -100,7 +100,7 @@ func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 			}
 			host := getMapValue(getMap(getMap(releaseValue, "global"), "ingress"), "host")
 			if len(host) != 0 {
-				if strings.HasSuffix(host, "haogs.cn") || strings.HasSuffix(host, "corp.cc") {
+				if kutil.IsLegalDomain(host) {
 					host = fmt.Sprintf("https://%s", host)
 				} else {
 					host = fmt.Sprintf("http://%s", host)

@@ -15,6 +15,7 @@ import (
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
+	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/ergoapi/util/exnet"
 	"github.com/imroc/req/v3"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -75,7 +76,7 @@ func GetNameByURL(url string, debug bool) (*AppData, error) {
 	if cfg.Domain == "" {
 		cfg.Domain = fmt.Sprintf("%s:32379", exnet.LocalIPs()[0])
 	} else {
-		if !strings.HasSuffix(cfg.Domain, "haogs.cn") {
+		if !kutil.IsLegalDomain(cfg.Domain) {
 			cfg.Domain = fmt.Sprintf("console.%s", cfg.Domain)
 		}
 	}

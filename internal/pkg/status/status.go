@@ -15,6 +15,7 @@ import (
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
+	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/easysoft/qcadmin/internal/pkg/util/output"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/exnet"
@@ -118,8 +119,8 @@ func (s *Status) Format() error {
 		}
 		consoleURL := ""
 		if len(domain) > 0 {
-			if !strings.HasSuffix(domain, "haogs.cn") {
-				domain = fmt.Sprintf("console.%s", domain)
+			if !kutil.IsLegalDomain(domain) {
+				domain = fmt.Sprintf("http://console.%s", domain)
 			}
 			consoleURL = domain
 		} else {

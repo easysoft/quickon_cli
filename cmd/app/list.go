@@ -9,11 +9,11 @@ package app
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
+	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/ergoapi/util/color"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
@@ -63,7 +63,7 @@ func NewCmdAppList(f factory.Factory) *cobra.Command {
 				}
 				host := getMapValue(getMap(getMap(values, "global"), "ingress"), "host")
 				if len(host) != 0 {
-					if strings.HasSuffix(host, "haogs.cn") || strings.HasSuffix(host, "corp.cc") {
+					if kutil.IsLegalDomain(host) {
 						host = fmt.Sprintf("https://%s", host)
 					} else {
 						host = fmt.Sprintf("http://%s", host)
