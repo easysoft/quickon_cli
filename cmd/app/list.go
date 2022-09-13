@@ -9,10 +9,12 @@ package app
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
+	"github.com/ergoapi/util/color"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -48,6 +50,39 @@ func NewCmdAppList(f factory.Factory) *cobra.Command {
 			}
 			it, _, _ := selectApp.Run()
 			log.Infof("select app: %s", release[it].Name)
+
+			selectInfo := promptui.Select{
+				Label: "select action: meta get url info, svc get container service message",
+				Items: []string{"meta", "svc"},
+			}
+			_, infoAction, _ := selectInfo.Run()
+			if infoAction == "meta" {
+				values, err := hc.GetAllValues(release[it].Name)
+				if err != nil {
+					return err
+				}
+				host := getMapValue(getMap(getMap(values, "global"), "ingress"), "host")
+				if len(host) != 0 {
+					if strings.HasSuffix(host, "haogs.cn") || strings.HasSuffix(host, "corp.cc") {
+						host = fmt.Sprintf("https://%s", host)
+					} else {
+						host = fmt.Sprintf("http://%s", host)
+					}
+				}
+				// spew.Dump(releaseValue)
+				auth := getMap(values, "auth")
+				// spew.Dump(auth)
+				if auth != nil {
+					authUsername := getMapValue(auth, "username")
+					authPassword := getMapValue(auth, "password")
+					log.Debugf("authUsername: %s, authPassword: %s", authUsername, authPassword)
+					log.Infof("app meta:\n\t   username: %s\n\t   password: %s\n\t   url: %s", color.SBlue(authUsername), color.SBlue(authPassword), color.SBlue(host))
+				} else {
+					log.Infof("app meta:\n\turl: %s", color.SBlue(host))
+				}
+				return nil
+			}
+
 			k8sClient, err := k8s.NewSimpleClient()
 			if err != nil {
 				log.Errorf("k8s client err: %v", err)

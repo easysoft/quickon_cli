@@ -402,3 +402,13 @@ func (c Client) GetValues(name string) (map[string]interface{}, error) {
 	}
 	return res, nil
 }
+
+func (c Client) GetAllValues(name string) (map[string]interface{}, error) {
+	client := action.NewGetValues(c.actionConfig)
+	client.AllValues = true
+	res, err := client.Run(name)
+	if err != nil {
+		return nil, errors.Wrap(err, fmt.Sprintf("get values %s failed: %v", name, err))
+	}
+	return res, nil
+}

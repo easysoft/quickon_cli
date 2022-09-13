@@ -3,6 +3,7 @@ run:
   skip-dirs-use-default: false
   skip-files:
   - "zz_*"
+  - ".*test.go"
   modules-download-mode: readonly
   allow-parallel-runners: true
 
@@ -53,10 +54,8 @@ linters:
     - misspell
     - revive
     - staticcheck
-    - structcheck
     # - typecheck
     - unused
-    - varcheck
     - goheader
 
 linters-settings:
