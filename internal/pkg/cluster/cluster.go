@@ -46,13 +46,14 @@ type Cluster struct {
 func NewCluster() *Cluster {
 	return &Cluster{
 		Metadata: types.Metadata{
-			ClusterCidr:      "10.42.0.0/16",
-			ServiceCidr:      "10.43.0.0/16",
-			Network:          "flannel",
-			QuchengVersion:   common.DefaultQuchengVersion,
-			DisableIngress:   false,
-			ImportDefaultApp: "zentao-open",
-			ConsolePassword:  expass.PwGenAlphaNumSymbols(16),
+			ClusterCidr:       "10.42.0.0/16",
+			ServiceCidr:       "10.43.0.0/16",
+			Network:           "flannel",
+			QuchengVersion:    common.DefaultQuchengVersion,
+			DisableIngress:    false,
+			DisableInstallApp: false,
+			ImportDefaultApp:  "zentao-open",
+			ConsolePassword:   expass.PwGenAlphaNumSymbols(16),
 		},
 		M: new(syncmap.Map),
 	}
@@ -165,6 +166,12 @@ func (p *Cluster) GetCreateExtOptions() []types.Flag {
 			P:     &p.ImportDefaultApp,
 			V:     p.ImportDefaultApp,
 			Usage: "install default app",
+		},
+		{
+			Name:  "disable-install-app",
+			P:     &p.DisableInstallApp,
+			V:     p.DisableInstallApp,
+			Usage: "disable install app",
 		},
 	}
 }
