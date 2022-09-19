@@ -72,6 +72,8 @@ const (
 	KubeQPS                = 5.0
 	KubeBurst              = 10
 	KubectlBinPath         = "/usr/local/bin/kubectl"
+	CRICrictl              = "/usr/local/bin/crictl"
+	CRICtr                 = "/usr/local/bin/ctr"
 	QcAdminBinPath         = "/usr/local/bin/qcadmin"
 	StatusWaitDuration     = 5 * time.Minute
 	WaitRetryInterval      = 5 * time.Second

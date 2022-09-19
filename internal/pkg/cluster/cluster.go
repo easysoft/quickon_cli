@@ -295,8 +295,14 @@ func (p *Cluster) InitK3sCluster() error {
 	p.Log.Done("started k3s service success")
 	if !excmd.CheckBin("kubectl") {
 		os.Symlink(k3sbin, common.KubectlBinPath)
-		p.Log.Done("create kubectl soft link")
 	}
+	if !excmd.CheckBin("crictl") {
+		os.Symlink(k3sbin, common.CRICrictl)
+	}
+	if !excmd.CheckBin("ctr") {
+		os.Symlink(k3sbin, common.CRICtr)
+	}
+	p.Log.Done("create cri soft link")
 	p.Log.StartWait("waiting for k3s cluster to be ready...")
 	t1 := time.Now()
 	for {
