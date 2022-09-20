@@ -1,5 +1,25 @@
 # Changelog
 
+## v1.2.2 (2022-09-19)
+
+ * [f54072d](https://github.com/easysoft/quickon_cli/commit/f54072d4b0893f9cb6ca1345dbd258f0319729dc) fix(init): allow disable install app
+ * [ada8f44](https://github.com/easysoft/quickon_cli/commit/ada8f44898bc1ac9195a1c4904e886fa8ce64986) feat(cli): add ctr cli soft link
+ * [a2568c2](https://github.com/easysoft/quickon_cli/commit/a2568c26b775b15ba732e400ad413dd9dcb2bbcc) feat(script): update script
+
+### Contributors
+
+ * ysicing
+
+## v1.2.1 (2022-09-13)
+
+ * [fa84170](https://github.com/easysoft/quickon_cli/commit/fa841700dff20e9f4da74d0f2e81caa27fe70b3d) feat(password): imp password gen func
+ * [c41696a](https://github.com/easysoft/quickon_cli/commit/c41696a511315484e08c99a990b6cc8952529dd2) style(domain): imp domain func
+ * [28ef5f3](https://github.com/easysoft/quickon_cli/commit/28ef5f347ead8ad6855bf70a5453933941f6626d) feat(app): imp app install message
+
+### Contributors
+
+ * ysicing
+
 ## v1.2.0 (2022-09-08)
 
  * [c47f4fc](https://github.com/easysoft/quickon_cli/commit/c47f4fcad39f34ed646ecde8c9db8d7617237e69) feat(app): support cli install app or install app from market
