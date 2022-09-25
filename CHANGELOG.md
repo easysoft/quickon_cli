@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.2.3 (2022-09-25)
+
+ * [ad577d7](https://github.com/easysoft/quickon_cli/commit/ad577d79143995f55d1f5430e041ec62a7a4ebf7) build(deps): bump github.com/imroc/req/v3 from 3.22.0 to 3.22.1 (#81)
+
+### Contributors
+
+ * dependabot[bot]
+
 ## v1.2.2 (2022-09-19)
 
  * [f54072d](https://github.com/easysoft/quickon_cli/commit/f54072d4b0893f9cb6ca1345dbd258f0319729dc) fix(init): allow disable install app
