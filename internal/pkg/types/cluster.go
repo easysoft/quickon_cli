@@ -29,14 +29,15 @@ type Metadata struct {
 	DataStore       string      `json:"datastore,omitempty" yaml:"datastore,omitempty"`
 	Network         string      `json:"network,omitempty" yaml:"network,omitempty"`
 	// Plugins         StringArray `json:"plugins,omitempty" yaml:"plugins,omitempty"`
-	Mode             string `json:"mode,omitempty" yaml:"mode,omitempty"`
-	QuchengVersion   string `json:"qucheng-version,omitempty" yaml:"qucheng-version,omitempty"`
-	DisableIngress   bool   `json:"disable-ingress,omitempty" yaml:"disable-ingress,omitempty"`
-	CNEAPI           string `json:"cne-api,omitempty" yaml:"cne-api,omitempty"`
-	CNEToken         string `json:"cne-token,omitempty" yaml:"cne-token,omitempty"`
-	Domain           string `json:"domain,omitempty" yaml:"domain,omitempty"`
-	ImportDefaultApp string `json:"import-default-app,omitempty" yaml:"import-default-app,omitempty"`
-	ConsolePassword  string `json:"console-password,omitempty" yaml:"console-password,omitempty"`
+	Mode              string `json:"mode,omitempty" yaml:"mode,omitempty"`
+	QuchengVersion    string `json:"qucheng-version,omitempty" yaml:"qucheng-version,omitempty"`
+	DisableIngress    bool   `json:"disable-ingress,omitempty" yaml:"disable-ingress,omitempty"`
+	CNEAPI            string `json:"cne-api,omitempty" yaml:"cne-api,omitempty"`
+	CNEToken          string `json:"cne-token,omitempty" yaml:"cne-token,omitempty"`
+	Domain            string `json:"domain,omitempty" yaml:"domain,omitempty"`
+	ImportDefaultApp  string `json:"import-default-app,omitempty" yaml:"import-default-app,omitempty"`
+	DisableInstallApp bool   `json:"disable-install-app,omitempty" yaml:"disable-install-app,omitempty"`
+	ConsolePassword   string `json:"console-password,omitempty" yaml:"console-password,omitempty"`
 }
 
 type Status struct {
