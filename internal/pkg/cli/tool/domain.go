@@ -57,15 +57,17 @@ func domainClean(f factory.Factory) *cobra.Command {
 			if err != nil {
 				return
 			}
+			// TODO 获取subdomain, maindomain
 			reqbody := domain.ReqBody{
-				UUID:      cm.Data["uuid"],
-				SecretKey: cm.Data["auth"],
+				SecretKey:  cm.Data["auth"],
+				SubDomain:  "",
+				MainDomain: "",
 			}
 			client := req.C().SetLogger(nil).SetUserAgent(common.GetUG())
 			if _, err := client.R().
 				SetHeader("Content-Type", "application/json").
 				SetBody(&reqbody).
-				Delete(common.GetAPI("/api/qdns/oss/record")); err != nil {
+				Delete(common.GetAPI("/api/qdnsv2/oss/record")); err != nil {
 				f.GetLog().Error("clean dns failed, reason: %v", err)
 			}
 		},
@@ -106,10 +108,10 @@ func domainAdd(f factory.Factory) *cobra.Command {
 						return
 					}
 				}
-				id := cm.Data["uuid"]
 				auth := cm.Data["auth"]
 				ip := exnet.LocalIPs()[0]
-				domain, _, err = suffixdomain.GenerateDomain(ip, id, auth, suffixdomain.GenCustomDomain(suffixdomain.SearchCustomDomain(ip, id, auth)))
+				// TODO
+				domain, _, err = suffixdomain.GenerateDomain(ip, auth, suffixdomain.GenCustomDomain(suffixdomain.SearchCustomDomain(ip, auth, "", "haogs.cn"), "haogs.cn"), "haogs.cn")
 				if len(domain) == 0 {
 					log.Warnf("gen domain failed: %v, use default domain: demo.haogs.cn", err)
 					domain = "demo.haogs.cn"

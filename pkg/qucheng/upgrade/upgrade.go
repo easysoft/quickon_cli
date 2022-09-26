@@ -110,7 +110,7 @@ func Upgrade(flagVersion string, log log.Logger) error {
 					log.Infof("load %s tls cert", domain)
 					defaultTLS := fmt.Sprintf("%s/tls-haogs-cn.yaml", common.GetDefaultCacheDir())
 					if !file.CheckFileExists(defaultTLS) {
-						suffixdomain.UpgradeTLSDDomain("127.0.0.1", exid.GenUUID(), exid.GenUUID(), domain)
+						suffixdomain.UpgradeTLSDDomain("127.0.0.1", exid.GenUUID(), domain)
 						log.StartWait(fmt.Sprintf("start issuing domain %s certificate, may take 3-5min", domain))
 						waittls := time.Now()
 						for {

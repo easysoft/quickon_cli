@@ -31,31 +31,31 @@ func (p *Cluster) genQuChengToken() string {
 	return expass.RandomPassword(32)
 }
 
-func (p *Cluster) getOrCreateUUIDAndAuth() (id, auth string, err error) {
+func (p *Cluster) getOrCreateUUIDAndAuth() (auth string, err error) {
 	// cm := &corev1.ConfigMap{}
 	cm, err := p.KubeClient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Get(context.TODO(), "q-suffix-host", metav1.GetOptions{})
 	if err != nil {
 		if !errors.IsNotFound(err) {
-			return "", "", err
+			return "", err
 		}
 		if errors.IsNotFound(err) {
 			p.Log.Debug("q-suffix-host not found, create it")
 			cm = suffixdomain.GenerateSuffixConfigMap("q-suffix-host", common.DefaultSystem)
 			if _, err := p.KubeClient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Create(context.TODO(), cm, metav1.CreateOptions{}); err != nil {
-				return "", "", err
+				return "", err
 			}
 		}
 	}
-	return cm.Data["uuid"], cm.Data["auth"], nil
+	return cm.Data["auth"], nil
 }
 
 func (p *Cluster) genSuffixHTTPHost(ip string) (domain, tls string, err error) {
-	id, auth, err := p.getOrCreateUUIDAndAuth()
+	auth, err := p.getOrCreateUUIDAndAuth()
 	if err != nil {
 		return "", "", err
 	}
-	defaultDomain := suffixdomain.SearchCustomDomain(ip, id, auth)
-	domain, tls, err = suffixdomain.GenerateDomain(ip, id, auth, suffixdomain.GenCustomDomain(defaultDomain))
+	defaultDomain := suffixdomain.SearchCustomDomain(ip, auth, "", "haogs.cn")
+	domain, tls, err = suffixdomain.GenerateDomain(ip, auth, suffixdomain.GenCustomDomain(defaultDomain, "haogs.cn"), "haogs.cn")
 	if err != nil {
 		return "", "", err
 	}
