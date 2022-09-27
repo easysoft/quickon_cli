@@ -8,7 +8,6 @@ package domain
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
@@ -23,35 +22,39 @@ import (
 )
 
 type ReqBody struct {
-	IP        string `json:"ip"`
-	UUID      string `json:"uuid"`
-	SecretKey string `json:"secretKey"`
-	Domain    string `json:"domain,omitempty"`
+	IP         string `json:"ip"`
+	SecretKey  string `json:"secretKey"`
+	SubDomain  string `json:"sub,omitempty"`
+	MainDomain string `json:"domain,omitempty"`
 }
 
 type RespBody struct {
 	Code int `json:"code"`
 	Data struct {
-		Domain string `json:"domain,omitempty"`
-		TLS    string `json:"tls,omitempty"`
+		Domain      string `json:"domain,omitempty"`
+		K8sTLS      string `json:"k8s-tls,omitempty"`
+		TLSCertPath string `json:"tls_cert_path,omitempty"`
+		TLSKeyPath  string `json:"tls_key_path,omitempty"`
 	} `json:"data"`
 	Message   string `json:"message"`
 	Timestamp int    `json:"timestamp"`
 }
 
-func SearchCustomDomain(iip, id, secretKey string) string {
+func SearchCustomDomain(iip, secretKey, domain string) string {
 	var respbody RespBody
+	subDomain, mainDomain := kutil.SplitDomain(domain)
 	reqbody := ReqBody{
-		IP:        iip,
-		UUID:      id,
-		SecretKey: secretKey,
+		IP:         iip,
+		SecretKey:  secretKey,
+		MainDomain: mainDomain,
+		SubDomain:  subDomain,
 	}
 	client := req.C().SetLogger(nil).SetUserAgent(common.GetUG())
 	_, err := client.R().
 		SetHeader("Content-Type", "application/json").
 		SetResult(&respbody).
 		SetBody(&reqbody).
-		Post(common.GetAPI("/api/qdns/oss/custom"))
+		Post(common.GetAPI("/api/qdnsv2/oss/custom"))
 
 	if err != nil {
 		return ""
@@ -60,57 +63,57 @@ func SearchCustomDomain(iip, id, secretKey string) string {
 }
 
 // UpgradeTLSDDomain tls domain
-func UpgradeTLSDDomain(iip, id, secretKey, domain string) error {
+func UpgradeTLSDDomain(iip, secretKey, domain string) error {
 	var respbody RespBody
-	if kutil.IsLegalDomain(domain) {
-		domain = strings.TrimSuffix(domain, ".haogs.cn")
-		domain = strings.TrimSuffix(domain, ".corp.cc")
+	if !kutil.IsLegalDomain(domain) {
+		return fmt.Errorf("domain not allow")
 	}
+	subDomain, mainDomain := kutil.SplitDomain(domain)
 	reqbody := ReqBody{
-		IP:        iip,
-		UUID:      id,
-		SecretKey: secretKey,
-		Domain:    domain,
+		IP:         iip,
+		SecretKey:  secretKey,
+		MainDomain: mainDomain,
+		SubDomain:  subDomain,
 	}
 	client := req.C().SetLogger(nil).SetUserAgent(common.GetUG())
 	_, err := client.R().
 		SetResult(&respbody).
 		SetBody(&reqbody).
-		Post(common.GetAPI("/api/qdns/oss/tls"))
+		Post(common.GetAPI("/api/qdnsv2/oss/tls"))
 	return err
 }
 
 // GenerateDomain generate suffix domain
-func GenerateDomain(iip, id, secretKey, domain string) (string, string, error) {
+func GenerateDomain(iip, secretKey, domain string) (string, string, error) {
 	log := log.GetInstance()
 	var respbody RespBody
-	if kutil.IsLegalDomain(domain) {
-		domain = strings.TrimSuffix(domain, ".haogs.cn")
-		domain = strings.TrimSuffix(domain, ".corp.cc")
+	if !kutil.IsLegalDomain(domain) {
+		return "", "", fmt.Errorf("domain not allow")
 	}
+	subDomain, mainDomain := kutil.SplitDomain(domain)
 	reqbody := ReqBody{
-		IP:        iip,
-		UUID:      id,
-		SecretKey: secretKey,
-		Domain:    domain,
+		IP:         iip,
+		SecretKey:  secretKey,
+		SubDomain:  subDomain,
+		MainDomain: mainDomain,
 	}
 	client := req.C().SetLogger(nil).SetUserAgent(common.GetUG())
 	_, err := client.R().
 		SetHeader("Content-Type", "application/json").
 		SetResult(&respbody).
 		SetBody(&reqbody).
-		Post(common.GetAPI("/api/qdns/oss/record"))
+		Post(common.GetAPI("/api/qdnsv2/oss/record"))
 
 	if err != nil {
 		return "", "", err
 	}
 	if len(respbody.Data.Domain) == 0 {
-		if len(reqbody.Domain) > 0 {
-			log.Warnf("current domain %s is unavailable, please try again", color.SRed("%s.haogs.cn", reqbody.Domain))
-			return GenerateDomain(iip, id, secretKey, GenCustomDomain(domain))
+		if len(reqbody.SubDomain) > 0 {
+			log.Warnf("current domain %s is unavailable, please try again", color.SRed("%s.%s", reqbody.SubDomain, reqbody.MainDomain))
+			return GenerateDomain(iip, secretKey, GenCustomDomain(domain))
 		}
 	}
-	return respbody.Data.Domain, respbody.Data.TLS, nil
+	return respbody.Data.Domain, respbody.Data.K8sTLS, nil
 }
 
 // GenerateSuffixConfigMap -
@@ -128,11 +131,12 @@ func GenerateSuffixConfigMap(name, namespace string) *corev1.ConfigMap {
 	return cm
 }
 
-func GenCustomDomain(defaultDomain string) string {
+func GenCustomDomain(domain string) string {
 	log := log.GetInstance()
+	subDomain, mainDomain := kutil.SplitDomain(domain)
 	prompt := promptui.Prompt{
-		Label:   "config custom subdomain for haogs.cn, like: <custom>.haogs.cn.\t",
-		Default: defaultDomain,
+		Label:   fmt.Sprintf("configure custom domain, like: %s.\t", domain),
+		Default: domain,
 		Templates: &promptui.PromptTemplates{
 			Prompt:  "{{ . }}",
 			Valid:   "{{ . | green }}",
@@ -141,10 +145,10 @@ func GenCustomDomain(defaultDomain string) string {
 		},
 		Validate: func(input string) error {
 			if !kutil.IsLegalDomain(input) {
-				input = fmt.Sprintf("%s.haogs.cn", input)
+				input = fmt.Sprintf("%s.%s", input, mainDomain)
 			}
-			if len(input) < 13 {
-				return fmt.Errorf("subdomain must be at least 4 characters, like %s", defaultDomain)
+			if len(input) < 12 {
+				return fmt.Errorf("subdomain must be at least 4 characters, like %s", subDomain)
 			}
 			if msgs := validation.NameIsDNSSubdomain(input, false); len(msgs) != 0 {
 				return fmt.Errorf("%s", msgs[0])
@@ -154,10 +158,10 @@ func GenCustomDomain(defaultDomain string) string {
 	}
 	result, _ := prompt.Run()
 	if result == "" {
-		log.Donef("use default domain: %s", color.SGreen(defaultDomain))
-		result = defaultDomain
+		log.Donef("use default domain: %s", color.SGreen(domain))
+		result = domain
 	}
-	result = strings.ReplaceAll(result, ".haogs.cn", "")
-	log.Infof("check subdomain %s availability", result)
+	// result = strings.ReplaceAll(result, fmt.Sprintf(".%s", mainDomain), "")
+	log.Infof("check subdomain %s availability", color.SGreen(result))
 	return result
 }

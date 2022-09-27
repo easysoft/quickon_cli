@@ -82,7 +82,7 @@ func GetNameByURL(url string, debug, useip bool) (*AppData, error) {
 		apiHost = fmt.Sprintf("https://%s", apiHost)
 	}
 
-	client := req.C().SetLogger(nil)
+	client := req.C().SetLogger(nil).SetUserAgent(common.GetUG())
 	if debug {
 		client = client.DevMode().EnableDumpAll()
 	}

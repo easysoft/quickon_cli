@@ -31,31 +31,31 @@ func (p *Cluster) genQuChengToken() string {
 	return expass.RandomPassword(32)
 }
 
-func (p *Cluster) getOrCreateUUIDAndAuth() (id, auth string, err error) {
+func (p *Cluster) getOrCreateUUIDAndAuth() (auth string, err error) {
 	// cm := &corev1.ConfigMap{}
 	cm, err := p.KubeClient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Get(context.TODO(), "q-suffix-host", metav1.GetOptions{})
 	if err != nil {
 		if !errors.IsNotFound(err) {
-			return "", "", err
+			return "", err
 		}
 		if errors.IsNotFound(err) {
 			p.Log.Debug("q-suffix-host not found, create it")
 			cm = suffixdomain.GenerateSuffixConfigMap("q-suffix-host", common.DefaultSystem)
 			if _, err := p.KubeClient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Create(context.TODO(), cm, metav1.CreateOptions{}); err != nil {
-				return "", "", err
+				return "", err
 			}
 		}
 	}
-	return cm.Data["uuid"], cm.Data["auth"], nil
+	return cm.Data["auth"], nil
 }
 
 func (p *Cluster) genSuffixHTTPHost(ip string) (domain, tls string, err error) {
-	id, auth, err := p.getOrCreateUUIDAndAuth()
+	auth, err := p.getOrCreateUUIDAndAuth()
 	if err != nil {
 		return "", "", err
 	}
-	defaultDomain := suffixdomain.SearchCustomDomain(ip, id, auth)
-	domain, tls, err = suffixdomain.GenerateDomain(ip, id, auth, suffixdomain.GenCustomDomain(defaultDomain))
+	defaultDomain := suffixdomain.SearchCustomDomain(ip, auth, "")
+	domain, tls, err = suffixdomain.GenerateDomain(ip, auth, suffixdomain.GenCustomDomain(defaultDomain))
 	if err != nil {
 		return "", "", err
 	}
@@ -101,7 +101,7 @@ func (p *Cluster) InstallQuCheng() error {
 			}
 			p.Domain = domain
 
-			p.Log.Infof("generate suffix domain: %s, ip: %v", p.Domain, p.Metadata.EIP)
+			p.Log.Infof("generate suffix domain: %s, ip: %v", color.SGreen(p.Domain), color.SGreen(p.Metadata.EIP))
 			return true, nil
 		})
 		if err != nil {
@@ -124,13 +124,16 @@ func (p *Cluster) InstallQuCheng() error {
 				qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", "default").Run()
 				break
 			}
-			qcexec.Command(os.Args[0], "experimental", "tools", "wget", "-t", fmt.Sprintf("https://pkg.qucheng.com/ssl/haogs.cn/%s/tls.yaml", p.Domain), "-d", defaultTLS).Run()
+			_, mainDomain := kutil.SplitDomain(p.Domain)
+			domainTLS := fmt.Sprintf("https://pkg.qucheng.com/ssl/%s/%s/tls.yaml", mainDomain, p.Domain)
+			qcexec.Command(os.Args[0], "experimental", "tools", "wget", "-t", domainTLS, "-d", defaultTLS).Run()
 			p.Log.Debug("wait for tls cert ready...")
 			time.Sleep(time.Second * 5)
 			trywaitsc := time.Now()
 			if trywaitsc.Sub(waittls) > time.Minute*3 {
 				// TODO  timeout
 				p.Log.Debugf("wait tls cert ready, timeout: %v", trywaitsc.Sub(waittls).Seconds())
+				break
 			}
 		}
 	} else {

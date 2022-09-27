@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
@@ -60,7 +61,7 @@ func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 				apiHost = fmt.Sprintf("https://%s", apiHost)
 			}
 			log.Debugf("install app %s, domain: %s.%s", name, domain, cfg.Domain)
-			client := req.C().SetLogger(nil)
+			client := req.C().SetLogger(nil).SetUserAgent(common.GetUG())
 			if log.GetLevel() == logrus.DebugLevel {
 				client = client.DevMode().EnableDumpAll()
 			}
