@@ -81,7 +81,7 @@ func NewResetPassword(f factory.Factory) *cobra.Command {
 				password = expass.PwGenAlphaNumSymbols(16)
 			}
 			log.Debugf("update superadmin password: %s", password)
-			client := req.C().SetLogger(nil)
+			client := req.C().SetLogger(nil).SetUserAgent(common.GetUG())
 			if log.GetLevel() > logrus.InfoLevel {
 				client = client.DevMode().EnableDumpAll()
 			}

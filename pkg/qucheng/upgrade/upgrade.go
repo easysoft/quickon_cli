@@ -128,13 +128,15 @@ func Upgrade(flagVersion string, log log.Logger) error {
 								defaultValue = helm.MergeMaps(defaultValue, values)
 								break
 							}
-							qcexec.Command(os.Args[0], "experimental", "tools", "wget", "-t", fmt.Sprintf("https://pkg.qucheng.com/ssl/haogs.cn/%s/tls.yaml", domain), "-d", defaultTLS).Run()
+							_, mainDomain := kutil.SplitDomain(domain)
+							qcexec.Command(os.Args[0], "experimental", "tools", "wget", "-t", fmt.Sprintf("https://pkg.qucheng.com/ssl/%s/%s/tls.yaml", mainDomain, domain), "-d", defaultTLS).Run()
 							log.Debug("wait for tls cert ready...")
 							time.Sleep(time.Second * 5)
 							trywaitsc := time.Now()
 							if trywaitsc.Sub(waittls) > time.Minute*3 {
 								// TODO  timeout
 								log.Debugf("wait tls cert ready, timeout: %v", trywaitsc.Sub(waittls).Seconds())
+								break
 							}
 						}
 					}

@@ -58,10 +58,11 @@ func domainClean(f factory.Factory) *cobra.Command {
 				return
 			}
 			// TODO 获取subdomain, maindomain
+			subDomain, mainDomain := kutil.SplitDomain(cfg.Domain)
 			reqbody := domain.ReqBody{
 				SecretKey:  cm.Data["auth"],
-				SubDomain:  "",
-				MainDomain: "",
+				SubDomain:  subDomain,
+				MainDomain: mainDomain,
 			}
 			client := req.C().SetLogger(nil).SetUserAgent(common.GetUG())
 			if _, err := client.R().
@@ -111,7 +112,7 @@ func domainAdd(f factory.Factory) *cobra.Command {
 				auth := cm.Data["auth"]
 				ip := exnet.LocalIPs()[0]
 				// TODO
-				domain, _, err = suffixdomain.GenerateDomain(ip, auth, suffixdomain.GenCustomDomain(suffixdomain.SearchCustomDomain(ip, auth, "", "haogs.cn"), "haogs.cn"), "haogs.cn")
+				domain, _, err = suffixdomain.GenerateDomain(ip, auth, suffixdomain.GenCustomDomain(suffixdomain.SearchCustomDomain(ip, auth, "")))
 				if len(domain) == 0 {
 					log.Warnf("gen domain failed: %v, use default domain: demo.haogs.cn", err)
 					domain = "demo.haogs.cn"

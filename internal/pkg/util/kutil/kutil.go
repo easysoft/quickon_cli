@@ -50,8 +50,19 @@ func NeedCacheHelmFile() bool {
 
 // IsLegalDomain check domain legal
 func IsLegalDomain(host string) bool {
-	if strings.HasSuffix(host, "corp.cc") || strings.HasSuffix(host, "haogs.cn") {
-		return true
+	for _, d := range common.ValidDomainSuffix {
+		if strings.HasSuffix(host, d) {
+			return true
+		}
 	}
 	return false
+}
+
+func SplitDomain(domain string) (string, string) {
+	for _, d := range common.ValidDomainSuffix {
+		if strings.HasSuffix(domain, d) {
+			return strings.ReplaceAll(domain, "."+d, ""), d
+		}
+	}
+	return domain, common.ValidDomainSuffix[0]
 }

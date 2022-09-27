@@ -8,7 +8,6 @@ package domain
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
@@ -41,8 +40,9 @@ type RespBody struct {
 	Timestamp int    `json:"timestamp"`
 }
 
-func SearchCustomDomain(iip, secretKey, subDomain, mainDomain string) string {
+func SearchCustomDomain(iip, secretKey, domain string) string {
 	var respbody RespBody
+	subDomain, mainDomain := kutil.SplitDomain(domain)
 	reqbody := ReqBody{
 		IP:         iip,
 		SecretKey:  secretKey,
@@ -63,11 +63,12 @@ func SearchCustomDomain(iip, secretKey, subDomain, mainDomain string) string {
 }
 
 // UpgradeTLSDDomain tls domain
-func UpgradeTLSDDomain(iip, secretKey, subDomain, mainDomain string) error {
+func UpgradeTLSDDomain(iip, secretKey, domain string) error {
 	var respbody RespBody
-	if !kutil.IsLegalDomain(mainDomain) {
+	if !kutil.IsLegalDomain(domain) {
 		return fmt.Errorf("domain not allow")
 	}
+	subDomain, mainDomain := kutil.SplitDomain(domain)
 	reqbody := ReqBody{
 		IP:         iip,
 		SecretKey:  secretKey,
@@ -83,12 +84,13 @@ func UpgradeTLSDDomain(iip, secretKey, subDomain, mainDomain string) error {
 }
 
 // GenerateDomain generate suffix domain
-func GenerateDomain(iip, secretKey, subDomain, mainDomain string) (string, string, error) {
+func GenerateDomain(iip, secretKey, domain string) (string, string, error) {
 	log := log.GetInstance()
 	var respbody RespBody
-	if !kutil.IsLegalDomain(mainDomain) {
+	if !kutil.IsLegalDomain(domain) {
 		return "", "", fmt.Errorf("domain not allow")
 	}
+	subDomain, mainDomain := kutil.SplitDomain(domain)
 	reqbody := ReqBody{
 		IP:         iip,
 		SecretKey:  secretKey,
@@ -108,7 +110,7 @@ func GenerateDomain(iip, secretKey, subDomain, mainDomain string) (string, strin
 	if len(respbody.Data.Domain) == 0 {
 		if len(reqbody.SubDomain) > 0 {
 			log.Warnf("current domain %s is unavailable, please try again", color.SRed("%s.%s", reqbody.SubDomain, reqbody.MainDomain))
-			return GenerateDomain(iip, secretKey, GenCustomDomain(subDomain, mainDomain), mainDomain)
+			return GenerateDomain(iip, secretKey, GenCustomDomain(domain))
 		}
 	}
 	return respbody.Data.Domain, respbody.Data.K8sTLS, nil
@@ -129,11 +131,12 @@ func GenerateSuffixConfigMap(name, namespace string) *corev1.ConfigMap {
 	return cm
 }
 
-func GenCustomDomain(subDomain, mainDomain string) string {
+func GenCustomDomain(domain string) string {
 	log := log.GetInstance()
+	subDomain, mainDomain := kutil.SplitDomain(domain)
 	prompt := promptui.Prompt{
-		Label:   fmt.Sprintf("config custom subdomain for %s, like: <custom>.%s.\t", mainDomain, mainDomain),
-		Default: fmt.Sprintf("%s.%s", subDomain, mainDomain),
+		Label:   fmt.Sprintf("configure custom domain, like: %s.\t", domain),
+		Default: domain,
 		Templates: &promptui.PromptTemplates{
 			Prompt:  "{{ . }}",
 			Valid:   "{{ . | green }}",
@@ -144,7 +147,7 @@ func GenCustomDomain(subDomain, mainDomain string) string {
 			if !kutil.IsLegalDomain(input) {
 				input = fmt.Sprintf("%s.%s", input, mainDomain)
 			}
-			if len(input) < 13 {
+			if len(input) < 12 {
 				return fmt.Errorf("subdomain must be at least 4 characters, like %s", subDomain)
 			}
 			if msgs := validation.NameIsDNSSubdomain(input, false); len(msgs) != 0 {
@@ -154,12 +157,11 @@ func GenCustomDomain(subDomain, mainDomain string) string {
 		},
 	}
 	result, _ := prompt.Run()
-	defaultDomain := fmt.Sprintf("%s.%s", subDomain, mainDomain)
 	if result == "" {
-		log.Donef("use default domain: %s", color.SGreen(defaultDomain))
-		result = defaultDomain
+		log.Donef("use default domain: %s", color.SGreen(domain))
+		result = domain
 	}
-	result = strings.ReplaceAll(result, fmt.Sprintf(".%s", mainDomain), "")
-	log.Infof("check subdomain %s availability", result)
+	// result = strings.ReplaceAll(result, fmt.Sprintf(".%s", mainDomain), "")
+	log.Infof("check subdomain %s availability", color.SGreen(result))
 	return result
 }
