@@ -36,7 +36,7 @@ spec:
       serviceAccountName: qcli-cm
       containers:
       - name: qcli-cm
-        image: hub.qucheng.com/platform/podinstall:2022092612
+        image: hub.qucheng.com/platform/podinstall:2022092816
         imagePullPolicy: Always
         env:
         - name: APP_DOMAIN
