@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/easysoft/qcadmin/common"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
@@ -33,12 +32,12 @@ func NewUpgradeQucheng(f factory.Factory) *cobra.Command {
 		Aliases: []string{"qc", "qucheng"},
 		Short:   "Upgrades the QuCheng to the newest version",
 		Args:    cobra.NoArgs,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			// 先升级cne-operator
+			return upcmd.PreUpgrade()
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return upcmd.Run()
-		},
-		PostRunE: func(cmd *cobra.Command, args []string) error {
-			// 升级成功
-			return upcmd.CleanOrInstall()
 		},
 	}
 	return up
@@ -57,15 +56,29 @@ func (cmd *Option) Run() error {
 }
 
 // Clean executes the command logic
-func (cmd *Option) CleanOrInstall() error {
-	cmd.log.Info("cleanup deprecated resources")
-	if err := qcexec.CommandRun(os.Args[0], "exp", "helm", "uninstall", "--name", "cne-api", "--namespace", common.DefaultSystem); err != nil {
-		cmd.log.Errorf("clean cne-api err: %v", err)
-	}
-	cmd.log.Info("patch new resources")
-	cmd.log.Info("start deploy operator plugins: cne-operator")
+func (cmd *Option) PreUpgrade() error {
+	// cmd.log.Info("cleanup deprecated resources")
+	// if err := qcexec.CommandRun(os.Args[0], "exp", "helm", "uninstall", "--name", "cne-api", "--namespace", common.DefaultSystem); err != nil {
+	// 	cmd.log.Errorf("clean cne-api err: %v", err)
+	// }
+	// cmd.log.Info("patch new resources")
+	cmd.log.Info("start upgrade operator plugins: cne-operator")
 	if err := qcexec.CommandRun(os.Args[0], "manage", "plugins", "enable", "cne-operator"); err != nil {
-		cmd.log.Errorf("deploy plugin cne-operator err: %v", err)
+		cmd.log.Errorf("upgrade plugin cne-operator err: %v", err)
 	}
 	return nil
 }
+
+// Clean executes the command logic
+// func (cmd *Option) CleanOrInstall() error {
+// 	cmd.log.Info("cleanup deprecated resources")
+// 	if err := qcexec.CommandRun(os.Args[0], "exp", "helm", "uninstall", "--name", "cne-api", "--namespace", common.DefaultSystem); err != nil {
+// 		cmd.log.Errorf("clean cne-api err: %v", err)
+// 	}
+// 	cmd.log.Info("patch new resources")
+// 	cmd.log.Info("start deploy operator plugins: cne-operator")
+// 	if err := qcexec.CommandRun(os.Args[0], "manage", "plugins", "enable", "cne-operator"); err != nil {
+// 		cmd.log.Errorf("deploy plugin cne-operator err: %v", err)
+// 	}
+// 	return nil
+// }
