@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.2.4 (2022-09-27)
+
+ * [c51cd02](https://github.com/easysoft/quickon_cli/commit/c51cd02f19595f82eb078b6d97f920dc75319f07) build(deps): bump github.com/docker/docker (#84)
+ * [a9c4e01](https://github.com/easysoft/quickon_cli/commit/a9c4e013b4e25596ef3bfc24b94919bf45eadb2d) feat(1.6.0): release 1.6.0 (#85)
+ * [f17f0ff](https://github.com/easysoft/quickon_cli/commit/f17f0ff2f4008f28f9b0a0554df80a79bb998cd5) build(deps): bump github.com/imroc/req/v3 from 3.22.1 to 3.23.0 (#82)
+
+### Contributors
+
+ * dependabot[bot]
+ * 缘生
+
 ## v1.2.3 (2022-09-25)
 
  * [ad577d7](https://github.com/easysoft/quickon_cli/commit/ad577d79143995f55d1f5430e041ec62a7a4ebf7) build(deps): bump github.com/imroc/req/v3 from 3.22.0 to 3.22.1 (#81)
