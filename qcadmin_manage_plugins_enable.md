@@ -9,7 +9,8 @@ qcadmin manage plugins enable [flags]
 ### Options
 
 ```
-  -h, --help   help for enable
+  -h, --help             help for enable
+  -v, --version string   plugin
 ```
 
 ### Options inherited from parent commands
