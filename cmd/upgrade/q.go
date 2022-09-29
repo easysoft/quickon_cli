@@ -72,7 +72,7 @@ func (up option) DoQcadmin() {
 	os.Chmod(common.DefaultQuickonBackupDir, common.FileMode0777)
 	up.log.Donef("Successfully updated ergo to version %s", lastversion)
 	up.log.Debugf("gen new version manifest")
-	up.log.Infof("Release note: \n\trelease %s ", lastversion)
+	up.log.Infof("Release note: \n\t release %s ", lastversion)
 	up.log.Infof("Upgrade docs: \n\t https://github.com/easysoft/quickon_cli/wiki/upgrade")
 	up.log.Infof("Support QQGroup: \n\t 768721743")
 }
