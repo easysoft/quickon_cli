@@ -189,3 +189,47 @@ func (p *Item) Install() error {
 
 	return err
 }
+
+func (p *Item) Upgrade() (err error) {
+	pluginName := fmt.Sprintf("qc-plugin-%s", p.Type)
+	oldSecret, _ := p.Client.GetSecret(context.TODO(), common.DefaultSystem, pluginName, metav1.GetOptions{})
+	updatestatus := true
+	if oldSecret == nil {
+		updatestatus = false
+	}
+
+	if p.Tool == "helm" {
+		applycmd := qcexec.Command(os.Args[0], "experimental", "helm", "upgrade", "--name", p.Type, "--repo", common.DefaultHelmRepoName, "--chart", p.Path, "--namespace", common.DefaultSystem)
+		if output, err := applycmd.CombinedOutput(); err != nil {
+			p.log.Errorf("helm upgrade %s plugin %s failed: %s", p.Type, p.Name, string(output))
+			return err
+		}
+	} else {
+		// #nosec
+		applycmd := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", common.DefaultSystem)
+		if output, err := applycmd.CombinedOutput(); err != nil {
+			p.log.Errorf("kubectl upgrade %s plugin %s failed: %s", p.Type, p.Name, string(output))
+			return err
+		}
+	}
+	p.log.Donef("upgrade %s plugin %s success.", p.Type, p.Name)
+	plugindata := map[string]string{
+		"type":       p.Type,
+		"name":       p.Name,
+		"version":    p.Version,
+		"cliversion": common.Version,
+	}
+	if updatestatus {
+		oldSecret.StringData = plugindata
+		_, err = p.Client.UpdateSecret(context.TODO(), common.DefaultSystem, oldSecret, metav1.UpdateOptions{})
+	} else {
+		_, err = p.Client.CreateSecret(context.TODO(), common.DefaultSystem, &corev1.Secret{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: pluginName,
+			},
+			StringData: plugindata,
+		}, metav1.CreateOptions{})
+	}
+
+	return err
+}

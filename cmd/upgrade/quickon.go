@@ -63,7 +63,7 @@ func (cmd *Option) PreUpgrade() error {
 	// }
 	// cmd.log.Info("patch new resources")
 	cmd.log.Info("start upgrade operator plugins: cne-operator")
-	if err := qcexec.CommandRun(os.Args[0], "manage", "plugins", "enable", "cne-operator"); err != nil {
+	if err := qcexec.CommandRun(os.Args[0], "manage", "plugins", "upgrade", "cne-operator"); err != nil {
 		cmd.log.Errorf("upgrade plugin cne-operator err: %v", err)
 	}
 	return nil

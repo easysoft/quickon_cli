@@ -14,6 +14,7 @@ import (
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	suffixdomain "github.com/easysoft/qcadmin/pkg/qucheng/domain"
+	"github.com/ergoapi/util/color"
 
 	"github.com/cockroachdb/errors"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
@@ -58,6 +59,9 @@ func (opt *Option) Fetch(ns, name string) (ComponentVersion, error) {
 	cmv.Remote.ChartVersion = remotecv
 	// can upgrade
 	cmv.CanUpgrade = version.LT(cmv.Remote.ChartVersion, cmv.Deploy.ChartVersion)
+	if cmv.CanUpgrade {
+		cmv.UpgradeMessage = fmt.Sprintf("Now you can use %s to upgrade component %s to the latest version", color.SGreen("%s upgrade %s", os.Args[0], name), name)
+	}
 	opt.log.Debugf("local: %s(%s), remote : %s(%s), upgrade: %v", localcv, localav, remotecv, remoteav, cmv.CanUpgrade)
 	return cmv, err
 }
@@ -166,6 +170,9 @@ func QuchengVersion() (Version, error) {
 	// 	v.Components = append(v.Components, uiVersion)
 	// }
 	if apiVersion, err := opt.Fetch(common.DefaultSystem, "qucheng"); err == nil {
+		v.Components = append(v.Components, apiVersion)
+	}
+	if apiVersion, err := opt.Fetch(common.DefaultSystem, "cne-operator"); err == nil {
 		v.Components = append(v.Components, apiVersion)
 	}
 	return v, nil

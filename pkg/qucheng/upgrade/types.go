@@ -7,16 +7,15 @@
 package upgrade
 
 type Version struct {
-	Components     []ComponentVersion `json:",omitempty"`
-	CanUpgrade     bool               `json:",omitempty"`
-	UpgradeMessage string
+	Components []ComponentVersion `json:",omitempty"`
 }
 
 type ComponentVersion struct {
-	Name       string
-	Deploy     CVersion
-	Remote     CVersion
-	CanUpgrade bool
+	Name           string
+	Deploy         CVersion
+	Remote         CVersion
+	CanUpgrade     bool   `json:",omitempty"`
+	UpgradeMessage string `json:",omitempty"`
 }
 
 type CVersion struct {

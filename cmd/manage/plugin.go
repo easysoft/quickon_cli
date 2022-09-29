@@ -29,7 +29,7 @@ func NewCmdPlugin(f factory.Factory) *cobra.Command {
 	cmd.AddCommand(listPluginCmd(f))
 	cmd.AddCommand(installPluginCmd(f))
 	cmd.AddCommand(unInstallPluginCmd(f))
-	// cmd.AddCommand(syncPluginFileCmd(f))
+	cmd.AddCommand(upgradePluginCmd(f))
 	return cmd
 }
 
@@ -131,6 +131,28 @@ func unInstallPluginCmd(f factory.Factory) *cobra.Command {
 			}
 			ps.Client = c
 			return ps.UnInstall()
+		},
+	}
+	return cmd
+}
+
+func upgradePluginCmd(f factory.Factory) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "upgrade",
+		Short:   "Upgrade plugin",
+		Aliases: []string{"up", "ug"},
+		Args:    cobra.RangeArgs(1, 2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			ps, err := pluginapi.GetMeta(args...)
+			if err != nil {
+				return err
+			}
+			c, err := k8s.NewClient("", "")
+			if err != nil {
+				return err
+			}
+			ps.Client = c
+			return ps.Upgrade()
 		},
 	}
 	return cmd

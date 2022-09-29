@@ -54,14 +54,12 @@ Server:
 {{- else }}
   ChartVersion:     {{$component.Deploy.ChartVersion}} --> {{$component.Remote.ChartVersion}}
 {{- end }}
+  Note:             {{ $component.UpgradeMessage }}
 {{- else }}
   AppVersion:       {{$component.Deploy.AppVersion}}
   ChartVersion:     {{$component.Deploy.ChartVersion}}
 {{- end }}
  {{- end}}
-{{- if .CanUpgrade }}
-  Note:              {{ .UpgradeMessage }}
-{{- end }}
 {{- end}}
 {{- end}}
 `
@@ -166,15 +164,6 @@ func ShowVersion(log logpkg.Logger) {
 		qv, err := upgrade.QuchengVersion()
 		if err == nil {
 			vd.Server = &qv
-			canUpgrade := false
-			for _, component := range qv.Components {
-				if component.CanUpgrade {
-					canUpgrade = true
-					break
-				}
-			}
-			vd.Server.CanUpgrade = canUpgrade
-			vd.Server.UpgradeMessage = fmt.Sprintf("Now you can use %s to upgrade quickon to the latest version", color.SGreen("%s upgrade quickon", os.Args[0]))
 		}
 	}
 	if err := prettyPrintVersion(vd, tmpl); err != nil {
