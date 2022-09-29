@@ -1,5 +1,30 @@
 # Changelog
 
+## v1.2.7 (2022-09-29)
+
+ * [6f822f1](https://github.com/easysoft/quickon_cli/commit/6f822f10156ad9c13d3feb6879e2b56e54cffdd8) feat(install): support operator install by version
+
+### Contributors
+
+ * ysicing
+
+## v1.2.6 (2022-09-29)
+
+ * [6e80646](https://github.com/easysoft/quickon_cli/commit/6e806463d3369ca791af8b8a6548a2fd3c50d0ad) fix(upgrade): fix upgrade operator failed
+ * [8702a85](https://github.com/easysoft/quickon_cli/commit/8702a857b933b47abee3ef921b6540220b5be505) feat(update): update podinstall version
+
+### Contributors
+
+ * ysicing
+
+## v1.2.5 (2022-09-28)
+
+ * [4d766ba](https://github.com/easysoft/quickon_cli/commit/4d766baf75db8790f41d86d8517bce5dc8860ee1) fix(upgrade): fix upgrade func
+
+### Contributors
+
+ * ysicing
+
 ## v1.2.4 (2022-09-27)
 
  * [c51cd02](https://github.com/easysoft/quickon_cli/commit/c51cd02f19595f82eb078b6d97f920dc75319f07) build(deps): bump github.com/docker/docker (#84)
