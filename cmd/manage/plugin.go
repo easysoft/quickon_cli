@@ -93,6 +93,7 @@ func listPluginCmd(f factory.Factory) *cobra.Command {
 }
 
 func installPluginCmd(f factory.Factory) *cobra.Command {
+	var version string
 	cmd := &cobra.Command{
 		Use:     "enable",
 		Short:   "install plugin",
@@ -108,9 +109,11 @@ func installPluginCmd(f factory.Factory) *cobra.Command {
 				return err
 			}
 			ps.Client = c
+			ps.InstallVersion = version
 			return ps.Install()
 		},
 	}
+	cmd.Flags().StringVarP(&version, "version", "v", "", "plugin")
 	return cmd
 }
 

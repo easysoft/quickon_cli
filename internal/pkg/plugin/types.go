@@ -19,17 +19,18 @@ type Meta struct {
 }
 
 type Item struct {
-	Client      *k8s.Client `json:"-"`
-	Name        string      `json:"name"`
-	Description string      `json:"description"`
-	Version     string      `json:"version"`
-	Home        string      `json:"home"`
-	Appversion  string      `json:"appversion"`
-	Type        string      `json:"type"`
-	Path        string      `json:"path"`
-	Tool        string      `json:"tool"`
-	BuiltIn     bool        `json:"builtin"`
-	log         log.Logger  `json:"-"`
+	Client         *k8s.Client `json:"-"`
+	Name           string      `json:"name"`
+	Description    string      `json:"description"`
+	Version        string      `json:"version"`
+	Home           string      `json:"home"`
+	Appversion     string      `json:"appversion"`
+	Type           string      `json:"type"`
+	Path           string      `json:"path"`
+	Tool           string      `json:"tool"`
+	BuiltIn        bool        `json:"builtin"`
+	InstallVersion string      `json:"-"`
+	log            log.Logger  `json:"-"`
 }
 
 type List []Meta

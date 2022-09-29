@@ -144,9 +144,9 @@ func (p *Cluster) InstallQuCheng() error {
 	cfg.Domain = p.Domain
 	cfg.APIToken = token
 	cfg.SaveConfig()
-
+	chartversion := common.GetVersion(p.QuchengVersion)
 	p.Log.Info("start deploy cne operator")
-	if err := qcexec.CommandRun(os.Args[0], "manage", "plugins", "enable", "cne-operator"); err != nil {
+	if err := qcexec.CommandRun(os.Args[0], "manage", "plugins", "enable", "cne-operator", "--version", chartversion); err != nil {
 		p.Log.Warnf("deploy cne-operator err: %v", err)
 	} else {
 		p.Log.Done("deployed cne-operator success")
@@ -166,7 +166,7 @@ func (p *Cluster) InstallQuCheng() error {
 		hostdomain = fmt.Sprintf("console.%s", hostdomain)
 	}
 	helmargs = append(helmargs, "--set", fmt.Sprintf("ingress.host=%s", hostdomain))
-	chartversion := common.GetVersion(p.QuchengVersion)
+
 	if len(chartversion) > 0 {
 		helmargs = append(helmargs, "--version", chartversion)
 	}

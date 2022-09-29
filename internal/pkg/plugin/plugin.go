@@ -150,7 +150,11 @@ func (p *Item) Install() error {
 		}
 	}
 	if p.Tool == "helm" {
-		applycmd := qcexec.Command(os.Args[0], "experimental", "helm", "upgrade", "--name", p.Type, "--repo", common.DefaultHelmRepoName, "--chart", p.Path, "--namespace", common.DefaultSystem)
+		args := []string{"experimental", "helm", "upgrade", "--name", p.Type, "--repo", common.DefaultHelmRepoName, "--chart", p.Path, "--namespace", common.DefaultSystem}
+		if len(p.InstallVersion) > 0 {
+			args = append(args, "--version", p.InstallVersion)
+		}
+		applycmd := qcexec.Command(os.Args[0], args...)
 		if output, err := applycmd.CombinedOutput(); err != nil {
 			p.log.Errorf("helm install %s plugin %s failed: %s", p.Type, p.Name, string(output))
 			return err
