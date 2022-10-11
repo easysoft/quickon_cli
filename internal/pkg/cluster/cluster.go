@@ -52,7 +52,7 @@ func NewCluster() *Cluster {
 			QuchengVersion:    common.DefaultQuchengVersion,
 			DisableIngress:    false,
 			DisableInstallApp: false,
-			ImportDefaultApp:  "zentao-open",
+			ImportDefaultApp:  "zentao",
 			ConsolePassword:   expass.PwGenAlphaNumSymbols(16),
 		},
 		M: new(syncmap.Map),

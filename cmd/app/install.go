@@ -42,7 +42,7 @@ func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 	app := &cobra.Command{
 		Use:     "install",
 		Short:   "install app",
-		Example: `q app install -n zentao-open or q app install zentao-open`,
+		Example: `q app install -n zentao or q app install zentao`,
 		Args:    cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 1 {
@@ -123,7 +123,7 @@ func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 			return nil
 		},
 	}
-	app.Flags().StringVarP(&name, "name", "n", "zentao-open", "app name")
+	app.Flags().StringVarP(&name, "name", "n", "zentao", "app name")
 	app.Flags().StringVarP(&domain, "domain", "d", "", "app subdomain")
 	app.Flags().BoolVar(&useip, "api-useip", true, "api use ip")
 	return app
