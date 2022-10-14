@@ -52,15 +52,21 @@ func domainClean(f factory.Factory) *cobra.Command {
 					return
 				}
 			}
-			kclient, _ := k8s.NewSimpleClient()
-			cm, err := kclient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Get(context.TODO(), "q-suffix-host", metav1.GetOptions{})
-			if err != nil {
-				return
+			secretKey := cfg.ClusterID
+			if len(secretKey) == 0 {
+				kclient, _ := k8s.NewSimpleClient()
+				cm, err := kclient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Get(context.TODO(), "q-suffix-host", metav1.GetOptions{})
+				if err != nil {
+					return
+				}
+				secretKey = cm.Data["auth"]
+				cfg.ClusterID = secretKey
+				cfg.SaveConfig()
 			}
 			// TODO 获取subdomain, maindomain
 			subDomain, mainDomain := kutil.SplitDomain(cfg.Domain)
 			reqbody := domain.ReqBody{
-				SecretKey:  cm.Data["auth"],
+				SecretKey:  secretKey,
 				SubDomain:  subDomain,
 				MainDomain: mainDomain,
 			}

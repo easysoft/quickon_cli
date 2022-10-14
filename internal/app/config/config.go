@@ -28,6 +28,7 @@ type Node struct {
 type Config struct {
 	Generated       time.Time `json:"-" yaml:"-"`
 	ConsolePassword string    `yaml:"console-password,omitempty" json:"console-password,omitempty"`
+	ClusterID       string    `yaml:"cluster_id" json:"cluster_id"`
 	DB              string    `yaml:"db" json:"db"`
 	Domain          string    `yaml:"domain" json:"domain"`
 	APIToken        string    `yaml:"api_token" json:"api_token"`

@@ -5,8 +5,9 @@
 qcmd=${1:-"/usr/local/bin/qcadmin"}
 
 if [ -f "${qcmd}" ]; then
-  echo "${qcmd} clean helm"
+  echo "${qcmd} clean doamin"
   ${qcmd} experimental tools domain clean
+  echo "${qcmd} clean helm"
   ${qcmd} experimental helm uninstall --name cne-api -n cne-system
   ${qcmd} experimental helm uninstall --name qucheng -n cne-system
   ${qcmd} experimental helm repo-del
@@ -83,6 +84,9 @@ done
 ip link delete cni0
 ip link delete flannel.1
 ip link delete flannel-v6.1
+ip link delete kube-ipvs0
+ip link delete flannel-wg
+ip link delete flannel-wg-v6
 rm -rf /var/lib/cni/
 iptables-save | grep -v KUBE- | grep -v CNI- | grep -v flannel | iptables-restore
 ip6tables-save | grep -v KUBE- | grep -v CNI- | grep -v flannel | ip6tables-restore
@@ -122,6 +126,7 @@ done
 [ -d "/var/lib/rancher/k3s" ] && rm -rf /var/lib/rancher/k3s
 [ -d "/var/lib/kubelet" ] && rm -rf /var/lib/kubelet
 [ -d "/opt/quickon" ] && rm -rf /opt/quickon
+[ -d "/etc/quickon" ] && rm -rf /etc/quickon
 
 # 暂时禁用selinux
 # if type yum >/dev/null 2>&1; then

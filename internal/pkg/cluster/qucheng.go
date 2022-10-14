@@ -46,7 +46,8 @@ func (p *Cluster) getOrCreateUUIDAndAuth() (auth string, err error) {
 			}
 		}
 	}
-	return cm.Data["auth"], nil
+	p.Status.UUID = cm.Data["auth"]
+	return p.Status.UUID, nil
 }
 
 func (p *Cluster) genSuffixHTTPHost(ip string) (domain, tls string, err error) {
@@ -143,6 +144,7 @@ func (p *Cluster) InstallQuCheng() error {
 	cfg, _ := config.LoadConfig()
 	cfg.Domain = p.Domain
 	cfg.APIToken = token
+	cfg.ClusterID = p.Status.UUID
 	cfg.SaveConfig()
 	chartversion := common.GetVersion(p.QuchengVersion)
 	p.Log.Info("start deploy cne operator")

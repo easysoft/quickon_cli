@@ -42,6 +42,7 @@ type Metadata struct {
 
 type Status struct {
 	Status string `json:"status,omitempty"`
+	UUID   string `json:"uuid,omitempty" yaml:"uuid,omitempty"`
 }
 
 // Flag struct for flag.
