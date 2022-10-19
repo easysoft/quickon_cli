@@ -32,6 +32,7 @@ import (
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
 
+	"github.com/shirou/gopsutil/v3/disk"
 	netutil "k8s.io/apimachinery/pkg/util/net"
 	"k8s.io/apimachinery/pkg/util/validation"
 	system "k8s.io/system-validators/validators"
@@ -588,6 +589,32 @@ func (ncc NumCPUCheck) Check() error {
 	return nil
 }
 
+// NumDiskCheck checks if current number of Disk is not less than required
+type NumDiskCheck struct {
+	NumDisk int
+}
+
+// Name returns the label for NumDiskCheck
+func (NumDiskCheck) Name() string {
+	return "NumDisk"
+}
+
+// Check number of Disk required by qcadmin
+func (ndc NumDiskCheck) Check() error {
+	log := log.GetInstance()
+	log.Debug("validating number of Disk")
+	mountRoot, err := disk.Usage("/")
+	if err != nil || mountRoot == nil {
+		return errors.Errorf("disk check failed, reason: %v", err)
+	}
+	numDisk := float64(mountRoot.Total) / 1024.0 / 1024.0 / 1024.0
+	if numDisk < float64(ndc.NumDisk) {
+		return errors.Errorf("the number of available Disk %.2f GB is less than the required %d GB", numDisk, ndc.NumDisk)
+	}
+	log.Donef("the number of available Disk %.2f GB is greater than the required %d GB", numDisk, ndc.NumDisk)
+	return nil
+}
+
 // MemCheck checks if the number of megabytes of memory is not less than required
 type MemCheck struct {
 	Mem uint64
@@ -614,6 +641,7 @@ func RunInitNodeChecks(execer utilsexec.Interface, cfg *types.Metadata, ignorePr
 	// manifestsDir := filepath.Join(kubeadmconstants.KubernetesDir, kubeadmconstants.ManifestsSubDirName)
 	checks := []Checker{
 		NumCPUCheck{NumCPU: common.ControlPlaneNumCPU},
+		NumDiskCheck{NumDisk: common.ControlPlaneNumDisk},
 		// Linux only
 		// TODO: support other OS, if control-plane is supported on it.
 		MemCheck{Mem: common.ControlPlaneMem},
