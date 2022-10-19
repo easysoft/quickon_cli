@@ -36,6 +36,8 @@ const (
 	// ControlPlaneMem is the number of megabytes of memory required on the control-plane
 	// Below that amount of RAM running a stable control plane would be difficult.
 	ControlPlaneMem = 1700
+	// ControlPlaneNumDisk is the number of Disk required on control-plane
+	ControlPlaneNumDisk = 40
 )
 
 const (
