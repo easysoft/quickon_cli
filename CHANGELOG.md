@@ -1,5 +1,28 @@
 # Changelog
 
+## v1.2.9 (2022-10-21)
+
+ * [19e67cb](https://github.com/easysoft/quickon_cli/commit/19e67cbc55c568f31fe5928953584d0a0c052d12) feat(2.0): release 2.0 support
+ * [17d0c6f](https://github.com/easysoft/quickon_cli/commit/17d0c6fecdbfc7d59f2567a7f505c1da2d563052) feat(precheck): add precheck disk
+ * [bc53073](https://github.com/easysoft/quickon_cli/commit/bc53073a50ca70d7460303e99845ce0f203fd199) build(deps): bump github.com/spf13/cobra from 1.5.0 to 1.6.0 (#90)
+ * [efe91b5](https://github.com/easysoft/quickon_cli/commit/efe91b5053aa50c4374471afaaf1b73fb56136b5) feat(update): fix uninstall
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
+## v1.2.8 (2022-10-11)
+
+ * [3fdc13d](https://github.com/easysoft/quickon_cli/commit/3fdc13dca1093654d0196a6d4f4fb106b80eaa16) feat(app): rename default app zentao-open to zentao
+ * [21ba5a4](https://github.com/easysoft/quickon_cli/commit/21ba5a46a3d8f52e697ada10ad4d81893d2f6fc8) build(deps): bump github.com/imroc/req/v3 from 3.23.0 to 3.24.0 (#86)
+ * [7492568](https://github.com/easysoft/quickon_cli/commit/7492568fd01eb406890682d06e90e482718f1ba7) style(style): fmt code
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v1.2.7 (2022-09-29)
 
  * [6f822f1](https://github.com/easysoft/quickon_cli/commit/6f822f10156ad9c13d3feb6879e2b56e54cffdd8) feat(install): support operator install by version
