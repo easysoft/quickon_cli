@@ -51,7 +51,7 @@ chmod 777 /opt/quickon/backup
 
 [ -z "$QUICKON_DOMAIN" ] && export QUICKON_DOMAIN=demo.haogs.cn
 
-[ -z "$QUICKON_HTTPS_PORT" ] && export QUICKON_HTTP_PORT=443
+[ -z "$QUICKON_HTTP_PORT" ] && export QUICKON_HTTP_PORT=443
 
 [ -z "$QUICKON_HTTPS_PORT" ] && export QUICKON_HTTPS_PORT=80
 
