@@ -27,7 +27,7 @@ qcadmin is an open-source lightweight cli tool for managing qucheng.
       <td>2 CPU cores, 4 GB memory, 40 GB disk space</td>
     </tr>
     <tr>
-      <td><b>Ubuntu</b> <i>16.04</i>, <i>18.04</i></td>
+      <td><b>Ubuntu</b> <i>20.04</i>, <i>18.04</i></td>
       <td>2 CPU cores, 4 GB memory, 40 GB disk space</td>
     </tr>
 		<tr>
