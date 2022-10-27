@@ -36,9 +36,14 @@ spec:
       serviceAccountName: qcli-cm
       containers:
       - name: qcli-cm
-        image: hub.qucheng.com/platform/podinstall:2022092816
+        image: hub.qucheng.com/platform/podinstall:2022102713
         imagePullPolicy: Always
         env:
+        - name: APP_NODE_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.hostIP
         - name: APP_DOMAIN
           value: demo.haogs.cn
         - name: APP_TOKEN
@@ -52,6 +57,8 @@ spec:
           mountPath: /qcli/k3syaml
         - name: qcfg
           mountPath: /qcli/root
+        - name: qbin
+          mountPath: /qcli/qbin
       volumes:
       - name: k3syaml
         hostPath:
@@ -59,5 +66,8 @@ spec:
       - name: qcfg
         hostPath:
           path: /root
+      - name: qbin
+        hostPath:
+          path: /usr/local/bin
       restartPolicy: Never
 

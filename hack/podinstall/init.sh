@@ -1,53 +1,41 @@
-#!/usr/bin/env sh
+#!/bin/bash
 
-command_exists() {
-	command -v "$@" > /dev/null 2>&1
-}
+[ -f "/.q.init" ] && exit 0
 
-if ! command_exists k3s ; then
-  echo "download k3s"
-  wget https://ghproxy.com/https://github.com/k3s-io/k3s/releases/download/v1.24.7%2Bk3s1/k3s
-  chmod +x k3s
-  mv k3s /usr/local/bin/k3s
-fi
-
-if ! command_exists kubectl; then
-  cp -a /usr/local/bin/k3s /usr/local/bin/kubectl
-fi
-
-cat > /etc/systemd/system/k3s.service <<EOF
-[Unit]
-Description=k3s server
-ConditionFileIsExecutable=/usr/local/bin/k3s
-After=network-online.target
-
-[Service]
-Type=notify
-Type=process
-Delegate=yes
-EnvironmentFile=-/etc/sysconfig/%N
-EnvironmentFile=-/etc/default/%N
-EnvironmentFile=-/etc/systemd/system/k3s.service.env
-StartLimitInterval=5
-StartLimitBurst=10
-ExecStartPre=-/bin/sh -xc '! /usr/bin/systemctl is-enabled --quiet nm-cloud-setup.service'
-ExecStartPre=-/sbin/modprobe br_netfilter
-ExecStartPre=-/sbin/modprobe overlay
-ExecStart=/usr/local/bin/k3s "server" "--docker" "--kubelet-arg=max-pods=220" "--kube-proxy-arg=proxy-mode=ipvs" "--kube-proxy-arg=masquerade-all=true" "--kube-proxy-arg=metrics-bind-address=0.0.0.0" "--data-dir=/opt/quickon/platform" "--pause-image=hub.qucheng.com/library/k3s-pause:3.6" "--disable-network-policy" "--disable-helm-controller" "--disable=servicelb,traefik" " --tls-san=kapi.qucheng.local" "--service-node-port-range=22767-32767" "--system-default-registry=hub.qucheng.com/library" "--cluster-cidr=10.42.0.0/16" "--service-cidr=10.43.0.0/16"
-LimitNOFILE=1048576
-LimitNPROC=infinity
-LimitCORE=infinity
-TasksMax=infinity
-Restart=always
-RestartSec=30
-[Install]
-WantedBy=multi-user.target
-EOF
+[ -d "/opt/quickon/init" ] || mkdir -pv /opt/quickon/init
 
 mkdir -pv /opt/quickon/platform/server/manifests /opt/quickon/backup
+
 chmod 777 /opt/quickon/backup
 
-[ -f "/opt/quickon/init/env" ] && source /opt/quickon/init/env
+wait_for_mount() {
+    local retries=${MAXWAIT:-300}
+    echo "Check whether the Mount is available."
+
+    for ((i = 1; i <= $retries; i += 1)); do
+        if [ -f "/opt/quickon/init/env" ] ;
+        then
+            echo "Mount is ready."
+            break
+        fi
+
+        if [ -f "/mnt/env" ] ;
+        then
+            cp -a /mnt/env /opt/quickon/init/env
+        fi
+
+        echo "Waiting Mount $i seconds"
+        sleep 1
+
+        if [ "$i" == "$retries" ]; then
+            echo "Unable to connect to mount"
+            return 1
+        fi
+    done
+    return 0
+}
+
+wait_for_mount && source /opt/quickon/init/env || echo "mount env failed"
 
 [ -z "$QUICKON_DOMAIN" ] && export QUICKON_DOMAIN=demo.haogs.cn
 
@@ -133,3 +121,7 @@ spec:
 EOF
 
 systemctl enable k3s --now
+
+touch /.q.init
+
+exit 0
