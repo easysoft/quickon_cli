@@ -1,0 +1,71 @@
+package httptls
+
+import (
+	"crypto/tls"
+	"fmt"
+	"net/http"
+	"os"
+	"strings"
+	"time"
+
+	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/app/config"
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
+	"github.com/sirupsen/logrus"
+)
+
+// CheckReNewCertificate 检查证书是否过期
+func CheckReNewCertificate() error {
+	cfg, _ := config.LoadConfig()
+	domain := cfg.Domain
+	if strings.HasSuffix(domain, "haogs.cn") || strings.HasSuffix(domain, "corp.cc") {
+		needRenew, err := checkCertificate(fmt.Sprintf("https://%s",domain))
+		if err != nil {
+			logrus.Errorf("check domain %s tls err: %v", domain, err)
+			return err
+		}
+		if needRenew {
+			return renewCertificate(domain)
+		}
+	}
+	return nil
+}
+
+func checkCertificate(domain string) (bool, error) {
+	client := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		},
+		Timeout: 10 * time.Second,
+	}
+	resp, err := client.Get(domain)
+	if err != nil {
+		return false, err
+	}
+	defer func() { _ = resp.Body.Close() }()
+	for _, cert := range resp.TLS.PeerCertificates {
+		if !cert.NotAfter.After(time.Now()) {
+			logrus.Warnf("domain %s tls expired", domain)
+			return true, nil
+		}
+		if cert.NotAfter.Sub(time.Now()).Hours() < 7*24 {
+			logrus.Warnf("domain %s tls expire after %fh", domain, cert.NotAfter.Sub(time.Now()).Hours())
+			return true, nil
+		}
+	}
+	return false, nil
+}
+
+func renewCertificate(domain string) error {
+	ds := strings.Split(domain, ".")
+	mainDomain := fmt.Sprintf("%s.%s", ds[len(ds)-2], ds[len(ds)-1])
+	// renew default tls certificate
+	if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("https://pkg.qucheng.com/ssl/%s/%s/tls.yaml", mainDomain, domain), "-n", common.DefaultSystem).Run(); err != nil {
+				logrus.Warnf("load renew tls cert for %s failed, reason: %v", common.DefaultSystem, err)
+	}
+	// renew ingress tls certificate
+	if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("https://pkg.qucheng.com/ssl/%s/%s/tls.yaml", mainDomain, domain)).Run(); err != nil {
+				logrus.Warnf("load renew tls cert for default failed, reason: %v", err)
+	}
+	return nil
+}

@@ -20,5 +20,6 @@ func newCmdManage(f factory.Factory) *cobra.Command {
 	}
 	m.AddCommand(manage.NewCmdPlugin(f))
 	m.AddCommand(manage.NewResetPassword(f))
+	m.AddCommand(manage.NewRenewTLS(f))
 	return m
 }
