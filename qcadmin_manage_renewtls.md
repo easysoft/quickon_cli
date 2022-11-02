@@ -1,17 +1,16 @@
-## qcadmin manage reset-password
+## qcadmin manage renewtls
 
-reset qucheng superadmin password
+renew qucheng tls domain
 
 ```
-qcadmin manage reset-password [flags]
+qcadmin manage renewtls [flags]
 ```
 
 ### Options
 
 ```
-      --api-useip         api use ip (default true)
-  -h, --help              help for reset-password
-  -p, --password string   superadmin password
+  -f, --force   force renew tls
+  -h, --help    help for renewtls
 ```
 
 ### Options inherited from parent commands
