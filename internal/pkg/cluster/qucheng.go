@@ -145,11 +145,19 @@ func (p *Cluster) InstallQuCheng() error {
 	cfg.Domain = p.Domain
 	cfg.APIToken = token
 	cfg.ClusterID = p.Status.UUID
+	cfg.S3.Username = expass.PwGenAlphaNum(8)
+	cfg.S3.Password = expass.PwGenAlphaNumSymbols(16)
 	cfg.SaveConfig()
 	chartversion := common.GetVersion(p.QuchengVersion)
 	p.Log.Info("start deploy cne operator")
-	if err := qcexec.CommandRun(os.Args[0], "manage", "plugins", "enable", "cne-operator", "--version", chartversion); err != nil {
-		p.Log.Warnf("deploy cne-operator err: %v", err)
+	operatorargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultCneOperatorName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultCneOperatorName, "--namespace", common.DefaultSystem,
+		"--set", "minio.ingress.enabled=true",
+		"--set", "minio.ingress.host=s3." + p.Domain,
+		"--set", "minio.auth.username=" + cfg.S3.Username,
+		"--set", "minio.auth.password=" + cfg.S3.Password,
+	}
+	if helmstd, err := qcexec.Command(os.Args[0], operatorargs...).CombinedOutput(); err != nil {
+		p.Log.Warnf("deploy cne-operator err: %v, std: %s", err, string(helmstd))
 	} else {
 		p.Log.Done("deployed cne-operator success")
 	}

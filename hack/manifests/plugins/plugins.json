@@ -14,21 +14,5 @@
 				"builtin": true
 			}
 		]
-	},
-	{
-			"type": "cne-operator",
-			"default": "cne-operator",
-			"item": [
-				{
-					"name": "cne-operator",
-					"description": "渠成云原生应用交付平台控制器",
-					"version": "1.6.0",
-					"home": "https://www.qucheng.com",
-					"appversion": "1.6.0",
-					"path": "cne-operator",
-					"tool": "helm",
-					"builtin": true
-				}
-			]
-		}
+	}
 ]

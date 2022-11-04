@@ -36,6 +36,12 @@ type Config struct {
 	Token           string    `yaml:"token" json:"token"`
 	Master          []Node    `yaml:"master" json:"master"`
 	Worker          []Node    `yaml:"worker" json:"worker"`
+	S3              S3Config  `yaml:"s3" json:"s3"`
+}
+
+type S3Config struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 func NewConfig() *Config {
