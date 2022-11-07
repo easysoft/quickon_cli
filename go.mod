@@ -15,7 +15,7 @@ require (
 	github.com/ergoapi/util v0.2.23
 	github.com/gofrs/flock v0.8.1
 	github.com/gosuri/uitable v0.0.4
-	github.com/imroc/req/v3 v3.24.0
+	github.com/imroc/req/v3 v3.25.0
 	github.com/inconshreveable/go-update v0.0.0-20160112193335-8152e7eb6ccf
 	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213
 	github.com/kardianos/service v1.2.1-0.20211104163826-b9d1d5b7279b
