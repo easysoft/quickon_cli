@@ -37,7 +37,7 @@ builds:
       - linux
     goarch:
       - amd64
-      - arm64
+      # - arm64
       # - mips
       # - mipsle
       # - s390x
@@ -47,6 +47,41 @@ builds:
     hooks:
       post:
         - upx -9 -f -q "{{ .Path }}"
+    main: main.go
+    binary: qcadmin
+  - id: linux-arm-build
+    ldflags:
+      - -w -s -X github.com/easysoft/qcadmin/common.Version={{.Summary}}
+      - -X github.com/easysoft/qcadmin/common.BuildDate={{.CommitDate}}
+      - -X github.com/easysoft/qcadmin/common.GitCommitHash={{.ShortCommit}}
+      - -X k8s.io/client-go/pkg/version.gitVersion={{.Summary}}
+      - -X k8s.io/client-go/pkg/version.gitCommit={{.FullCommit}}
+      - -X k8s.io/client-go/pkg/version.gitTreeState=dirty
+      - -X k8s.io/client-go/pkg/version.buildDate={{.CommitDate}}
+      - -X k8s.io/client-go/pkg/version.gitMajor=1
+      - -X k8s.io/client-go/pkg/version.gitMinor=23
+      - -X k8s.io/component-base/version.gitVersion={{.Summary}}
+      - -X k8s.io/component-base/version.gitCommit={{.FullCommit}}
+      - -X k8s.io/component-base/version.gitTreeState=dirty
+      - -X k8s.io/component-base/version.gitMajor=1
+      - -X k8s.io/component-base/version.gitMinor=23
+      - -X k8s.io/component-base/version.buildDate={{.CommitDate}}
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - arm64
+      # - loong64
+      # - mips
+      # - mipsle
+      # - s390x
+      # - riscv64
+    # gomips:
+    #   - softfloat
+    # hooks:
+    #   post:
+    #     - upx -9 -f -q "{{ .Path }}"
     main: main.go
     binary: qcadmin
   - id: macos-build

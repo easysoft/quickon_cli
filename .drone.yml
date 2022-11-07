@@ -39,6 +39,7 @@ steps:
     settings:
       debug: true
       path: ./dist
+      include: amd64
 
   - name: upload stable
     image: ysicing/drone-plugin-cos
