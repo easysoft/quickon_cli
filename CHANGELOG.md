@@ -1,5 +1,26 @@
 # Changelog
 
+## v1.2.11 (2022-11-02)
+
+ * [a7c43a1](https://github.com/easysoft/quickon_cli/commit/a7c43a1bc1995c8c40cf409de6f00f44f41a81e7) feat(update): support renew tls
+ * [703869a](https://github.com/easysoft/quickon_cli/commit/703869a423b4683d632d7c03ed1a38b9e277de7d) fix(typo): update
+
+### Contributors
+
+ * ysicing
+
+## v1.2.10 (2022-10-28)
+
+ * [7b6d83f](https://github.com/easysoft/quickon_cli/commit/7b6d83f36fdf66f46112c2e4e6911af2fae4bcfb) docs(os): update support linux
+ * [583d44b](https://github.com/easysoft/quickon_cli/commit/583d44b62e0f7f1b94569499ffeef8b50486acf9) fix(typo): fix env typo
+ * [d360a74](https://github.com/easysoft/quickon_cli/commit/d360a749894e15c52321847c937e7d190aff4f68) feat(update): update k3s version
+ * [812525a](https://github.com/easysoft/quickon_cli/commit/812525a2329b269a9aff0fde43f66689b7590674) build(deps): bump github.com/docker/docker (#92)
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v1.2.9 (2022-10-21)
 
  * [19e67cb](https://github.com/easysoft/quickon_cli/commit/19e67cbc55c568f31fe5928953584d0a0c052d12) feat(2.0): release 2.0 support
