@@ -50,6 +50,7 @@ func CheckReNewCertificate(force bool) (err error) {
 func checkCertificate(domain string) (bool, error) {
 	client := &http.Client{
 		Transport: &http.Transport{
+			// nolint:gosec
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		},
 		Timeout: 10 * time.Second,

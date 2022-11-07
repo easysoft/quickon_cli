@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    job-name: renewtls
+  name: renewtls
+  namespace: cne-system
+spec:
+  backoffLimit: 1
+  completions: 1
+  parallelism: 1
+  template:
+    metadata:
+      labels:
+        job-name: renewtls
+    spec:
+      containers:
+      - env:
+        - name: DOMAIN
+          value: zcz13.haogs.cn
+        image: hub.qucheng.com/platform/tlsrenew:2022
+        imagePullPolicy: Always
+        name: renewtls
+      restartPolicy: OnFailure
+      serviceAccount: qucheng
+      serviceAccountName: qucheng
+      terminationGracePeriodSeconds: 30
