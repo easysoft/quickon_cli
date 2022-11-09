@@ -1,5 +1,33 @@
 # Changelog
 
+## v1.3.2 (2022-11-09)
+
+ * [acd91b2](https://github.com/easysoft/quickon_cli/commit/acd91b2d360cbe1eb09eebe7d627a06c9c0464c8) fix(renewtls): fix renewtls typo
+
+### Contributors
+
+ * ysicing
+
+## v1.3.1 (2022-11-07)
+
+ * [d2b9717](https://github.com/easysoft/quickon_cli/commit/d2b97179081943e49f7d4f4f0d0320b7251a3336) fix(upx): disable upx for arm arch
+
+### Contributors
+
+ * ysicing
+
+## v1.3.0 (2022-11-07)
+
+ * [2fd01a8](https://github.com/easysoft/quickon_cli/commit/2fd01a8872492317f86af633103876a88de8307e) feat(2.2): release 2.2
+ * [c651b82](https://github.com/easysoft/quickon_cli/commit/c651b82c36395d4c1fadfb39dc04a77f23377cba) feat(update): update
+ * [d084b08](https://github.com/easysoft/quickon_cli/commit/d084b0879e6322669d0fc03be363ea73e24c4ce9) feat(s3): add s3 config
+ * [915aa86](https://github.com/easysoft/quickon_cli/commit/915aa86fdff889d02afb71de4b9a1f0f8fbb40b1) build(deps): bump github.com/imroc/req/v3 from 3.24.0 to 3.25.0
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v1.2.11 (2022-11-02)
 
  * [a7c43a1](https://github.com/easysoft/quickon_cli/commit/a7c43a1bc1995c8c40cf409de6f00f44f41a81e7) feat(update): support renew tls
