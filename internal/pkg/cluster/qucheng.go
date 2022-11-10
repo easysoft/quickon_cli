@@ -146,7 +146,7 @@ func (p *Cluster) InstallQuCheng() error {
 	cfg.APIToken = token
 	cfg.ClusterID = p.Status.UUID
 	cfg.S3.Username = expass.PwGenAlphaNum(8)
-	cfg.S3.Password = expass.PwGenAlphaNumSymbols(16)
+	cfg.S3.Password = expass.PwGenAlphaNum(16)
 	cfg.SaveConfig()
 	chartversion := common.GetVersion(p.QuchengVersion)
 	p.Log.Info("start deploy cne operator")
