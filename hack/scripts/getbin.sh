@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -xe
+
 if [ ! -f "hack/bin/k3s-linux-amd64" ]; then
 	wget -O hack/bin/k3s-linux-amd64 https://github.com/k3s-io/k3s/releases/download/v1.24.7%2Bk3s1/k3s
 fi
