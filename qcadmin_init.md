@@ -36,7 +36,7 @@ qcadmin init [flags]
 ```
       --app string                   install default app (default "zentao")
       --cluster-data-source string   data source for cluster, default is sqlite
-      --console-password string      qucheng console default password (default "^3NRieB.%noZ&UVR")
+      --console-password string      qucheng console default password (default "jD#rx=XUG-=(3^=>")
       --disable-ingress              disable nginx ingress plugins
       --disable-install-app          disable install app
       --domain string                application custom domain name
