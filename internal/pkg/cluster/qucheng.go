@@ -156,6 +156,9 @@ func (p *Cluster) InstallQuCheng() error {
 		"--set", "minio.auth.username=" + cfg.S3.Username,
 		"--set", "minio.auth.password=" + cfg.S3.Password,
 	}
+	if len(chartversion) > 0 {
+		operatorargs = append(operatorargs, "--version", chartversion)
+	}
 	if helmstd, err := qcexec.Command(os.Args[0], operatorargs...).CombinedOutput(); err != nil {
 		p.Log.Warnf("deploy cne-operator err: %v, std: %s", err, string(helmstd))
 	} else {
