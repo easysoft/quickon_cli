@@ -25,8 +25,8 @@ var rootDirs = []string{
 }
 
 var qDirs = []string{
-	common.DefaultQuickonPlatformDir,
-	common.DefaultQuickonBackupDir,
+	common.GetDefaultQuickonPlatformDir(""),
+	common.GetDefaultQuickonBackupDir(""),
 }
 
 func initRootDirectory() error {
@@ -42,7 +42,8 @@ func initRootDirectory() error {
 		}
 	}
 
-	os.Chmod(common.DefaultQuickonBackupDir, common.FileMode0777)
+	// TODO 自定义目录可能有问题
+	os.Chmod(common.GetDefaultQuickonBackupDir(""), common.FileMode0777)
 
 	if err := static.StageFiles(); err != nil {
 		return errors.Errorf("failed to stage files, err: %s", err)

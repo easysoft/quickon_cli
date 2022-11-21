@@ -37,6 +37,7 @@ type Config struct {
 	Master          []Node    `yaml:"master" json:"master"`
 	Worker          []Node    `yaml:"worker" json:"worker"`
 	S3              S3Config  `yaml:"s3" json:"s3"`
+	DataDir         string    `yaml:"datadir" json:"datadir"`
 }
 
 type S3Config struct {

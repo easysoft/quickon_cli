@@ -14,6 +14,7 @@ import (
 
 	"github.com/easysoft/qcadmin/cmd/version"
 	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/selfupdate"
@@ -66,11 +67,12 @@ func (up option) DoQcadmin() {
 		up.log.Errorf("upgrade failed, reason: %v", err)
 		return
 	}
-	if !file.CheckFileExists(fmt.Sprintf("%s/storage", common.DefaultQuickonPlatformDir)) {
-		os.Symlink(common.K3sDefaultDir, common.DefaultQuickonPlatformDir)
+	cfg, _ := config.LoadConfig()
+	if !file.CheckFileExists(fmt.Sprintf("%s/storage", common.GetDefaultQuickonPlatformDir(cfg.DataDir))) {
+		os.Symlink(common.K3sDefaultDir, common.GetDefaultQuickonPlatformDir(""))
 	}
-	os.Chmod(common.DefaultQuickonBackupDir, common.FileMode0777)
-	up.log.Donef("Successfully updated ergo to version %s", lastversion)
+	os.Chmod(common.GetDefaultQuickonBackupDir(cfg.DataDir), common.FileMode0777)
+	up.log.Donef("Successfully updated q to version %s", lastversion)
 	up.log.Debugf("gen new version manifest")
 	up.log.Infof("Release note: \n\t release %s ", lastversion)
 	up.log.Infof("Upgrade docs: \n\t https://github.com/easysoft/quickon_cli/wiki/upgrade")

@@ -38,6 +38,7 @@ type Metadata struct {
 	ImportDefaultApp  string `json:"import-default-app,omitempty" yaml:"import-default-app,omitempty"`
 	DisableInstallApp bool   `json:"disable-install-app,omitempty" yaml:"disable-install-app,omitempty"`
 	ConsolePassword   string `json:"console-password,omitempty" yaml:"console-password,omitempty"`
+	DataDir           string `json:"data-dir,omitempty" yaml:"data-dir,omitempty"`
 }
 
 type Status struct {
