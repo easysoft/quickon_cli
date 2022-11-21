@@ -1,11 +1,31 @@
 # Changelog
 
-## v1.3.2 (2022-11-09)
+## v1.3.3 (2022-11-21)
 
+ * [cd723d7](https://github.com/easysoft/quickon_cli/commit/cd723d7119c24868e9fa06a40033107b78789c20) support custom data dir (#103)
+ * [5044748](https://github.com/easysoft/quickon_cli/commit/5044748651d917fa87e0b011ec186581342935a1) build(deps): bump github.com/shirou/gopsutil/v3 from 3.22.9 to 3.22.10 (#102)
+ * [e79b6c4](https://github.com/easysoft/quickon_cli/commit/e79b6c44a0d14f7c1d9929494457ce6bc6a2e4ae) feat(k3s): update k3s to v1.24.8 (#101)
+ * [a963935](https://github.com/easysoft/quickon_cli/commit/a963935008553eb5d20d39febd8270b5968d06fd) build(deps): bump github.com/docker/docker (#99)
+ * [f08bca4](https://github.com/easysoft/quickon_cli/commit/f08bca4e0e856ca920030dee0397db8526d1e78b) fix(operator): fix operator install with version
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+ * 缘生
+
+## v1.3.2 (2022-11-10)
+
+ * [007b89e](https://github.com/easysoft/quickon_cli/commit/007b89e77fb912bbeef0003d862895c775f3e345) fix(backup): fix backup password typo
+ * [ab66ce1](https://github.com/easysoft/quickon_cli/commit/ab66ce190720fc1c6668e91bf4deaef56e206c38) chore(build): disable upx
+ * [5f7f8ff](https://github.com/easysoft/quickon_cli/commit/5f7f8ff77904582bf591e10cada3c159eb678694) build(deps): bump github.com/spf13/cobra from 1.6.0 to 1.6.1 (#97)
+ * [f47433b](https://github.com/easysoft/quickon_cli/commit/f47433b88ee1b361793063016907505016eeb1c0) chore(github-action): disable go cache
+ * [164b8ea](https://github.com/easysoft/quickon_cli/commit/164b8ea53dd28863d8cbd6a07d1c110a4d619e49) build(deps): bump golang.org/x/sys from 0.1.0 to 0.2.0 (#96)
  * [acd91b2](https://github.com/easysoft/quickon_cli/commit/acd91b2d360cbe1eb09eebe7d627a06c9c0464c8) fix(renewtls): fix renewtls typo
 
 ### Contributors
 
+ * dependabot[bot]
  * ysicing
 
 ## v1.3.1 (2022-11-07)
