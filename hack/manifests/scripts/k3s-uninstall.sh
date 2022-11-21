@@ -120,6 +120,10 @@ for cmd in kubectl crictl ctr; do
     fi
 done
 
+datadir=$(cat /root/.qc/config/cluster.yaml | grep datadir | awk '{print $2}')
+
+[ ! -z "$datadir" ] && rm -rf $datadir
+
 [ -d "/etc/rancher/k3s" ] && rm -rf /etc/rancher/k3s
 [ -d "/run/k3s" ] && rm -rf /run/k3s
 [ -d "/run/flannel" ] && rm -rf /run/flannel

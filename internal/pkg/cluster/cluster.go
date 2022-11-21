@@ -54,6 +54,7 @@ func NewCluster() *Cluster {
 			DisableInstallApp: false,
 			ImportDefaultApp:  "zentao",
 			ConsolePassword:   expass.PwGenAlphaNumSymbols(16),
+			DataDir:           common.DefaultQuickonDataDir,
 		},
 		M: new(syncmap.Map),
 	}
@@ -78,6 +79,12 @@ func (p *Cluster) GetCreateNativeOptions() []types.Flag {
 			P:     &p.ConsolePassword,
 			V:     p.ConsolePassword,
 			Usage: "qucheng console default password",
+		},
+		{
+			Name:  "data-dir",
+			P:     &p.DataDir,
+			V:     p.DataDir,
+			Usage: "Folder to hold state default /opt/quickon",
 		},
 	}
 }
@@ -326,8 +333,8 @@ func (p *Cluster) InitK3sCluster() error {
 	os.Symlink(common.K3sKubeConfig, d)
 	p.Log.Donef("create kubeconfig soft link %v ---> %v", common.K3sKubeConfig, d)
 	os.Rename(common.K3sDefaultDir, common.K3sDefaultDir+"_"+time.Now().Format("20060102150405"))
-	os.Symlink(common.DefaultQuickonPlatformDir, common.K3sDefaultDir)
-	p.Log.Donef("create kubeconfig soft link %v ---> %v", common.DefaultQuickonPlatformDir, common.K3sDefaultDir)
+	os.Symlink(common.GetDefaultQuickonPlatformDir(p.DataDir), common.K3sDefaultDir)
+	p.Log.Donef("create kubeconfig soft link %v ---> %v", common.GetDefaultQuickonPlatformDir(p.DataDir), common.K3sDefaultDir)
 	kclient, _ := k8s.NewSimpleClient()
 	if kclient != nil {
 		_, err = kclient.CreateNamespace(context.TODO(), common.DefaultSystem, metav1.CreateOptions{})
@@ -358,7 +365,7 @@ func (p *Cluster) configCommonOptions() []string {
 		"--kube-proxy-arg=proxy-mode=ipvs",
 		"--kube-proxy-arg=masquerade-all=true",
 		"--kube-proxy-arg=metrics-bind-address=0.0.0.0",
-		"--data-dir="+common.DefaultQuickonPlatformDir,
+		"--data-dir="+common.GetDefaultQuickonPlatformDir(p.DataDir),
 		"--pause-image=hub.qucheng.com/library/k3s-pause:3.6")
 
 	return args

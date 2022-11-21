@@ -120,3 +120,21 @@ func GetCustomQuickonDir(path string) string {
 	}
 	return path
 }
+
+func GetDefaultQuickonBackupDir(path string) string {
+	if len(path) == 0 {
+		path = DefaultQuickonDataDir
+	} else {
+		path = strings.TrimSuffix(path, "/")
+	}
+	return fmt.Sprintf("%s/backup", path)
+}
+
+func GetDefaultQuickonPlatformDir(path string) string {
+	if len(path) == 0 {
+		path = DefaultQuickonDataDir
+	} else {
+		path = strings.TrimSuffix(path, "/")
+	}
+	return fmt.Sprintf("%s/platform", path)
+}
