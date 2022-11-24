@@ -106,7 +106,7 @@ func (p *Cluster) InstallQuCheng() error {
 			return true, nil
 		})
 		if err != nil {
-			p.Domain = "demo.haogs.cn"
+			p.Domain = "demo.corp.cc"
 			p.Log.Warnf("gen suffix domain failed, reason: %v, use default domain: %s", err, p.Domain)
 		}
 		p.Log.Infof("load %s tls cert", p.Domain)

@@ -120,8 +120,8 @@ func domainAdd(f factory.Factory) *cobra.Command {
 				// TODO
 				domain, _, err = suffixdomain.GenerateDomain(ip, auth, suffixdomain.GenCustomDomain(suffixdomain.SearchCustomDomain(ip, auth, "")))
 				if len(domain) == 0 {
-					log.Warnf("gen domain failed: %v, use default domain: demo.haogs.cn", err)
-					domain = "demo.haogs.cn"
+					log.Warnf("gen domain failed: %v, use default domain: demo.corp.cc", err)
+					domain = "demo.corp.cc"
 				}
 				cfg.Domain = domain
 			} else {

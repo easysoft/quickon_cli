@@ -45,7 +45,7 @@ spec:
               apiVersion: v1
               fieldPath: status.hostIP
         - name: APP_DOMAIN
-          value: demo.haogs.cn
+          value: demo.corp.cc
         - name: APP_TOKEN
           value: demo-haogs-cn
         - name: APP_HTTP_PORT

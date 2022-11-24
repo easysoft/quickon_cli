@@ -64,5 +64,5 @@ func SplitDomain(domain string) (string, string) {
 			return strings.ReplaceAll(domain, "."+d, ""), d
 		}
 	}
-	return domain, common.ValidDomainSuffix[0]
+	return domain, common.ValidDomainSuffix[1]
 }

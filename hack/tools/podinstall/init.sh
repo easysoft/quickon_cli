@@ -37,7 +37,7 @@ wait_for_mount() {
 
 wait_for_mount && source /opt/quickon/init/env || echo "mount env failed"
 
-[ -z "$QUICKON_DOMAIN" ] && export QUICKON_DOMAIN=demo.haogs.cn
+[ -z "$QUICKON_DOMAIN" ] && export QUICKON_DOMAIN=demo.corp.cc
 
 [ -z "$QUICKON_HTTP_PORT" ] && export QUICKON_HTTP_PORT=443
 
