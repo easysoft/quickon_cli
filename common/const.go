@@ -60,7 +60,7 @@ const (
 )
 
 const (
-	DefaultQuchengVersion  = "stable-2.2"
+	DefaultQuchengVersion  = "stable-2.3"
 	K3sBinName             = "k3s"
 	K3sBinPath             = "/usr/local/bin/k3s"
 	HelmBinName            = "helm"
