@@ -19,7 +19,6 @@ func newCmdUpgrade(f factory.Factory) *cobra.Command {
 		Aliases: []string{"ug", "ugc"},
 	}
 	up.AddCommand(upgrade.NewUpgradeQ(f))
-	up.AddCommand(upgrade.NewUpgradeOperator(f))
 	up.AddCommand(upgrade.NewUpgradeQucheng(f))
 	return up
 }
