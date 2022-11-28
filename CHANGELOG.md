@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.3.6 (2022-11-28)
+
+ * [0cac632](https://github.com/easysoft/quickon_cli/commit/0cac632107fa1b1cea2e5fdf9cab1fecef8dfb3d) feat(update): update inner tools
+ * [05976c4](https://github.com/easysoft/quickon_cli/commit/05976c49f40a9be7c90455bf35bc0cbd380cdc5e) build(deps): bump github.com/ergoapi/util from 0.2.23 to 0.2.24 (#106)
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v1.3.5 (2022-11-25)
 
  * [4f9bc5c](https://github.com/easysoft/quickon_cli/commit/4f9bc5c0cd922383c43ca57d9bcd34d45dbc2769) feat(update): fix upgrade
