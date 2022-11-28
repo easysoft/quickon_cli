@@ -7,11 +7,15 @@
 package static
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/static/data"
 	"github.com/easysoft/qcadmin/internal/static/deploy"
 	"github.com/easysoft/qcadmin/internal/static/haogstls"
 	"github.com/easysoft/qcadmin/internal/static/scripts"
+	"github.com/ergoapi/util/file"
 )
 
 func StageFiles() error {
@@ -27,6 +31,28 @@ func StageFiles() error {
 	}
 	if err := haogstls.Stage(dataDir); err != nil {
 		return err
+	}
+	if err := initInternalCommand(dataDir); err != nil {
+		return err
+	}
+	return nil
+}
+
+func initInternalCommand(dataDir string) error {
+	// cp -a /root/.qc/data/hack/manifests/scripts/qc-* /root/.qc/bin/
+	// cp -a /root/.qc/data/hack/manifests/scripts/qcadmin-* /root/.qc/bin/
+	sourcePath := fmt.Sprintf("%s/hack/manifests/scripts", dataDir)
+	files, err := file.DirFilesList(sourcePath, common.ValidPrefixes, nil)
+	if err != nil {
+		return err
+	}
+	for _, f := range files {
+		s := strings.Split(f, "/")
+		targetfile := fmt.Sprintf("%s/%s", common.GetDefaultBinDir(), s[len(s)-1])
+		sourcefile := fmt.Sprintf("%s/%s", sourcePath, f)
+		if err := file.Copy(sourcefile, targetfile, true); err != nil {
+			return err
+		}
 	}
 	return nil
 }

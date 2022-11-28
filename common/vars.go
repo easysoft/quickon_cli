@@ -21,7 +21,7 @@ type cloudAPIS struct {
 }
 
 var (
-	ValidPrefixes     = []string{"qcadmin"}
+	ValidPrefixes     = []string{"qcadmin", "qc"}
 	ValidDomainSuffix = []string{"haogs.cn", "corp.cc"}
 )
 
