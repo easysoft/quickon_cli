@@ -1,5 +1,23 @@
 # Changelog
 
+## v1.3.5 (2022-11-25)
+
+ * [4f9bc5c](https://github.com/easysoft/quickon_cli/commit/4f9bc5c0cd922383c43ca57d9bcd34d45dbc2769) feat(update): fix upgrade
+
+### Contributors
+
+ * ysicing
+
+## v1.3.4 (2022-11-24)
+
+ * [a39386a](https://github.com/easysoft/quickon_cli/commit/a39386a51937f2906293ffa89e1ce6a36896ce82) feat(domain): update default domain
+ * [529b2f7](https://github.com/easysoft/quickon_cli/commit/529b2f737dd2f48f1604ea9806842063c85690c9) feat(2.3): bump quickon to 2.3
+ * [cb7d291](https://github.com/easysoft/quickon_cli/commit/cb7d29161438db17120a4627a626d58b6d0a5722) feat(gateway): add gateway api install manifest
+
+### Contributors
+
+ * ysicing
+
 ## v1.3.3 (2022-11-21)
 
  * [cd723d7](https://github.com/easysoft/quickon_cli/commit/cd723d7119c24868e9fa06a40033107b78789c20) support custom data dir (#103)
