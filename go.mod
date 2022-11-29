@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/BeidouCloudPlatform/go-bindata/v4 v4.1.0
-	github.com/Masterminds/semver/v3 v3.1.1
+	github.com/Masterminds/semver/v3 v3.2.0
 	github.com/chai2010/gettext-go v0.0.0-20160711120539-c6fed771bfd5
 	github.com/cheggaaa/pb/v3 v3.1.0
 	github.com/cockroachdb/errors v1.9.0
