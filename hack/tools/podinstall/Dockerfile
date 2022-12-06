@@ -8,7 +8,7 @@ FROM ysicing/k8s as fetch
 
 WORKDIR /root
 
-RUN wget https://ghproxy.com/https://github.com/easysoft/quickon_cli/releases/download/v1.2.11/qcadmin_linux_amd64 && \
+RUN wget https://ghproxy.com/https://github.com/easysoft/quickon_cli/releases/download/v1.3.6/qcadmin_linux_amd64 && \
   chmod +x qcadmin_linux_amd64
 
 FROM ysicing/k8s
