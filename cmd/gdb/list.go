@@ -13,7 +13,7 @@ import (
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
-	quchengv1beta1 "github.com/easysoft/quikon-api/qucheng/v1beta1"
+	quchengv1beta1 "github.com/easysoft/quickon-api/qucheng/v1beta1"
 	"github.com/ergoapi/util/exmap"
 	"github.com/manifoldco/promptui"
 	"github.com/pkg/browser"

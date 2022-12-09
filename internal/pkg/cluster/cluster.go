@@ -382,7 +382,7 @@ func (p *Cluster) configServerOptions() []string {
 		--flannel-backend=none
 	*/
 	var args []string
-	args = append(args, "--disable-network-policy", "--disable-helm-controller", "--disable=servicelb,traefik")
+	args = append(args, "--cluster-init", "--disable-network-policy", "--disable-helm-controller", "--disable=servicelb,traefik")
 	var tlsSans string
 	for _, tlsSan := range p.TLSSans {
 		tlsSans = tlsSans + fmt.Sprintf(" --tls-san=%s", tlsSan)

@@ -16,8 +16,8 @@ import (
 	"path/filepath"
 	"time"
 
-	quchengclientset "github.com/easysoft/quikon-api/client/clientset/versioned"
-	quchengv1beta1 "github.com/easysoft/quikon-api/qucheng/v1beta1"
+	quchengclientset "github.com/easysoft/quickon-api/client/clientset/versioned"
+	quchengv1beta1 "github.com/easysoft/quickon-api/qucheng/v1beta1"
 	"github.com/ergoapi/util/exmap"
 	"golang.org/x/term"
 	appsv1 "k8s.io/api/apps/v1"
