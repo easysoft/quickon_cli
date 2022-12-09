@@ -226,8 +226,8 @@ github.com/docker/go-units v0.4.0/go.mod h1:fgPhTUdO+D/Jk86RDLlptpiXQzgHJF7gydDD
 github.com/docker/libtrust v0.0.0-20150114040149-fa567046d9b1 h1:ZClxb8laGDf5arXfYcAtECDFgAgHklGI8CxgjHnXKJ4=
 github.com/docopt/docopt-go v0.0.0-20180111231733-ee0de3bc6815/go.mod h1:WwZ+bS3ebgob9U8Nd0kOddGdZWjyMGR8Wziv+TBNwSE=
 github.com/dustin/go-humanize v1.0.0/go.mod h1:HtrtbFcZ19U5GC7JDqmcUSB87Iq5E25KnS6fMYU6eOk=
-github.com/easysoft/quikon-api v0.5.0 h1:O8b5tJ0/54XRkaURQcgiTLi0t3AVpNDPItF/e+ooxWU=
-github.com/easysoft/quikon-api v0.5.0/go.mod h1:JcH7SjswC+TdpaiG/bLO8MBb1ekkTdFcs7i4CGMjwzg=
+github.com/easysoft/quickon-api v0.6.0 h1:RzgLKQDFCQTOn+Mm0zabc/9fzybKsUbAaywYwhvTBQg=
+github.com/easysoft/quickon-api v0.6.0/go.mod h1:J3QfhrkhaitaJzQc16SxiLFOVk86uYhouNaYGHOXzjY=
 github.com/eknkc/amber v0.0.0-20171010120322-cdade1c07385/go.mod h1:0vRUJqYpeSZifjYj7uP3BG/gKcuzL9xWVV/Y+cK33KM=
 github.com/elazarl/goproxy v0.0.0-20180725130230-947c36da3153 h1:yUdfgN0XgIJw7foRItutHYUIhlcKzcSf5vDpdhQAKTc=
 github.com/elazarl/goproxy v0.0.0-20180725130230-947c36da3153/go.mod h1:/Zj4wYkgs4iZTTu3o/KG3Itv/qCCa8VVMlb3i9OVuzc=
@@ -246,8 +246,8 @@ github.com/envoyproxy/go-control-plane v0.9.9-0.20210217033140-668b12f5399d/go.m
 github.com/envoyproxy/go-control-plane v0.9.9-0.20210512163311-63b5d3c536b0/go.mod h1:hliV/p42l8fGbc6Y9bQ70uLwIvmJyVE5k4iMKlh8wCQ=
 github.com/envoyproxy/go-control-plane v0.10.2-0.20220325020618-49ff273808a1/go.mod h1:KJwIaB5Mv44NWtYuAOFCVOjcI94vtpEz2JU/D2v6IjE=
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
-github.com/ergoapi/util v0.2.25 h1:LF7KxGgqPKFep4tWM+MkrxShF0Dk9Xn34tjRhCy7h78=
-github.com/ergoapi/util v0.2.25/go.mod h1:lc2keKuxkzG0Uu3hTN8f/GECHTjjRse8mQ97RC6CaCc=
+github.com/ergoapi/util v0.2.26 h1:vpxdt0EHMzt5PVlpvmd7KGeWiGSOwODr5GIFA2K26Y8=
+github.com/ergoapi/util v0.2.26/go.mod h1:lc2keKuxkzG0Uu3hTN8f/GECHTjjRse8mQ97RC6CaCc=
 github.com/etcd-io/bbolt v1.3.3/go.mod h1:ZF2nL25h33cCyBtcyWeZ2/I3HQOfTP+0PIEvHjkjCrw=
 github.com/evanphx/json-patch v4.11.0+incompatible/go.mod h1:50XU6AFN0ol/bzJsmQLiYLvXMP4fmwYFNcr97nuDLSk=
 github.com/evanphx/json-patch v4.12.0+incompatible h1:4onqiflcdA9EOZ4RxV643DvftH5pOlLGNtQ5lPWQu84=

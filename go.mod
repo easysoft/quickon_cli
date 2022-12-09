@@ -10,9 +10,9 @@ require (
 	github.com/cockroachdb/errors v1.9.0
 	github.com/containerd/continuity v0.3.0
 	github.com/docker/docker v20.10.21+incompatible
-	github.com/easysoft/quikon-api v0.5.0
+	github.com/easysoft/quickon-api v0.6.0
 	github.com/emirpasic/gods v1.18.1
-	github.com/ergoapi/util v0.2.25
+	github.com/ergoapi/util v0.2.26
 	github.com/gofrs/flock v0.8.1
 	github.com/gosuri/uitable v0.0.4
 	github.com/imroc/req/v3 v3.25.0
