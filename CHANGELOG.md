@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.3.7 (2022-12-09)
+
+ * [aa76827](https://github.com/easysoft/quickon_cli/commit/aa76827f746da3582d109dd08375a48017f8fd0e) feat(2.4): release 2.4
+ * [1601b82](https://github.com/easysoft/quickon_cli/commit/1601b82983654110e175fa1eb0c5c631a309af46) build(deps): bump github.com/Masterminds/semver/v3 from 3.1.1 to 3.2.0 (#108)
+ * [032c700](https://github.com/easysoft/quickon_cli/commit/032c70089ba1be07539d6b8a3664dc9b35feb60b) fix(update): update init.sh
+ * [28d47ce](https://github.com/easysoft/quickon_cli/commit/28d47cec6f9d59d98584abc6229125bbd7c18bbd) feat(podinstall): update q
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v1.3.6 (2022-11-28)
 
  * [0cac632](https://github.com/easysoft/quickon_cli/commit/0cac632107fa1b1cea2e5fdf9cab1fecef8dfb3d) feat(update): update inner tools
