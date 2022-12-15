@@ -1,4 +1,6 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
+
+[ -n "${DEBUG:+1}" ] && set -x
 
 helm repo add install https://hub.qucheng.com/chartrepo/stable
 
@@ -76,4 +78,8 @@ wait_for_tls() {
     return 0
 }
 
-wait_for_tls && kubectl apply -f https://pkg.qucheng.com/ssl/${TOP_DOMAIN}/${APP_DOMAIN}/tls.yaml || echo "load tls failed"
+wait_for_tls && (
+  kubectl apply -f https://pkg.qucheng.com/ssl/${TOP_DOMAIN}/${APP_DOMAIN}/tls.yaml -n default
+  kubectl apply -f https://pkg.qucheng.com/ssl/${TOP_DOMAIN}/${APP_DOMAIN}/tls.yaml -n cne-system
+  kubectl apply -f https://pkg.qucheng.com/ssl/${TOP_DOMAIN}/${APP_DOMAIN}/tls.yaml -n kube-system
+) || echo "load tls failed"
