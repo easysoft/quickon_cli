@@ -7,8 +7,13 @@ helm repo update
 kubectl create ns cne-system
 
 export APP_DOMAIN=${APP_DOMAIN:-k3s.local}
+export APP_DOMAIN=$(echo -e $APP_DOMAIN | sed 's/[[:space:]]//g' | xargs -I {} echo {})
 export APP_TOKEN=${APP_TOKEN:-XZdrjxhAhq5pDjpEU3kR4djsvJ3rfj0M}
 export TOP_DOMAIN=${APP_DOMAIN#*.}
+
+# add debug
+
+echo "\"$APP_DOMAIN\" \"$TOP_DOMAIN\""
 
 cat > /tmp/qucheng.yaml <<EOF
 cloud:
