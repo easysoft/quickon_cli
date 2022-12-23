@@ -1,5 +1,35 @@
 # Changelog
 
+## v1.3.8 (2022-12-23)
+
+ * [17641f0](https://github.com/easysoft/quickon_cli/commit/17641f02285623f0a3f2f75dd7d9034e1aa43c6c) feat(2.5): release 2.5
+ * [9d511f9](https://github.com/easysoft/quickon_cli/commit/9d511f9bbb741f99af2c8abbb576ac2bb8f2a17f) build(deps): bump github.com/ulikunitz/xz from 0.5.10 to 0.5.11 (#114)
+ * [2ac2fae](https://github.com/easysoft/quickon_cli/commit/2ac2fae4ee3a42459617b8ca85a67f27178e2016) fix(podinstall): fix podinstall typo
+ * [d6a614f](https://github.com/easysoft/quickon_cli/commit/d6a614ff5427bf8ffa039d3891e61d0a2bb60cca) feat(update): update
+ * [1ccea79](https://github.com/easysoft/quickon_cli/commit/1ccea79096c6cf8c50ccddc03ac81d50084bdc55) build(deps): bump github.com/imroc/req/v3 from 3.25.0 to 3.26.4 (#113)
+ * [5b5f302](https://github.com/easysoft/quickon_cli/commit/5b5f302e986afdbc646b360c01ac096bdd5c0d68) build(deps): bump goreleaser/goreleaser-action from 3 to 4 (#112)
+ * [fbcef29](https://github.com/easysoft/quickon_cli/commit/fbcef29474ee5bd850cb6da3a43bfe996af93531) feat(update): fix pod install
+ * [c1cc6d0](https://github.com/easysoft/quickon_cli/commit/c1cc6d042863825cce7c856fec02cdc8752f67a7) feat(ingress): update ingress version (#111)
+ * [3376bac](https://github.com/easysoft/quickon_cli/commit/3376bac1f62194f98e852f1e2b981cfa3076ce00) build(deps): bump github.com/shirou/gopsutil/v3 from 3.22.10 to 3.22.11 (#109)
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+ * 缘生
+
+## v1.3.7 (2022-12-09)
+
+ * [aa76827](https://github.com/easysoft/quickon_cli/commit/aa76827f746da3582d109dd08375a48017f8fd0e) feat(2.4): release 2.4
+ * [1601b82](https://github.com/easysoft/quickon_cli/commit/1601b82983654110e175fa1eb0c5c631a309af46) build(deps): bump github.com/Masterminds/semver/v3 from 3.1.1 to 3.2.0 (#108)
+ * [032c700](https://github.com/easysoft/quickon_cli/commit/032c70089ba1be07539d6b8a3664dc9b35feb60b) fix(update): update init.sh
+ * [28d47ce](https://github.com/easysoft/quickon_cli/commit/28d47cec6f9d59d98584abc6229125bbd7c18bbd) feat(podinstall): update q
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v1.3.6 (2022-11-28)
 
  * [0cac632](https://github.com/easysoft/quickon_cli/commit/0cac632107fa1b1cea2e5fdf9cab1fecef8dfb3d) feat(update): update inner tools
