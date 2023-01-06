@@ -150,6 +150,13 @@ func (p *Cluster) InstallQuCheng() error {
 	cfg.DataDir = p.DataDir
 	cfg.SaveConfig()
 	chartversion := common.GetVersion(p.QuchengVersion)
+	p.Log.Info("start deploy cne custom tools")
+	toolargs := []string{"experimental", "helm", "upgrade", "--name", "selfcert", "--repo", common.DefaultHelmRepoName, "--chart", "selfcert", "--namespace", common.DefaultSystem}
+	if helmstd, err := qcexec.Command(os.Args[0], toolargs...).CombinedOutput(); err != nil {
+		p.Log.Warnf("deploy cne custom tools err: %v, std: %s", err, string(helmstd))
+	} else {
+		p.Log.Done("deployed cne custom tools success")
+	}
 	p.Log.Info("start deploy cne operator")
 	operatorargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultCneOperatorName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultCneOperatorName, "--namespace", common.DefaultSystem,
 		"--set", "minio.ingress.enabled=true",
