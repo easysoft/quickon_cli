@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.3.9 (2023-01-06)
+
+ * [8c82249](https://github.com/easysoft/quickon_cli/commit/8c8224920da7daa915095c15a91fee2ec7627d9f) feat(2.6): release 2.6
+ * [55689bb](https://github.com/easysoft/quickon_cli/commit/55689bbe319ed56048a2911ac9274781fe991c7f) build(deps): bump github.com/shirou/gopsutil/v3 from 3.22.11 to 3.22.12 (#118)
+ * [b7371f0](https://github.com/easysoft/quickon_cli/commit/b7371f0dc7ad0ebb402c77bfabc8ce1d03733d08) build(deps): bump github.com/mattn/go-isatty from 0.0.16 to 0.0.17 (#117)
+ * [7a95118](https://github.com/easysoft/quickon_cli/commit/7a9511826a569f7efacbc66656f1623bb48cb2b8) build(deps): bump github.com/docker/docker (#116)
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v1.3.8 (2022-12-23)
 
  * [17641f0](https://github.com/easysoft/quickon_cli/commit/17641f02285623f0a3f2f75dd7d9034e1aa43c6c) feat(2.5): release 2.5
