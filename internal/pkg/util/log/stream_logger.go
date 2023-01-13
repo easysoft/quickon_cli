@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2022 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
+// Copyright (c) 2021-2023 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
 // Use of this source code is covered by the following dual licenses:
 // (1) Z PUBLIC LICENSE 1.2 (ZPL 1.2)
 // (2) Affero General Public License 3.0 (AGPL 3.0)
@@ -12,6 +12,8 @@ import (
 	"os"
 	"sync"
 
+	"github.com/cockroachdb/errors"
+	"github.com/easysoft/qcadmin/internal/pkg/util/log/survey"
 	"github.com/sirupsen/logrus"
 )
 
@@ -291,4 +293,9 @@ func (s *StreamLogger) WriteString(message string) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+// Question asks a new question
+func (s *StreamLogger) Question(params *survey.QuestionOptions) (string, error) {
+	return "", errors.New("questions in discard logger not supported")
 }
