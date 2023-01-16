@@ -36,6 +36,9 @@ issues:
     - linters:
         - goheader
       text: "Authors"
+    - linters:
+        - goheader
+      text: "Copyright"
 
 linters:
   # TODO: fix errors so that all of the linters below pass.

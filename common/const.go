@@ -87,6 +87,8 @@ const (
 	InitFileName           = ".initdone"
 	InitLockFileName       = ".qlock"
 	InitModeCluster        = ".incluster"
+	DefaultOSUserRoot      = "root"
+	DefaultSSHPort         = 22
 )
 
 const (

@@ -65,7 +65,15 @@ func CommandRun(name string, arg ...string) error {
 	Trace(cmd)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
 	return cmd.Run()
+}
+
+func CommandBashRunWithResp(cmdStr string) (string, error) {
+	cmd := sysexec.Command("/bin/bash", "-c", cmdStr) // #nosec
+	Trace(cmd)
+	result, err := cmd.CombinedOutput()
+	return string(result), err
 }
 
 func CommandRespByte(command string, args ...string) ([]byte, error) {

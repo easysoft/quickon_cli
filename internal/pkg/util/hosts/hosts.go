@@ -96,9 +96,6 @@ func (h *HostFile) ParseHostFile(path string) (*linkedhashmap.Map, error) {
 		}
 		tmpHostnameArr := strings.Fields(str)
 		curDomain := strings.Join(tmpHostnameArr[1:], " ")
-		//if !iputils.CheckDomain(curDomain) {
-		//	return lm, errors.New(" file contain error domain" + curDomain)
-		//}
 		curIP := exstr.TrimSpaceWS(tmpHostnameArr[0])
 
 		checkIP := net.ParseIP(curIP)
