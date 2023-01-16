@@ -20,7 +20,7 @@ import (
 	"time"
 
 	"github.com/easysoft/qcadmin/common"
-	"github.com/easysoft/qcadmin/internal/app/config"
+	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"golang.org/x/crypto/ssh"
 	"k8s.io/apimachinery/pkg/util/wait"
@@ -61,7 +61,7 @@ type SSH struct {
 	log          log.Logger
 }
 
-func NewSSHClient(ssh *config.SSH, isStdout bool) Interface {
+func NewSSHClient(ssh *types.SSH, isStdout bool) Interface {
 	log := log.GetInstance()
 	if ssh.User == "" {
 		ssh.User = common.DefaultOSUserRoot

@@ -4,34 +4,40 @@
 // (2) Affero General Public License 3.0 (AGPL 3.0)
 // license that can be found in the LICENSE file.
 
-package main
+package sshutil
 
 import (
-	"github.com/easysoft/qcadmin/internal/app/config"
+	"github.com/easysoft/qcadmin/internal/pkg/types"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/ssh"
+	"github.com/spf13/cobra"
 )
 
-func main() {
-	sshClient := ssh.NewSSHClient(&config.SSH{
-		Passwd: "sshutil",
-	}, true)
-	if err := sshClient.Ping("127.0.0.1:10022"); err != nil {
-		panic(err)
+func EmbedCommand(f factory.Factory) *cobra.Command {
+	var cfg *types.SSH
+	var hosts []string
+	ssh := &cobra.Command{
+		Use:   "ssh",
+		Short: "ssh util tool",
+		Run: func(cmd *cobra.Command, args []string) {
+			osargs := args[:]
+			if len(hosts) == 0 {
+				// local
+			} else {
+				sshClient := ssh.NewSSHClient(cfg, true)
+				for _, host := range hosts {
+					if err := sshClient.Ping(host); err != nil {
+						continue
+					}
+					sshClient.CmdAsync(host, osargs...)
+				}
+			}
+		},
 	}
-	if err := sshClient.CmdAsync("127.0.0.1:10022", "pwd"); err != nil {
-		panic(err)
-	}
-	sshClient1 := ssh.NewSSHClient(&config.SSH{
-		Passwd: "sshutil",
-		User:   "sshutil",
-	}, true)
-	if err := sshClient1.Ping("127.0.0.1:10023"); err != nil {
-		panic(err)
-	}
-	if err := sshClient1.CmdAsync("127.0.0.1:10023", "pwd"); err != nil {
-		panic(err)
-	}
-	if err := sshClient.CmdAsync("127.0.0.1:10024", "pwd"); err != nil {
-		panic(err)
-	}
+	ssh.Flags().StringVar(&cfg.User, "user", "root", "ssh user")
+	ssh.Flags().StringVar(&cfg.Passwd, "passwd", "", "ssh password")
+	ssh.Flags().StringVar(&cfg.Pk, "pkfile", "", "ssh pk file")
+	ssh.Flags().StringVar(&cfg.PkPasswd, "pkpass", "", "ssh key passwd")
+	ssh.Flags().StringSliceVar(&hosts, "hosts", nil, "ips, like 192.168.0.1:22")
+	return ssh
 }

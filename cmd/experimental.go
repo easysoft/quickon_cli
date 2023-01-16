@@ -22,5 +22,6 @@ func NewCmdExperimental(f factory.Factory) *cobra.Command {
 	experimentalCmd.AddCommand(experimental.KubectlCommand(f))
 	experimentalCmd.AddCommand(experimental.HelmCommand(f))
 	experimentalCmd.AddCommand(experimental.ToolsCommand(f))
+	experimentalCmd.AddCommand(experimental.SSHCommand(f))
 	return experimentalCmd
 }
