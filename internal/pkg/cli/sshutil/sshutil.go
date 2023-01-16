@@ -31,4 +31,7 @@ func main() {
 	if err := sshClient1.CmdAsync("127.0.0.1:10023", "pwd"); err != nil {
 		panic(err)
 	}
+	if err := sshClient.CmdAsync("127.0.0.1:10024", "pwd"); err != nil {
+		panic(err)
+	}
 }

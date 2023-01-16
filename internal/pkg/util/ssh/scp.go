@@ -23,11 +23,11 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/pkg/sftp"
 	"github.com/schollz/progressbar/v3"
 	"golang.org/x/crypto/ssh"
+	"k8s.io/apimachinery/pkg/util/wait"
 
 	"github.com/ergoapi/util/exhash"
 	"github.com/ergoapi/util/file"
@@ -71,10 +71,18 @@ func (s *SSH) newClientAndSftpClient(host string) (*ssh.Client, *sftp.Client, er
 }
 
 func (s *SSH) sftpConnect(host string) (sshClient *ssh.Client, sftpClient *sftp.Client, err error) {
-	err = exponentialBackoffRetry(defaultMaxRetry, time.Millisecond*100, 2, func() error {
+	try := 0
+	if err := wait.ExponentialBackoff(defaultBackoff, func() (bool, error) {
+		try++
+		s.log.Infof("the %d/%d time tring to ssh to %s with user %s", try, defaultBackoff.Steps, host, s.User)
 		sshClient, sftpClient, err = s.newClientAndSftpClient(host)
-		return err
-	}, isErrorWorthRetry)
+		if err != nil {
+			return false, nil
+		}
+		return true, nil
+	}); err != nil {
+		return nil, nil, fmt.Errorf("ssh init dialer [%s] error: %w", host, err)
+	}
 	return
 }
 
@@ -125,11 +133,6 @@ func (s *SSH) Copy(host, localPath, remotePath string) error {
 	}()
 
 	return s.doCopy(sftpClient, host, localPath, remotePath, bar)
-}
-
-func isErrorWorthRetry(err error) bool {
-	return strings.Contains(err.Error(), "connection reset by peer") ||
-		strings.Contains(err.Error(), io.EOF.Error())
 }
 
 func (s *SSH) doCopy(client *sftp.Client, host, src, dest string, epu *progressbar.ProgressBar) error {

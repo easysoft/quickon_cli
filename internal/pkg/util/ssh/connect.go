@@ -25,8 +25,8 @@ import (
 	"time"
 
 	"golang.org/x/crypto/ssh"
+	"k8s.io/apimachinery/pkg/util/wait"
 
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/ergoapi/util/file"
 )
 
@@ -81,33 +81,19 @@ func newSession(client *ssh.Client) (*ssh.Session, error) {
 }
 
 func (s *SSH) Connect(host string) (sshClient *ssh.Client, session *ssh.Session, err error) {
-	err = exponentialBackoffRetry(defaultMaxRetry, time.Millisecond*100, 2, func() error {
+	try := 0
+	if err := wait.ExponentialBackoff(defaultBackoff, func() (bool, error) {
+		try++
+		s.log.Infof("the %d/%d time tring to ssh to %s with user %s", try, defaultBackoff.Steps, host, s.User)
 		sshClient, session, err = s.newClientAndSession(host)
-		return err
-	}, isErrorWorthRetry)
-	return
-}
-
-func exponentialBackoffRetry(steps int, interval time.Duration, factor int,
-	fn func() error,
-	retryIfCertainError func(error) bool) error {
-	log := log.GetInstance()
-	var err error
-	for i := 0; i < steps; i++ {
-		if i > 0 {
-			log.Debugf("retrying %s later due to error occur: %v", interval, err)
-			time.Sleep(interval)
-			interval *= time.Duration(factor)
+		if err != nil {
+			return false, nil
 		}
-		if err = fn(); err != nil {
-			if retryIfCertainError(err) {
-				continue
-			}
-			return err
-		}
-		break
+		return true, nil
+	}); err != nil {
+		return nil, nil, fmt.Errorf("ssh init dialer [%s] error: %w", host, err)
 	}
-	return err
+	return
 }
 
 func (s *SSH) newClientAndSession(host string) (*ssh.Client, *ssh.Session, error) {

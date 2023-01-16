@@ -22,14 +22,14 @@ import (
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
-	"github.com/spf13/pflag"
 	"golang.org/x/crypto/ssh"
+	"k8s.io/apimachinery/pkg/util/wait"
 )
 
-var defaultMaxRetry = 5
-
-func RegisterFlags(fs *pflag.FlagSet) {
-	fs.IntVar(&defaultMaxRetry, "max-retry", defaultMaxRetry, "define max num of ssh retry times")
+var defaultBackoff = wait.Backoff{
+	Duration: 15 * time.Second,
+	Factor:   1,
+	Steps:    5,
 }
 
 type Interface interface {

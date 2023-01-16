@@ -10,3 +10,4 @@ completions
 manpages
 internal/pkg/cli/test/*.go
 patch.diff
+hack/manifests/service

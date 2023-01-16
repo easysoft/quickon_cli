@@ -97,3 +97,69 @@ const (
 	QuchengDefaultUser = "qadmin"
 	QuchengDefaultPass = "pass4Quickon"
 )
+
+const K3SServiceTpl = `
+[Unit]
+Description=Lightweight Kubernetes
+Documentation=https://k3s.io
+Wants=network-online.target
+After=network-online.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+{{if .TypeMaster -}}
+Type=notify
+{{else}}
+Type=exec
+{{ end -}}
+EnvironmentFile=-/etc/default/%N
+EnvironmentFile=-/etc/sysconfig/%N
+EnvironmentFile=-/etc/systemd/system/k3s.service.env
+KillMode=process
+Delegate=yes
+# Having non-zero Limit*s causes performance problems due to accounting overhead
+# in the kernel. We recommend using cgroups to do container-local accounting.
+LimitNOFILE=1048576
+LimitNPROC=infinity
+LimitCORE=infinity
+TasksMax=infinity
+TimeoutStartSec=0
+Restart=always
+RestartSec=5s
+ExecStartPre=/bin/sh -xc '! /usr/bin/systemctl is-enabled --quiet nm-cloud-setup.service'
+ExecStartPre=-/sbin/modprobe br_netfilter
+ExecStartPre=-/sbin/modprobe overlay
+ExecStart=/usr/local/bin/k3s \
+  {{if .TypeMaster -}}
+    server \
+    --tls-san kubeapi.haogs.cn \
+    --tls-san apiserver.cluster.local \
+    --tls-san {{ .KubeAPI }} \
+    --cluster-cidr {{ .ClusterCIDR }} \
+    --service-cidr {{ .ServiceCIDR }} \
+    {{if not .Master0 -}}
+    --token qucheng \
+    --server https://{{ .KubeAPI }}:6443 \
+    {{ end -}}
+    {{if .DataStore -}}
+    --datastore-endpoint {{.DataStore}} \
+    {{else -}}
+    --cluster-init \
+    --etcd-snapshot-retention "0 */4 * * *" \
+    --etcd-snapshot-retention 30 \
+    {{end -}}
+    --disable servicelb,traefik,local-storage \
+    --disable-cloud-controller \
+    --disable-network-policy \
+    --disable-helm-controller \
+    {{ end -}}
+    --data-dir {{.DataDir}} \
+    {{if .Docker -}}
+    --docker \
+    {{ end -}}
+    --pause-image hub.qucheng.com/library/rancher/mirrored-pause:3.6 \
+    --kube-proxy-arg "proxy-mode=ipvs" "masquerade-all=true" \
+    --kube-proxy-arg "metrics-bind-address=0.0.0.0"
+`
