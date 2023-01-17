@@ -74,7 +74,7 @@ func (s *SSH) sftpConnect(host string) (sshClient *ssh.Client, sftpClient *sftp.
 	try := 0
 	if err := wait.ExponentialBackoff(defaultBackoff, func() (bool, error) {
 		try++
-		s.log.Infof("the %d/%d time tring to ssh to %s with user %s", try, defaultBackoff.Steps, host, s.User)
+		s.log.Infof("the %d/%d time tring to ssh/scp to %s with user %s", try, defaultBackoff.Steps, host, s.User)
 		sshClient, sftpClient, err = s.newClientAndSftpClient(host)
 		if err != nil {
 			return false, nil

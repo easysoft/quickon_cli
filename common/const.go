@@ -89,6 +89,8 @@ const (
 	InitModeCluster        = ".incluster"
 	DefaultOSUserRoot      = "root"
 	DefaultSSHPort         = 22
+	PrivateKeyFilename     = "id_rsa"
+	PublicKeyFilename      = "id_rsa.pub"
 )
 
 const (

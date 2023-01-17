@@ -101,7 +101,7 @@ func (p *InCluster) InitQucheng() (err error) {
 }
 
 func (p *InCluster) CreateCheck(skip bool) error {
-	// no need to support.
+	// load kubeconfig check cluster ready
 	return nil
 }
 

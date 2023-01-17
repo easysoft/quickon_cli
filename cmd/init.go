@@ -65,11 +65,10 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 			if err := cp.PreSystemInit(); err != nil {
 				log.Fatalf("presystem init err, reason: %s", err)
 			}
-			if err := cp.CreateCheck(skip); err != nil {
-				log.Fatalf("precheck err, reason: %v", err)
-			}
 		}
-
+		if err := cp.CreateCheck(skip); err != nil {
+			log.Fatalf("precheck err, reason: %v", err)
+		}
 		if err := cp.CreateCluster(); err != nil {
 			log.Fatalf("init cluster err: %v", err)
 		}

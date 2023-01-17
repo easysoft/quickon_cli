@@ -14,7 +14,7 @@ import (
 )
 
 func EmbedCommand(f factory.Factory) *cobra.Command {
-	var cfg *types.SSH
+	var cfg types.SSH
 	var hosts []string
 	ssh := &cobra.Command{
 		Use:   "ssh",
@@ -24,7 +24,7 @@ func EmbedCommand(f factory.Factory) *cobra.Command {
 			if len(hosts) == 0 {
 				// local
 			} else {
-				sshClient := ssh.NewSSHClient(cfg, true)
+				sshClient := ssh.NewSSHClient(&cfg, true)
 				for _, host := range hosts {
 					if err := sshClient.Ping(host); err != nil {
 						continue
