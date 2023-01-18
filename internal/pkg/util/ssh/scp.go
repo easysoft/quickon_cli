@@ -29,9 +29,7 @@ import (
 	"golang.org/x/crypto/ssh"
 	"k8s.io/apimachinery/pkg/util/wait"
 
-	"github.com/ergoapi/util/exhash"
 	"github.com/ergoapi/util/file"
-	"github.com/ergoapi/util/progress"
 )
 
 func (s *SSH) RemoteSha256Sum(host, remoteFilePath string) string {
@@ -127,7 +125,8 @@ func (s *SSH) Copy(host, localPath, remotePath string) error {
 			return sftpClient.MkdirAll(remotePath)
 		}
 	}
-	bar := progress.Simple("copying files to "+host, number)
+	bar := Simple("copying files to "+host, number)
+	// bar := progress.Simple("copying files to "+host, number)
 	defer func() {
 		_ = bar.Close()
 	}()
@@ -154,23 +153,6 @@ func (s *SSH) doCopy(client *sftp.Client, host, src, dest string, epu *progressb
 			}
 		}
 	} else {
-		fn := func(host string, name string) bool {
-			exists, err := checkIfRemoteFileExists(client, name)
-			if err != nil {
-				s.log.Errorf("failed to detect remote file exists: %v", err)
-			}
-			return exists
-		}
-		if isEnvTrue("USE_SHELL_TO_CHECK_FILE_EXISTS") {
-			fn = s.remoteFileExist
-		}
-		if !isEnvTrue("DO_NOT_CHECKSUM") && fn(host, dest) {
-			rfp, _ := client.Stat(dest)
-			if lfp.Size() == rfp.Size() && exhash.GenSha256(src) == s.RemoteSha256Sum(host, dest) {
-				s.log.Debugf("remote dst %s already exists and is the latest version, skip copying process", dest)
-				return nil
-			}
-		}
 		lf, err := os.Open(filepath.Clean(src))
 		if err != nil {
 			return fmt.Errorf("failed to open: %v", err)
@@ -187,17 +169,6 @@ func (s *SSH) doCopy(client *sftp.Client, host, src, dest string, epu *progressb
 		defer dstfp.Close()
 		if _, err = io.Copy(dstfp, lf); err != nil {
 			return fmt.Errorf("failed to Copy: %v", err)
-		}
-		if !isEnvTrue("DO_NOT_CHECKSUM") {
-			dh := s.RemoteSha256Sum(host, dest)
-			if dh == "" {
-				// when ssh connection failed, remote sha256 is default to "", so ignore it.
-				return nil
-			}
-			sh := exhash.GenSha256(src)
-			if sh != dh {
-				return fmt.Errorf("sha256 sum not match %s(%s) != %s(%s), maybe network corruption?", src, sh, dest, dh)
-			}
 		}
 		_ = epu.Add(1)
 	}
@@ -221,4 +192,27 @@ func isEnvTrue(k string) bool {
 		return boolVal
 	}
 	return false
+}
+
+func Simple(title string, count int) *progressbar.ProgressBar {
+	bar := progressbar.NewOptions(count,
+		progressbar.OptionEnableColorCodes(true),
+		progressbar.OptionShowBytes(false),
+		progressbar.OptionSetWidth(15),
+		progressbar.OptionShowCount(),
+		progressbar.OptionOnCompletion(func() {
+			fmt.Fprint(os.Stdout, "\n")
+		}),
+		// progressbar.OptionShowIts(),
+		progressbar.OptionSetPredictTime(true),
+		progressbar.OptionSetDescription(""),
+		progressbar.OptionShowElapsedTimeOnFinish(),
+		progressbar.OptionSetTheme(progressbar.Theme{
+			Saucer:        "[green]=[reset]",
+			SaucerHead:    "[green]>[reset]",
+			SaucerPadding: " ",
+			BarStart:      "[",
+			BarEnd:        "]",
+		}))
+	return bar
 }

@@ -63,7 +63,7 @@ lint: ## lint code
 
 default: gencopyright fmt lint ## fmt code
 
-coverage: ## coverage
+coverage: generate ## coverage
 	go test -race -failfast -coverprofile=coverage.out -covermode=atomic `go list ./... | grep -vE '(internal/static)'`
 
 build: ## build binary

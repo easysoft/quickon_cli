@@ -7,6 +7,7 @@
 package experimental
 
 import (
+	"github.com/easysoft/qcadmin/internal/pkg/cli/k3stpl"
 	"github.com/easysoft/qcadmin/internal/pkg/cli/sshutil"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/spf13/cobra"
@@ -14,5 +15,13 @@ import (
 
 // SSHCommand ssh command.
 func SSHCommand(f factory.Factory) *cobra.Command {
-	return sshutil.EmbedCommand(f)
+	return sshutil.EmbedSSHCommand(f)
+}
+
+func SCPCommand(f factory.Factory) *cobra.Command {
+	return sshutil.EmbedScpCommand(f)
+}
+
+func K3sTPLCommand(f factory.Factory) *cobra.Command {
+	return k3stpl.EmbedCommand(f)
 }

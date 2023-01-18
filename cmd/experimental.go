@@ -7,7 +7,10 @@
 package cmd
 
 import (
+	"github.com/easysoft/qcadmin/cmd/apply"
+	"github.com/easysoft/qcadmin/cmd/cluster"
 	"github.com/easysoft/qcadmin/cmd/experimental"
+
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/spf13/cobra"
 )
@@ -23,5 +26,9 @@ func NewCmdExperimental(f factory.Factory) *cobra.Command {
 	experimentalCmd.AddCommand(experimental.HelmCommand(f))
 	experimentalCmd.AddCommand(experimental.ToolsCommand(f))
 	experimentalCmd.AddCommand(experimental.SSHCommand(f))
+	experimentalCmd.AddCommand(experimental.SCPCommand(f))
+	experimentalCmd.AddCommand(experimental.K3sTPLCommand(f))
+	experimentalCmd.AddCommand(cluster.ClusterCommand(f))
+	experimentalCmd.AddCommand(apply.ApplyCommand(f))
 	return experimentalCmd
 }

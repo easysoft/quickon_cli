@@ -4,7 +4,7 @@
 // (2) Affero General Public License 3.0 (AGPL 3.0)
 // license that can be found in the LICENSE file.
 
-package main
+package k3stpl
 
 import (
 	"bytes"
@@ -12,8 +12,9 @@ import (
 	"os"
 
 	"github.com/easysoft/qcadmin/common"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/ergoapi/util/file"
+	"github.com/spf13/cobra"
 )
 
 type K3sArgs struct {
@@ -48,19 +49,24 @@ func (k3s K3sArgs) Template() string {
 	return common.K3SServiceTpl
 }
 
-func main() {
-	k3sMasterArgs := K3sArgs{
-		TypeMaster:  true,
-		Master0:     true,
-		KubeAPI:     "k.local",
-		ClusterCIDR: "10.88.0.0/16",
-		ServiceCIDR: "10.89.0.0/16",
-		DataStore:   "mysql://",
-		DataDir:     "",
-		Docker:      true,
+func EmbedCommand(f factory.Factory) *cobra.Command {
+	var k3sargs K3sArgs
+	rootCmd := &cobra.Command{
+		Use: "k3stpl",
+		Run: func(cmd *cobra.Command, args []string) {
+			log := f.GetLog()
+			tplfile, _ := os.CreateTemp("/tmp", "")
+			log.Infof("file: %s", tplfile.Name())
+			file.Writefile(tplfile.Name(), k3sargs.Manifests(""))
+		},
 	}
-	log := log.GetInstance()
-	f, _ := os.CreateTemp("/tmp", "")
-	log.Infof("file: %s", f.Name())
-	file.Writefile(f.Name(), k3sMasterArgs.Manifests(""))
+	rootCmd.Flags().StringVar(&k3sargs.ClusterCIDR, "cluster-cidr", "10.42.0.0/16", "cluster cidr")
+	rootCmd.Flags().StringVar(&k3sargs.ServiceCIDR, "service-cidr", "10.43.0.0/16", "service cidr")
+	rootCmd.Flags().StringVar(&k3sargs.DataDir, "data-dir", "", "data dir")
+	rootCmd.Flags().StringVar(&k3sargs.DataStore, "data", "", "data type")
+	rootCmd.Flags().StringVar(&k3sargs.KubeAPI, "kubeapi", "", "kubeapi")
+	rootCmd.Flags().BoolVar(&k3sargs.Docker, "docker", true, "docker")
+	rootCmd.Flags().BoolVar(&k3sargs.TypeMaster, "master", true, "master")
+	rootCmd.Flags().BoolVar(&k3sargs.Master0, "master0", false, "master0")
+	return rootCmd
 }
