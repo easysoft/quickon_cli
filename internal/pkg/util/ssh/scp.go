@@ -21,7 +21,6 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"strconv"
 	"strings"
 
 	"github.com/pkg/sftp"
@@ -173,25 +172,6 @@ func (s *SSH) doCopy(client *sftp.Client, host, src, dest string, epu *progressb
 		_ = epu.Add(1)
 	}
 	return nil
-}
-
-func checkIfRemoteFileExists(client *sftp.Client, fp string) (bool, error) {
-	_, err := client.Stat(fp)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return false, nil
-		}
-		return false, err
-	}
-	return true, nil
-}
-
-func isEnvTrue(k string) bool {
-	if v, ok := os.LookupEnv(k); ok {
-		boolVal, _ := strconv.ParseBool(v)
-		return boolVal
-	}
-	return false
 }
 
 func Simple(title string, count int) *progressbar.ProgressBar {

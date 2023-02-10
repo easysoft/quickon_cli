@@ -36,6 +36,9 @@
             "staticcheck": true,
         },
         "go.lintTool": "golangci-lint",
+        "go.lintFlags": [
+                "--fast"
+        ],
         "go.lintOnSave": "package",
         "editor.formatOnSave": true,
         "go.toolsEnvVars": {

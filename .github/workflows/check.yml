@@ -2,7 +2,7 @@ name: check
 
 env:
   # Common versions
-  GO_VERSION: '1.19'
+  GO_VERSION: '1.20'
 
 permissions:
   contents: read
@@ -57,7 +57,7 @@ jobs:
              exit -1
           fi
   lint:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3

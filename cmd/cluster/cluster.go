@@ -5,13 +5,35 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// ClusterCommand cluster command.
-func ClusterCommand(f factory.Factory) *cobra.Command {
-	c := &cobra.Command{
-		Use:     "cluster",
-		Short:   "cluster tools",
-		Aliases: []string{"c"},
+func InitCommand(f factory.Factory) *cobra.Command {
+	init := &cobra.Command{
+		Use:   "init",
+		Short: "init cluster",
+		Run: func(cmd *cobra.Command, args []string) {
+
+		},
 	}
-	c.AddCommand(newInit(f))
-	return c
+	return init
+}
+
+func JoinCommand(f factory.Factory) *cobra.Command {
+	join := &cobra.Command{
+		Use:   "join",
+		Short: "join cluster",
+		Run: func(cmd *cobra.Command, args []string) {
+
+		},
+	}
+	return join
+}
+
+func CleanCommand(f factory.Factory) *cobra.Command {
+	clean := &cobra.Command{
+		Use:   "clean",
+		Short: "clean cluster",
+		Run: func(cmd *cobra.Command, args []string) {
+
+		},
+	}
+	return clean
 }

@@ -110,7 +110,6 @@ func (p *Item) UnInstall() error {
 	}
 	// #nosec
 	if p.Tool == "helm" {
-
 		applycmd := qcexec.Command(os.Args[0], "experimental", "helm", "delete", p.Type, "-n", common.DefaultSystem)
 		if output, err := applycmd.CombinedOutput(); err != nil {
 			p.log.Errorf("helm uninstall %s plugin %s failed: %s", p.Type, p.Name, string(output))
