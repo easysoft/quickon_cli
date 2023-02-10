@@ -32,7 +32,7 @@ func (s *SSH) Ping(host string) error {
 	}
 	client, _, err := s.Connect(host)
 	if err != nil {
-		return fmt.Errorf("[ssh %s]create ssh session failed, %v", host, err)
+		return err
 	}
 	err = client.Close()
 	if err != nil {

@@ -1,6 +1,6 @@
 module github.com/easysoft/qcadmin
 
-go 1.19
+go 1.20
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.6
@@ -52,6 +52,18 @@ require (
 	k8s.io/system-validators v1.7.0
 	k8s.io/utils v0.0.0-20230115233650-391b47cb4029
 	sigs.k8s.io/yaml v1.3.0
+)
+
+// Replace to match K8s 1.25.6
+replace (
+	github.com/kardianos/service v1.2.1-0.20211104163826-b9d1d5b7279b => github.com/BeidouCloudPlatform/service v1.2.1-0.20211108101837-1fc58f473016
+	k8s.io/api => k8s.io/api v0.25.6
+	k8s.io/apimachinery => k8s.io/apimachinery v0.25.6
+	k8s.io/cli-runtime => k8s.io/cli-runtime v0.25.6
+	k8s.io/client-go => k8s.io/client-go v0.25.6
+	k8s.io/component-base => k8s.io/component-base v0.25.6
+	k8s.io/kubectl => k8s.io/kubectl v0.25.6
+	k8s.io/metrics => k8s.io/metrics v0.25.6
 )
 
 require (
@@ -212,16 +224,4 @@ require (
 	sigs.k8s.io/kustomize/kustomize/v4 v4.5.7 // indirect
 	sigs.k8s.io/kustomize/kyaml v0.13.9 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
-)
-
-// Replace to match K8s 1.25.6
-replace (
-	github.com/kardianos/service v1.2.1-0.20211104163826-b9d1d5b7279b => github.com/BeidouCloudPlatform/service v1.2.1-0.20211108101837-1fc58f473016
-	k8s.io/api => k8s.io/api v0.25.6
-	k8s.io/apimachinery => k8s.io/apimachinery v0.25.6
-	k8s.io/cli-runtime => k8s.io/cli-runtime v0.25.6
-	k8s.io/client-go => k8s.io/client-go v0.25.6
-	k8s.io/component-base => k8s.io/component-base v0.25.6
-	k8s.io/kubectl => k8s.io/kubectl v0.25.6
-	k8s.io/metrics => k8s.io/metrics v0.25.6
 )

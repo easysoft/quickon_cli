@@ -91,7 +91,7 @@ func (s *SSH) Connect(host string) (sshClient *ssh.Client, session *ssh.Session,
 		}
 		return true, nil
 	}); err != nil {
-		return nil, nil, fmt.Errorf("ssh init dialer [%s] error: %w", host, err)
+		return nil, nil, fmt.Errorf("ssh init dialer failed, reason: %s %w", host, err)
 	}
 	return
 }

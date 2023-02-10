@@ -27,9 +27,9 @@ import (
 )
 
 var defaultBackoff = wait.Backoff{
-	Duration: 15 * time.Second,
+	Duration: 10 * time.Second,
 	Factor:   1,
-	Steps:    5,
+	Steps:    3,
 }
 
 type Interface interface {
