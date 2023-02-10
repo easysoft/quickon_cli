@@ -96,7 +96,7 @@ func (p *InCluster) InitQucheng() (err error) {
 	if err := p.InstallQuCheng(); err != nil {
 		return err
 	}
-	file.Writefile(common.GetCustomConfig(common.InitModeCluster), "in cluster ok")
+	file.Writefile(common.GetCustomConfig(common.InitModeCluster), "in cluster ok", true)
 	return nil
 }
 

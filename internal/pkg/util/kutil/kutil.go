@@ -39,12 +39,12 @@ func NeedCacheHelmFile() bool {
 		now := time.Now()
 		if now.Sub(old) > 10*time.Minute {
 			os.Remove(cachefile)
-			file.Writefile(cachefile, ztime.NowUnixString())
+			file.Writefile(cachefile, ztime.NowUnixString(), true)
 			return true
 		}
 		return false
 	}
-	file.Writefile(cachefile, ztime.NowUnixString())
+	file.Writefile(cachefile, ztime.NowUnixString(), true)
 	return true
 }
 

@@ -199,7 +199,7 @@ func (p *Cluster) InstallQuCheng() error {
 	p.Log.Done("install qucheng success")
 	p.Ready()
 	initfile := common.GetCustomConfig(common.InitFileName)
-	if err := file.Writefile(initfile, "init done"); err != nil {
+	if err := file.Writefile(initfile, "init done", true); err != nil {
 		p.Log.Warnf("write init done file failed, reason: %v.\n\t please run: touch %s", err, initfile)
 	}
 	if !p.DisableInstallApp {

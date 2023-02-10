@@ -8,6 +8,7 @@ package cluster
 
 import (
 	"fmt"
+	"os"
 	"runtime"
 
 	"github.com/cockroachdb/errors"
@@ -36,10 +37,24 @@ func NewCluster(f factory.Factory) *Cluster {
 	}
 }
 
-func (c *Cluster) copyk3s(mip, ip string, sshClient ssh.Interface) error {
+func (c *Cluster) preinit(mip, ip string, sshClient ssh.Interface) error {
 	k3sbin := fmt.Sprintf("%s/hack/bin/k3s-%s-%s", common.GetDefaultDataDir(), runtime.GOOS, runtime.GOARCH)
 	if err := sshClient.Copy(ip, k3sbin, "/usr/local/bin/k3s"); err != nil {
 		return errors.Errorf("copy k3s bin (%s:%s -> %s:/usr/local/bin/k3s) failed, reason: %v", ip, mip, k3sbin, ip, err)
+	}
+	qbin, _ := os.Executable()
+	if err := sshClient.Copy(ip, qbin, "/usr/local/bin/qcadmin"); err != nil {
+		return errors.Errorf("copy k3s bin (%s:%s -> %s:/usr/local/bin/qcadmin) failed, reason: %v", ip, mip, qbin, ip, err)
+	}
+	if err := sshClient.CmdAsync(ip, "/root/.qc/data/hack/manifests/scripts/init.sh"); err != nil {
+		return errors.Errorf("%s run init script failed, reason: %v", ip, err)
+	}
+	c.log.Donef("init %s success", ip)
+	// add master0 ip
+	hostsArgs := fmt.Sprintf("/usr/local/bin/qcadmin exp tools hosts add --domain kubeapi.k7s.local --ip %s", mip)
+	if err := sshClient.CmdAsync(ip, hostsArgs); err != nil {
+		c.log.Debugf("cmd: %s", hostsArgs)
+		return errors.Errorf("%s add master0 (kubeapi.k7s.local --> %s) failed, reason: %v", ip, mip, err)
 	}
 	return nil
 }
@@ -48,12 +63,15 @@ func (c *Cluster) initMaster0(ip string, sshClient ssh.Interface) error {
 	c.log.Infof("master0 ip: %s", ip)
 	k3sargs := k3stpl.K3sArgs{}
 	master0tplSrc := fmt.Sprintf("%s/master0.%s", common.GetDefaultCacheDir(), ip)
-	master0tplDst := fmt.Sprintf("%s/k3s.service", c.SSH.User)
-	file.Writefile(master0tplSrc, k3sargs.Manifests(""))
+	master0tplDst := fmt.Sprintf("/%s/k3s.service", c.SSH.User)
+	file.Writefile(master0tplSrc, k3sargs.Manifests(""), true)
 	if err := sshClient.Copy(ip, master0tplSrc, master0tplDst); err != nil {
 		return errors.Errorf("copy master0 %s tpl failed, reason: %v", ip, err)
 	}
-	return c.copyk3s(ip, ip, sshClient)
+	if err := c.preinit(ip, ip, sshClient); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (c *Cluster) joinNode(mip, ip string, master bool, sshClient ssh.Interface) error {
@@ -65,11 +83,11 @@ func (c *Cluster) joinNode(mip, ip string, master bool, sshClient ssh.Interface)
 	k3sargs := k3stpl.K3sArgs{}
 	tplSrc := fmt.Sprintf("%s/%s.%s", common.GetDefaultCacheDir(), t, ip)
 	tplDst := fmt.Sprintf("/%s/k3s.service", c.SSH.User)
-	file.Writefile(tplSrc, k3sargs.Manifests(""))
+	file.Writefile(tplSrc, k3sargs.Manifests(""), true)
 	if err := sshClient.Copy(ip, tplSrc, tplDst); err != nil {
 		return errors.Errorf("%s copy tpl (%s:%s->%s:%s) failed, reason: %v", t, mip, tplSrc, ip, tplDst, err)
 	}
-	return c.copyk3s(mip, ip, sshClient)
+	return c.preinit(mip, ip, sshClient)
 }
 
 func (c *Cluster) InitNode() error {

@@ -29,7 +29,7 @@ func EmbedSSHCommand(f factory.Factory) *cobra.Command {
 					if err := sshClient.Ping(host); err != nil {
 						continue
 					}
-					sshClient.CmdAsync(host, osargs...)
+					sshClient.CmdsAsync(host, osargs...)
 				}
 			}
 		},

@@ -57,7 +57,7 @@ func newHostsAddCmd(f factory.Factory) *cobra.Command {
 			hf := &hosts.HostFile{Path: hostsPath}
 			if hf.HasDomain(domain) {
 				hf.DeleteDomain(domain)
-				log.Donef("domain %s delete success", domain)
+				log.Donef("found domain %s exist, clean success", domain)
 			}
 			hf.AppendHost(domain, ip)
 			log.Donef("domain %s:%s append success", domain, ip)

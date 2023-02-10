@@ -57,7 +57,7 @@ func EmbedCommand(f factory.Factory) *cobra.Command {
 			log := f.GetLog()
 			tplfile, _ := os.CreateTemp("/tmp", "")
 			log.Infof("file: %s", tplfile.Name())
-			file.Writefile(tplfile.Name(), k3sargs.Manifests(""))
+			file.Writefile(tplfile.Name(), k3sargs.Manifests(""), true)
 		},
 	}
 	rootCmd.Flags().StringVar(&k3sargs.ClusterCIDR, "cluster-cidr", "10.42.0.0/16", "cluster cidr")

@@ -37,8 +37,10 @@ type Interface interface {
 	// scp -r /tmp root@192.168.0.2:/root/tmp => Copy("192.168.0.2","tmp","/root/tmp")
 	// need check md5sum
 	Copy(host, srcFilePath, dstFilePath string) error
+	// CmdsAsync is exec command on remote host, and asynchronous return logs
+	CmdsAsync(host string, cmds ...string) error
 	// CmdAsync is exec command on remote host, and asynchronous return logs
-	CmdAsync(host string, cmd ...string) error
+	CmdAsync(host string, cmd string) error
 	// Cmd is exec command on remote host, and return combined standard output and standard error
 	Cmd(host, cmd string) ([]byte, error)
 	//CmdToString is exec command on remote host, and return spilt standard output and standard error

@@ -12,7 +12,7 @@ require (
 	github.com/docker/docker v20.10.22+incompatible
 	github.com/easysoft/quickon-api v0.6.0
 	github.com/emirpasic/gods v1.18.1
-	github.com/ergoapi/util v0.3.7
+	github.com/ergoapi/util v0.3.8
 	github.com/gofrs/flock v0.8.1
 	github.com/gosuri/uitable v0.0.4
 	github.com/imroc/req/v3 v3.30.0
@@ -35,10 +35,10 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/ulikunitz/xz v0.5.11
 	github.com/vishvananda/netlink v1.1.1-0.20210330154013-f5de75959ad5
-	golang.org/x/crypto v0.5.0
+	golang.org/x/crypto v0.6.0
 	golang.org/x/sync v0.1.0
 	golang.org/x/sys v0.5.0
-	golang.org/x/term v0.4.0
+	golang.org/x/term v0.5.0
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gotest.tools v2.2.0+incompatible
 	helm.sh/helm/v3 v3.11.1
@@ -199,9 +199,9 @@ require (
 	go.starlark.net v0.0.0-20200306205701-8dd3e2ee1dd5 // indirect
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/mod v0.7.0 // indirect
-	golang.org/x/net v0.5.0 // indirect
+	golang.org/x/net v0.6.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20220223155221-ee480838109b // indirect
-	golang.org/x/text v0.6.0 // indirect
+	golang.org/x/text v0.7.0 // indirect
 	golang.org/x/time v0.2.0 // indirect
 	golang.org/x/tools v0.5.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
