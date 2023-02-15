@@ -16,12 +16,14 @@
 package ssh
 
 import (
+	"fmt"
 	"net"
 	"time"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+	"github.com/ergoapi/util/zos"
 	"golang.org/x/crypto/ssh"
 	"k8s.io/apimachinery/pkg/util/wait"
 )
@@ -67,6 +69,9 @@ func NewSSHClient(ssh *types.SSH, isStdout bool) Interface {
 	log := log.GetInstance()
 	if ssh.User == "" {
 		ssh.User = common.DefaultOSUserRoot
+	}
+	if ssh.Passwd == "" && ssh.Pk == "" && ssh.PkData == "" {
+		ssh.Pk = fmt.Sprintf("%s/.ssh/id_rsa", zos.GetHomeDir())
 	}
 	address, err := listLocalHostAddrs()
 	// todo: return error?

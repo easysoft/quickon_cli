@@ -21,11 +21,11 @@ type K3sArgs struct {
 	TypeMaster  bool
 	Master0     bool
 	KubeAPI     string
+	KubeToken   string
 	ClusterCIDR string
 	ServiceCIDR string
 	DataStore   string
 	DataDir     string
-	Docker      bool
 }
 
 func render(data K3sArgs, temp string) string {
@@ -41,6 +41,9 @@ func (k3s K3sArgs) Manifests(template string) string {
 	}
 	if k3s.DataDir == "" {
 		k3s.DataDir = "/data/k3s"
+	}
+	if k3s.KubeToken == "" {
+		k3s.KubeToken = "quickon"
 	}
 	return render(k3s, template)
 }
@@ -65,7 +68,6 @@ func EmbedCommand(f factory.Factory) *cobra.Command {
 	rootCmd.Flags().StringVar(&k3sargs.DataDir, "data-dir", "", "data dir")
 	rootCmd.Flags().StringVar(&k3sargs.DataStore, "data", "", "data type")
 	rootCmd.Flags().StringVar(&k3sargs.KubeAPI, "kubeapi", "", "kubeapi")
-	rootCmd.Flags().BoolVar(&k3sargs.Docker, "docker", true, "docker")
 	rootCmd.Flags().BoolVar(&k3sargs.TypeMaster, "master", true, "master")
 	rootCmd.Flags().BoolVar(&k3sargs.Master0, "master0", false, "master0")
 	return rootCmd

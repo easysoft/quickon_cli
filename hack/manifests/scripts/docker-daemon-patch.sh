@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# shellcheck disable=SC1090,SC1091,SC2046,SC2068,SC2086
+
 [ $(id -u) -eq 0 ] || exec sudo $0 $@
 
 cat > /etc/docker/daemon.example.json <<EOF

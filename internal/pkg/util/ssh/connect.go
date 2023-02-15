@@ -28,6 +28,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/wait"
 
 	"github.com/ergoapi/util/file"
+	"github.com/ergoapi/util/zos"
 )
 
 func (s *SSH) getClientConfig() *ssh.ClientConfig {
@@ -91,7 +92,7 @@ func (s *SSH) Connect(host string) (sshClient *ssh.Client, session *ssh.Session,
 		}
 		return true, nil
 	}); err != nil {
-		return nil, nil, fmt.Errorf("ssh init dialer failed, reason: %s %w", host, err)
+		return nil, nil, fmt.Errorf("ssh init dialer failed, %s %w", host, err)
 	}
 	return
 }
@@ -116,14 +117,18 @@ func (s *SSH) sshAuthMethod(password, pkFile, pkData, pkPasswd string) (auth []s
 			auth = append(auth, ssh.PublicKeys(signer))
 		}
 	}
-	if file.CheckFileExists(pkFile) {
-		signer, err := parsePrivateKeyFile(pkFile, pkPasswd)
-		if err == nil {
-			auth = append(auth, ssh.PublicKeys(signer))
-		}
-	}
 	if password != "" {
 		auth = append(auth, ssh.Password(password))
+	} else {
+		if pkFile == "" {
+			pkFile = fmt.Sprintf("%s/.ssh/id_rsa", zos.GetHomeDir())
+		}
+		if file.CheckFileExists(pkFile) {
+			signer, err := parsePrivateKeyFile(pkFile, pkPasswd)
+			if err == nil {
+				auth = append(auth, ssh.PublicKeys(signer))
+			}
+		}
 	}
 	return auth
 }

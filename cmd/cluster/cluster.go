@@ -7,8 +7,10 @@
 package cluster
 
 import (
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/pkg/cluster"
+	"github.com/ergoapi/util/exnet"
 	"github.com/spf13/cobra"
 )
 
@@ -29,6 +31,11 @@ func InitCommand(f factory.Factory) *cobra.Command {
 		Use:     "init",
 		Short:   "init cluster",
 		Example: initExample,
+		PreRun: func(cmd *cobra.Command, args []string) {
+			if len(cluster.MasterIPs) == 0 {
+				cluster.MasterIPs = append(cluster.MasterIPs, exnet.LocalIPs()[0])
+			}
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return cluster.InitNode()
 		},
@@ -53,12 +60,34 @@ func JoinCommand(f factory.Factory) *cobra.Command {
 	return join
 }
 
+func DeleteCommand(f factory.Factory) *cobra.Command {
+	cluster := cluster.NewCluster(f)
+	delete := &cobra.Command{
+		Use:     "delete",
+		Short:   "delete node(s)",
+		Aliases: []string{"del"},
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if len(cluster.IPs) == 0 {
+				return errors.New("missing node ips")
+			}
+			// TODO check ip, 是否存在
+			return nil
+		},
+		Run: func(cmd *cobra.Command, args []string) {
+
+		},
+	}
+	delete.Flags().StringSliceVar(&cluster.IPs, "ips", nil, "ips, like 192.168.0.1:22")
+	return delete
+}
+
 func CleanCommand(f factory.Factory) *cobra.Command {
+	cluster := cluster.NewCluster(f)
 	clean := &cobra.Command{
 		Use:   "clean",
 		Short: "clean cluster",
-		Run: func(cmd *cobra.Command, args []string) {
-
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return cluster.Clean()
 		},
 	}
 	return clean

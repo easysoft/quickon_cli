@@ -134,34 +134,36 @@ ExecStartPre=/bin/sh -xc '! /usr/bin/systemctl is-enabled --quiet nm-cloud-setup
 ExecStartPre=-/sbin/modprobe br_netfilter
 ExecStartPre=-/sbin/modprobe overlay
 ExecStart=/usr/local/bin/k3s \
-  {{if .TypeMaster -}}
-    server \
-    --tls-san kubeapi.haogs.cn \
-    --tls-san apiserver.cluster.local \
-    --tls-san {{ .KubeAPI }} \
-    --cluster-cidr {{ .ClusterCIDR }} \
-    --service-cidr {{ .ServiceCIDR }} \
-    {{if not .Master0 -}}
-    --token qucheng \
-    --server https://{{ .KubeAPI }}:6443 \
-    {{ end -}}
-    {{if .DataStore -}}
-    --datastore-endpoint {{.DataStore}} \
+    {{if .TypeMaster -}}
+      server \
+      --tls-san kubeapi.haogs.cn \
+      --tls-san apiserver.cluster.local \
+      --tls-san {{ .KubeAPI }} \
+      {{if .ClusterCIDR -}}
+        --cluster-cidr {{ .ClusterCIDR }} \
+      {{ end -}}
+      {{if .ServiceCIDR -}}
+        --service-cidr {{ .ServiceCIDR }} \
+      {{ end -}}
+      {{if .DataStore -}}
+        --datastore-endpoint {{.DataStore}} \
+      {{else -}}
+        --cluster-init \
+      {{end -}}
+      --disable servicelb,traefik,local-storage \
+      --disable-cloud-controller \
+      --disable-network-policy \
+      --disable-helm-controller \
     {{else -}}
-    --cluster-init \
-    --etcd-snapshot-retention "0 */4 * * *" \
-    --etcd-snapshot-retention 30 \
-    {{end -}}
-    --disable servicelb,traefik,local-storage \
-    --disable-cloud-controller \
-    --disable-network-policy \
-    --disable-helm-controller \
+      agent \
     {{ end -}}
-    --data-dir {{.DataDir}} \
-    {{if .Docker -}}
-    --docker \
+        --token {{ .KubeToken }} \
+    {{if not .Master0 -}}
+      --server https://{{ .KubeAPI }}:6443 \
     {{ end -}}
-    --pause-image hub.qucheng.com/library/rancher/mirrored-pause:3.6 \
-    --kube-proxy-arg "proxy-mode=ipvs" "masquerade-all=true" \
-    --kube-proxy-arg "metrics-bind-address=0.0.0.0"
+      --data-dir {{.DataDir}} \
+      --docker \
+      --pause-image hub.qucheng.com/library/rancher/mirrored-pause:3.6 \
+      --kube-proxy-arg "proxy-mode=ipvs" "masquerade-all=true" \
+      --kube-proxy-arg "metrics-bind-address=0.0.0.0"
 `

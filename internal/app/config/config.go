@@ -11,6 +11,8 @@ import (
 	"time"
 
 	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/pkg/types"
+	"github.com/ergoapi/util/exstr"
 	"github.com/ergoapi/util/file"
 	"sigs.k8s.io/yaml"
 )
@@ -20,13 +22,14 @@ var Cfg *Config
 // Node node meta
 type Node struct {
 	Host string `yaml:"host" json:"host"`
-	Name string `yaml:"name" json:"name"`
-	Init bool   `yaml:"-" json:"-"`
+	Name string `yaml:"name,omitempty" json:"name,omitempty"`
+	Init bool   `yaml:"init,omitempty" json:"init,omitempty"`
 }
 
 // Config
 type Config struct {
 	Generated       time.Time `json:"-" yaml:"-"`
+	Global          Global    `yaml:"global" json:"global"`
 	ConsolePassword string    `yaml:"console-password,omitempty" json:"console-password,omitempty"`
 	ClusterID       string    `yaml:"cluster_id" json:"cluster_id"`
 	DB              string    `yaml:"db" json:"db"`
@@ -38,6 +41,10 @@ type Config struct {
 	Worker          []Node    `yaml:"worker" json:"worker"`
 	S3              S3Config  `yaml:"s3" json:"s3"`
 	DataDir         string    `yaml:"datadir" json:"datadir"`
+}
+
+type Global struct {
+	SSH types.SSH `yaml:"ssh" json:"ssh"`
 }
 
 type S3Config struct {
@@ -61,6 +68,15 @@ func LoadConfig() (*Config, error) {
 	return r, nil
 }
 
+func LoadTruncateConfig() *Config {
+	path := common.GetDefaultConfig()
+	r := new(Config)
+	if file.CheckFileExists(path) {
+		os.Remove(path)
+	}
+	return r
+}
+
 func (r *Config) SaveConfig() error {
 	path := common.GetDefaultConfig()
 	b, err := yaml.Marshal(r)
@@ -72,4 +88,26 @@ func (r *Config) SaveConfig() error {
 		return err
 	}
 	return nil
+}
+
+func (r *Config) GetNodes() []Node {
+	var nodes []Node
+	nodes = append(nodes, r.Master...)
+	nodes = append(nodes, r.Worker...)
+	return nodes
+}
+
+func (r *Config) GetIPs() []string {
+	var ips []string
+	for _, node := range r.Master {
+		ips = append(ips, node.Host)
+	}
+	for _, node := range r.Worker {
+		ips = append(ips, node.Host)
+	}
+	return exstr.DuplicateStrElement(ips)
+}
+
+func (r *Config) CheckIP(ip string) bool {
+	return exstr.StringArrayContains(r.GetIPs(), ip)
 }
