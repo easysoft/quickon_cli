@@ -39,9 +39,7 @@ func (k3s K3sArgs) Manifests(template string) string {
 	if template == "" {
 		template = k3s.Template()
 	}
-	if k3s.DataDir == "" {
-		k3s.DataDir = "/data/k3s"
-	}
+	k3s.DataDir = common.GetDefaultQuickonPlatformDir(k3s.DataDir)
 	if k3s.KubeToken == "" {
 		k3s.KubeToken = "quickon"
 	}
