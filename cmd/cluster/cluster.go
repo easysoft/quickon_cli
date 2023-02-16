@@ -35,6 +35,7 @@ func InitCommand(f factory.Factory) *cobra.Command {
 			if len(cluster.MasterIPs) == 0 {
 				cluster.MasterIPs = append(cluster.MasterIPs, exnet.LocalIPs()[0])
 			}
+			// 禁止重复初始化
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return cluster.InitNode()
@@ -50,13 +51,16 @@ func InitCommand(f factory.Factory) *cobra.Command {
 }
 
 func JoinCommand(f factory.Factory) *cobra.Command {
+	cluster := cluster.NewCluster(f)
 	join := &cobra.Command{
 		Use:   "join",
 		Short: "join cluster",
-		Run: func(cmd *cobra.Command, args []string) {
-
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return cluster.JoinNode()
 		},
 	}
+	join.Flags().StringSliceVar(&cluster.MasterIPs, "master", nil, "ips, like 192.168.0.1:22")
+	join.Flags().StringSliceVar(&cluster.WorkerIPs, "worker", nil, "ips, like 192.168.0.1:22")
 	return join
 }
 
@@ -70,11 +74,10 @@ func DeleteCommand(f factory.Factory) *cobra.Command {
 			if len(cluster.IPs) == 0 {
 				return errors.New("missing node ips")
 			}
-			// TODO check ip, 是否存在
 			return nil
 		},
-		Run: func(cmd *cobra.Command, args []string) {
-
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return cluster.DeleteNode()
 		},
 	}
 	delete.Flags().StringSliceVar(&cluster.IPs, "ips", nil, "ips, like 192.168.0.1:22")

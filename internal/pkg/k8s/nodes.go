@@ -173,3 +173,7 @@ func (c *Client) GetNodeResources(sortBy string, selector labels.Selector) ([]No
 	}
 	return resources, err
 }
+
+func (c *Client) DeleteNode() error {
+	return nil
+}

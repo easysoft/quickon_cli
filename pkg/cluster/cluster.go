@@ -17,6 +17,7 @@ import (
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/cli/k3stpl"
+	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/internal/pkg/util/ssh"
@@ -72,8 +73,8 @@ func (c *Cluster) preinit(mip, ip string, sshClient ssh.Interface) error {
 	return nil
 }
 
-func (c *Cluster) initMaster0(ip string, sshClient ssh.Interface) error {
-	c.log.Infof("master0 ip: %s", ip)
+func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error {
+	c.log.Infof("master0 ip: %s", cfg.InitNode)
 	k3sargs := k3stpl.K3sArgs{
 		Master0:     true,
 		TypeMaster:  true,
@@ -84,35 +85,32 @@ func (c *Cluster) initMaster0(ip string, sshClient ssh.Interface) error {
 		ServiceCIDR: "",
 		DataStore:   "",
 	}
-	master0tplSrc := fmt.Sprintf("%s/master0.%s", common.GetDefaultCacheDir(), ip)
+	master0tplSrc := fmt.Sprintf("%s/master0.%s", common.GetDefaultCacheDir(), cfg.InitNode)
 	master0tplDst := fmt.Sprintf("/%s/.k3s.service", c.SSH.User)
 	file.Writefile(master0tplSrc, k3sargs.Manifests(""), true)
-	if err := sshClient.Copy(ip, master0tplSrc, master0tplDst); err != nil {
-		return errors.Errorf("copy master0 %s tpl failed, reason: %v", ip, err)
+	if err := sshClient.Copy(cfg.InitNode, master0tplSrc, master0tplDst); err != nil {
+		return errors.Errorf("copy master0 %s tpl failed, reason: %v", cfg.InitNode, err)
 	}
-	if err := c.preinit(ip, ip, sshClient); err != nil {
+	if err := c.preinit(cfg.InitNode, cfg.InitNode, sshClient); err != nil {
 		return err
 	}
-	cfg := config.LoadTruncateConfig()
 	cfg.ClusterID = exid.GenUUID()
 	cfg.DB = k3sargs.DataStore
 	cfg.DataDir = k3sargs.DataDir
-	cfg.InitNode = ip
 	cfg.Master = append(cfg.Master, config.Node{
-		Host: ip,
+		Host: cfg.InitNode,
 		Init: true,
 	})
 	cfg.Token = k3sargs.KubeToken
 	return cfg.SaveConfig()
 }
 
-func (c *Cluster) joinNode(mip, ip string, master bool, sshClient ssh.Interface) error {
+func (c *Cluster) joinNode(ip string, master bool, cfg *config.Config, sshClient ssh.Interface) error {
 	t := "worker"
 	if master {
 		t = "master"
 	}
 	c.log.Infof("node role: %s, ip: %s", t, ip)
-	cfg, _ := config.LoadConfig()
 	k3sargs := k3stpl.K3sArgs{
 		Master0:     false,
 		TypeMaster:  master,
@@ -127,9 +125,9 @@ func (c *Cluster) joinNode(mip, ip string, master bool, sshClient ssh.Interface)
 	tplDst := fmt.Sprintf("/%s/.k3s.service", c.SSH.User)
 	file.Writefile(tplSrc, k3sargs.Manifests(""), true)
 	if err := sshClient.Copy(ip, tplSrc, tplDst); err != nil {
-		return errors.Errorf("%s copy tpl (%s:%s->%s:%s) failed, reason: %v", t, mip, tplSrc, ip, tplDst, err)
+		return errors.Errorf("%s copy tpl (%s:%s->%s:%s) failed, reason: %v", t, cfg.InitNode, tplSrc, ip, tplDst, err)
 	}
-	if err := c.preinit(mip, ip, sshClient); err != nil {
+	if err := c.preinit(cfg.InitNode, ip, sshClient); err != nil {
 		return err
 	}
 	if master {
@@ -148,10 +146,11 @@ func (c *Cluster) InitNode() error {
 	c.log.Info("init node")
 	c.MasterIPs = exstr.DuplicateStrElement(c.MasterIPs)
 	c.WorkerIPs = exstr.DuplicateStrElement(c.WorkerIPs)
-	master0 := c.MasterIPs[0]
 	otherMaster := c.MasterIPs[1:]
 	sshClient := ssh.NewSSHClient(&c.SSH, true)
-	if err := c.initMaster0(master0, sshClient); err != nil {
+	cfg := config.LoadTruncateConfig()
+	cfg.InitNode = c.MasterIPs[0]
+	if err := c.initMaster0(cfg, sshClient); err != nil {
 		return err
 	}
 	for _, host := range otherMaster {
@@ -160,7 +159,7 @@ func (c *Cluster) InitNode() error {
 			c.log.Warnf("skip join master: %s, reason: %v", host, err)
 			continue
 		}
-		if err := c.joinNode(master0, host, true, sshClient); err != nil {
+		if err := c.joinNode(host, true, cfg, sshClient); err != nil {
 			c.log.Warnf("skip join master: %s, reason: %v", host, err)
 		}
 	}
@@ -170,7 +169,36 @@ func (c *Cluster) InitNode() error {
 			c.log.Warnf("skip join worker: %s, reason: %v", host, err)
 			continue
 		}
-		if err := c.joinNode(master0, host, false, sshClient); err != nil {
+		if err := c.joinNode(host, false, cfg, sshClient); err != nil {
+			c.log.Warnf("skip join worker: %s, reason: %v", host, err)
+		}
+	}
+	return nil
+}
+
+func (c *Cluster) JoinNode() error {
+	c.log.Info("join node")
+	c.MasterIPs = exstr.DuplicateStrElement(c.MasterIPs)
+	c.WorkerIPs = exstr.DuplicateStrElement(c.WorkerIPs)
+	sshClient := ssh.NewSSHClient(&c.SSH, true)
+	cfg, _ := config.LoadConfig()
+	for _, host := range c.MasterIPs {
+		c.log.Debugf("ping master %s", host)
+		if err := sshClient.Ping(host); err != nil {
+			c.log.Warnf("skip join master: %s, reason: %v", host, err)
+			continue
+		}
+		if err := c.joinNode(host, true, cfg, sshClient); err != nil {
+			c.log.Warnf("skip join master: %s, reason: %v", host, err)
+		}
+	}
+	for _, host := range c.WorkerIPs {
+		c.log.Debugf("ping worker %s", host)
+		if err := sshClient.Ping(host); err != nil {
+			c.log.Warnf("skip join worker: %s, reason: %v", host, err)
+			continue
+		}
+		if err := c.joinNode(host, false, cfg, sshClient); err != nil {
 			c.log.Warnf("skip join worker: %s, reason: %v", host, err)
 		}
 	}
@@ -187,6 +215,33 @@ func (c *Cluster) cleanNode(ip string, sshClient ssh.Interface, wg *sync.WaitGro
 		return
 	}
 	c.log.Donef("clean node %s success", ip)
+}
+
+func (c *Cluster) deleteNode(ip string, sshClient ssh.Interface, kubeClient *k8s.Client, wg *sync.WaitGroup) error {
+	defer wg.Done()
+	// 从集群中移除节点
+	// 清理节点
+	return nil
+}
+
+func (c *Cluster) DeleteNode() error {
+	cfg, _ := config.LoadConfig()
+	var wg sync.WaitGroup
+	sshClient := ssh.NewSSHClient(&cfg.Global.SSH, true)
+	kubeClient, err := k8s.NewSimpleClient()
+	if err != nil {
+		return errors.Errorf("load k8s client failed, reason: %v", err)
+	}
+	for _, ip := range c.IPs {
+		if ip == cfg.InitNode {
+			c.log.Warnf("init node %s not allow delete, can use clean subcmd", ip)
+			continue
+		}
+		wg.Add(1)
+		c.deleteNode(ip, sshClient, kubeClient, &wg)
+	}
+	wg.Wait()
+	return cfg.SaveConfig()
 }
 
 // Clean 清理集群
