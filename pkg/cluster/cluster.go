@@ -7,6 +7,7 @@
 package cluster
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"runtime"
@@ -221,7 +222,7 @@ func (c *Cluster) deleteNode(ip string, sshClient ssh.Interface, kubeClient *k8s
 	defer wg.Done()
 	// 从集群中移除节点
 	// 清理节点
-	return nil
+	return kubeClient.DownNode(context.TODO(), ip)
 }
 
 func (c *Cluster) DeleteNode() error {

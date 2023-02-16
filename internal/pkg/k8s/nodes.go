@@ -88,6 +88,18 @@ func (c *Client) GetActivePodByNodename(node corev1.Node) (*corev1.PodList, erro
 	return activePods, err
 }
 
+func (c *Client) GetPodsByNodes(nodeName string) (pods []corev1.Pod, err error) {
+	podList, err := c.Clientset.CoreV1().Pods(metav1.NamespaceAll).List(context.TODO(), metav1.ListOptions{
+		FieldSelector: fields.SelectorFromSet(fields.Set{"spec.nodeName": nodeName}).String()})
+	if err != nil {
+		return pods, err
+	}
+	for _, pod := range podList.Items {
+		pods = append(pods, pod)
+	}
+	return pods, nil
+}
+
 // GetNodes
 func (c *Client) GetNodes(resourceName string, selector labels.Selector) (map[string]corev1.Node, error) {
 	nodes := make(map[string]corev1.Node)
@@ -172,8 +184,4 @@ func (c *Client) GetNodeResources(sortBy string, selector labels.Selector) ([]No
 		resources = append(resources, resource)
 	}
 	return resources, err
-}
-
-func (c *Client) DeleteNode() error {
-	return nil
 }
