@@ -12,6 +12,9 @@ import (
 	"os"
 	"runtime"
 	"sync"
+	"time"
+
+	"k8s.io/apimachinery/pkg/util/wait"
 
 	"github.com/cockroachdb/errors"
 
@@ -29,6 +32,12 @@ import (
 
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 )
+
+var defaultBackoff = wait.Backoff{
+	Duration: 6 * time.Second,
+	Factor:   1,
+	Steps:    10,
+}
 
 type Cluster struct {
 	log       log.Logger
@@ -77,14 +86,15 @@ func (c *Cluster) preinit(mip, ip string, sshClient ssh.Interface) error {
 func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error {
 	c.log.Infof("master0 ip: %s", cfg.InitNode)
 	k3sargs := k3stpl.K3sArgs{
-		Master0:     true,
-		TypeMaster:  true,
-		KubeAPI:     "kubeapi.k7s.local",
-		KubeToken:   expass.PwGenAlphaNum(16),
-		DataDir:     "",
-		ClusterCIDR: "",
-		ServiceCIDR: "",
-		DataStore:   "",
+		Master0:      true,
+		TypeMaster:   true,
+		KubeAPI:      "kubeapi.k7s.local",
+		KubeToken:    expass.PwGenAlphaNum(16),
+		DataDir:      "",
+		ClusterCIDR:  "",
+		ServiceCIDR:  "",
+		DataStore:    "",
+		LocalStorage: true,
 	}
 	master0tplSrc := fmt.Sprintf("%s/master0.%s", common.GetDefaultCacheDir(), cfg.InitNode)
 	master0tplDst := fmt.Sprintf("/%s/.k3s.service", c.SSH.User)
@@ -93,6 +103,10 @@ func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error
 		return errors.Errorf("copy master0 %s tpl failed, reason: %v", cfg.InitNode, err)
 	}
 	if err := c.preinit(cfg.InitNode, cfg.InitNode, sshClient); err != nil {
+		return err
+	}
+	// waiting k3s ready
+	if err := c.waitk3sReady(cfg.InitNode, sshClient); err != nil {
 		return err
 	}
 	cfg.ClusterID = exid.GenUUID()
@@ -106,6 +120,27 @@ func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error
 	return cfg.SaveConfig()
 }
 
+func (c *Cluster) waitk3sReady(host string, sshClient ssh.Interface) error {
+	c.log.StartWait("check k8s ready.")
+	try := 0
+	err := wait.ExponentialBackoff(defaultBackoff, func() (bool, error) {
+		try++
+		c.log.Debugf("the %d/%d time tring to check k8s status", try, defaultBackoff.Steps)
+		// TODO 地址错误问题
+		err := sshClient.Copy(host, "/etc/rancher/k3s/k3s.yaml", common.GetDefaultNewKubeConfig())
+		if err != nil {
+			return false, nil
+		}
+		return true, nil
+	})
+	c.log.StopWait()
+	if err != nil {
+		return fmt.Errorf("check k8s ready failed, reason: %w", err)
+	}
+	c.log.Done("check k8s ready.")
+	return nil
+}
+
 func (c *Cluster) joinNode(ip string, master bool, cfg *config.Config, sshClient ssh.Interface) error {
 	t := "worker"
 	if master {
@@ -113,14 +148,15 @@ func (c *Cluster) joinNode(ip string, master bool, cfg *config.Config, sshClient
 	}
 	c.log.Infof("node role: %s, ip: %s", t, ip)
 	k3sargs := k3stpl.K3sArgs{
-		Master0:     false,
-		TypeMaster:  master,
-		KubeAPI:     "kubeapi.k7s.local",
-		KubeToken:   cfg.Token,
-		DataDir:     cfg.DataDir,
-		ClusterCIDR: "",
-		ServiceCIDR: "",
-		DataStore:   cfg.DB,
+		Master0:      false,
+		TypeMaster:   master,
+		KubeAPI:      "kubeapi.k7s.local",
+		KubeToken:    cfg.Token,
+		DataDir:      cfg.DataDir,
+		ClusterCIDR:  "",
+		ServiceCIDR:  "",
+		DataStore:    cfg.DB,
+		LocalStorage: true,
 	}
 	tplSrc := fmt.Sprintf("%s/%s.%s", common.GetDefaultCacheDir(), t, ip)
 	tplDst := fmt.Sprintf("/%s/.k3s.service", c.SSH.User)
@@ -219,17 +255,22 @@ func (c *Cluster) cleanNode(ip string, sshClient ssh.Interface, wg *sync.WaitGro
 }
 
 func (c *Cluster) deleteNode(ip string, sshClient ssh.Interface, kubeClient *k8s.Client, wg *sync.WaitGroup) error {
-	defer wg.Done()
+	c.log.Infof("start clean node %s", ip)
 	// 从集群中移除节点
+	c.log.Infof("delete node %s from cluster", ip)
+	if err := kubeClient.DownNode(context.TODO(), ip); err != nil {
+		c.log.Warnf("delete node %s from cluster failed, reason: %v", ip, err)
+	}
 	// 清理节点
-	return kubeClient.DownNode(context.TODO(), ip)
+	c.cleanNode(ip, sshClient, wg)
+	return nil
 }
 
 func (c *Cluster) DeleteNode() error {
 	cfg, _ := config.LoadConfig()
 	var wg sync.WaitGroup
 	sshClient := ssh.NewSSHClient(&cfg.Global.SSH, true)
-	kubeClient, err := k8s.NewSimpleClient()
+	kubeClient, err := k8s.NewSimpleClient(common.GetDefaultNewKubeConfig())
 	if err != nil {
 		return errors.Errorf("load k8s client failed, reason: %v", err)
 	}

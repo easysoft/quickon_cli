@@ -18,14 +18,15 @@ import (
 )
 
 type K3sArgs struct {
-	TypeMaster  bool
-	Master0     bool
-	KubeAPI     string
-	KubeToken   string
-	ClusterCIDR string
-	ServiceCIDR string
-	DataStore   string
-	DataDir     string
+	TypeMaster   bool
+	Master0      bool
+	KubeAPI      string
+	KubeToken    string
+	ClusterCIDR  string
+	ServiceCIDR  string
+	DataStore    string
+	DataDir      string
+	LocalStorage bool
 }
 
 func render(data K3sArgs, temp string) string {

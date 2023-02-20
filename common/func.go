@@ -81,7 +81,7 @@ func GetChannel(p string) string {
 	return p
 }
 
-// GetChannel 获取chartrepo channel地址
+// GetVersion 获取chartrepo channel地址
 func GetVersion(p string) string {
 	if strings.Contains(p, "-") {
 		v := strings.Split(p, "-")
@@ -100,6 +100,13 @@ func GetDefaultConfig() string {
 
 func GetDefaultKubeConfig() string {
 	d := fmt.Sprintf("%v/.kube", zos.GetHomeDir())
+	os.MkdirAll(d, FileMode0644)
+	return fmt.Sprintf("%v/config", d)
+}
+
+func GetDefaultNewKubeConfig() string {
+	home := zos.GetHomeDir()
+	d := home + "/" + DefaultCfgDir + "/.kube"
 	os.MkdirAll(d, FileMode0644)
 	return fmt.Sprintf("%v/config", d)
 }

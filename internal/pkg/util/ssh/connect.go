@@ -85,7 +85,7 @@ func (s *SSH) Connect(host string) (sshClient *ssh.Client, session *ssh.Session,
 	try := 0
 	if err := wait.ExponentialBackoff(defaultBackoff, func() (bool, error) {
 		try++
-		s.log.Infof("the %d/%d time tring to ssh to %s with user %s", try, defaultBackoff.Steps, host, s.User)
+		s.log.Debugf("the %d/%d time tring to ssh to %s with user %s", try, defaultBackoff.Steps, host, s.User)
 		sshClient, session, err = s.newClientAndSession(host)
 		if err != nil {
 			return false, nil

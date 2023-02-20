@@ -88,14 +88,19 @@ func NewSimpleQClient() (*Client, error) {
 	}, nil
 }
 
-func NewSimpleClient() (*Client, error) {
+func NewSimpleClient(kubecfg ...string) (*Client, error) {
 	kubeconfig := os.Getenv("KUBECONFIG")
 	if kubeconfig == "" {
 		dir, err := os.UserHomeDir()
 		if err != nil {
 			return nil, err
 		}
-		kubeconfig = filepath.Join(dir, ".kube", "config")
+		if len(kubecfg) > 0 {
+			kubeconfig = kubecfg[0]
+		} else {
+			kubeconfig = filepath.Join(dir, ".kube", "config")
+		}
+
 	}
 	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
 	if err != nil {
@@ -272,22 +277,30 @@ func (c *Client) GetNodeByIP(ctx context.Context, ip string) (*corev1.Node, erro
 	if len(nodes.Items) == 0 {
 		return nil, kubeerr.NewNotFound(schema.GroupResource{Resource: "nodes"}, ip)
 	}
-	return &nodes.Items[0], nil
+	for _, node := range nodes.Items {
+		for _, nodeip := range node.Status.Addresses {
+			if nodeip.Address == ip {
+				return &node, nil
+			}
+		}
+	}
+	return nil, kubeerr.NewNotFound(schema.GroupResource{Resource: "nodes"}, ip)
 }
 
 func (c *Client) DownNode(ctx context.Context, ip string) error {
-	if _, err := c.GetNodeByIP(ctx, ip); err != nil {
+	nodeinfo, err := c.GetNodeByIP(ctx, ip)
+	if err != nil {
 		if kubeerr.IsNotFound(err) {
 			return nil
 		}
 		return err
 	}
 	// TODO 需要处理已存在
-	c.CordonOrUnCordonNode(ctx, name, true, metav1.PatchOptions{})
-	if err := c.DeleteOrEvictPodsSimple(ctx, name); err != nil {
+	c.CordonOrUnCordonNode(ctx, nodeinfo.Name, true, metav1.PatchOptions{})
+	if err := c.DeleteOrEvictPodsSimple(ctx, nodeinfo.Name); err != nil {
 		return err
 	}
-	return c.Clientset.CoreV1().Nodes().Delete(ctx, name, metav1.DeleteOptions{})
+	return c.Clientset.CoreV1().Nodes().Delete(ctx, nodeinfo.Name, metav1.DeleteOptions{})
 }
 
 func (c *Client) DeleteNode(ctx context.Context, name string) error {
