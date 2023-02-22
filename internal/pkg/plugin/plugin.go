@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2022 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
+// Copyright (c) 2021-2023 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
 // Use of this source code is covered by the following dual licenses:
 // (1) Z PUBLIC LICENSE 1.2 (ZPL 1.2)
 // (2) Affero General Public License 3.0 (AGPL 3.0)
@@ -110,7 +110,6 @@ func (p *Item) UnInstall() error {
 	}
 	// #nosec
 	if p.Tool == "helm" {
-
 		applycmd := qcexec.Command(os.Args[0], "experimental", "helm", "delete", p.Type, "-n", common.DefaultSystem)
 		if output, err := applycmd.CombinedOutput(); err != nil {
 			p.log.Errorf("helm uninstall %s plugin %s failed: %s", p.Type, p.Name, string(output))

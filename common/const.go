@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2022 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
+// Copyright (c) 2021-2023 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
 // Use of this source code is covered by the following dual licenses:
 // (1) Z PUBLIC LICENSE 1.2 (ZPL 1.2)
 // (2) Affero General Public License 3.0 (AGPL 3.0)
@@ -87,6 +87,10 @@ const (
 	InitFileName           = ".initdone"
 	InitLockFileName       = ".qlock"
 	InitModeCluster        = ".incluster"
+	DefaultOSUserRoot      = "root"
+	DefaultSSHPort         = 22
+	PrivateKeyFilename     = "id_rsa"
+	PublicKeyFilename      = "id_rsa.pub"
 )
 
 const (
@@ -95,3 +99,75 @@ const (
 	QuchengDefaultUser = "qadmin"
 	QuchengDefaultPass = "pass4Quickon"
 )
+
+const K3SServiceTpl = `
+[Unit]
+Description=Lightweight Kubernetes
+Documentation=https://k3s.io
+Wants=network-online.target
+After=network-online.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+{{if .TypeMaster -}}
+Type=notify
+{{else}}
+Type=exec
+{{ end -}}
+EnvironmentFile=-/etc/default/%N
+EnvironmentFile=-/etc/sysconfig/%N
+EnvironmentFile=-/etc/systemd/system/k3s.service.env
+KillMode=process
+Delegate=yes
+# Having non-zero Limit*s causes performance problems due to accounting overhead
+# in the kernel. We recommend using cgroups to do container-local accounting.
+LimitNOFILE=1048576
+LimitNPROC=infinity
+LimitCORE=infinity
+TasksMax=infinity
+TimeoutStartSec=0
+Restart=always
+RestartSec=5s
+ExecStartPre=/bin/sh -xc '! /usr/bin/systemctl is-enabled --quiet nm-cloud-setup.service'
+ExecStartPre=-/sbin/modprobe br_netfilter
+ExecStartPre=-/sbin/modprobe overlay
+ExecStart=/usr/local/bin/k3s \
+    {{if .TypeMaster -}}
+      server \
+      --tls-san kubeapi.haogs.cn \
+      --tls-san apiserver.cluster.local \
+      --tls-san {{ .KubeAPI }} \
+      {{if .ClusterCIDR -}}
+        --cluster-cidr {{ .ClusterCIDR }} \
+      {{ end -}}
+      {{if .ServiceCIDR -}}
+        --service-cidr {{ .ServiceCIDR }} \
+      {{ end -}}
+      {{if .DataStore -}}
+        --datastore-endpoint {{.DataStore}} \
+      {{else -}}
+        --cluster-init \
+      {{end -}}
+      {{if .LocalStorage -}}
+        --disable servicelb,traefik,local-storage \
+      {{else -}}
+        --disable servicelb,traefik \
+      {{end -}}
+      --disable-cloud-controller \
+      --disable-network-policy \
+      --disable-helm-controller \
+    {{else -}}
+      agent \
+    {{ end -}}
+        --token {{ .KubeToken }} \
+    {{if not .Master0 -}}
+      --server https://{{ .KubeAPI }}:6443 \
+    {{ end -}}
+      --data-dir {{.DataDir}} \
+      --docker \
+      --pause-image hub.qucheng.com/library/rancher/mirrored-pause:3.6 \
+      --kube-proxy-arg "proxy-mode=ipvs" "masquerade-all=true" \
+      --kube-proxy-arg "metrics-bind-address=0.0.0.0"
+`

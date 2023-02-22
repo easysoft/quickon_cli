@@ -63,6 +63,9 @@ lint: ## lint code
 
 default: gencopyright fmt lint ## fmt code
 
+coverage: generate ## coverage
+	go test -race -failfast -coverprofile=coverage.out -covermode=atomic `go list ./... | grep -vE '(internal/static)'`
+
 build: ## build binary
 	@echo "build bin ${GIT_VERSION} $(GIT_COMMIT) $(GIT_BRANCH) $(BUILD_DATE) $(GIT_TREE_STATE)"
 	@GO_ENABLED=1 gox -osarch="linux/amd64 linux/arm64" \

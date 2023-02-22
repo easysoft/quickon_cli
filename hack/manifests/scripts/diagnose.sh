@@ -125,6 +125,8 @@ system_status() {
 
     run df -h | tee -a ${diagnose_dir}/system_df_status
 
+    run cat cat /etc/resolv.conf | tee -a ${diagnose_dir}/system_dns
+
     run cat /proc/mounts | tee -a ${diagnose_dir}/system_mounts_status
 
     if [ "$is_ps_hang" == "false" ]; then

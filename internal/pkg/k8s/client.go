@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2022 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
+// Copyright (c) 2021-2023 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
 // Use of this source code is covered by the following dual licenses:
 // (1) Z PUBLIC LICENSE 1.2 (ZPL 1.2)
 // (2) Affero General Public License 3.0 (AGPL 3.0)
@@ -10,6 +10,7 @@ import (
 	"bufio"
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -23,9 +24,12 @@ import (
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
+	policyv1 "k8s.io/api/policy/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	storagev1 "k8s.io/api/storage/v1"
+	kubeerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/dynamic"
@@ -36,6 +40,13 @@ import (
 	"k8s.io/client-go/tools/remotecommand"
 	"k8s.io/kubectl/pkg/scheme"
 	metrics "k8s.io/metrics/pkg/client/clientset/versioned"
+)
+
+const (
+	//EvictionKind EvictionKind
+	EvictionKind = "Eviction"
+	//EvictionSubresource EvictionSubresource
+	EvictionSubresource = "pods/eviction"
 )
 
 type Client struct {
@@ -77,14 +88,19 @@ func NewSimpleQClient() (*Client, error) {
 	}, nil
 }
 
-func NewSimpleClient() (*Client, error) {
+func NewSimpleClient(kubecfg ...string) (*Client, error) {
 	kubeconfig := os.Getenv("KUBECONFIG")
 	if kubeconfig == "" {
 		dir, err := os.UserHomeDir()
 		if err != nil {
 			return nil, err
 		}
-		kubeconfig = filepath.Join(dir, ".kube", "config")
+		if len(kubecfg) > 0 {
+			kubeconfig = kubecfg[0]
+		} else {
+			kubeconfig = filepath.Join(dir, ".kube", "config")
+		}
+
 	}
 	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
 	if err != nil {
@@ -177,6 +193,38 @@ func (c *Client) GetGitVersion(_ context.Context) (string, error) {
 	return v.GitVersion, nil
 }
 
+// SupportEviction uses Discovery API to find out if the server support eviction subresource
+// If support, it will return its groupVersion; Otherwise, it will return ""
+func (c *Client) SupportEviction() (string, error) {
+	discoveryClient := c.Clientset.Discovery()
+	groupList, err := discoveryClient.ServerGroups()
+	if err != nil {
+		return "", err
+	}
+	foundPolicyGroup := false
+	var policyGroupVersion string
+	for _, group := range groupList.Groups {
+		if group.Name == "policy" {
+			foundPolicyGroup = true
+			policyGroupVersion = group.PreferredVersion.GroupVersion
+			break
+		}
+	}
+	if !foundPolicyGroup {
+		return "", nil
+	}
+	resourceList, err := discoveryClient.ServerResourcesForGroupVersion("v1")
+	if err != nil {
+		return "", err
+	}
+	for _, resource := range resourceList.APIResources {
+		if resource.Name == EvictionSubresource && resource.Kind == EvictionKind {
+			return policyGroupVersion, nil
+		}
+	}
+	return "", nil
+}
+
 func (c *Client) ListSC(ctx context.Context, opts metav1.ListOptions) (*storagev1.StorageClassList, error) {
 	return c.Clientset.StorageV1().StorageClasses().List(ctx, opts)
 }
@@ -215,6 +263,101 @@ func (c *Client) PatchDefaultSC(ctx context.Context) (*storagev1.StorageClass, e
 
 func (c *Client) ListNodes(ctx context.Context, opts metav1.ListOptions) (*corev1.NodeList, error) {
 	return c.Clientset.CoreV1().Nodes().List(ctx, opts)
+}
+
+func (c *Client) GetNodeByName(ctx context.Context, name string, opts metav1.GetOptions) (*corev1.Node, error) {
+	return c.Clientset.CoreV1().Nodes().Get(ctx, name, opts)
+}
+
+func (c *Client) GetNodeByIP(ctx context.Context, ip string) (*corev1.Node, error) {
+	nodes, err := c.Clientset.CoreV1().Nodes().List(ctx, metav1.ListOptions{})
+	if err != nil {
+		return nil, err
+	}
+	if len(nodes.Items) == 0 {
+		return nil, kubeerr.NewNotFound(schema.GroupResource{Resource: "nodes"}, ip)
+	}
+	for _, node := range nodes.Items {
+		for _, nodeip := range node.Status.Addresses {
+			if nodeip.Address == ip {
+				return &node, nil
+			}
+		}
+	}
+	return nil, kubeerr.NewNotFound(schema.GroupResource{Resource: "nodes"}, ip)
+}
+
+func (c *Client) DownNode(ctx context.Context, ip string) error {
+	nodeinfo, err := c.GetNodeByIP(ctx, ip)
+	if err != nil {
+		if kubeerr.IsNotFound(err) {
+			return nil
+		}
+		return err
+	}
+	// TODO 需要处理已存在
+	c.CordonOrUnCordonNode(ctx, nodeinfo.Name, true, metav1.PatchOptions{})
+	if err := c.DeleteOrEvictPodsSimple(ctx, nodeinfo.Name); err != nil {
+		return err
+	}
+	return c.Clientset.CoreV1().Nodes().Delete(ctx, nodeinfo.Name, metav1.DeleteOptions{})
+}
+
+func (c *Client) DeleteNode(ctx context.Context, name string) error {
+	return c.Clientset.CoreV1().Nodes().Delete(ctx, name, metav1.DeleteOptions{})
+}
+
+func (c *Client) DrainNode(ctx context.Context, name string, opts metav1.DeleteOptions) error {
+	return c.Clientset.CoreV1().Nodes().Delete(ctx, name, opts)
+}
+
+func (c *Client) CordonOrUnCordonNode(ctx context.Context, name string, drain bool, opts metav1.PatchOptions) (*corev1.Node, error) {
+	data := fmt.Sprintf(`{"spec":{"unschedulable":%t}}`, drain)
+	node, err := c.Clientset.CoreV1().Nodes().Patch(ctx, name, types.StrategicMergePatchType, []byte(data), opts)
+	if err != nil {
+		return node, err
+	}
+	return node, nil
+}
+
+func (c *Client) DeleteOrEvictPodsSimple(ctx context.Context, name string) error {
+	pods, err := c.GetPodsByNodes(name)
+	if err != nil {
+		return err
+	}
+	policyGroupVersion, err := c.SupportEviction()
+	if err != nil {
+		return err
+	}
+	if policyGroupVersion == "" {
+		return errors.New("k8s not support eviction subresource")
+	}
+	for _, v := range pods {
+		c.EvictPod(ctx, v, policyGroupVersion)
+	}
+	return nil
+}
+
+// evictPod 驱离POD
+func (c *Client) EvictPod(ctx context.Context, pod corev1.Pod, policyGroupVersion string) error {
+	deleteOptions := &metav1.DeleteOptions{}
+	//if o.GracePeriodSeconds >= 0 {
+	//	gracePeriodSeconds := int64(o.GracePeriodSeconds)
+	//	deleteOptions.GracePeriodSeconds = &gracePeriodSeconds
+	//}
+	eviction := &policyv1.Eviction{
+		TypeMeta: metav1.TypeMeta{
+			APIVersion: policyGroupVersion,
+			Kind:       EvictionKind,
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      pod.Name,
+			Namespace: pod.Namespace,
+		},
+		DeleteOptions: deleteOptions,
+	}
+	// Remember to change change the URL manipulation func when Evction's version change
+	return c.Clientset.PolicyV1().Evictions(eviction.Namespace).Evict(ctx, eviction)
 }
 
 func (c *Client) CreateSecret(ctx context.Context, namespace string, secret *corev1.Secret, opts metav1.CreateOptions) (*corev1.Secret, error) {

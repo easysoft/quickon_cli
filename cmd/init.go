@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2022 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
+// Copyright (c) 2021-2023 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
 // Use of this source code is covered by the following dual licenses:
 // (1) Z PUBLIC LICENSE 1.2 (ZPL 1.2)
 // (2) Affero General Public License 3.0 (AGPL 3.0)
@@ -65,11 +65,10 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 			if err := cp.PreSystemInit(); err != nil {
 				log.Fatalf("presystem init err, reason: %s", err)
 			}
-			if err := cp.CreateCheck(skip); err != nil {
-				log.Fatalf("precheck err, reason: %v", err)
-			}
 		}
-
+		if err := cp.CreateCheck(skip); err != nil {
+			log.Fatalf("precheck err, reason: %v", err)
+		}
 		if err := cp.CreateCluster(); err != nil {
 			log.Fatalf("init cluster err: %v", err)
 		}

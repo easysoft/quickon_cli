@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2022 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
+// Copyright (c) 2021-2023 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
 // Use of this source code is covered by the following dual licenses:
 // (1) Z PUBLIC LICENSE 1.2 (ZPL 1.2)
 // (2) Affero General Public License 3.0 (AGPL 3.0)
@@ -137,7 +137,6 @@ func (c Client) Upgrade(name, repoName, chartName, chartVersion string, values m
 	ct, err := loader.Load(p)
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf("load chart %s failed: %v", chartName, err))
-
 	}
 	// TODO 获取之前参数，并且更新参数
 	release, err := client.Run(name, ct, values)

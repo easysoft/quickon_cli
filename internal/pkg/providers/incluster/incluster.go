@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2022 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
+// Copyright (c) 2021-2023 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
 // Use of this source code is covered by the following dual licenses:
 // (1) Z PUBLIC LICENSE 1.2 (ZPL 1.2)
 // (2) Affero General Public License 3.0 (AGPL 3.0)
@@ -96,12 +96,12 @@ func (p *InCluster) InitQucheng() (err error) {
 	if err := p.InstallQuCheng(); err != nil {
 		return err
 	}
-	file.Writefile(common.GetCustomConfig(common.InitModeCluster), "in cluster ok")
+	file.Writefile(common.GetCustomConfig(common.InitModeCluster), "in cluster ok", true)
 	return nil
 }
 
 func (p *InCluster) CreateCheck(skip bool) error {
-	// no need to support.
+	// load kubeconfig check cluster ready
 	return nil
 }
 

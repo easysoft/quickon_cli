@@ -1,11 +1,16 @@
 run:
   timeout: 5m
   skip-dirs-use-default: false
+  skip-dirs:
+    - hack/bin
+    - testdata$
+    - examples$
   skip-files:
   - "zz_*"
   - ".*test.go"
   modules-download-mode: readonly
   allow-parallel-runners: true
+  go: '1.19'
 
 issues:
   exclude:
@@ -36,12 +41,11 @@ issues:
     - linters:
         - goheader
       text: "Authors"
+    - linters:
+        - goheader
+      text: "Copyright"
 
 linters:
-  # TODO: fix errors so that all of the linters below pass.
-  # The linters that are commented out, as well as those explicitly disabled,
-  # are currently failing.  We should fix those failures or define exclusion
-  # rules, and then enable those linters.
   disable-all: true
   enable:
     # - goerr113
@@ -54,9 +58,11 @@ linters:
     - misspell
     - revive
     - staticcheck
-    # - typecheck
+    - typecheck
     - unused
     - goheader
+    # - lll
+    - whitespace
 
 linters-settings:
   gosimple:

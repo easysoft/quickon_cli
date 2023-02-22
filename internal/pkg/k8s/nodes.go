@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2022 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
+// Copyright (c) 2021-2023 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
 // Use of this source code is covered by the following dual licenses:
 // (1) Z PUBLIC LICENSE 1.2 (ZPL 1.2)
 // (2) Affero General Public License 3.0 (AGPL 3.0)
@@ -86,6 +86,18 @@ func (c *Client) GetActivePodByNodename(node corev1.Node) (*corev1.PodList, erro
 		return nil, err
 	}
 	return activePods, err
+}
+
+func (c *Client) GetPodsByNodes(nodeName string) (pods []corev1.Pod, err error) {
+	podList, err := c.Clientset.CoreV1().Pods(metav1.NamespaceAll).List(context.TODO(), metav1.ListOptions{
+		FieldSelector: fields.SelectorFromSet(fields.Set{"spec.nodeName": nodeName}).String()})
+	if err != nil {
+		return pods, err
+	}
+	for _, pod := range podList.Items {
+		pods = append(pods, pod)
+	}
+	return pods, nil
 }
 
 // GetNodes

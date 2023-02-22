@@ -90,7 +90,6 @@ func (sc ServiceCheck) Check() error {
 	}
 
 	if !initSystem.ServiceIsEnabled(sc.Service) {
-
 		return errors.Errorf("%s service is not enabled, please run '%s'",
 			sc.Service, initSystem.EnableCommand(sc.Service))
 	}

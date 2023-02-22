@@ -1,0 +1,20 @@
+version: '3.3'
+services:
+  debian:
+    image: takeyamajp/debian-sshd
+    container_name: debian
+    environment:
+      ROOT_PASSWORD: sshutil
+    restart: always
+    ports:
+      - "10022:22"
+  centos:
+    image: jdeathe/centos-ssh:2.6.1
+    container_name: centos
+    environment:
+      SSH_USER_PASSWORD: sshutil
+      SSH_USER: sshutil
+      SSH_PASSWORD_AUTHENTICATION: "true"
+    restart: always
+    ports:
+      - "10023:22"

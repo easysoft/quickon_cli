@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2022 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
+// Copyright (c) 2021-2023 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
 // Use of this source code is covered by the following dual licenses:
 // (1) Z PUBLIC LICENSE 1.2 (ZPL 1.2)
 // (2) Affero General Public License 3.0 (AGPL 3.0)
@@ -14,6 +14,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/cockroachdb/errors"
+	"github.com/easysoft/qcadmin/internal/pkg/util/log/survey"
 	goansi "github.com/k0kubun/go-ansi"
 	"github.com/mgutz/ansi"
 	"github.com/sirupsen/logrus"
@@ -28,6 +30,7 @@ type stdoutLogger struct {
 
 	loadingText *loadingText
 
+	survey     survey.Survey
 	fileLogger Logger
 }
 
@@ -416,4 +419,17 @@ func (s *stdoutLogger) WriteString(message string) {
 			s.loadingText.Start()
 		}
 	}
+}
+
+func (s *stdoutLogger) Question(params *survey.QuestionOptions) (string, error) {
+	// Stop wait if there was any
+	s.StopWait()
+
+	// Check if we can ask the question
+	if s.GetLevel() < logrus.InfoLevel {
+		return "", errors.Errorf("Cannot ask question '%s' because log level is too low", params.Question)
+	}
+
+	s.WriteString("\n")
+	return s.survey.Question(params)
 }

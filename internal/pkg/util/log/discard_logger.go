@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2022 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
+// Copyright (c) 2021-2023 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
 // Use of this source code is covered by the following dual licenses:
 // (1) Z PUBLIC LICENSE 1.2 (ZPL 1.2)
 // (2) Affero General Public License 3.0 (AGPL 3.0)
@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/easysoft/qcadmin/internal/pkg/util/log/survey"
 	"github.com/sirupsen/logrus"
 )
 
@@ -101,3 +102,16 @@ func (d *DiscardLogger) Write(message []byte) (int, error) {
 
 // WriteString implements logger interface
 func (d *DiscardLogger) WriteString(message string) {}
+
+// Question asks a new question
+func (d *DiscardLogger) Question(params *survey.QuestionOptions) (string, error) {
+	return "", SurveyError{}
+}
+
+// SurveyError is used to identify errors where questions were asked in the discard logger
+type SurveyError struct{}
+
+// Error implements error interface
+func (s SurveyError) Error() string {
+	return "Asking questions is not possible in silenced mode"
+}
