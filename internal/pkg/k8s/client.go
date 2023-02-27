@@ -14,9 +14,9 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path/filepath"
 	"time"
 
+	"github.com/easysoft/qcadmin/common"
 	quchengclientset "github.com/easysoft/quickon-api/client/clientset/versioned"
 	quchengv1beta1 "github.com/easysoft/quickon-api/qucheng/v1beta1"
 	"github.com/ergoapi/util/exmap"
@@ -63,11 +63,7 @@ type Client struct {
 func NewSimpleQClient() (*Client, error) {
 	kubeconfig := os.Getenv("KUBECONFIG")
 	if kubeconfig == "" {
-		dir, err := os.UserHomeDir()
-		if err != nil {
-			return nil, err
-		}
-		kubeconfig = filepath.Join(dir, ".kube", "config")
+		kubeconfig = common.GetKubeConfig()
 	}
 	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
 	if err != nil {
@@ -91,14 +87,10 @@ func NewSimpleQClient() (*Client, error) {
 func NewSimpleClient(kubecfg ...string) (*Client, error) {
 	kubeconfig := os.Getenv("KUBECONFIG")
 	if kubeconfig == "" {
-		dir, err := os.UserHomeDir()
-		if err != nil {
-			return nil, err
-		}
 		if len(kubecfg) > 0 {
 			kubeconfig = kubecfg[0]
 		} else {
-			kubeconfig = filepath.Join(dir, ".kube", "config")
+			kubeconfig = common.GetKubeConfig()
 		}
 	}
 	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
@@ -119,11 +111,7 @@ func NewClient(contextName, kubeconfig string) (*Client, error) {
 	if kubeconfig == "" {
 		kubeconfig = os.Getenv("KUBECONFIG")
 		if kubeconfig == "" {
-			dir, err := os.UserHomeDir()
-			if err != nil {
-				return nil, err
-			}
-			kubeconfig = filepath.Join(dir, ".kube", "config")
+			kubeconfig = common.GetKubeConfig()
 		}
 	}
 	restClientGetter := genericclioptions.ConfigFlags{
