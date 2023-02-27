@@ -1,5 +1,21 @@
 # Changelog
 
+## v2.0.0-alpha.1 (2023-02-27)
+
+ * [99c8272](https://github.com/easysoft/quickon_cli/commit/99c8272260e0af34edf0ed526fe750d89a95b4b3) feat(quickon): imp quickon install
+ * [201183d](https://github.com/easysoft/quickon_cli/commit/201183d9839a33d6a649b8e47360b3cac3736415) fix(typo): fix missing quickon cmd
+ * [c3db971](https://github.com/easysoft/quickon_cli/commit/c3db971e17875758830e6c99607c47deca440bdf) build(deps): bump github.com/vishvananda/netlink (#127)
+ * [33d86c3](https://github.com/easysoft/quickon_cli/commit/33d86c31eba43b404a533b6b93affed79fd0f3ed) build(deps): bump gopkg.in/natefinch/lumberjack.v2 from 2.0.0 to 2.2.1 (#126)
+ * [4a24d49](https://github.com/easysoft/quickon_cli/commit/4a24d49779968ef162cbed66b01cb71aa395d671) build(deps): bump golang.org/x/net from 0.4.0 to 0.7.0 (#125)
+ * [8e31122](https://github.com/easysoft/quickon_cli/commit/8e3112248d01cd41db3a31b62bc59f8b5795e8a0) build(deps): bump github.com/containerd/containerd from 1.6.12 to 1.6.18 (#124)
+ * [a630c6f](https://github.com/easysoft/quickon_cli/commit/a630c6f48cfd6ed75fb323e3d592ff7539247c45) WIP Release v2 (#121)
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+ * 缘生
+
 ## v1.3.9 (2023-01-06)
 
  * [8c82249](https://github.com/easysoft/quickon_cli/commit/8c8224920da7daa915095c15a91fee2ec7627d9f) feat(2.6): release 2.6
