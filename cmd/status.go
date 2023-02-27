@@ -30,7 +30,7 @@ func newCmdStatus(f factory.Factory) *cobra.Command {
 		Long:  ``,
 		PreRun: func(cmd *cobra.Command, args []string) {
 			defaultArgs := os.Args
-			if !file.CheckFileExists(common.GetDefaultKubeConfig()) {
+			if !file.CheckFileExists(params.KubeConfig) {
 				log.Warnf("not found cluster. just run %s init cluster", color.SGreen("%s init", defaultArgs[0]))
 				os.Exit(0)
 			}
@@ -49,7 +49,7 @@ func newCmdStatus(f factory.Factory) *cobra.Command {
 			return err
 		},
 	}
-	cmd.Flags().StringVarP(&params.KubeConfig, "kubeconfig", "c", "", "Kubernetes configuration file")
+	cmd.Flags().StringVarP(&params.KubeConfig, "kubeconfig", "c", common.GetKubeConfig(), "Kubernetes configuration file")
 	cmd.Flags().BoolVar(&params.Wait, "wait", false, "Wait for status to report success (no errors and warnings)")
 	cmd.Flags().DurationVar(&params.WaitDuration, "wait-duration", common.StatusWaitDuration, "Maximum time to wait for status")
 	cmd.Flags().BoolVar(&params.IgnoreWarnings, "ignore-warnings", false, "Ignore warnings when waiting for status to report success")

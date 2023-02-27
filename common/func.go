@@ -12,6 +12,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
 )
 
@@ -109,6 +110,14 @@ func GetDefaultNewKubeConfig() string {
 	d := home + "/" + DefaultCfgDir + "/.kube"
 	os.MkdirAll(d, FileMode0644)
 	return fmt.Sprintf("%v/config", d)
+}
+
+func GetKubeConfig() string {
+	kubecfg := GetDefaultNewKubeConfig()
+	if file.CheckFileExists(kubecfg) {
+		return kubecfg
+	}
+	return GetDefaultKubeConfig()
 }
 
 func GetCustomConfig(name string) string {
