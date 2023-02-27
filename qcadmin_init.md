@@ -36,7 +36,7 @@ qcadmin init [flags]
 ```
       --app string                   install default app (default "zentao")
       --cluster-data-source string   data source for cluster, default is sqlite
-      --console-password string      qucheng console default password (default "82Q!n[uE%c$,Aq]<")
+      --console-password string      qucheng console default password (default "a@tr2m[s=y?,3k=(")
       --data-dir string              Folder to hold state default /opt/quickon (default "/opt/quickon")
       --disable-ingress              disable nginx ingress plugins
       --disable-install-app          disable install app

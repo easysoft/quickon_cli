@@ -12,7 +12,7 @@ qcadmin quickon init [flags]
       --domain string             global domain
   -h, --help                      help for init
       --ip string                 ip
-      --quickon-password string   quickon console password (default "mRrQSaxKns1YIbg2A6XAP0K4ICEnTjK0")
+      --quickon-password string   quickon console password (default "Kk8mU2mYwnIHs791K5cAZbVMS8zhR7lW")
       --version string            quick version (default "stable-2.6")
 ```
 

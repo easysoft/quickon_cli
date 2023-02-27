@@ -11,7 +11,7 @@ qcadmin status [flags]
 ```
   -h, --help                     help for status
       --ignore-warnings          Ignore warnings when waiting for status to report success
-  -c, --kubeconfig string        Kubernetes configuration file
+  -c, --kubeconfig string        Kubernetes configuration file (default "/home/runner/.kube/config")
   -o, --output string            prints the output in the specified format. Allowed values: table, json, yaml (default table)
       --wait                     Wait for status to report success (no errors and warnings)
       --wait-duration duration   Maximum time to wait for status (default 5m0s)
