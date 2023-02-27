@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.0.0-alpha.2 (2023-02-27)
+
+ * [e4bb0bd](https://github.com/easysoft/quickon_cli/commit/e4bb0bdf0c5ed71529945cde91737a54c6a2a5ba) feat(ns): change default ns
+ * [6373a15](https://github.com/easysoft/quickon_cli/commit/6373a159763149658cf48063fe75629703acb95d) fix(kubeclient): fix kubeconfig default path
+ * [41572d6](https://github.com/easysoft/quickon_cli/commit/41572d6d5dfd2a7a9d286b5b966862a56e04c9bd) fix(status): fix status kubeconfig check
+
+### Contributors
+
+ * ysicing
+
 ## v2.0.0-alpha.1 (2023-02-27)
 
  * [99c8272](https://github.com/easysoft/quickon_cli/commit/99c8272260e0af34edf0ed526fe750d89a95b4b3) feat(quickon): imp quickon install
