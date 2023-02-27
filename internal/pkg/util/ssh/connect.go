@@ -17,7 +17,6 @@ package ssh
 
 import (
 	"fmt"
-	"net"
 	"os"
 	"strings"
 	"time"
@@ -40,13 +39,11 @@ func (s *SSH) getClientConfig() *ssh.ClientConfig {
 			s.Timeout = defaultTimeout
 		}
 		s.clientConfig = &ssh.ClientConfig{
-			User:    s.User,
-			Auth:    auth,
-			Timeout: s.Timeout,
-			Config:  config,
-			HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
-				return nil
-			},
+			User:            s.User,
+			Auth:            auth,
+			Timeout:         s.Timeout,
+			Config:          config,
+			HostKeyCallback: ssh.InsecureIgnoreHostKey(), // nolint:gosec
 		}
 	}
 	return s.clientConfig

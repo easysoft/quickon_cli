@@ -49,12 +49,12 @@ func CheckReNewCertificate(force bool) (err error) {
 func checkCertificate(domain string) (bool, error) {
 	log := log.GetInstance()
 	log.Debugf("start check domain %s certificate", domain)
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // nolint:gosec
+	}
 	client := &http.Client{
-		Transport: &http.Transport{
-			// nolint:gosec
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-		},
-		Timeout: 10 * time.Second,
+		Transport: tr,
+		Timeout:   10 * time.Second,
 	}
 	resp, err := client.Get(domain)
 	if err != nil {
