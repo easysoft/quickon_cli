@@ -7,9 +7,6 @@
 package kubectl
 
 import (
-	"math/rand"
-	"time"
-
 	"github.com/spf13/cobra"
 	"k8s.io/component-base/cli"
 	"k8s.io/kubectl/pkg/cmd"
@@ -33,8 +30,6 @@ func Main() {
 }
 
 func main() {
-	rand.Seed(time.Now().UnixNano())
-
 	command := cmd.NewDefaultKubectlCommand()
 	if err := cli.RunNoErrOutput(command); err != nil {
 		util.CheckErr(err)

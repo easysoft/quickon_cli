@@ -10,6 +10,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	pluginapi "github.com/easysoft/qcadmin/internal/pkg/plugin"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
@@ -93,7 +94,7 @@ func listPluginCmd(f factory.Factory) *cobra.Command {
 }
 
 func installPluginCmd(f factory.Factory) *cobra.Command {
-	var version string
+	var version, kubecfg string
 	cmd := &cobra.Command{
 		Use:     "enable",
 		Short:   "install plugin",
@@ -104,7 +105,7 @@ func installPluginCmd(f factory.Factory) *cobra.Command {
 			if err != nil {
 				return err
 			}
-			c, err := k8s.NewClient("", "")
+			c, err := k8s.NewClient("", kubecfg)
 			if err != nil {
 				return err
 			}
@@ -114,6 +115,7 @@ func installPluginCmd(f factory.Factory) *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVarP(&version, "version", "v", "", "plugin")
+	cmd.Flags().StringVarP(&kubecfg, "kubeconfig", "k", common.GetDefaultNewKubeConfig(), "kubeconfig file")
 	return cmd
 }
 

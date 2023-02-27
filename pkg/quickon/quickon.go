@@ -1,0 +1,326 @@
+// Copyright (c) 2021-2023 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
+// Use of this source code is covered by the following dual licenses:
+// (1) Z PUBLIC LICENSE 1.2 (ZPL 1.2)
+// (2) Affero General Public License 3.0 (AGPL 3.0)
+// license that can be found in the LICENSE file.
+
+package quickon
+
+import (
+	"context"
+	"fmt"
+	"os"
+	"strings"
+	"time"
+
+	"github.com/cockroachdb/errors"
+	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/app/config"
+	"github.com/easysoft/qcadmin/internal/pkg/k8s"
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
+	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+	"github.com/easysoft/qcadmin/internal/pkg/util/retry"
+	suffixdomain "github.com/easysoft/qcadmin/pkg/qucheng/domain"
+	"github.com/ergoapi/util/color"
+	"github.com/ergoapi/util/exnet"
+	"github.com/ergoapi/util/expass"
+	"github.com/ergoapi/util/file"
+	"github.com/ergoapi/util/ztime"
+	"github.com/imroc/req/v3"
+	"golang.org/x/sync/errgroup"
+	kubeerr "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
+
+type Meta struct {
+	Domain     string
+	IP         string
+	Version    string
+	kubeClient *k8s.Client
+	log        log.Logger
+}
+
+func New(f factory.Factory) (*Meta, error) {
+	kubeClient, err := k8s.NewSimpleClient(common.GetDefaultNewKubeConfig())
+	if err != nil {
+		return nil, errors.Errorf("load k8s client failed, reason: %v", err)
+	}
+	return &Meta{
+		kubeClient: kubeClient,
+		log:        f.GetLog(),
+	}, nil
+}
+
+func (m *Meta) checkIngress() {
+	m.log.StartWait("check default ingress class")
+	defaultClass, _ := m.kubeClient.ListDefaultIngressClass(context.Background(), metav1.ListOptions{})
+	m.log.StopWait()
+	if defaultClass == nil {
+		m.log.Infof("not found default ingress class, will install nginx ingress")
+		m.log.Debug("start install default ingress: nginx-ingress-controller")
+		if err := qcexec.CommandRun(os.Args[0], "manage", "plugins", "enable", "ingress"); err != nil {
+			m.log.Errorf("install ingress failed, reason: %v", err)
+		} else {
+			m.log.Done("install ingress: cne-ingress success")
+		}
+	} else {
+		m.log.Infof("found exist default ingress class: %s", defaultClass.Name)
+	}
+	m.log.Done("check default ingress done")
+}
+
+func (m *Meta) checkStorage() {
+	m.log.StartWait("check default storage class")
+	defaultClass, _ := m.kubeClient.GetDefaultSC(context.Background())
+	m.log.StopWait()
+	if defaultClass == nil {
+		m.log.Infof("not found default storage class, will install default storage")
+		m.log.Debug("start install default storage: local-storage")
+		if err := qcexec.CommandRun(os.Args[0], "manage", "plugins", "enable", "storage"); err != nil {
+			m.log.Errorf("install storage failed, reason: %v", err)
+		} else {
+			m.log.Done("install storage: local-storage success")
+		}
+	} else {
+		m.log.Infof("found exist default storage class: %s", defaultClass.Name)
+	}
+	m.log.Done("check default storage done")
+}
+
+func (m *Meta) Check() error {
+	if err := m.addHelmRepo(); err != nil {
+		return err
+	}
+	_, err := m.kubeClient.CreateNamespace(context.TODO(), common.DefaultSystem, metav1.CreateOptions{})
+	if err == nil {
+		m.log.Donef("create namespace %s", common.DefaultSystem)
+	}
+	m.checkIngress()
+	// m.checkStorage()
+	return nil
+}
+
+func (m *Meta) addHelmRepo() error {
+	output, err := qcexec.Command(os.Args[0], "experimental", "helm", "repo-add", "--name", common.DefaultHelmRepoName, "--url", common.GetChartRepo(m.Version)).CombinedOutput()
+	if err != nil {
+		errmsg := string(output)
+		if !strings.Contains(errmsg, "exists") {
+			m.log.Errorf("init quickon helm repo failed, reason: %s", string(output))
+			return err
+		}
+		m.log.Warn("quickon helm repo already exists")
+	} else {
+		m.log.Done("add quickon helm repo success")
+	}
+	output, err = qcexec.Command(os.Args[0], "experimental", "helm", "repo-update").CombinedOutput()
+	if err != nil {
+		m.log.Errorf("update quickon helm repo failed, reason: %s", string(output))
+		return err
+	}
+	m.log.Done("update quickon helm repo success")
+	return nil
+}
+
+func (m *Meta) Upgrade() error {
+	m.log.Info("executing init quickon logic...")
+	ctx := context.Background()
+	m.log.Debug("waiting for storage to be ready...")
+	waitsc := time.Now()
+	// wait.BackoffUntil TODO
+	for {
+		sc, _ := m.kubeClient.GetDefaultSC(ctx)
+		if sc != nil {
+			m.log.Donef("default storage %s is ready", sc.Name)
+			break
+		}
+		time.Sleep(time.Second * 5)
+		trywaitsc := time.Now()
+		if trywaitsc.Sub(waitsc) > time.Minute*3 {
+			m.log.Warnf("wait storage ready, timeout: %v", trywaitsc.Sub(waitsc).Seconds())
+			break
+		}
+	}
+
+	_, err := m.kubeClient.CreateNamespace(ctx, common.DefaultSystem, metav1.CreateOptions{})
+	if err != nil {
+		if !kubeerr.IsAlreadyExists(err) {
+			return err
+		}
+	}
+	m.log.Debug("start init quickon")
+	if m.Domain == "" {
+		err := retry.Retry(time.Second*1, 3, func() (bool, error) {
+			domain, _, err := m.genSuffixHTTPHost(m.IP)
+			if err != nil {
+				return false, err
+			}
+			m.Domain = domain
+			m.log.Infof("generate suffix domain: %s, ip: %v", color.SGreen(m.Domain), color.SGreen(m.IP))
+			return true, nil
+		})
+		if err != nil {
+			m.Domain = "demo.corp.cc"
+			m.log.Warnf("gen suffix domain failed, reason: %v, use default domain: %s", err, m.Domain)
+		}
+		m.log.Infof("load %s tls cert", m.Domain)
+		defaultTLS := fmt.Sprintf("%s/tls-haogs-cn.yaml", common.GetDefaultCacheDir())
+		m.log.StartWait(fmt.Sprintf("start issuing domain %s certificate, may take 3-5min", m.Domain))
+		waittls := time.Now()
+		for {
+			if _, err := os.Stat(defaultTLS); err == nil {
+				m.log.StopWait()
+				m.log.Done("download tls cert success")
+				if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.DefaultSystem).Run(); err != nil {
+					m.log.Warnf("load default tls cert failed, reason: %v", err)
+				} else {
+					m.log.Done("load default tls cert success")
+				}
+				qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", "default").Run()
+				break
+			}
+			_, mainDomain := kutil.SplitDomain(m.Domain)
+			domainTLS := fmt.Sprintf("https://pkg.qucheng.com/ssl/%s/%s/tls.yaml", mainDomain, m.Domain)
+			qcexec.Command(os.Args[0], "experimental", "tools", "wget", "-t", domainTLS, "-d", defaultTLS).Run()
+			m.log.Debug("wait for tls cert ready...")
+			time.Sleep(time.Second * 5)
+			trywaitsc := time.Now()
+			if trywaitsc.Sub(waittls) > time.Minute*3 {
+				// TODO  timeout
+				m.log.Debugf("wait tls cert ready, timeout: %v", trywaitsc.Sub(waittls).Seconds())
+				break
+			}
+		}
+	} else {
+		m.log.Infof("use custom domain %s, you should add dns record to your domain: *.%s -> %s", m.Domain, color.SGreen(m.Domain), color.SGreen(m.IP))
+	}
+	token := expass.RandomPassword(32)
+	cfg, _ := config.LoadConfig()
+	cfg.Domain = m.Domain
+	cfg.APIToken = token
+	cfg.S3.Username = expass.PwGenAlphaNum(8)
+	cfg.S3.Password = expass.PwGenAlphaNum(16)
+	cfg.SaveConfig()
+	chartversion := common.GetVersion(m.Version)
+	m.log.Info("start deploy cne custom tools")
+	toolargs := []string{"experimental", "helm", "upgrade", "--name", "selfcert", "--repo", common.DefaultHelmRepoName, "--chart", "selfcert", "--namespace", common.DefaultSystem}
+	if helmstd, err := qcexec.Command(os.Args[0], toolargs...).CombinedOutput(); err != nil {
+		m.log.Warnf("deploy cne custom tools err: %v, std: %s", err, string(helmstd))
+	} else {
+		m.log.Done("deployed cne custom tools success")
+	}
+	m.log.Info("start deploy cne operator")
+	operatorargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultCneOperatorName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultCneOperatorName, "--namespace", common.DefaultSystem,
+		"--set", "minio.ingress.enabled=true",
+		"--set", "minio.ingress.host=s3." + m.Domain,
+		"--set", "minio.auth.username=" + cfg.S3.Username,
+		"--set", "minio.auth.password=" + cfg.S3.Password,
+	}
+	if len(chartversion) > 0 {
+		operatorargs = append(operatorargs, "--version", chartversion)
+	}
+	if helmstd, err := qcexec.Command(os.Args[0], operatorargs...).CombinedOutput(); err != nil {
+		m.log.Warnf("deploy cne-operator err: %v, std: %s", err, string(helmstd))
+	} else {
+		m.log.Done("deployed cne-operator success")
+	}
+	helmchan := common.GetChannel(m.Version)
+	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultQuchengName, "--namespace", common.DefaultSystem, "--set", "env.APP_DOMAIN=" + m.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
+	if helmchan != "stable" {
+		helmargs = append(helmargs, "--set", "env.PHP_DEBUG=2")
+		helmargs = append(helmargs, "--set", "cloud.switchChannel=true")
+		helmargs = append(helmargs, "--set", "cloud.selectVersion=true")
+	}
+	hostdomain := m.Domain
+	if kutil.IsLegalDomain(hostdomain) {
+		helmargs = append(helmargs, "--set", "ingress.tls.enabled=true")
+		helmargs = append(helmargs, "--set", "ingress.tls.secretName=tls-haogs-cn")
+	} else {
+		hostdomain = fmt.Sprintf("console.%s", hostdomain)
+	}
+	helmargs = append(helmargs, "--set", fmt.Sprintf("ingress.host=%s", hostdomain))
+
+	if len(chartversion) > 0 {
+		helmargs = append(helmargs, "--version", chartversion)
+	}
+	output, err := qcexec.Command(os.Args[0], helmargs...).CombinedOutput()
+	if err != nil {
+		m.log.Errorf("upgrade install qucheng web failed: %s", string(output))
+		return err
+	}
+	m.log.Done("install qucheng success")
+	m.QuickONReady()
+	initfile := common.GetCustomConfig(common.InitFileName)
+	if err := file.Writefile(initfile, "init done", true); err != nil {
+		m.log.Warnf("write init done file failed, reason: %v.\n\t please run: touch %s", err, initfile)
+	}
+	return nil
+}
+
+// QuickONReady 渠成Ready
+func (m *Meta) QuickONReady() {
+	clusterWaitGroup, ctx := errgroup.WithContext(context.Background())
+	clusterWaitGroup.Go(func() error {
+		return m.readyQuickON(ctx)
+	})
+	if err := clusterWaitGroup.Wait(); err != nil {
+		m.log.Error(err)
+	}
+}
+
+func (m *Meta) readyQuickON(ctx context.Context) error {
+	t1 := ztime.NowUnix()
+	client := req.C().SetLogger(nil).SetUserAgent(common.GetUG()).SetTimeout(time.Second * 1)
+	m.log.StartWait("waiting for qucheng ready")
+	status := false
+	for {
+		t2 := ztime.NowUnix() - t1
+		if t2 > 180 {
+			m.log.Warnf("waiting for qucheng ready 3min timeout: check your network or storage. after install you can run: q status")
+			break
+		}
+		_, err := client.R().Get(fmt.Sprintf("http://%s:32379", exnet.LocalIPs()[0]))
+		if err == nil {
+			status = true
+			break
+		}
+		time.Sleep(time.Second * 10)
+	}
+	m.log.StopWait()
+	if status {
+		m.log.Donef("qucheng ready, cost: %v", time.Since(time.Unix(t1, 0)))
+	}
+	return nil
+}
+
+func (m *Meta) getOrCreateUUIDAndAuth() (auth string, err error) {
+	// cm := &corev1.ConfigMap{}
+	cm, err := m.kubeClient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Get(context.TODO(), "q-suffix-host", metav1.GetOptions{})
+	if err != nil {
+		if !kubeerr.IsNotFound(err) {
+			return "", err
+		}
+		if kubeerr.IsNotFound(err) {
+			m.log.Debug("q-suffix-host not found, create it")
+			cm = suffixdomain.GenerateSuffixConfigMap("q-suffix-host", common.DefaultSystem)
+			if _, err := m.kubeClient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Create(context.TODO(), cm, metav1.CreateOptions{}); err != nil {
+				return "", err
+			}
+		}
+	}
+	return cm.Data["auth"], nil
+}
+
+func (m *Meta) genSuffixHTTPHost(ip string) (domain, tls string, err error) {
+	auth, err := m.getOrCreateUUIDAndAuth()
+	if err != nil {
+		return "", "", err
+	}
+	defaultDomain := suffixdomain.SearchCustomDomain(ip, auth, "")
+	domain, tls, err = suffixdomain.GenerateDomain(ip, auth, suffixdomain.GenCustomDomain(defaultDomain))
+	if err != nil {
+		return "", "", err
+	}
+	return domain, tls, nil
+}

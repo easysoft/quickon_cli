@@ -151,9 +151,9 @@ ExecStart=/usr/local/bin/k3s \
         --cluster-init \
       {{end -}}
       {{if .LocalStorage -}}
-        --disable servicelb,traefik,local-storage \
-      {{else -}}
         --disable servicelb,traefik \
+      {{else -}}
+        --disable servicelb,traefik,local-storage \
       {{end -}}
       --disable-cloud-controller \
       --disable-network-policy \

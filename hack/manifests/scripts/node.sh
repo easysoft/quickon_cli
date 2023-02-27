@@ -60,14 +60,14 @@ systemd_disable() {
 
 # --- enable and start systemd service ---
 systemd_enable() {
-    info "systemd: Enabling k3s unit"
+    info "enabling k3s unit"
     $SUDO cp /root/.k3s.service /etc/systemd/system/k3s.service
     $SUDO systemctl enable k3s >/dev/null
     $SUDO systemctl daemon-reload >/dev/null
 }
 
 systemd_start() {
-    info "systemd: Starting k3s"
+    info "starting k3s"
     $SUDO systemctl restart k3s
 }
 

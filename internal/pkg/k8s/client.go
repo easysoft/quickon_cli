@@ -100,7 +100,6 @@ func NewSimpleClient(kubecfg ...string) (*Client, error) {
 		} else {
 			kubeconfig = filepath.Join(dir, ".kube", "config")
 		}
-
 	}
 	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
 	if err != nil {
@@ -676,6 +675,23 @@ func (c *Client) ExecPodWithTTY(ctx context.Context, namespace, podName, contain
 
 func (c *Client) CreateIngressClass(ctx context.Context, ingressClass *networkingv1.IngressClass, opts metav1.CreateOptions) (*networkingv1.IngressClass, error) {
 	return c.Clientset.NetworkingV1().IngressClasses().Create(ctx, ingressClass, opts)
+}
+
+func (c *Client) ListIngressClass(ctx context.Context, opts metav1.ListOptions) (*networkingv1.IngressClassList, error) {
+	return c.Clientset.NetworkingV1().IngressClasses().List(ctx, opts)
+}
+
+func (c *Client) ListDefaultIngressClass(ctx context.Context, opts metav1.ListOptions) (*networkingv1.IngressClass, error) {
+	lists, err := c.ListIngressClass(ctx, opts)
+	if err != nil {
+		return nil, err
+	}
+	for _, l := range lists.Items {
+		if exmap.GetLabelValue(l.Annotations, "ingressclass.kubernetes.io/is-default-class") == "true" {
+			return &l, nil
+		}
+	}
+	return nil, errors.New("not found default ingress class")
 }
 
 func (c *Client) DeleteIngressClass(ctx context.Context, name string, opts metav1.DeleteOptions) error {

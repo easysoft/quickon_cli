@@ -12,7 +12,7 @@ require (
 	github.com/docker/docker v20.10.22+incompatible
 	github.com/easysoft/quickon-api v0.6.0
 	github.com/emirpasic/gods v1.18.1
-	github.com/ergoapi/util v0.3.8
+	github.com/ergoapi/util v0.3.12
 	github.com/gofrs/flock v0.8.1
 	github.com/gosuri/uitable v0.0.4
 	github.com/imroc/req/v3 v3.30.0
@@ -67,7 +67,7 @@ replace (
 )
 
 require (
-	github.com/6tail/lunar-go v1.2.21 // indirect
+	github.com/6tail/lunar-go v1.3.1 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/MakeNowJust/heredoc v1.0.0 // indirect
