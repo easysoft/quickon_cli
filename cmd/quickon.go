@@ -19,5 +19,6 @@ func newCmdQuickon(f factory.Factory) *cobra.Command {
 	}
 	quickonCmd.AddCommand(quickon.CheckCommand(f))
 	quickonCmd.AddCommand(quickon.InitCommand(f))
+	quickonCmd.AddCommand(quickon.UninstallCommand(f))
 	return quickonCmd
 }

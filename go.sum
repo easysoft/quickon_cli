@@ -44,8 +44,7 @@ dmitri.shuralyov.com/html/belt v0.0.0-20180602232347-f7d459c86be0/go.mod h1:JLBr
 dmitri.shuralyov.com/service/change v0.0.0-20181023043359-a85b471d5412/go.mod h1:a1inKt/atXimZ4Mv927x+r7UpyzRUf4emIoiiSC2TN4=
 dmitri.shuralyov.com/state v0.0.0-20180228185332-28bcc343414c/go.mod h1:0PRwlb0D6DFvNNtx+9ybjezNCa8XF0xaYcETyp6rHWU=
 git.apache.org/thrift.git v0.0.0-20180902110319-2566ecd5d999/go.mod h1:fPE2ZNJGynbRyZ4dJvy6G277gSllfV2HJqblrnkyeyg=
-github.com/6tail/lunar-go v1.2.21 h1:ZdEtWcykeIJajjHQJbn0wRu0gyKLMMWst6yN5kusaBw=
-github.com/6tail/lunar-go v1.2.21/go.mod h1:mMvCby9aWTSmsZjnv+5EOW7taJFV4RsjNcQLRl/3whY=
+github.com/6tail/lunar-go v1.3.1 h1:axnwy8q7DCN3x0aSM9d33W6yB7w8PW/EXpIYCD/nOvg=
 github.com/6tail/lunar-go v1.3.1/go.mod h1:mMvCby9aWTSmsZjnv+5EOW7taJFV4RsjNcQLRl/3whY=
 github.com/AlecAivazis/survey/v2 v2.3.6 h1:NvTuVHISgTHEHeBFqt6BHOe4Ny/NwGZr7w+F8S9ziyw=
 github.com/AlecAivazis/survey/v2 v2.3.6/go.mod h1:4AuI9b7RjAR+G7v9+C4YSlX/YL3K3cWNXgWXOhllqvI=
@@ -211,8 +210,6 @@ github.com/envoyproxy/go-control-plane v0.9.7/go.mod h1:cwu0lG7PUMfa9snN8LXBig5y
 github.com/envoyproxy/go-control-plane v0.9.9-0.20201210154907-fd9021fe5dad/go.mod h1:cXg6YxExXjJnVBQHBLXeUAgxn2UodCpnH306RInaBQk=
 github.com/envoyproxy/go-control-plane v0.9.9-0.20210217033140-668b12f5399d/go.mod h1:cXg6YxExXjJnVBQHBLXeUAgxn2UodCpnH306RInaBQk=
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
-github.com/ergoapi/util v0.3.8 h1:D5Kenloo7dEFLMcnrrqbEvwRBlOIipu0gP8PnyU7Y88=
-github.com/ergoapi/util v0.3.8/go.mod h1:xCzx6UTwggFGYK7gKbpbQBJozgNvp5oP/BxBjJCr7Tc=
 github.com/ergoapi/util v0.3.12 h1:MyrJ+NojBJncaxId4AwwQyQhSizQaEpQN7y4Aizl6W8=
 github.com/ergoapi/util v0.3.12/go.mod h1:7qMvTo3NrP5exP0s2/swthukNqQM8CR81TcnOoYb0M0=
 github.com/etcd-io/bbolt v1.3.3/go.mod h1:ZF2nL25h33cCyBtcyWeZ2/I3HQOfTP+0PIEvHjkjCrw=

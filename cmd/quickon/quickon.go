@@ -11,6 +11,7 @@ import (
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/pkg/quickon"
+	"github.com/ergoapi/util/expass"
 	"github.com/spf13/cobra"
 )
 
@@ -19,8 +20,8 @@ func CheckCommand(f factory.Factory) *cobra.Command {
 		Use:   "check",
 		Short: "check cluster ready",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			quickonCliet, err := quickon.New(f)
-			if err != nil {
+			quickonCliet := quickon.New(f)
+			if err := quickonCliet.GetKubeClient(); err != nil {
 				return err
 			}
 			return quickonCliet.Check()
@@ -30,20 +31,40 @@ func CheckCommand(f factory.Factory) *cobra.Command {
 }
 
 func InitCommand(f factory.Factory) *cobra.Command {
-	quickonCliet, _ := quickon.New(f)
+	quickonCliet := quickon.New(f)
 	init := &cobra.Command{
 		Use:   "init",
 		Short: "init quickon",
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if err := quickonCliet.GetKubeClient(); err != nil {
+				return err
+			}
 			if len(quickonCliet.IP) == 0 {
 				cfg, _ := config.LoadConfig()
 				quickonCliet.IP = cfg.InitNode
 			}
-			return quickonCliet.Upgrade()
+			return quickonCliet.Init()
 		},
 	}
 	init.Flags().StringVar(&quickonCliet.Domain, "domain", "", "global domain")
 	init.Flags().StringVar(&quickonCliet.IP, "ip", "", "ip")
+	init.Flags().StringVar(&quickonCliet.ConsolePassword, "quickon-password", expass.PwGenAlphaNum(32), "quickon console password")
 	init.Flags().StringVar(&quickonCliet.Version, "version", common.DefaultQuchengVersion, "quick version")
 	return init
+}
+
+func UninstallCommand(f factory.Factory) *cobra.Command {
+	quickonCliet := quickon.New(f)
+	uninstall := &cobra.Command{
+		Use:     "uninstall",
+		Short:   "uninstall quickon",
+		Aliases: []string{"clean"},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if err := quickonCliet.GetKubeClient(); err != nil {
+				return err
+			}
+			return quickonCliet.UnInstall()
+		},
+	}
+	return uninstall
 }

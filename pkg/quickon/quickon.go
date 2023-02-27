@@ -35,22 +35,27 @@ import (
 )
 
 type Meta struct {
-	Domain     string
-	IP         string
-	Version    string
-	kubeClient *k8s.Client
-	log        log.Logger
+	Domain          string
+	IP              string
+	Version         string
+	ConsolePassword string
+	kubeClient      *k8s.Client
+	log             log.Logger
 }
 
-func New(f factory.Factory) (*Meta, error) {
+func New(f factory.Factory) *Meta {
+	return &Meta{
+		log: f.GetLog(),
+	}
+}
+
+func (m *Meta) GetKubeClient() error {
 	kubeClient, err := k8s.NewSimpleClient(common.GetDefaultNewKubeConfig())
 	if err != nil {
-		return nil, errors.Errorf("load k8s client failed, reason: %v", err)
+		return errors.Errorf("load k8s client failed, reason: %v", err)
 	}
-	return &Meta{
-		kubeClient: kubeClient,
-		log:        f.GetLog(),
-	}, nil
+	m.kubeClient = kubeClient
+	return nil
 }
 
 func (m *Meta) checkIngress() {
@@ -123,7 +128,7 @@ func (m *Meta) addHelmRepo() error {
 	return nil
 }
 
-func (m *Meta) Upgrade() error {
+func (m *Meta) Init() error {
 	m.log.Info("executing init quickon logic...")
 	ctx := context.Background()
 	m.log.Debug("waiting for storage to be ready...")
@@ -255,6 +260,7 @@ func (m *Meta) Upgrade() error {
 	if err := file.Writefile(initfile, "init done", true); err != nil {
 		m.log.Warnf("write init done file failed, reason: %v.\n\t please run: touch %s", err, initfile)
 	}
+	m.Show()
 	return nil
 }
 
@@ -323,4 +329,58 @@ func (m *Meta) genSuffixHTTPHost(ip string) (domain, tls string, err error) {
 		return "", "", err
 	}
 	return domain, tls, nil
+}
+
+func (m *Meta) Show() {
+	if len(m.IP) <= 0 {
+		m.IP = exnet.LocalIPs()[0]
+	}
+	resetPassArgs := []string{"manage", "reset-password", "--password", m.ConsolePassword}
+	qcexec.CommandRun(os.Args[0], resetPassArgs...)
+	cfg, _ := config.LoadConfig()
+	cfg.ConsolePassword = m.ConsolePassword
+	cfg.SaveConfig()
+	domain := cfg.Domain
+
+	m.log.Info("----------------------------\t")
+	if len(domain) > 0 {
+		if !kutil.IsLegalDomain(cfg.Domain) {
+			domain = fmt.Sprintf("http://console.%s", cfg.Domain)
+		} else {
+			domain = fmt.Sprintf("https://%s", cfg.Domain)
+		}
+	} else {
+		domain = fmt.Sprintf("http://%s:32379", m.IP)
+	}
+	m.log.Donef("console: %s, username: %s, password: %s",
+		color.SGreen(domain), color.SGreen(common.QuchengDefaultUser), color.SGreen(m.ConsolePassword))
+	m.log.Donef("docs: %s", common.QuchengDocs)
+	m.log.Done("support: 768721743(QQGroup)")
+}
+
+func (m *Meta) UnInstall() error {
+	m.log.Warnf("start clean quickon.")
+	// 清理helm安装应用
+	m.log.Info("start uninstall cne custom tools")
+	toolargs := []string{"experimental", "helm", "uninstall", "--name", "selfcert", "--namespace", common.DefaultSystem}
+	if helmstd, err := qcexec.Command(os.Args[0], toolargs...).CombinedOutput(); err != nil {
+		m.log.Warnf("uninstall cne custom tools err: %v, std: %s", err, string(helmstd))
+	} else {
+		m.log.Done("uninstall cne custom tools success")
+	}
+	m.log.Info("start uninstall cne operator")
+	operatorargs := []string{"experimental", "helm", "uninstall", "--name", common.DefaultCneOperatorName, "--namespace", common.DefaultSystem}
+	if helmstd, err := qcexec.Command(os.Args[0], operatorargs...).CombinedOutput(); err != nil {
+		m.log.Warnf("uninstall cne-operator err: %v, std: %s", err, string(helmstd))
+	} else {
+		m.log.Done("uninstall cne-operator success")
+	}
+	m.log.Info("start uninstall cne quickon")
+	quickonargs := []string{"experimental", "helm", "uninstall", "--name", common.DefaultQuchengName, "--namespace", common.DefaultSystem}
+	if helmstd, err := qcexec.Command(os.Args[0], quickonargs...).CombinedOutput(); err != nil {
+		m.log.Warnf("uninstall quickon err: %v, std: %s", err, string(helmstd))
+	} else {
+		m.log.Done("uninstall quickon success")
+	}
+	return nil
 }

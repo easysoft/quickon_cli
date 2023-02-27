@@ -28,7 +28,6 @@ create_symlinks() {
         if [ ! -e /usr/local/bin/${cmd} ]; then
             which_cmd=$(command -v ${cmd} 2>/dev/null || true)
             if [ -z "${which_cmd}" ]; then
-                info "Creating /usr/local/bin/${cmd} symlink to k3s"
                 $SUDO ln -sf k3s /usr/local/bin/${cmd}
             fi
         fi
