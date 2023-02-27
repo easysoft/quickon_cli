@@ -80,6 +80,8 @@ const (
 	WaitRetryInterval      = 5 * time.Second
 	DefaultHelmRepoName    = "install"
 	DefaultSystem          = "cne-system"
+	DefaultSystemNamespace = "quickon-system"
+	DefaultAppNamespace    = "quickon-app"
 	DefaultQuchengName     = "qucheng"
 	DefaultCneOperatorName = "cne-operator"
 	DefaultIngressName     = "nginx-ingress-controller"

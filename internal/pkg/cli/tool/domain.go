@@ -55,7 +55,7 @@ func domainClean(f factory.Factory) *cobra.Command {
 			secretKey := cfg.ClusterID
 			if len(secretKey) == 0 {
 				kclient, _ := k8s.NewSimpleClient()
-				cm, err := kclient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Get(context.TODO(), "q-suffix-host", metav1.GetOptions{})
+				cm, err := kclient.Clientset.CoreV1().ConfigMaps(common.GetDefaultSystemNamespace(true)).Get(context.TODO(), "q-suffix-host", metav1.GetOptions{})
 				if err != nil {
 					return
 				}
@@ -101,12 +101,12 @@ func domainAdd(f factory.Factory) *cobra.Command {
 			}
 			if len(customdomain) == 0 {
 				kclient, _ := k8s.NewSimpleClient()
-				cm, err := kclient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Get(context.TODO(), "q-suffix-host", metav1.GetOptions{})
+				cm, err := kclient.Clientset.CoreV1().ConfigMaps(common.GetDefaultSystemNamespace(true)).Get(context.TODO(), "q-suffix-host", metav1.GetOptions{})
 				if err != nil {
 					if errors.IsNotFound(err) {
 						log.Debug("q-suffix-host not found, create it")
-						cm = suffixdomain.GenerateSuffixConfigMap("q-suffix-host", common.DefaultSystem)
-						if _, err := kclient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Create(context.TODO(), cm, metav1.CreateOptions{}); err != nil {
+						cm = suffixdomain.GenerateSuffixConfigMap("q-suffix-host", common.GetDefaultSystemNamespace(true))
+						if _, err := kclient.Clientset.CoreV1().ConfigMaps(common.GetDefaultSystemNamespace(true)).Create(context.TODO(), cm, metav1.CreateOptions{}); err != nil {
 							log.Errorf("k8s api err: %v", err)
 							return
 						}
@@ -130,14 +130,14 @@ func domainAdd(f factory.Factory) *cobra.Command {
 			// save config
 			cfg.SaveConfig()
 			// upgrade qucheng
-			helmClient, _ := helm.NewClient(&helm.Config{Namespace: common.DefaultSystem})
+			helmClient, _ := helm.NewClient(&helm.Config{Namespace: common.GetDefaultSystemNamespace(true)})
 			if err := helmClient.UpdateRepo(); err != nil {
 				log.Warnf("update repo failed, reason: %v", err)
 			}
-			if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/hack/haogstls/haogs.yaml", common.GetDefaultDataDir()), "-n", common.DefaultSystem).Run(); err != nil {
-				log.Warnf("load tls cert for %s failed, reason: %v", common.DefaultSystem, err)
+			if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/hack/haogstls/haogs.yaml", common.GetDefaultDataDir()), "-n", common.GetDefaultSystemNamespace(true)).Run(); err != nil {
+				log.Warnf("load tls cert for %s failed, reason: %v", common.GetDefaultSystemNamespace(true), err)
 			} else {
-				log.Donef("load tls cert for %s success", common.DefaultSystem)
+				log.Donef("load tls cert for %s success", common.GetDefaultSystemNamespace(true))
 			}
 			if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/hack/haogstls/haogs.yaml", common.GetDefaultDataDir()), "-n", "default").Run(); err != nil {
 				log.Warnf("load tls cert for default failed, reason: %v", err)

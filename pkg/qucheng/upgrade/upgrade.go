@@ -93,7 +93,7 @@ func (opt *Option) fetchCR(ns, name string) (string, string, error) {
 }
 
 func Upgrade(flagVersion string, log log.Logger) error {
-	helmClient, _ := helm.NewClient(&helm.Config{Namespace: common.DefaultSystem})
+	helmClient, _ := helm.NewClient(&helm.Config{Namespace: common.GetDefaultSystemNamespace(true)})
 	if err := helmClient.UpdateRepo(); err != nil {
 		log.Errorf("update repo failed, reason: %v", err)
 		return err
@@ -121,7 +121,7 @@ func Upgrade(flagVersion string, log log.Logger) error {
 							if _, err := os.Stat(defaultTLS); err == nil {
 								log.StopWait()
 								log.Done("download tls cert success")
-								if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.DefaultSystem).Run(); err != nil {
+								if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.GetDefaultSystemNamespace(true)).Run(); err != nil {
 									log.Warnf("load default tls cert failed, reason: %v", err)
 								} else {
 									log.Done("load default tls cert success")
@@ -166,13 +166,10 @@ func QuchengVersion() (Version, error) {
 	opt := Option{
 		log: log.GetInstance(),
 	}
-	// if uiVersion, err := opt.Fetch(common.DefaultSystem, "cne-api"); err == nil {
-	// 	v.Components = append(v.Components, uiVersion)
-	// }
-	if apiVersion, err := opt.Fetch(common.DefaultSystem, "qucheng"); err == nil {
+	if apiVersion, err := opt.Fetch(common.GetDefaultSystemNamespace(true), "qucheng"); err == nil {
 		v.Components = append(v.Components, apiVersion)
 	}
-	if apiVersion, err := opt.Fetch(common.DefaultSystem, "cne-operator"); err == nil {
+	if apiVersion, err := opt.Fetch(common.GetDefaultSystemNamespace(true), "cne-operator"); err == nil {
 		v.Components = append(v.Components, apiVersion)
 	}
 	return v, nil

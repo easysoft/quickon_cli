@@ -99,7 +99,7 @@ func (p *Item) UnInstall() error {
 		return nil
 	}
 	pluginName := fmt.Sprintf("qc-plugin-%s", p.Type)
-	_, err := p.Client.GetSecret(context.TODO(), common.DefaultSystem, pluginName, metav1.GetOptions{})
+	_, err := p.Client.GetSecret(context.TODO(), common.GetDefaultSystemNamespace(true), pluginName, metav1.GetOptions{})
 	if err != nil {
 		if errors.IsNotFound(err) {
 			p.log.Warnf("plugin %s is already uninstalled", p.Type)
@@ -110,27 +110,27 @@ func (p *Item) UnInstall() error {
 	}
 	// #nosec
 	if p.Tool == "helm" {
-		applycmd := qcexec.Command(os.Args[0], "experimental", "helm", "delete", p.Type, "-n", common.DefaultSystem)
+		applycmd := qcexec.Command(os.Args[0], "experimental", "helm", "delete", p.Type, "-n", common.GetDefaultSystemNamespace(true))
 		if output, err := applycmd.CombinedOutput(); err != nil {
 			p.log.Errorf("helm uninstall %s plugin %s failed: %s", p.Type, p.Name, string(output))
 			return err
 		}
 	} else {
 		// #nosec
-		applycmd := qcexec.Command(os.Args[0], "experimental", "kubectl", "delete", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", common.DefaultSystem)
+		applycmd := qcexec.Command(os.Args[0], "experimental", "kubectl", "delete", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", common.GetDefaultSystemNamespace(true))
 		if output, err := applycmd.CombinedOutput(); err != nil {
 			p.log.Errorf("kubectl uninstall %s plugin %s failed: %s", p.Type, p.Name, string(output))
 			return err
 		}
 	}
 	p.log.Donef("uninstall %s plugin success.", p.Type)
-	p.Client.DeleteSecret(context.TODO(), common.DefaultSystem, pluginName, metav1.DeleteOptions{})
+	p.Client.DeleteSecret(context.TODO(), common.GetDefaultSystemNamespace(true), pluginName, metav1.DeleteOptions{})
 	return nil
 }
 
 func (p *Item) Install() error {
 	pluginName := fmt.Sprintf("qc-plugin-%s", p.Type)
-	oldSecret, err := p.Client.GetSecret(context.TODO(), common.DefaultSystem, pluginName, metav1.GetOptions{})
+	oldSecret, err := p.Client.GetSecret(context.TODO(), common.GetDefaultSystemNamespace(true), pluginName, metav1.GetOptions{})
 	updatestatus := false
 	if err == nil {
 		nowversion := gv.MustParse(strings.TrimPrefix(p.Version, "v"))
@@ -149,7 +149,7 @@ func (p *Item) Install() error {
 		}
 	}
 	if p.Tool == "helm" {
-		args := []string{"experimental", "helm", "upgrade", "--name", p.Type, "--repo", common.DefaultHelmRepoName, "--chart", p.Path, "--namespace", common.DefaultSystem}
+		args := []string{"experimental", "helm", "upgrade", "--name", p.Type, "--repo", common.DefaultHelmRepoName, "--chart", p.Path, "--namespace", common.GetDefaultSystemNamespace(true)}
 		if len(p.InstallVersion) > 0 {
 			args = append(args, "--version", p.InstallVersion)
 		}
@@ -160,7 +160,7 @@ func (p *Item) Install() error {
 		}
 	} else {
 		// #nosec
-		applycmd := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", common.DefaultSystem)
+		applycmd := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", common.GetDefaultSystemNamespace(true))
 		if output, err := applycmd.CombinedOutput(); err != nil {
 			p.log.Errorf("kubectl install %s plugin %s failed: %s", p.Type, p.Name, string(output))
 			return err
@@ -175,14 +175,14 @@ func (p *Item) Install() error {
 		"cliversion": common.Version,
 	}
 	if updatestatus {
-		_, err = p.Client.UpdateSecret(context.TODO(), common.DefaultSystem, &corev1.Secret{
+		_, err = p.Client.UpdateSecret(context.TODO(), common.GetDefaultSystemNamespace(true), &corev1.Secret{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: pluginName,
 			},
 			StringData: plugindata,
 		}, metav1.UpdateOptions{})
 	} else {
-		_, err = p.Client.CreateSecret(context.TODO(), common.DefaultSystem, &corev1.Secret{
+		_, err = p.Client.CreateSecret(context.TODO(), common.GetDefaultSystemNamespace(true), &corev1.Secret{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: pluginName,
 			},
@@ -195,21 +195,21 @@ func (p *Item) Install() error {
 
 func (p *Item) Upgrade() (err error) {
 	pluginName := fmt.Sprintf("qc-plugin-%s", p.Type)
-	oldSecret, _ := p.Client.GetSecret(context.TODO(), common.DefaultSystem, pluginName, metav1.GetOptions{})
+	oldSecret, _ := p.Client.GetSecret(context.TODO(), common.GetDefaultSystemNamespace(true), pluginName, metav1.GetOptions{})
 	updatestatus := true
 	if oldSecret == nil {
 		updatestatus = false
 	}
 
 	if p.Tool == "helm" {
-		applycmd := qcexec.Command(os.Args[0], "experimental", "helm", "upgrade", "--name", p.Type, "--repo", common.DefaultHelmRepoName, "--chart", p.Path, "--namespace", common.DefaultSystem)
+		applycmd := qcexec.Command(os.Args[0], "experimental", "helm", "upgrade", "--name", p.Type, "--repo", common.DefaultHelmRepoName, "--chart", p.Path, "--namespace", common.GetDefaultSystemNamespace(true))
 		if output, err := applycmd.CombinedOutput(); err != nil {
 			p.log.Errorf("helm upgrade %s plugin %s failed: %s", p.Type, p.Name, string(output))
 			return err
 		}
 	} else {
 		// #nosec
-		applycmd := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", common.DefaultSystem)
+		applycmd := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", common.GetDefaultSystemNamespace(true))
 		if output, err := applycmd.CombinedOutput(); err != nil {
 			p.log.Errorf("kubectl upgrade %s plugin %s failed: %s", p.Type, p.Name, string(output))
 			return err
@@ -224,9 +224,9 @@ func (p *Item) Upgrade() (err error) {
 	}
 	if updatestatus {
 		oldSecret.StringData = plugindata
-		_, err = p.Client.UpdateSecret(context.TODO(), common.DefaultSystem, oldSecret, metav1.UpdateOptions{})
+		_, err = p.Client.UpdateSecret(context.TODO(), common.GetDefaultSystemNamespace(true), oldSecret, metav1.UpdateOptions{})
 	} else {
-		_, err = p.Client.CreateSecret(context.TODO(), common.DefaultSystem, &corev1.Secret{
+		_, err = p.Client.CreateSecret(context.TODO(), common.GetDefaultSystemNamespace(true), &corev1.Secret{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: pluginName,
 			},

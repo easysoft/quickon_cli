@@ -33,15 +33,15 @@ func (p *Cluster) genQuChengToken() string {
 
 func (p *Cluster) getOrCreateUUIDAndAuth() (auth string, err error) {
 	// cm := &corev1.ConfigMap{}
-	cm, err := p.KubeClient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Get(context.TODO(), "q-suffix-host", metav1.GetOptions{})
+	cm, err := p.KubeClient.Clientset.CoreV1().ConfigMaps(common.GetDefaultSystemNamespace(true)).Get(context.TODO(), "q-suffix-host", metav1.GetOptions{})
 	if err != nil {
 		if !errors.IsNotFound(err) {
 			return "", err
 		}
 		if errors.IsNotFound(err) {
 			p.Log.Debug("q-suffix-host not found, create it")
-			cm = suffixdomain.GenerateSuffixConfigMap("q-suffix-host", common.DefaultSystem)
-			if _, err := p.KubeClient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Create(context.TODO(), cm, metav1.CreateOptions{}); err != nil {
+			cm = suffixdomain.GenerateSuffixConfigMap("q-suffix-host", common.GetDefaultSystemNamespace(true))
+			if _, err := p.KubeClient.Clientset.CoreV1().ConfigMaps(common.GetDefaultSystemNamespace(true)).Create(context.TODO(), cm, metav1.CreateOptions{}); err != nil {
 				return "", err
 			}
 		}
@@ -83,7 +83,7 @@ func (p *Cluster) InstallQuCheng() error {
 		}
 	}
 
-	_, err := p.KubeClient.CreateNamespace(ctx, common.DefaultSystem, metav1.CreateOptions{})
+	_, err := p.KubeClient.CreateNamespace(ctx, common.GetDefaultSystemNamespace(true), metav1.CreateOptions{})
 	if err != nil {
 		if !errors.IsAlreadyExists(err) {
 			return err
@@ -117,7 +117,7 @@ func (p *Cluster) InstallQuCheng() error {
 			if _, err := os.Stat(defaultTLS); err == nil {
 				p.Log.StopWait()
 				p.Log.Done("download tls cert success")
-				if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.DefaultSystem).Run(); err != nil {
+				if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.GetDefaultSystemNamespace(true)).Run(); err != nil {
 					p.Log.Warnf("load default tls cert failed, reason: %v", err)
 				} else {
 					p.Log.Done("load default tls cert success")
@@ -151,14 +151,14 @@ func (p *Cluster) InstallQuCheng() error {
 	cfg.SaveConfig()
 	chartversion := common.GetVersion(p.QuchengVersion)
 	p.Log.Info("start deploy cne custom tools")
-	toolargs := []string{"experimental", "helm", "upgrade", "--name", "selfcert", "--repo", common.DefaultHelmRepoName, "--chart", "selfcert", "--namespace", common.DefaultSystem}
+	toolargs := []string{"experimental", "helm", "upgrade", "--name", "selfcert", "--repo", common.DefaultHelmRepoName, "--chart", "selfcert", "--namespace", common.GetDefaultSystemNamespace(true)}
 	if helmstd, err := qcexec.Command(os.Args[0], toolargs...).CombinedOutput(); err != nil {
 		p.Log.Warnf("deploy cne custom tools err: %v, std: %s", err, string(helmstd))
 	} else {
 		p.Log.Done("deployed cne custom tools success")
 	}
 	p.Log.Info("start deploy cne operator")
-	operatorargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultCneOperatorName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultCneOperatorName, "--namespace", common.DefaultSystem,
+	operatorargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultCneOperatorName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultCneOperatorName, "--namespace", common.GetDefaultSystemNamespace(true),
 		"--set", "minio.ingress.enabled=true",
 		"--set", "minio.ingress.host=s3." + p.Domain,
 		"--set", "minio.auth.username=" + cfg.S3.Username,
@@ -173,7 +173,7 @@ func (p *Cluster) InstallQuCheng() error {
 		p.Log.Done("deployed cne-operator success")
 	}
 	helmchan := common.GetChannel(p.QuchengVersion)
-	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultQuchengName, "--namespace", common.DefaultSystem, "--set", "env.APP_DOMAIN=" + p.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
+	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultQuchengName, "--namespace", common.GetDefaultSystemNamespace(true), "--set", "env.APP_DOMAIN=" + p.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
 	if helmchan != "stable" {
 		helmargs = append(helmargs, "--set", "env.PHP_DEBUG=2")
 		helmargs = append(helmargs, "--set", "cloud.switchChannel=true")

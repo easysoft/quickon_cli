@@ -52,7 +52,7 @@ func NewResetPassword(f factory.Factory) *cobra.Command {
 					log.Errorf("k8s client err: %v", err)
 					return
 				}
-				cneapiDeploy, err := k8sClient.GetDeployment(context.Background(), common.DefaultSystem, "qucheng", metav1.GetOptions{})
+				cneapiDeploy, err := k8sClient.GetDeployment(context.Background(), common.GetDefaultSystemNamespace(true), "qucheng", metav1.GetOptions{})
 				if err != nil {
 					log.Errorf("get k8s deploy err: %v", err)
 					return

@@ -98,12 +98,13 @@ func (m *Meta) Check() error {
 	if err := m.addHelmRepo(); err != nil {
 		return err
 	}
-	_, err := m.kubeClient.CreateNamespace(context.TODO(), common.DefaultSystem, metav1.CreateOptions{})
+	_, err := m.kubeClient.CreateNamespace(context.TODO(), common.GetDefaultSystemNamespace(true), metav1.CreateOptions{})
 	if err == nil {
-		m.log.Donef("create namespace %s", common.DefaultSystem)
+		m.log.Donef("create namespace %s", common.GetDefaultSystemNamespace(true))
 	}
+	m.kubeClient.CreateNamespace(context.TODO(), common.DefaultAppNamespace, metav1.CreateOptions{})
 	m.checkIngress()
-	// m.checkStorage()
+	m.checkStorage()
 	return nil
 }
 
@@ -148,7 +149,7 @@ func (m *Meta) Init() error {
 		}
 	}
 
-	_, err := m.kubeClient.CreateNamespace(ctx, common.DefaultSystem, metav1.CreateOptions{})
+	_, err := m.kubeClient.CreateNamespace(ctx, common.GetDefaultSystemNamespace(true), metav1.CreateOptions{})
 	if err != nil {
 		if !kubeerr.IsAlreadyExists(err) {
 			return err
@@ -177,7 +178,7 @@ func (m *Meta) Init() error {
 			if _, err := os.Stat(defaultTLS); err == nil {
 				m.log.StopWait()
 				m.log.Done("download tls cert success")
-				if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.DefaultSystem).Run(); err != nil {
+				if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.GetDefaultSystemNamespace(true)).Run(); err != nil {
 					m.log.Warnf("load default tls cert failed, reason: %v", err)
 				} else {
 					m.log.Done("load default tls cert success")
@@ -209,14 +210,14 @@ func (m *Meta) Init() error {
 	cfg.SaveConfig()
 	chartversion := common.GetVersion(m.Version)
 	m.log.Info("start deploy cne custom tools")
-	toolargs := []string{"experimental", "helm", "upgrade", "--name", "selfcert", "--repo", common.DefaultHelmRepoName, "--chart", "selfcert", "--namespace", common.DefaultSystem}
+	toolargs := []string{"experimental", "helm", "upgrade", "--name", "selfcert", "--repo", common.DefaultHelmRepoName, "--chart", "selfcert", "--namespace", common.GetDefaultSystemNamespace(true)}
 	if helmstd, err := qcexec.Command(os.Args[0], toolargs...).CombinedOutput(); err != nil {
 		m.log.Warnf("deploy cne custom tools err: %v, std: %s", err, string(helmstd))
 	} else {
 		m.log.Done("deployed cne custom tools success")
 	}
 	m.log.Info("start deploy cne operator")
-	operatorargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultCneOperatorName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultCneOperatorName, "--namespace", common.DefaultSystem,
+	operatorargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultCneOperatorName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultCneOperatorName, "--namespace", common.GetDefaultSystemNamespace(true),
 		"--set", "minio.ingress.enabled=true",
 		"--set", "minio.ingress.host=s3." + m.Domain,
 		"--set", "minio.auth.username=" + cfg.S3.Username,
@@ -231,7 +232,7 @@ func (m *Meta) Init() error {
 		m.log.Done("deployed cne-operator success")
 	}
 	helmchan := common.GetChannel(m.Version)
-	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultQuchengName, "--namespace", common.DefaultSystem, "--set", "env.APP_DOMAIN=" + m.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
+	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultQuchengName, "--namespace", common.GetDefaultSystemNamespace(true), "--set", "env.APP_DOMAIN=" + m.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
 	if helmchan != "stable" {
 		helmargs = append(helmargs, "--set", "env.PHP_DEBUG=2")
 		helmargs = append(helmargs, "--set", "cloud.switchChannel=true")
@@ -302,15 +303,15 @@ func (m *Meta) readyQuickON(ctx context.Context) error {
 
 func (m *Meta) getOrCreateUUIDAndAuth() (auth string, err error) {
 	// cm := &corev1.ConfigMap{}
-	cm, err := m.kubeClient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Get(context.TODO(), "q-suffix-host", metav1.GetOptions{})
+	cm, err := m.kubeClient.Clientset.CoreV1().ConfigMaps(common.GetDefaultSystemNamespace(true)).Get(context.TODO(), "q-suffix-host", metav1.GetOptions{})
 	if err != nil {
 		if !kubeerr.IsNotFound(err) {
 			return "", err
 		}
 		if kubeerr.IsNotFound(err) {
 			m.log.Debug("q-suffix-host not found, create it")
-			cm = suffixdomain.GenerateSuffixConfigMap("q-suffix-host", common.DefaultSystem)
-			if _, err := m.kubeClient.Clientset.CoreV1().ConfigMaps(common.DefaultSystem).Create(context.TODO(), cm, metav1.CreateOptions{}); err != nil {
+			cm = suffixdomain.GenerateSuffixConfigMap("q-suffix-host", common.GetDefaultSystemNamespace(true))
+			if _, err := m.kubeClient.Clientset.CoreV1().ConfigMaps(common.GetDefaultSystemNamespace(true)).Create(context.TODO(), cm, metav1.CreateOptions{}); err != nil {
 				return "", err
 			}
 		}
@@ -362,21 +363,21 @@ func (m *Meta) UnInstall() error {
 	m.log.Warnf("start clean quickon.")
 	// 清理helm安装应用
 	m.log.Info("start uninstall cne custom tools")
-	toolargs := []string{"experimental", "helm", "uninstall", "--name", "selfcert", "--namespace", common.DefaultSystem}
+	toolargs := []string{"experimental", "helm", "uninstall", "--name", "selfcert", "--namespace", common.GetDefaultSystemNamespace(true)}
 	if helmstd, err := qcexec.Command(os.Args[0], toolargs...).CombinedOutput(); err != nil {
 		m.log.Warnf("uninstall cne custom tools err: %v, std: %s", err, string(helmstd))
 	} else {
 		m.log.Done("uninstall cne custom tools success")
 	}
 	m.log.Info("start uninstall cne operator")
-	operatorargs := []string{"experimental", "helm", "uninstall", "--name", common.DefaultCneOperatorName, "--namespace", common.DefaultSystem}
+	operatorargs := []string{"experimental", "helm", "uninstall", "--name", common.DefaultCneOperatorName, "--namespace", common.GetDefaultSystemNamespace(true)}
 	if helmstd, err := qcexec.Command(os.Args[0], operatorargs...).CombinedOutput(); err != nil {
 		m.log.Warnf("uninstall cne-operator err: %v, std: %s", err, string(helmstd))
 	} else {
 		m.log.Done("uninstall cne-operator success")
 	}
 	m.log.Info("start uninstall cne quickon")
-	quickonargs := []string{"experimental", "helm", "uninstall", "--name", common.DefaultQuchengName, "--namespace", common.DefaultSystem}
+	quickonargs := []string{"experimental", "helm", "uninstall", "--name", common.DefaultQuchengName, "--namespace", common.GetDefaultSystemNamespace(true)}
 	if helmstd, err := qcexec.Command(os.Args[0], quickonargs...).CombinedOutput(); err != nil {
 		m.log.Warnf("uninstall quickon err: %v, std: %s", err, string(helmstd))
 	} else {

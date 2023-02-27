@@ -154,3 +154,11 @@ func GetDefaultQuickonPlatformDir(path string) string {
 	}
 	return fmt.Sprintf("%s/platform", path)
 }
+
+// GetDefaultSystemNamespace get quickon default system ns
+func GetDefaultSystemNamespace(newVersion bool) string {
+	if newVersion {
+		return DefaultSystemNamespace
+	}
+	return DefaultSystem
+}

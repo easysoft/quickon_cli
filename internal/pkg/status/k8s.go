@@ -151,9 +151,9 @@ func (k *K8sStatusCollector) quchengStatus(ctx context.Context, status *Status) 
 	k.deploymentStatus(ctx, "kube-system", "metrics-server", "metrics-server", "k8s", status)
 	k.deploymentStatus(ctx, "kube-system", "local-path-provisioner", "local-path-provisioner", "k8s", status)
 	// 业务层
-	k.deploymentStatus(ctx, common.DefaultSystem, common.DefaultQuchengName, common.DefaultQuchengName, "", status)
+	k.deploymentStatus(ctx, common.GetDefaultSystemNamespace(true), common.DefaultQuchengName, common.DefaultQuchengName, "", status)
 	// 数据库
-	k.deploymentStatus(ctx, common.DefaultSystem, common.DefaultDBName, common.DefaultDBName, "", status)
+	k.deploymentStatus(ctx, common.GetDefaultSystemNamespace(true), common.DefaultDBName, common.DefaultDBName, "", status)
 
 	// 插件状态
 	plugins, _ := plugin.GetMaps()
@@ -166,15 +166,15 @@ func (k *K8sStatusCollector) quchengStatus(ctx context.Context, status *Status) 
 func (k *K8sStatusCollector) quchengPluginStatus(ctx context.Context, p plugin.Meta, status *Status) error {
 	k.option.Log.Debugf("check plugin %s status", p.Type)
 	stateCount := PodStateCount{Type: "Plugin"}
-	_, err := k.client.GetSecret(ctx, common.DefaultSystem, "qc-plugin-"+p.Type, metav1.GetOptions{})
+	_, err := k.client.GetSecret(ctx, common.GetDefaultSystemNamespace(true), "qc-plugin-"+p.Type, metav1.GetOptions{})
 	if err != nil {
 		stateCount.Disabled = true
 	} else {
 		stateCount.Disabled = false
 		if p.Type == "ingress" {
-			k.deploymentStatus(ctx, common.DefaultSystem, fmt.Sprintf("ingress-%s", common.DefaultIngressName), common.DefaultIngressName, "", status)
+			k.deploymentStatus(ctx, common.GetDefaultSystemNamespace(true), fmt.Sprintf("ingress-%s", common.DefaultIngressName), common.DefaultIngressName, "", status)
 		} else if p.Type == "cne-operator" {
-			k.deploymentStatus(ctx, common.DefaultSystem, common.DefaultCneOperatorName, common.DefaultCneOperatorName, "", status)
+			k.deploymentStatus(ctx, common.GetDefaultSystemNamespace(true), common.DefaultCneOperatorName, common.DefaultCneOperatorName, "", status)
 		}
 	}
 	status.QStatus.PluginState[p.Type] = stateCount

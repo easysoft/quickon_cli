@@ -81,8 +81,8 @@ func renewCertificate(domain string) error {
 	coreDomain := fmt.Sprintf("%s.%s.%s", ds[len(ds)-3], ds[len(ds)-2], ds[len(ds)-1])
 	tlsfile := fmt.Sprintf("https://pkg.qucheng.com/ssl/%s/%s/tls.yaml", mainDomain, coreDomain)
 	log.Debugf("renew default tls certificate use %s", tlsfile)
-	if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", tlsfile, "-n", common.DefaultSystem).Run(); err != nil {
-		log.Warnf("load renew tls cert for %s failed, reason: %v", common.DefaultSystem, err)
+	if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", tlsfile, "-n", common.GetDefaultSystemNamespace(true)).Run(); err != nil {
+		log.Warnf("load renew tls cert for %s failed, reason: %v", common.GetDefaultSystemNamespace(true), err)
 	}
 	log.Debugf("renew ingress tls certificate")
 	if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", tlsfile).Run(); err != nil {

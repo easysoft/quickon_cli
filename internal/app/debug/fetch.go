@@ -60,7 +60,7 @@ func GetNameByURL(url string, debug, useip bool) (*AppData, error) {
 		if err != nil {
 			return nil, err
 		}
-		cneapiDeploy, err := k8sClient.GetDeployment(context.Background(), common.DefaultSystem, "qucheng", metav1.GetOptions{})
+		cneapiDeploy, err := k8sClient.GetDeployment(context.Background(), common.GetDefaultSystemNamespace(true), "qucheng", metav1.GetOptions{})
 		if err != nil {
 			return nil, err
 		}

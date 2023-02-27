@@ -330,9 +330,9 @@ func (p *Cluster) InitK3sCluster() error {
 	p.Log.Donef("create kubeconfig soft link %v ---> %v", common.GetDefaultQuickonPlatformDir(p.DataDir), common.K3sDefaultDir)
 	kclient, _ := k8s.NewSimpleClient()
 	if kclient != nil {
-		_, err = kclient.CreateNamespace(context.TODO(), common.DefaultSystem, metav1.CreateOptions{})
+		_, err = kclient.CreateNamespace(context.TODO(), common.GetDefaultSystemNamespace(true), metav1.CreateOptions{})
 		if err == nil {
-			p.Log.Donef("create namespace %s", common.DefaultSystem)
+			p.Log.Donef("create namespace %s", common.GetDefaultSystemNamespace(true))
 		}
 		p.KubeClient = kclient
 	}

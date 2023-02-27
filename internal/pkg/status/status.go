@@ -110,7 +110,7 @@ func (s *Status) Format() error {
 		}
 		fmt.Fprintf(w, "\n")
 		fmt.Fprintf(w, "Qucheng Status: \n")
-		fmt.Fprintf(w, "  namespace:\t%s\n", color.SBlue(common.DefaultSystem))
+		fmt.Fprintf(w, "  namespace:\t%s\n", color.SBlue(common.GetDefaultSystemNamespace(true)))
 		cfg, _ := config.LoadConfig()
 		domain := ""
 		loginip := exnet.LocalIPs()[0]
