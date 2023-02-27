@@ -162,3 +162,9 @@ func GetDefaultSystemNamespace(newVersion bool) string {
 	}
 	return DefaultSystem
 }
+
+func GetDefaultQuickONNamespace() []string {
+	var ns []string
+	ns = append(ns, DefaultAppNamespace, DefaultCINamespace, DefaultSystemNamespace)
+	return ns
+}

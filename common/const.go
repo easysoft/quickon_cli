@@ -82,6 +82,7 @@ const (
 	DefaultSystem          = "cne-system"
 	DefaultSystemNamespace = "quickon-system"
 	DefaultAppNamespace    = "quickon-app"
+	DefaultCINamespace     = "quickon-ci"
 	DefaultQuchengName     = "qucheng"
 	DefaultCneOperatorName = "cne-operator"
 	DefaultIngressName     = "nginx-ingress-controller"

@@ -22,12 +22,12 @@ LDFLAGS := "-w -s \
   -X 'k8s.io/client-go/pkg/version.gitTreeState=dirty' \
   -X 'k8s.io/client-go/pkg/version.buildDate=${BUILD_DATE}' \
 	-X 'k8s.io/client-go/pkg/version.gitMajor=1' \
-	-X 'k8s.io/client-go/pkg/version.gitMinor=23' \
+	-X 'k8s.io/client-go/pkg/version.gitMinor=24' \
   -X 'k8s.io/component-base/version.gitVersion=${BUILD_RELEASE}' \
   -X 'k8s.io/component-base/version.gitCommit=${GIT_COMMIT}' \
   -X 'k8s.io/component-base/version.gitTreeState=dirty' \
 	-X 'k8s.io/component-base/version.gitMajor=1' \
-	-X 'k8s.io/component-base/version.gitMinor=23' \
+	-X 'k8s.io/component-base/version.gitMinor=24' \
   -X 'k8s.io/component-base/version.buildDate=${BUILD_DATE}'"
 
 ##########################################################################

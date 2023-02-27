@@ -98,13 +98,28 @@ func (m *Meta) Check() error {
 	if err := m.addHelmRepo(); err != nil {
 		return err
 	}
-	_, err := m.kubeClient.CreateNamespace(context.TODO(), common.GetDefaultSystemNamespace(true), metav1.CreateOptions{})
-	if err == nil {
-		m.log.Donef("create namespace %s", common.GetDefaultSystemNamespace(true))
+	if err := m.initNS(); err != nil {
+		return err
 	}
-	m.kubeClient.CreateNamespace(context.TODO(), common.DefaultAppNamespace, metav1.CreateOptions{})
 	m.checkIngress()
 	m.checkStorage()
+	return nil
+}
+
+func (m *Meta) initNS() error {
+	m.log.Debugf("init quickon default namespace.")
+	for _, ns := range common.GetDefaultQuickONNamespace() {
+		_, err := m.kubeClient.GetNamespace(context.TODO(), ns, metav1.GetOptions{})
+		if err != nil {
+			if !kubeerr.IsNotFound(err) {
+				return err
+			}
+			if _, err := m.kubeClient.CreateNamespace(context.TODO(), ns, metav1.CreateOptions{}); err != nil && kubeerr.IsAlreadyExists(err) {
+				return err
+			}
+		}
+	}
+	m.log.Donef("init quickon default namespace success.")
 	return nil
 }
 
@@ -116,7 +131,7 @@ func (m *Meta) addHelmRepo() error {
 			m.log.Errorf("init quickon helm repo failed, reason: %s", string(output))
 			return err
 		}
-		m.log.Warn("quickon helm repo already exists")
+		m.log.Debugf("quickon helm repo already exists")
 	} else {
 		m.log.Done("add quickon helm repo success")
 	}
