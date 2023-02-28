@@ -1,7 +1,7 @@
 # qcadmin(q)
 
 ![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/easysoft/quickon_cli?filename=go.mod&style=flat-square)
-![GitHub Workflow Status (event)](https://img.shields.io/github/workflow/status/easysoft/quickon_cli/Release?style=flat-square)
+[![Release](https://github.com/easysoft/quickon_cli/actions/workflows/release.yml/badge.svg)](https://github.com/easysoft/quickon_cli/actions/workflows/release.yml)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/easysoft/quickon_cli?style=flat-square)
 ![GitHub](https://img.shields.io/badge/license-ZPL%20%2B%20AGPL-blue)
 [![Go Report Card](https://goreportcard.com/badge/github.com/easysoft/quickon_cli)](https://goreportcard.com/report/github.com/easysoft/quickon_cli)
@@ -18,8 +18,8 @@
 
 ### Linux 发行版
 
-* **Debian**  *Bullseye(推荐), Buster*
-* **Ubuntu**  *16.04, 18.04*
+* **Debian**  *11(推荐), 10*
+* **Ubuntu**  *20.04, 18.04*
 * **CentOS**  *7*
 
 > 建议内核版本`5.14及之后版本`
@@ -31,7 +31,7 @@
 ### k8s/k3s版本
 
 * 对接已有k8s集群, 推荐1.20+版本
-* 默认k3s版本为`1.23`
+* 默认k3s版本为`1.24`
 
 ## 要求和建议
 
@@ -54,7 +54,7 @@
 
 #### 1. 从源码安装
 
-> 需要go环境，推荐使用`1.19`
+> 需要go环境，推荐使用`1.20`
 
 ```bash
 # Clone the repo

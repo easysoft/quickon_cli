@@ -39,6 +39,7 @@ gencopyright: ## add copyright
 	@bash hack/scripts/gencopyright.sh
 
 doc: ## gen docs
+	rm -rf ./docs/*.md
 	go run ./docs/docs.go
 	cp -a README.md docs/index.md
 

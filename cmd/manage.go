@@ -21,5 +21,11 @@ func newCmdManage(f factory.Factory) *cobra.Command {
 	m.AddCommand(manage.NewCmdPlugin(f))
 	m.AddCommand(manage.NewResetPassword(f))
 	m.AddCommand(manage.NewRenewTLS(f))
+	gdbCmd := &cobra.Command{
+		Use:   "gdb",
+		Short: "Manage Global Database",
+	}
+	gdbCmd.AddCommand(manage.NewCmdGdbList(f))
+	m.AddCommand(gdbCmd)
 	return m
 }
