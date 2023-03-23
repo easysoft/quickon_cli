@@ -36,7 +36,7 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
       - name: Cache Go Dependencies
-        uses: magnetikonline/action-golang-cache@v3
+        uses: magnetikonline/action-golang-cache@v4
         with:
           go-version-file: go.mod
       - name: install addlicense
@@ -68,7 +68,7 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
       - name: Cache Go Dependencies
-        uses: magnetikonline/action-golang-cache@v3
+        uses: magnetikonline/action-golang-cache@v4
         with:
           go-version-file: go.mod
       - name: Run Linter
