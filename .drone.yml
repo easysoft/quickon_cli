@@ -20,8 +20,8 @@ steps:
     pull: always
     privileged: true
     commands:
-      - wget -O /drone/src/hack/bin/k3s-linux-amd64 https://pkg-1308438674.cos.ap-shanghai.myqcloud.com/qucheng/cli/stable/k3s/v1.24.10/k3s-linux-amd64
-      - wget -O /drone/src/hack/bin/k3s-linux-arm64 https://pkg-1308438674.cos.ap-shanghai.myqcloud.com/qucheng/cli/stable/k3s/v1.24.10/k3s-linux-arm64
+      - wget -O /drone/src/hack/bin/k3s-linux-amd64 https://pkg-1308438674.cos.ap-shanghai.myqcloud.com/qucheng/cli/stable/k3s/v1.24.11/k3s-linux-amd64
+      - wget -O /drone/src/hack/bin/k3s-linux-arm64 https://pkg-1308438674.cos.ap-shanghai.myqcloud.com/qucheng/cli/stable/k3s/v1.24.11/k3s-linux-arm64
       - chmod +x /drone/src/hack/bin/k3s-linux-amd64 /drone/src/hack/bin/k3s-linux-arm64
 
   - name: build

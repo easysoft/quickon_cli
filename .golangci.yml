@@ -5,6 +5,7 @@ run:
     - hack/bin
     - testdata$
     - examples$
+    - internal/static
   skip-files:
   - "zz_*"
   - ".*test.go"

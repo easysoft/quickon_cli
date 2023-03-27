@@ -42,7 +42,7 @@ func NewResetPassword(f factory.Factory) *cobra.Command {
 	var useip bool
 	rp := &cobra.Command{
 		Use:     "reset-password",
-		Short:   "reset qucheng superadmin password",
+		Short:   "reset quickon admin password",
 		Aliases: []string{"rp", "re-pass"},
 		Run: func(cmd *cobra.Command, args []string) {
 			cfg, _ := config.LoadConfig()
@@ -80,7 +80,7 @@ func NewResetPassword(f factory.Factory) *cobra.Command {
 				log.Warn("not found password, will generate random password")
 				password = expass.PwGenAlphaNumSymbols(16)
 			}
-			log.Debugf("update superadmin password: %s", password)
+			log.Debugf("update admin password: %s", password)
 			client := req.C().SetLogger(nil).SetUserAgent(common.GetUG())
 			if log.GetLevel() > logrus.InfoLevel {
 				client = client.DevMode().EnableDumpAll()
@@ -106,10 +106,10 @@ func NewResetPassword(f factory.Factory) *cobra.Command {
 			}
 			cfg.ConsolePassword = password
 			cfg.SaveConfig()
-			log.Donef("update superadmin %s password %s success.", color.SGreen(result.Data.Account), color.SGreen(password))
+			log.Donef("gen admin %s password %s success.", color.SGreen(result.Data.Account), color.SGreen(password))
 		},
 	}
-	rp.Flags().StringVarP(&password, "password", "p", "", "superadmin password")
+	rp.Flags().StringVarP(&password, "password", "p", "", "admin password")
 	rp.Flags().BoolVar(&useip, "api-useip", true, "api use ip")
 	return rp
 }

@@ -20,50 +20,56 @@ func CheckCommand(f factory.Factory) *cobra.Command {
 		Use:   "check",
 		Short: "check cluster ready",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			quickonCliet := quickon.New(f)
-			if err := quickonCliet.GetKubeClient(); err != nil {
+			quickonClient := quickon.New(f)
+			if err := quickonClient.GetKubeClient(); err != nil {
 				return err
 			}
-			return quickonCliet.Check()
+			return quickonClient.Check()
 		},
 	}
 	return check
 }
 
 func InitCommand(f factory.Factory) *cobra.Command {
-	quickonCliet := quickon.New(f)
+	quickonClient := quickon.New(f)
 	init := &cobra.Command{
 		Use:   "init",
 		Short: "init quickon",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := quickonCliet.GetKubeClient(); err != nil {
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := quickonClient.GetKubeClient(); err != nil {
 				return err
 			}
-			if len(quickonCliet.IP) == 0 {
-				cfg, _ := config.LoadConfig()
-				quickonCliet.IP = cfg.InitNode
+			return quickonClient.Check()
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if err := quickonClient.GetKubeClient(); err != nil {
+				return err
 			}
-			return quickonCliet.Init()
+			if len(quickonClient.IP) == 0 {
+				cfg, _ := config.LoadConfig()
+				quickonClient.IP = cfg.InitNode
+			}
+			return quickonClient.Init()
 		},
 	}
-	init.Flags().StringVar(&quickonCliet.Domain, "domain", "", "global domain")
-	init.Flags().StringVar(&quickonCliet.IP, "ip", "", "ip")
-	init.Flags().StringVar(&quickonCliet.ConsolePassword, "quickon-password", expass.PwGenAlphaNum(32), "quickon console password")
-	init.Flags().StringVar(&quickonCliet.Version, "version", common.DefaultQuchengVersion, "quick version")
+	init.Flags().StringVar(&quickonClient.Domain, "domain", "", "global domain")
+	init.Flags().StringVar(&quickonClient.IP, "ip", "", "ip")
+	init.Flags().StringVar(&quickonClient.ConsolePassword, "quickon-password", expass.PwGenAlphaNum(32), "quickon console password")
+	init.Flags().StringVar(&quickonClient.Version, "version", common.DefaultQuchengVersion, "quick version")
 	return init
 }
 
 func UninstallCommand(f factory.Factory) *cobra.Command {
-	quickonCliet := quickon.New(f)
+	quickonClient := quickon.New(f)
 	uninstall := &cobra.Command{
 		Use:     "uninstall",
 		Short:   "uninstall quickon",
 		Aliases: []string{"clean"},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := quickonCliet.GetKubeClient(); err != nil {
+			if err := quickonClient.GetKubeClient(); err != nil {
 				return err
 			}
-			return quickonCliet.UnInstall()
+			return quickonClient.UnInstall()
 		},
 	}
 	return uninstall

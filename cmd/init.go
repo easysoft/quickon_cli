@@ -7,19 +7,16 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/easysoft/qcadmin/common"
-	"github.com/easysoft/qcadmin/internal/pkg/providers"
+	"github.com/easysoft/qcadmin/internal/pkg/k8s"
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/file"
 	"github.com/spf13/cobra"
 
-	// default provider
-	_ "github.com/easysoft/qcadmin/internal/pkg/providers/incluster"
-	_ "github.com/easysoft/qcadmin/internal/pkg/providers/native"
-
-	"github.com/easysoft/qcadmin/cmd/flags"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 )
 
@@ -28,7 +25,6 @@ var (
 		Use:   "init",
 		Short: "Run this command in order to set up the QuCheng control plane",
 	}
-	cp   providers.Provider
 	skip bool
 )
 
@@ -37,46 +33,39 @@ func init() {
 }
 
 func newCmdInit(f factory.Factory) *cobra.Command {
-	// native.Init()
 	log := f.GetLog()
-
+	defaultArgs := os.Args
+	globalToolPath := defaultArgs[0]
 	name := "native"
-	if file.CheckFileExists(common.GetDefaultKubeConfig()) {
+	if file.CheckFileExists(common.GetKubeConfig()) {
 		name = "incluster"
 	}
 
-	if reg, err := providers.GetProvider(name); err != nil {
-		log.Fatalf("failed to get provider: %s", err)
-	} else {
-		cp = reg
-	}
-	initCmd.Flags().AddFlagSet(flags.ConvertFlags(initCmd, cp.GetCreateFlags()))
-	initCmd.Example = cp.GetUsageExample("create")
 	initCmd.PreRun = func(cmd *cobra.Command, args []string) {
-		defaultArgs := os.Args
 		if file.CheckFileExists(common.GetCustomConfig(common.InitFileName)) {
-			log.Donef("cluster is already initialized, just run %s get cluster status", color.SGreen("%s status", defaultArgs[0]))
+			log.Donef("quickon is already initialized, just run %s get cluster status", color.SGreen("%s status", globalToolPath))
 			os.Exit(0)
+		}
+		if name == "incluster" {
+			// TODO Check k8s ready
+			if _, err := k8s.NewSimpleClient(); err != nil {
+				log.Errorf("k8s is not ready, please check your k8s cluster, just run %s ", color.SGreen("%s exp kubectl get nodes", globalToolPath))
+				os.Exit(0)
+			}
 		}
 	}
 	initCmd.Run = func(cmd *cobra.Command, args []string) {
-		cp.SetLog(log)
-		if name != "incluster" {
-			if err := cp.PreSystemInit(); err != nil {
-				log.Fatalf("presystem init err, reason: %s", err)
+		if name == "native" {
+			log.Infof("start init native provider")
+			if err := qcexec.CommandRun(globalToolPath, "cluster", "init", fmt.Sprintf("--debug=%v", globalFlags.Debug)); err != nil {
+				log.Warnf("init k8s cluster failed, reason: %v", err)
+				return
 			}
 		}
-		if err := cp.CreateCheck(skip); err != nil {
-			log.Fatalf("precheck err, reason: %v", err)
+		if err := qcexec.CommandRun(globalToolPath, "quickon", "init", fmt.Sprintf("--debug=%v", globalFlags.Debug)); err != nil {
+				log.Warnf("init quickon failed, reason: %v", err)
+				return
 		}
-		if err := cp.CreateCluster(); err != nil {
-			log.Fatalf("init cluster err: %v", err)
-		}
-
-		if err := cp.InitQucheng(); err != nil {
-			log.Fatalf("init qucheng err: %v", err)
-		}
-		cp.Show()
 	}
 	return initCmd
 }
