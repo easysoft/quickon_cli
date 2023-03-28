@@ -60,7 +60,8 @@ const (
 )
 
 const (
-	DefaultQuchengVersion  = "stable-2.6"
+	DefaultQuchengVersion  = "stable-3.0"
+	DefalutQuchengType     = "oss"
 	K3sBinName             = "k3s"
 	K3sBinPath             = "/usr/local/bin/k3s"
 	HelmBinName            = "helm"

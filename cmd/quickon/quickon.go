@@ -55,7 +55,8 @@ func InitCommand(f factory.Factory) *cobra.Command {
 	init.Flags().StringVar(&quickonClient.Domain, "domain", "", "global domain")
 	init.Flags().StringVar(&quickonClient.IP, "ip", "", "ip")
 	init.Flags().StringVar(&quickonClient.ConsolePassword, "quickon-password", expass.PwGenAlphaNum(32), "quickon console password")
-	init.Flags().StringVar(&quickonClient.Version, "version", common.DefaultQuchengVersion, "quick version")
+	init.Flags().StringVar(&quickonClient.Version, "version", common.DefaultQuchengVersion, "quickon version")
+	init.Flags().BoolVar(&quickonClient.OssMode, "oss", true, "quickon type, default oss, also support enterprise")
 	return init
 }
 
