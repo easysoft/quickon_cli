@@ -1,5 +1,21 @@
 # Changelog
 
+## v2.0.0-beta.0 (2023-03-28)
+
+ * [0048d91](https://github.com/easysoft/quickon_cli/commit/0048d911981cf6200c9ea0c71fbe6e6b4663e0e2) fix(kube): fix kube path typo
+ * [e2c6cf9](https://github.com/easysoft/quickon_cli/commit/e2c6cf9a0cf209abc893c8ee35c1d240ab03574e) build(deps): bump actions/setup-go from 3 to 4 (#133)
+ * [5e6dfce](https://github.com/easysoft/quickon_cli/commit/5e6dfcef61196c877801d8c331d2b72821bd1617) feat(install): fix install typo
+ * [d385d5f](https://github.com/easysoft/quickon_cli/commit/d385d5f3f23f096b757149a8561401a66c8c58c1) build(deps): bump magnetikonline/action-golang-cache from 3 to 4 (#132)
+ * [25e202e](https://github.com/easysoft/quickon_cli/commit/25e202e157964d9c2f61822278fdc2f2df1604a3) feat(update): fix update
+ * [4fad7f7](https://github.com/easysoft/quickon_cli/commit/4fad7f79e4fd40880ce5b5d03527d436365257be) build(deps): bump github.com/shirou/gopsutil/v3 from 3.22.12 to 3.23.1 (#130)
+ * [415dbbf](https://github.com/easysoft/quickon_cli/commit/415dbbf6f60307c51073a99273c39edbc5c9cab9) style(lint): nolint gosec
+ * [f3a23ff](https://github.com/easysoft/quickon_cli/commit/f3a23ffb20bb19baa93a9f10df7539f29407111d) fix(ns): imp ns create
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v2.0.0-alpha.2 (2023-02-27)
 
  * [e4bb0bd](https://github.com/easysoft/quickon_cli/commit/e4bb0bdf0c5ed71529945cde91737a54c6a2a5ba) feat(ns): change default ns
