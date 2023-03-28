@@ -75,7 +75,7 @@ q init -q edge
 
 ```bash
 # debian
-echo "deb [trusted=yes] https://apt.fury.io/qucheng/ /" | tee /etc/apt/sources.list.d/qcadmin.list
+echo "deb [trusted=yes] https://repo.qucheng.com/quickon/ /" | tee /etc/apt/sources.list.d/qcadmin.list
 apt update
 apt search qcadmin
 apt install qcadmin

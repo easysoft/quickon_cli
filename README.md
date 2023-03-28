@@ -83,18 +83,19 @@ q init -q edge
 
 ```bash
 # debian
-echo "deb [trusted=yes] https://repo.qucheng.com/qucheng/ /" | tee /etc/apt/sources.list.d/qcadmin.list
+echo "deb [trusted=yes] https://repo.qucheng.com/quickon/apt/ /" | tee /etc/apt/sources.list.d/quickon.list
 apt update
 apt search qcadmin
 apt install qcadmin
 # centos7
-cat > /etc/yum.repos.d/qcadmin.repo << EOF
-[fury]
-name=Qucheng Yum Repo
-baseurl=https://repo.qucheng.com/qucheng/
+cat > /etc/yum.repos.d/quickon.repo << EOF
+[quickon]
+name=Quickon Repo
+baseurl=https://repo.qucheng.com/quickon/yum/
 enabled=1
 gpgcheck=0
 EOF
+
 yum makecache
 yum install qcadmin
 ```
