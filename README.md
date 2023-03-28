@@ -19,6 +19,7 @@
 ### Linux 发行版
 
 * **Debian**  *11(推荐), 10*
+* **Rocky** *9, 8*
 * **Ubuntu**  *20.04, 18.04*
 * **CentOS**  *7*
 
@@ -82,7 +83,7 @@ q init -q edge
 
 ```bash
 # debian
-echo "deb [trusted=yes] https://apt.fury.io/qucheng/ /" | tee /etc/apt/sources.list.d/qcadmin.list
+echo "deb [trusted=yes] https://repo.qucheng.com/qucheng/ /" | tee /etc/apt/sources.list.d/qcadmin.list
 apt update
 apt search qcadmin
 apt install qcadmin
@@ -90,7 +91,7 @@ apt install qcadmin
 cat > /etc/yum.repos.d/qcadmin.repo << EOF
 [fury]
 name=Qucheng Yum Repo
-baseurl=https://yum.fury.io/qucheng/
+baseurl=https://repo.qucheng.com/qucheng/
 enabled=1
 gpgcheck=0
 EOF
@@ -105,10 +106,15 @@ yum install qcadmin
 ```bash
 # create qucheng cluster
 q init
-# create a k3s cluster with other cidr
-q init --podsubnet 10.42.0.0/16 --svcsubnet 10.43.0.0/16
-# custom domain
-q init --domain qucheng.example.com
+```
+
+### 高级使用
+
+```bash
+# step 1. 创建k3s集群
+q cluster init
+# step 2. 初始化渠成平台
+q quickon init 
 ```
 
 ## 相关文档

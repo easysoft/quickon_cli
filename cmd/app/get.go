@@ -9,6 +9,8 @@ package app
 import (
 	"os"
 
+	"github.com/easysoft/qcadmin/common"
+
 	"github.com/easysoft/qcadmin/internal/app/debug"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
@@ -32,7 +34,7 @@ func NewCmdAppGet(f factory.Factory) *cobra.Command {
 			if err != nil {
 				return err
 			}
-			extargs := []string{"exp", "kubectl", "get", "-o", "wide", "pods,deploy,pvc,svc,ing", "-l", "release=" + appdata.K8Name}
+			extargs := []string{"exp", "kubectl", "get", "-o", "wide", "pods,deploy,pvc,svc,ing", "-l", "release=" + appdata.K8Name, "--kubeconfig", common.GetDefaultNewKubeConfig()}
 			// extargs = append(extargs, args...)
 			return qcexec.CommandRun(os.Args[0], extargs...)
 		},

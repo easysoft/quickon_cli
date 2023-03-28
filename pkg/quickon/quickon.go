@@ -190,15 +190,15 @@ func (m *Meta) Init() error {
 		m.log.StartWait(fmt.Sprintf("start issuing domain %s certificate, may take 3-5min", m.Domain))
 		waittls := time.Now()
 		for {
-			if _, err := os.Stat(defaultTLS); err == nil {
+			if file.CheckFileExists(defaultTLS) {
 				m.log.StopWait()
 				m.log.Done("download tls cert success")
-				if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.GetDefaultSystemNamespace(true)).Run(); err != nil {
+				if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.GetDefaultSystemNamespace(true), "--kubeconfig", common.GetDefaultNewKubeConfig()).Run(); err != nil {
 					m.log.Warnf("load default tls cert failed, reason: %v", err)
 				} else {
 					m.log.Done("load default tls cert success")
 				}
-				qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", "default").Run()
+				qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", "default", "--kubeconfig", common.GetDefaultNewKubeConfig()).Run()
 				break
 			}
 			_, mainDomain := kutil.SplitDomain(m.Domain)

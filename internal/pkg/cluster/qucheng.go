@@ -117,12 +117,12 @@ func (p *Cluster) InstallQuCheng() error {
 			if _, err := os.Stat(defaultTLS); err == nil {
 				p.Log.StopWait()
 				p.Log.Done("download tls cert success")
-				if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.GetDefaultSystemNamespace(true)).Run(); err != nil {
+				if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.GetDefaultSystemNamespace(true), "--kubeconfig", common.GetDefaultNewKubeConfig()).Run(); err != nil {
 					p.Log.Warnf("load default tls cert failed, reason: %v", err)
 				} else {
 					p.Log.Done("load default tls cert success")
 				}
-				qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", "default").Run()
+				qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", "default", "--kubeconfig", common.GetDefaultNewKubeConfig()).Run()
 				break
 			}
 			_, mainDomain := kutil.SplitDomain(p.Domain)

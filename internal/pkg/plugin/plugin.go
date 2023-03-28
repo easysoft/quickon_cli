@@ -117,7 +117,7 @@ func (p *Item) UnInstall() error {
 		}
 	} else {
 		// #nosec
-		applycmd := qcexec.Command(os.Args[0], "experimental", "kubectl", "delete", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", common.GetDefaultSystemNamespace(true))
+		applycmd := qcexec.Command(os.Args[0], "experimental", "kubectl", "delete", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", common.GetDefaultSystemNamespace(true), "--kubeconfig", common.GetDefaultNewKubeConfig())
 		if output, err := applycmd.CombinedOutput(); err != nil {
 			p.log.Errorf("kubectl uninstall %s plugin %s failed: %s", p.Type, p.Name, string(output))
 			return err
@@ -160,7 +160,7 @@ func (p *Item) Install() error {
 		}
 	} else {
 		// #nosec
-		applycmd := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", common.GetDefaultSystemNamespace(true))
+		applycmd := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", common.GetDefaultSystemNamespace(true), "--kubeconfig", common.GetDefaultNewKubeConfig())
 		if output, err := applycmd.CombinedOutput(); err != nil {
 			p.log.Errorf("kubectl install %s plugin %s failed: %s", p.Type, p.Name, string(output))
 			return err
@@ -209,7 +209,7 @@ func (p *Item) Upgrade() (err error) {
 		}
 	} else {
 		// #nosec
-		applycmd := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", common.GetDefaultSystemNamespace(true))
+		applycmd := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/%s", common.GetDefaultDataDir(), p.Path), "-n", common.GetDefaultSystemNamespace(true), "--kubeconfig", common.GetDefaultNewKubeConfig())
 		if output, err := applycmd.CombinedOutput(); err != nil {
 			p.log.Errorf("kubectl upgrade %s plugin %s failed: %s", p.Type, p.Name, string(output))
 			return err

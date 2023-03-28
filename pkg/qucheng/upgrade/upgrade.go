@@ -121,12 +121,12 @@ func Upgrade(flagVersion string, log log.Logger) error {
 							if _, err := os.Stat(defaultTLS); err == nil {
 								log.StopWait()
 								log.Done("download tls cert success")
-								if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.GetDefaultSystemNamespace(true)).Run(); err != nil {
+								if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.GetDefaultSystemNamespace(true), "--kubeconfig", common.GetDefaultNewKubeConfig()).Run(); err != nil {
 									log.Warnf("load default tls cert failed, reason: %v", err)
 								} else {
 									log.Done("load default tls cert success")
 								}
-								qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", "default").Run()
+								qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", "default", "--kubeconfig", common.GetDefaultNewKubeConfig()).Run()
 								args := []string{"ingress.tls.enabled=true", "ingress.tls.secretName=tls-haogs-cn"}
 								values, _ := helm.MergeValues(args)
 								defaultValue = helm.MergeMaps(defaultValue, values)

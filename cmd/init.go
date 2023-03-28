@@ -25,11 +25,13 @@ var (
 		Use:   "init",
 		Short: "Run this command in order to set up the QuCheng control plane",
 	}
-	skip bool
+	skip    bool
+	appName string
 )
 
 func init() {
 	initCmd.PersistentFlags().BoolVar(&skip, "skip-precheck", false, "skip precheck")
+	initCmd.PersistentFlags().StringVar(&appName, "app", "zentao", "app name")
 }
 
 func newCmdInit(f factory.Factory) *cobra.Command {
@@ -58,13 +60,17 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 		if name == "native" {
 			log.Infof("start init native provider")
 			if err := qcexec.CommandRun(globalToolPath, "cluster", "init", fmt.Sprintf("--debug=%v", globalFlags.Debug)); err != nil {
-				log.Warnf("init k8s cluster failed, reason: %v", err)
+				log.Errorf("init k8s cluster failed, reason: %v", err)
 				return
 			}
 		}
 		if err := qcexec.CommandRun(globalToolPath, "quickon", "init", fmt.Sprintf("--debug=%v", globalFlags.Debug)); err != nil {
-				log.Warnf("init quickon failed, reason: %v", err)
-				return
+			log.Errorf("init quickon failed, reason: %v", err)
+			return
+		}
+		if err := qcexec.CommandRun(globalToolPath, "app", "install", "--name", appName, "--api-useip", fmt.Sprintf("--debug=%v", globalFlags.Debug)); err != nil {
+			log.Errorf("init quickon failed, reason: %v", err)
+			return
 		}
 	}
 	return initCmd
