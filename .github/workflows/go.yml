@@ -74,4 +74,5 @@ jobs:
         working-directory: dist/artifacts/
         run: |
           chmod +x qcadmin_linux_amd64
-          sudo ./qcadmin_linux_amd64 init -q test --domain q.local --skip-precheck  --debug
+          sudo ./qcadmin_linux_amd64 cluster init --debug
+          sudo ./qcadmin_linux_amd64 quickon init --domain local.demo --debug
