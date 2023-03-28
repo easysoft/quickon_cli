@@ -173,7 +173,7 @@ func (p *Cluster) InstallQuCheng() error {
 		p.Log.Done("deployed cne-operator success")
 	}
 	helmchan := common.GetChannel(p.QuchengVersion)
-	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultQuchengName, "--namespace", common.GetDefaultSystemNamespace(true), "--set", "env.APP_DOMAIN=" + p.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
+	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.GetQuickONName(true), "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultQuchengName, "--namespace", common.GetDefaultSystemNamespace(true), "--set", "env.APP_DOMAIN=" + p.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
 	if helmchan != "stable" {
 		helmargs = append(helmargs, "--set", "env.PHP_DEBUG=2")
 		helmargs = append(helmargs, "--set", "cloud.switchChannel=true")

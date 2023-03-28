@@ -39,6 +39,7 @@ type Meta struct {
 	IP              string
 	Version         string
 	ConsolePassword string
+	OssMode         bool
 	kubeClient      *k8s.Client
 	log             log.Logger
 }
@@ -247,7 +248,7 @@ func (m *Meta) Init() error {
 		m.log.Done("deployed cne-operator success")
 	}
 	helmchan := common.GetChannel(m.Version)
-	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultQuchengName, "--namespace", common.GetDefaultSystemNamespace(true), "--set", "env.APP_DOMAIN=" + m.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
+	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.GetQuickONName(m.OssMode), "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultQuchengName, "--namespace", common.GetDefaultSystemNamespace(true), "--set", "env.APP_DOMAIN=" + m.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
 	if helmchan != "stable" {
 		helmargs = append(helmargs, "--set", "env.PHP_DEBUG=2")
 		helmargs = append(helmargs, "--set", "cloud.switchChannel=true")
@@ -392,7 +393,7 @@ func (m *Meta) UnInstall() error {
 		m.log.Done("uninstall cne-operator success")
 	}
 	m.log.Info("start uninstall cne quickon")
-	quickonargs := []string{"experimental", "helm", "uninstall", "--name", common.DefaultQuchengName, "--namespace", common.GetDefaultSystemNamespace(true)}
+	quickonargs := []string{"experimental", "helm", "uninstall", "--name", common.GetQuickONName(m.OssMode), "--namespace", common.GetDefaultSystemNamespace(true)}
 	if helmstd, err := qcexec.Command(os.Args[0], quickonargs...).CombinedOutput(); err != nil {
 		m.log.Warnf("uninstall quickon err: %v, std: %s", err, string(helmstd))
 	} else {

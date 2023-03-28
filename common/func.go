@@ -168,3 +168,10 @@ func GetDefaultQuickONNamespace() []string {
 	ns = append(ns, DefaultAppNamespace, DefaultCINamespace, DefaultSystemNamespace)
 	return ns
 }
+
+func GetQuickONName(oss bool) string {
+	if oss {
+		return DefaultQuchengName
+	}
+	return fmt.Sprintf("%s-biz", DefaultQuchengName)
+}
