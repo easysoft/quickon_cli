@@ -1,5 +1,17 @@
 # Changelog
 
+## v2.0.0-beta.1 (2023-03-30)
+
+ * [79baca5](https://github.com/easysoft/quickon_cli/commit/79baca5e4c743cd2ff159a02e982a75ed73b5699) refactor(subcmd): del manage subcmd
+ * [c5a4bfc](https://github.com/easysoft/quickon_cli/commit/c5a4bfc1918446853d0b7aaa071fb49fb59679a0) chore(github): update github action test (#136)
+ * [1ea40e2](https://github.com/easysoft/quickon_cli/commit/1ea40e2441edbab647ee92a9640b74fc1bcd999d) feat(3.0): support 3.0 (#135)
+ * [bfb7b88](https://github.com/easysoft/quickon_cli/commit/bfb7b889455e3297720f54634f3b47755a878210) docs(update): update readme
+
+### Contributors
+
+ * ysicing
+ * 缘生
+
 ## v2.0.0-beta.0 (2023-03-28)
 
  * [0048d91](https://github.com/easysoft/quickon_cli/commit/0048d911981cf6200c9ea0c71fbe6e6b4663e0e2) fix(kube): fix kube path typo
