@@ -7,17 +7,35 @@
 package cmd
 
 import (
+	"github.com/easysoft/qcadmin/cmd/app"
 	"github.com/easysoft/qcadmin/cmd/manage"
 	"github.com/easysoft/qcadmin/cmd/quickon"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/spf13/cobra"
 )
 
+func newCmdApp(f factory.Factory) *cobra.Command {
+	appCmd := &cobra.Command{
+		Use:     "app",
+		Short:   "Manage Quickon applications",
+		Version: "20230330",
+	}
+	appCmd.AddCommand(app.NewCmdAppExec(f))
+	appCmd.AddCommand(app.NewCmdAppGet(f))
+	appCmd.AddCommand(app.NewCmdAppLogs(f))
+	appCmd.AddCommand(app.NewCmdAppList(f))
+	appCmd.AddCommand(app.NewCmdAppInstall(f))
+	appCmd.AddCommand(app.NewCmdAppMarket(f))
+	return appCmd
+}
+
 func newCmdQuickon(f factory.Factory) *cobra.Command {
 	quickonCmd := &cobra.Command{
-		Use:   "quickon",
-		Short: "Quickon commands",
+		Use:     "quickon",
+		Short:   "Quickon commands",
+		Version: "20230330",
 	}
+	quickonCmd.AddCommand(newCmdApp(f))
 	quickonCmd.AddCommand(quickon.CheckCommand(f))
 	quickonCmd.AddCommand(quickon.InitCommand(f))
 	quickonCmd.AddCommand(quickon.UninstallCommand(f))
