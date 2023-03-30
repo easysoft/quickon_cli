@@ -15,7 +15,7 @@ import (
 func newCmdApp(f factory.Factory) *cobra.Command {
 	appCmd := &cobra.Command{
 		Use:    "app",
-		Short:  "Manage applications",
+		Short:  "Manage Quickon applications",
 		Hidden: false,
 	}
 	appCmd.AddCommand(app.NewCmdAppExec(f))

@@ -68,7 +68,6 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 	rootCmd.AddCommand(newCmdUninstall(f))
 	rootCmd.AddCommand(newCmdStatus(f))
 	rootCmd.AddCommand(newCmdUpgrade(f))
-	rootCmd.AddCommand(newCmdManage(f))
 	rootCmd.AddCommand(newCmdApp(f))
 	rootCmd.AddCommand(newCmdCluster(f))
 	rootCmd.AddCommand(newCmdQuickon(f))
