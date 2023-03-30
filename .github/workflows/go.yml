@@ -75,4 +75,4 @@ jobs:
         run: |
           chmod +x qcadmin_linux_amd64
           sudo ./qcadmin_linux_amd64 cluster init --debug
-          sudo ./qcadmin_linux_amd64 quickon init --domain local.demo --debug
+          sudo ./qcadmin_linux_amd64 quickon init --domain local.demo --version test-2.6 --debug
