@@ -9,7 +9,7 @@ require (
 	github.com/cheggaaa/pb/v3 v3.1.0
 	github.com/cockroachdb/errors v1.9.1
 	github.com/containerd/continuity v0.3.0
-	github.com/docker/docker v20.10.22+incompatible
+	github.com/docker/docker v23.0.2+incompatible
 	github.com/easysoft/quickon-api v0.6.1
 	github.com/emirpasic/gods v1.18.1
 	github.com/ergoapi/util v0.3.12
