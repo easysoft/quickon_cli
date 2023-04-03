@@ -5,6 +5,9 @@ on:
     tags:
       - v*
 
+env:
+  TZ: Asia/Shanghai
+
 jobs:
   generate_changelog:
     runs-on: ubuntu-latest

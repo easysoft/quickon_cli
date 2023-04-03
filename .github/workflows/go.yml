@@ -3,6 +3,7 @@ name: go
 env:
   # Common versions
   GO_VERSION: '1.20'
+  TZ: Asia/Shanghai
 
 permissions:
   contents: read
