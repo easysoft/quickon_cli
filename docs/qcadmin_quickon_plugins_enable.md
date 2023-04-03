@@ -10,7 +10,7 @@ qcadmin quickon plugins enable [flags]
 
 ```
   -h, --help                help for enable
-  -k, --kubeconfig string   kubeconfig file (default "/Users/ysicing/.qc/config/.kube/config")
+  -k, --kubeconfig string   kubeconfig file (default "/home/runner/.qc/config/.kube/config")
   -v, --version string      plugin
 ```
 
