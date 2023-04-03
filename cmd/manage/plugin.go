@@ -115,7 +115,7 @@ func installPluginCmd(f factory.Factory) *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVarP(&version, "version", "v", "", "plugin")
-	cmd.Flags().StringVarP(&kubecfg, "kubeconfig", "k", common.GetDefaultNewKubeConfig(), "kubeconfig file")
+	cmd.Flags().StringVarP(&kubecfg, "kubeconfig", "k", common.GetKubeConfig(), "kubeconfig file")
 	return cmd
 }
 

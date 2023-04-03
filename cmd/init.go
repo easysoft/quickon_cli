@@ -26,7 +26,8 @@ import (
 
 var (
 	initCmd = &cobra.Command{
-		Use: "init",
+		Use:   "init",
+		Short: "Initialize a Kubernetes & Quickon cluster",
 	}
 	skip    bool
 	appName string
