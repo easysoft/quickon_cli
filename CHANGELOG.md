@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.0.0-beta.2 (2023-04-03)
+
+ * [1b4afc4](https://github.com/easysoft/quickon_cli/commit/1b4afc436136fa315d47c2334805520baa5dcd33) feat(uninstall): fix uninstall
+ * [dc56c65](https://github.com/easysoft/quickon_cli/commit/dc56c65b7177383b6eb9f8f24dc9a9808e3d4a3d) docs(update): update cli docs
+ * [94cc6a8](https://github.com/easysoft/quickon_cli/commit/94cc6a8fbd34bf1a651dd55ff54dc69ae9e27ea3) fix(ci): fix smoke install version
+ * [82f3850](https://github.com/easysoft/quickon_cli/commit/82f38507960efa71636486a83ce0354b6165b77c) refactor(subcmd): del app & precheck
+
+### Contributors
+
+ * ysicing
+
 ## v2.0.0-beta.1 (2023-03-30)
 
  * [79baca5](https://github.com/easysoft/quickon_cli/commit/79baca5e4c743cd2ff159a02e982a75ed73b5699) refactor(subcmd): del manage subcmd
