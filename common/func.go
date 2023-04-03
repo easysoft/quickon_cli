@@ -83,11 +83,14 @@ func GetChannel(p string) string {
 }
 
 // GetVersion 获取chartrepo channel地址
-func GetVersion(p string) string {
+func GetVersion(p string, qt QuickonType) string {
 	if strings.Contains(p, "-") {
 		v := strings.Split(p, "-")
 		if len(v) != 2 {
-			return DefaultQuchengVersion
+			if qt == QuickonOSSType {
+				return DefaultQuickonOssVersion
+			}
+			return DefaultQuickonEEVersion
 		}
 		return v[1]
 	}

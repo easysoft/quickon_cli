@@ -20,6 +20,20 @@ type cloudAPIS struct {
 	DocURL        string
 }
 
+type QuickonType string
+
+var (
+	QuickonOSSType QuickonType = "oss" // 开源版
+	QuickonEEType  QuickonType = "ee"  // 企业版
+)
+
+type InstallType string
+
+var (
+	OnlineInstallType  InstallType = "online"  // 在线安装
+	OfflineInstallType InstallType = "offline" // 离线安装
+)
+
 var (
 	ValidPrefixes     = []string{"qcadmin", "qc"}
 	ValidDomainSuffix = []string{"haogs.cn", "corp.cc"}

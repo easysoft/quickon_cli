@@ -60,41 +60,41 @@ const (
 )
 
 const (
-	DefaultQuchengVersion  = "stable-3.0"
-	DefalutQuchengType     = "oss"
-	K3sBinName             = "k3s"
-	K3sBinPath             = "/usr/local/bin/k3s"
-	HelmBinName            = "helm"
-	HelmBinPath            = "/usr/local/bin/helm"
-	K3sBinVersion          = "v1.24.9+k3s1"
-	K3sBinURL              = "https://github.com/k3s-io/k3s/releases/download"
-	K3sAgentEnv            = "/etc/systemd/system/k3s-agent.service.env"
-	K3sKubeConfig          = "/etc/rancher/k3s/k3s.yaml"
-	K3sDefaultDir          = "/var/lib/rancher/k3s"
-	KubeQPS                = 5.0
-	KubeBurst              = 10
-	KubectlBinPath         = "/usr/local/bin/kubectl"
-	CRICrictl              = "/usr/local/bin/crictl"
-	CRICtr                 = "/usr/local/bin/ctr"
-	QcAdminBinPath         = "/usr/local/bin/qcadmin"
-	StatusWaitDuration     = 5 * time.Minute
-	WaitRetryInterval      = 5 * time.Second
-	DefaultHelmRepoName    = "install"
-	DefaultSystem          = "cne-system"
-	DefaultSystemNamespace = "quickon-system"
-	DefaultAppNamespace    = "quickon-app"
-	DefaultCINamespace     = "quickon-ci"
-	DefaultQuchengName     = "qucheng"
-	DefaultCneOperatorName = "cne-operator"
-	DefaultIngressName     = "nginx-ingress-controller"
-	DefaultDBName          = "qucheng-mysql"
-	InitFileName           = ".initdone"
-	InitLockFileName       = ".qlock"
-	InitModeCluster        = ".incluster"
-	DefaultOSUserRoot      = "root"
-	DefaultSSHPort         = 22
-	PrivateKeyFilename     = "id_rsa"
-	PublicKeyFilename      = "id_rsa.pub"
+	DefaultQuickonOssVersion = "stable-3.0" // 开源版本
+	DefaultQuickonEEVersion  = "test-1.0"
+	K3sBinName               = "k3s"
+	K3sBinPath               = "/usr/local/bin/k3s"
+	HelmBinName              = "helm"
+	HelmBinPath              = "/usr/local/bin/helm"
+	K3sBinVersion            = "v1.24.12+k3s1"
+	K3sBinURL                = "https://github.com/k3s-io/k3s/releases/download"
+	K3sAgentEnv              = "/etc/systemd/system/k3s-agent.service.env"
+	K3sKubeConfig            = "/etc/rancher/k3s/k3s.yaml"
+	K3sDefaultDir            = "/var/lib/rancher/k3s"
+	KubeQPS                  = 5.0
+	KubeBurst                = 10
+	KubectlBinPath           = "/usr/local/bin/kubectl"
+	CRICrictl                = "/usr/local/bin/crictl"
+	CRICtr                   = "/usr/local/bin/ctr"
+	QcAdminBinPath           = "/usr/local/bin/qcadmin"
+	StatusWaitDuration       = 5 * time.Minute
+	WaitRetryInterval        = 5 * time.Second
+	DefaultHelmRepoName      = "install"
+	DefaultSystem            = "cne-system"
+	DefaultSystemNamespace   = "quickon-system"
+	DefaultAppNamespace      = "quickon-app"
+	DefaultCINamespace       = "quickon-ci"
+	DefaultQuchengName       = "qucheng"
+	DefaultCneOperatorName   = "cne-operator"
+	DefaultIngressName       = "nginx-ingress-controller"
+	DefaultDBName            = "qucheng-mysql"
+	InitFileName             = ".initdone"
+	InitLockFileName         = ".qlock"
+	InitModeCluster          = ".incluster"
+	DefaultOSUserRoot        = "root"
+	DefaultSSHPort           = 22
+	PrivateKeyFilename       = "id_rsa"
+	PublicKeyFilename        = "id_rsa.pub"
 )
 
 const (

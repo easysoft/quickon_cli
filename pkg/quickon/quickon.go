@@ -40,6 +40,7 @@ type Meta struct {
 	Version         string
 	ConsolePassword string
 	OssMode         bool
+	QuickonType     common.QuickonType
 	kubeClient      *k8s.Client
 	log             log.Logger
 }
@@ -224,7 +225,7 @@ func (m *Meta) Init() error {
 	cfg.S3.Username = expass.PwGenAlphaNum(8)
 	cfg.S3.Password = expass.PwGenAlphaNum(16)
 	cfg.SaveConfig()
-	chartversion := common.GetVersion(m.Version)
+	chartversion := common.GetVersion(m.Version, m.QuickonType)
 	m.log.Info("start deploy cne custom tools")
 	toolargs := []string{"experimental", "helm", "upgrade", "--name", "selfcert", "--repo", common.DefaultHelmRepoName, "--chart", "selfcert", "--namespace", common.GetDefaultSystemNamespace(true)}
 	if helmstd, err := qcexec.Command(os.Args[0], toolargs...).CombinedOutput(); err != nil {

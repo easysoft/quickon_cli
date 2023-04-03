@@ -7,6 +7,8 @@
 package quickon
 
 import (
+	"fmt"
+
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
@@ -32,6 +34,7 @@ func CheckCommand(f factory.Factory) *cobra.Command {
 
 func InitCommand(f factory.Factory) *cobra.Command {
 	quickonClient := quickon.New(f)
+	quickonClient.QuickonType = common.QuickonOSSType
 	init := &cobra.Command{
 		Use:   "init",
 		Short: "init quickon",
@@ -42,6 +45,9 @@ func InitCommand(f factory.Factory) *cobra.Command {
 			return quickonClient.Check()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if !quickonClient.OssMode {
+				quickonClient.QuickonType = common.QuickonEEType
+			}
 			if err := quickonClient.GetKubeClient(); err != nil {
 				return err
 			}
@@ -55,7 +61,7 @@ func InitCommand(f factory.Factory) *cobra.Command {
 	init.Flags().StringVar(&quickonClient.Domain, "domain", "", "global domain")
 	init.Flags().StringVar(&quickonClient.IP, "ip", "", "ip")
 	init.Flags().StringVar(&quickonClient.ConsolePassword, "quickon-password", expass.PwGenAlphaNum(32), "quickon console password")
-	init.Flags().StringVar(&quickonClient.Version, "version", common.DefaultQuchengVersion, "quickon version")
+	init.Flags().StringVar(&quickonClient.Version, "version", common.DefaultQuickonOssVersion, fmt.Sprintf("quickon version(oss: %s/ee: %s)", common.DefaultQuickonOssVersion, common.DefaultQuickonEEVersion))
 	init.Flags().BoolVar(&quickonClient.OssMode, "oss", true, "quickon type, default oss, also support enterprise")
 	return init
 }

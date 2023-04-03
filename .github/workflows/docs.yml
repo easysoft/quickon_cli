@@ -31,3 +31,9 @@ jobs:
       with:
         github_token: ${{ secrets.GH_TOKEN }}
         publish_dir: ./docs
+    - uses: peter-evans/create-pull-request@v4
+      with:
+        title: 'docs: updated docs'
+        commit-message: 'docs: updated docs'
+        branch: create-pull-request/docs
+        signoff: true
