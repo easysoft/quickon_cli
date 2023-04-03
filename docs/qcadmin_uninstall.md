@@ -9,7 +9,8 @@ qcadmin uninstall [flags]
 ### Options
 
 ```
-  -h, --help   help for uninstall
+      --clean-cluster   clean cluster
+  -h, --help            help for uninstall
 ```
 
 ### Options inherited from parent commands
