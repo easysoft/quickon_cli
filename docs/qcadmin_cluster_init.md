@@ -18,13 +18,17 @@ q cluster init --podsubnet "10.42.0.0/16" \
 ### Options
 
 ```
-  -h, --help             help for init
-      --master strings   ips, like 192.168.0.1:22
-      --passwd string    ssh password
-      --pkfile string    ssh pk file
-      --pkpass string    ssh key passwd
-      --user string      ssh user (default "root")
-      --worker strings   ips, like 192.168.0.1:22
+      --cni string            k8s networking plugin, support flannel, wireguard, custom (default "flannel")
+      --data-dir string       cluster & quickon data dir (default "/opt/quickon")
+  -h, --help                  help for init
+      --master stringArray    master ip list, e.g: 192.168.0.1:22
+  -p, --password string       ssh password
+      --pkfile string         ssh private key, if not set, will use password
+      --pkpass string         ssh private key password
+      --pod-cidr string       k8s cluster pod cidr (default "10.42.0.0/16")
+      --service-cidr string   k8s cluster service cidr (default "10.43.0.0/16")
+  -u, --username string       ssh user (default "root")
+      --worker stringArray    worker ip list, e.g: 192.168.0.1:22
 ```
 
 ### Options inherited from parent commands

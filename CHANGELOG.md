@@ -1,5 +1,17 @@
 # Changelog
 
+## v2.0.0-beta.3 (2023-04-03)
+
+ * [7db2362](https://github.com/easysoft/quickon_cli/commit/7db2362d55922ce6cdcfd276e0e06f68ae6a5945) fix(init): imp init cmd message
+ * [efa05f8](https://github.com/easysoft/quickon_cli/commit/efa05f8f92d7950bc667f717984d354c63c8cfc4) fix(init): imp init flag
+ * [5de07a0](https://github.com/easysoft/quickon_cli/commit/5de07a0f358c1f32bd6912fb0282b538f38ff9b8) feat(update): fix cfg
+ * [237d5dc](https://github.com/easysoft/quickon_cli/commit/237d5dc7181df52f0d201a49619a268592a9b5e5) fix(ci): update action tz
+ * [77088d1](https://github.com/easysoft/quickon_cli/commit/77088d1e7992359327a0d1ef23f38f17f5f800c3) fix(ci): merge docs & changelog
+
+### Contributors
+
+ * ysicing
+
 ## v2.0.0-beta.2 (2023-04-03)
 
  * [1b4afc4](https://github.com/easysoft/quickon_cli/commit/1b4afc436136fa315d47c2334805520baa5dcd33) feat(uninstall): fix uninstall
