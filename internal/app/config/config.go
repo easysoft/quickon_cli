@@ -26,21 +26,29 @@ type Node struct {
 	Init bool   `yaml:"init,omitempty" json:"init,omitempty"`
 }
 
-// Config
+// Config config
 type Config struct {
 	Generated       time.Time `json:"-" yaml:"-"`
 	Global          Global    `yaml:"global" json:"global"`
 	ConsolePassword string    `yaml:"console-password,omitempty" json:"console-password,omitempty"`
-	ClusterID       string    `yaml:"cluster_id" json:"cluster_id"`
 	DB              string    `yaml:"db" json:"db"`
 	Domain          string    `yaml:"domain" json:"domain"`
 	APIToken        string    `yaml:"api_token" json:"api_token"`
-	InitNode        string    `yaml:"init_node" json:"init_node"`
-	Token           string    `yaml:"token" json:"token"`
-	Master          []Node    `yaml:"master" json:"master"`
-	Worker          []Node    `yaml:"worker" json:"worker"`
 	S3              S3Config  `yaml:"s3" json:"s3"`
+	Cluster         Cluster   `yaml:"cluster" json:"cluster"`
 	DataDir         string    `yaml:"datadir" json:"datadir"`
+}
+
+type Cluster struct {
+	ID          string `yaml:"id" json:"cid"`
+	CNI         string `yaml:"cni" json:"cni"`
+	PodCIDR     string `yaml:"pod-cidr" json:"pod-cidr"`
+	ServiceCIDR string `yaml:"svc-cidr" json:"svc-cidr"`
+	LbCIDR      string `yaml:"lb-cidr,omitempty" json:"lb-cidr,omitempty"`
+	Master      []Node `yaml:"master" json:"master"`
+	Worker      []Node `yaml:"worker" json:"worker"`
+	InitNode    string `yaml:"init_node" json:"init_node"`
+	Token       string `yaml:"token" json:"token"`
 }
 
 type Global struct {
@@ -92,17 +100,17 @@ func (r *Config) SaveConfig() error {
 
 func (r *Config) GetNodes() []Node {
 	var nodes []Node
-	nodes = append(nodes, r.Master...)
-	nodes = append(nodes, r.Worker...)
+	nodes = append(nodes, r.Cluster.Master...)
+	nodes = append(nodes, r.Cluster.Worker...)
 	return nodes
 }
 
 func (r *Config) GetIPs() []string {
 	var ips []string
-	for _, node := range r.Master {
+	for _, node := range r.Cluster.Master {
 		ips = append(ips, node.Host)
 	}
-	for _, node := range r.Worker {
+	for _, node := range r.Cluster.Worker {
 		ips = append(ips, node.Host)
 	}
 	return exstr.DuplicateStrElement(ips)

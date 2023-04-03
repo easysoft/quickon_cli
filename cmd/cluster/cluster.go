@@ -47,6 +47,10 @@ func InitCommand(f factory.Factory) *cobra.Command {
 	init.Flags().StringVar(&cluster.SSH.PkPasswd, "pkpass", "", "ssh key passwd")
 	init.Flags().StringSliceVar(&cluster.MasterIPs, "master", nil, "ips, like 192.168.0.1:22")
 	init.Flags().StringSliceVar(&cluster.WorkerIPs, "worker", nil, "ips, like 192.168.0.1:22")
+	init.Flags().StringVar(&cluster.CNI, "cni", "flannel", "network cni, like flannel, wireguard, custom")
+	init.Flags().StringVar(&cluster.DataDir, "data-dir", "/opt/quickon", "data dir")
+	init.Flags().StringVar(&cluster.PodCIDR, "pod-cidr", "10.42.0.0/16", "cluster pods cidr")
+	init.Flags().StringVar(&cluster.ServiceCIDR, "service-cidr", "10.43.0.0/16", "cluster service cidr")
 	return init
 }
 

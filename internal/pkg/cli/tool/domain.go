@@ -52,7 +52,7 @@ func domainClean(f factory.Factory) *cobra.Command {
 					return
 				}
 			}
-			secretKey := cfg.ClusterID
+			secretKey := cfg.Cluster.ID
 			if len(secretKey) == 0 {
 				kclient, _ := k8s.NewSimpleClient()
 				cm, err := kclient.Clientset.CoreV1().ConfigMaps(common.GetDefaultSystemNamespace(true)).Get(context.TODO(), "q-suffix-host", metav1.GetOptions{})
@@ -60,7 +60,7 @@ func domainClean(f factory.Factory) *cobra.Command {
 					return
 				}
 				secretKey = cm.Data["auth"]
-				cfg.ClusterID = secretKey
+				cfg.Cluster.ID = secretKey
 				cfg.SaveConfig()
 			}
 			// TODO 获取subdomain, maindomain

@@ -22,11 +22,12 @@ type K3sArgs struct {
 	Master0      bool
 	KubeAPI      string
 	KubeToken    string
-	ClusterCIDR  string
+	PodCIDR      string
 	ServiceCIDR  string
 	DataStore    string
 	DataDir      string
 	LocalStorage bool
+	CNI          string
 }
 
 func render(data K3sArgs, temp string) string {
@@ -43,6 +44,15 @@ func (k3s K3sArgs) Manifests(template string) string {
 	k3s.DataDir = common.GetDefaultQuickonPlatformDir(k3s.DataDir)
 	if k3s.KubeToken == "" {
 		k3s.KubeToken = "quickon"
+	}
+	if k3s.CNI != "" && k3s.CNI != "flannel" {
+		if k3s.CNI == "wg" || k3s.CNI == "wireguard-native" || k3s.CNI == "wireguard" {
+			k3s.CNI = "wireguard-native"
+		} else {
+			k3s.CNI = "none"
+		}
+	} else {
+		k3s.CNI = ""
 	}
 	return render(k3s, template)
 }
@@ -62,7 +72,7 @@ func EmbedCommand(f factory.Factory) *cobra.Command {
 			file.Writefile(tplfile.Name(), k3sargs.Manifests(""), true)
 		},
 	}
-	rootCmd.Flags().StringVar(&k3sargs.ClusterCIDR, "cluster-cidr", "10.42.0.0/16", "cluster cidr")
+	rootCmd.Flags().StringVar(&k3sargs.PodCIDR, "pod-cidr", "10.42.0.0/16", "cluster cidr")
 	rootCmd.Flags().StringVar(&k3sargs.ServiceCIDR, "service-cidr", "10.43.0.0/16", "service cidr")
 	rootCmd.Flags().StringVar(&k3sargs.DataDir, "data-dir", "", "data dir")
 	rootCmd.Flags().StringVar(&k3sargs.DataStore, "data", "", "data type")

@@ -53,7 +53,7 @@ func InitCommand(f factory.Factory) *cobra.Command {
 			}
 			if len(quickonClient.IP) == 0 {
 				cfg, _ := config.LoadConfig()
-				quickonClient.IP = cfg.InitNode
+				quickonClient.IP = cfg.Cluster.InitNode
 			}
 			return quickonClient.Init()
 		},

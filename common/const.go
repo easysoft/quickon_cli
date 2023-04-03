@@ -143,14 +143,14 @@ ExecStart=/usr/local/bin/k3s \
       --tls-san kubeapi.haogs.cn \
       --tls-san apiserver.cluster.local \
       --tls-san {{ .KubeAPI }} \
-      {{if .ClusterCIDR -}}
-        --cluster-cidr {{ .ClusterCIDR }} \
-      {{ end -}}
+      {{if .PodCIDR -}}
+        --cluster-cidr {{ .PodCIDR }} \
+      {{end -}}
       {{if .ServiceCIDR -}}
         --service-cidr {{ .ServiceCIDR }} \
-      {{ end -}}
+      {{end -}}
       {{if .DataStore -}}
-        --datastore-endpoint {{.DataStore}} \
+        --datastore-endpoint {{ .DataStore }} \
       {{else -}}
         --cluster-init \
       {{end -}}
@@ -162,13 +162,16 @@ ExecStart=/usr/local/bin/k3s \
       --disable-cloud-controller \
       --disable-network-policy \
       --disable-helm-controller \
+      {{if .CNI -}}
+        --flannel-backend {{ .CNI }} \
+      {{end -}}
     {{else -}}
       agent \
-    {{ end -}}
-        --token {{ .KubeToken }} \
+    {{end -}}
+      --token {{ .KubeToken }} \
     {{if not .Master0 -}}
       --server https://{{ .KubeAPI }}:6443 \
-    {{ end -}}
+    {{end -}}
       --data-dir {{.DataDir}} \
       --docker \
       --pause-image hub.qucheng.com/library/rancher/mirrored-pause:3.6 \

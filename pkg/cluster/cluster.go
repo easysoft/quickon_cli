@@ -40,11 +40,15 @@ var defaultBackoff = wait.Backoff{
 }
 
 type Cluster struct {
-	log       log.Logger
-	MasterIPs []string
-	WorkerIPs []string
-	IPs       []string
-	SSH       types.SSH
+	log         log.Logger
+	MasterIPs   []string
+	WorkerIPs   []string
+	IPs         []string
+	SSH         types.SSH
+	CNI         string
+	DataDir     string
+	PodCIDR     string
+	ServiceCIDR string
 }
 
 func NewCluster(f factory.Factory) *Cluster {
@@ -84,39 +88,44 @@ func (c *Cluster) preinit(mip, ip string, sshClient ssh.Interface) error {
 }
 
 func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error {
-	c.log.Infof("master0 ip: %s", cfg.InitNode)
+	c.log.Infof("master0 ip: %s", cfg.Cluster.InitNode)
 	k3sargs := k3stpl.K3sArgs{
-		Master0:      true,
-		TypeMaster:   true,
-		KubeAPI:      "kubeapi.k7s.local",
-		KubeToken:    expass.PwGenAlphaNum(16),
-		DataDir:      "",
-		ClusterCIDR:  "",
-		ServiceCIDR:  "",
+		Master0:     true,
+		TypeMaster:  true,
+		KubeAPI:     "kubeapi.k7s.local",
+		KubeToken:   expass.PwGenAlphaNum(16),
+		DataDir:     c.DataDir,
+		PodCIDR:     c.PodCIDR,
+		ServiceCIDR: c.ServiceCIDR,
+		CNI:         c.CNI,
+		// TODO EE
 		DataStore:    "",
 		LocalStorage: true,
 	}
-	master0tplSrc := fmt.Sprintf("%s/master0.%s", common.GetDefaultCacheDir(), cfg.InitNode)
+	master0tplSrc := fmt.Sprintf("%s/master0.%s", common.GetDefaultCacheDir(), cfg.Cluster.InitNode)
 	master0tplDst := fmt.Sprintf("/%s/.k3s.service", c.SSH.User)
 	file.Writefile(master0tplSrc, k3sargs.Manifests(""), true)
-	if err := sshClient.Copy(cfg.InitNode, master0tplSrc, master0tplDst); err != nil {
-		return errors.Errorf("copy master0 %s tpl failed, reason: %v", cfg.InitNode, err)
+	if err := sshClient.Copy(cfg.Cluster.InitNode, master0tplSrc, master0tplDst); err != nil {
+		return errors.Errorf("copy master0 %s tpl failed, reason: %v", cfg.Cluster.InitNode, err)
 	}
-	if err := c.preinit(cfg.InitNode, cfg.InitNode, sshClient); err != nil {
+	if err := c.preinit(cfg.Cluster.InitNode, cfg.Cluster.InitNode, sshClient); err != nil {
 		return err
 	}
 	// waiting k3s ready
-	if err := c.waitk3sReady(cfg.InitNode, sshClient); err != nil {
+	if err := c.waitk3sReady(cfg.Cluster.InitNode, sshClient); err != nil {
 		return err
 	}
-	cfg.ClusterID = exid.GenUUID()
+	cfg.Cluster.ID = exid.GenUUID()
+	cfg.Cluster.PodCIDR = c.PodCIDR
+	cfg.Cluster.ServiceCIDR = c.ServiceCIDR
+	cfg.Cluster.CNI = c.CNI
 	cfg.DB = k3sargs.DataStore
 	cfg.DataDir = k3sargs.DataDir
-	cfg.Master = append(cfg.Master, config.Node{
-		Host: cfg.InitNode,
+	cfg.Cluster.Master = append(cfg.Cluster.Master, config.Node{
+		Host: cfg.Cluster.InitNode,
 		Init: true,
 	})
-	cfg.Token = k3sargs.KubeToken
+	cfg.Cluster.Token = k3sargs.KubeToken
 	return cfg.SaveConfig()
 }
 
@@ -151,9 +160,9 @@ func (c *Cluster) joinNode(ip string, master bool, cfg *config.Config, sshClient
 		Master0:      false,
 		TypeMaster:   master,
 		KubeAPI:      "kubeapi.k7s.local",
-		KubeToken:    cfg.Token,
+		KubeToken:    cfg.Cluster.Token,
 		DataDir:      cfg.DataDir,
-		ClusterCIDR:  "",
+		PodCIDR:      "",
 		ServiceCIDR:  "",
 		DataStore:    cfg.DB,
 		LocalStorage: true,
@@ -162,17 +171,17 @@ func (c *Cluster) joinNode(ip string, master bool, cfg *config.Config, sshClient
 	tplDst := fmt.Sprintf("/%s/.k3s.service", c.SSH.User)
 	file.Writefile(tplSrc, k3sargs.Manifests(""), true)
 	if err := sshClient.Copy(ip, tplSrc, tplDst); err != nil {
-		return errors.Errorf("%s copy tpl (%s:%s->%s:%s) failed, reason: %v", t, cfg.InitNode, tplSrc, ip, tplDst, err)
+		return errors.Errorf("%s copy tpl (%s:%s->%s:%s) failed, reason: %v", t, cfg.Cluster.InitNode, tplSrc, ip, tplDst, err)
 	}
-	if err := c.preinit(cfg.InitNode, ip, sshClient); err != nil {
+	if err := c.preinit(cfg.Cluster.InitNode, ip, sshClient); err != nil {
 		return err
 	}
 	if master {
-		cfg.Master = append(cfg.Master, config.Node{
+		cfg.Cluster.Master = append(cfg.Cluster.Master, config.Node{
 			Host: ip,
 		})
 	} else {
-		cfg.Worker = append(cfg.Worker, config.Node{
+		cfg.Cluster.Worker = append(cfg.Cluster.Worker, config.Node{
 			Host: ip,
 		})
 	}
@@ -186,7 +195,7 @@ func (c *Cluster) InitNode() error {
 	otherMaster := c.MasterIPs[1:]
 	sshClient := ssh.NewSSHClient(&c.SSH, true)
 	cfg := config.LoadTruncateConfig()
-	cfg.InitNode = c.MasterIPs[0]
+	cfg.Cluster.InitNode = c.MasterIPs[0]
 	if err := c.initMaster0(cfg, sshClient); err != nil {
 		return err
 	}
@@ -275,7 +284,7 @@ func (c *Cluster) DeleteNode() error {
 		return errors.Errorf("load k8s client failed, reason: %v", err)
 	}
 	for _, ip := range c.IPs {
-		if ip == cfg.InitNode {
+		if ip == cfg.Cluster.InitNode {
 			c.log.Warnf("init node %s not allow delete, can use clean subcmd", ip)
 			continue
 		}
