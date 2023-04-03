@@ -21,7 +21,7 @@ Easily bootstrap a secure control plane for QuCheng
 
 * [qcadmin bug-report](qcadmin_bug-report.md)	 - Display system information for bug report
 * [qcadmin cluster](qcadmin_cluster.md)	 - Cluster commands
-* [qcadmin init](qcadmin_init.md)	 - Run this command in order to set up the QuCheng control plane
+* [qcadmin init](qcadmin_init.md)	 - 
 * [qcadmin quickon](qcadmin_quickon.md)	 - Quickon commands
 * [qcadmin status](qcadmin_status.md)	 - Display status
 * [qcadmin uninstall](qcadmin_uninstall.md)	 - Uninstall
