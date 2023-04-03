@@ -8,6 +8,7 @@ package cluster
 
 import (
 	"github.com/cockroachdb/errors"
+	"github.com/easysoft/qcadmin/cmd/flags"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/pkg/cluster"
 	"github.com/ergoapi/util/exnet"
@@ -41,16 +42,7 @@ func InitCommand(f factory.Factory) *cobra.Command {
 			return cluster.InitNode()
 		},
 	}
-	init.Flags().StringVar(&cluster.SSH.User, "user", "root", "ssh user")
-	init.Flags().StringVar(&cluster.SSH.Passwd, "passwd", "", "ssh password")
-	init.Flags().StringVar(&cluster.SSH.Pk, "pkfile", "", "ssh pk file")
-	init.Flags().StringVar(&cluster.SSH.PkPasswd, "pkpass", "", "ssh key passwd")
-	init.Flags().StringSliceVar(&cluster.MasterIPs, "master", nil, "ips, like 192.168.0.1:22")
-	init.Flags().StringSliceVar(&cluster.WorkerIPs, "worker", nil, "ips, like 192.168.0.1:22")
-	init.Flags().StringVar(&cluster.CNI, "cni", "flannel", "network cni, like flannel, wireguard, custom")
-	init.Flags().StringVar(&cluster.DataDir, "data-dir", "/opt/quickon", "data dir")
-	init.Flags().StringVar(&cluster.PodCIDR, "pod-cidr", "10.42.0.0/16", "cluster pods cidr")
-	init.Flags().StringVar(&cluster.ServiceCIDR, "service-cidr", "10.43.0.0/16", "cluster service cidr")
+	init.Flags().AddFlagSet(flags.ConvertFlags(init, cluster.GetMasterFlags()))
 	return init
 }
 

@@ -53,8 +53,97 @@ type Cluster struct {
 
 func NewCluster(f factory.Factory) *Cluster {
 	return &Cluster{
-		log: f.GetLog(),
+		log:         f.GetLog(),
+		CNI:         "flannel",
+		PodCIDR:     "10.42.0.0/16",
+		ServiceCIDR: "10.43.0.0/16",
+		DataDir:     "/opt/quickon",
+		SSH: types.SSH{
+			User: "root",
+		},
 	}
+}
+
+func (c *Cluster) getSSHFlags() []types.Flag {
+	return []types.Flag{
+		{
+			Name:      "username",
+			ShortHand: "u",
+			P:         &c.SSH.User,
+			V:         c.SSH.User,
+			Usage:     "ssh user",
+		},
+		{
+			Name:      "password",
+			ShortHand: "p",
+			P:         &c.SSH.Passwd,
+			V:         c.SSH.Passwd,
+			Usage:     "ssh password",
+		},
+		{
+			Name:  "pkfile",
+			P:     &c.SSH.Pk,
+			V:     c.SSH.Pk,
+			Usage: "ssh private key, if not set, will use password",
+		},
+		{
+			Name:  "pkpass",
+			P:     &c.SSH.PkPasswd,
+			V:     c.SSH.PkPasswd,
+			Usage: "ssh private key password",
+		},
+		{
+			Name:  "master",
+			P:     &c.MasterIPs,
+			V:     c.MasterIPs,
+			Usage: `master ip list, e.g: 192.168.0.1:22`,
+		},
+		{
+			Name:  "worker",
+			P:     &c.WorkerIPs,
+			V:     c.WorkerIPs,
+			Usage: `worker ip list, e.g: 192.168.0.1:22`,
+		},
+	}
+}
+
+func (c *Cluster) getMasterFlags() []types.Flag {
+	return []types.Flag{
+		{
+			Name:  "cni",
+			P:     &c.CNI,
+			V:     c.CNI,
+			Usage: "k8s networking plugin, support flannel, wireguard, custom",
+		},
+		{
+			Name:  "pod-cidr",
+			P:     &c.PodCIDR,
+			V:     c.PodCIDR,
+			Usage: "k8s cluster pod cidr",
+		},
+		{
+			Name:  "service-cidr",
+			P:     &c.ServiceCIDR,
+			V:     c.ServiceCIDR,
+			Usage: "k8s cluster service cidr",
+		},
+		{
+			Name:  "data-dir",
+			P:     &c.DataDir,
+			V:     c.DataDir,
+			Usage: "cluster & quickon data dir",
+		},
+	}
+}
+
+func (c *Cluster) GetMasterFlags() []types.Flag {
+	fs := c.getSSHFlags()
+	fs = append(fs, c.getMasterFlags()...)
+	return fs
+}
+
+func (c *Cluster) GetWorkerFlags() []types.Flag {
+	return nil
 }
 
 func (c *Cluster) preinit(mip, ip string, sshClient ssh.Interface) error {

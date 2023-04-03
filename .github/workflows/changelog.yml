@@ -42,3 +42,4 @@ jobs:
           commit-message: 'docs: updated CHANGELOG.md & docs'
           branch: create-pull-request/changelog
           signoff: true
+          delete-branch: true
