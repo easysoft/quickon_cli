@@ -14,6 +14,7 @@ import (
 )
 
 func EmbedSSHCommand(f factory.Factory) *cobra.Command {
+	log := f.GetLog()
 	var cfg types.SSH
 	var hosts []string
 	ssh := &cobra.Command{
@@ -23,6 +24,7 @@ func EmbedSSHCommand(f factory.Factory) *cobra.Command {
 			osargs := args[:]
 			if len(hosts) == 0 {
 				// local
+				log.Warnf("hosts is null, local exec: %v", osargs)
 			} else {
 				sshClient := ssh.NewSSHClient(&cfg, true)
 				for _, host := range hosts {
@@ -53,6 +55,7 @@ func EmbedScpCommand(f factory.Factory) *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(hosts) == 0 {
 				// local
+				log.Warnf("hosts is null")
 			} else {
 				sshClient := ssh.NewSSHClient(&cfg, true)
 				for _, host := range hosts {

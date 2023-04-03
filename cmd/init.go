@@ -10,6 +10,10 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/easysoft/qcadmin/cmd/flags"
+	nativeCluster "github.com/easysoft/qcadmin/pkg/cluster"
+	"github.com/ergoapi/util/exnet"
+
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
@@ -22,8 +26,7 @@ import (
 
 var (
 	initCmd = &cobra.Command{
-		Use:   "init",
-		Short: "Run this command in order to set up the QuCheng control plane",
+		Use: "init",
 	}
 	skip    bool
 	appName string
@@ -39,8 +42,13 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 	defaultArgs := os.Args
 	globalToolPath := defaultArgs[0]
 	name := "native"
+	nCluster := nativeCluster.NewCluster(f)
 	if file.CheckFileExists(common.GetKubeConfig()) {
 		name = "incluster"
+		initCmd.Long = `Found k8s config, run this command in order to set up Quickon Control Plane`
+	} else {
+		initCmd.Flags().AddFlagSet(flags.ConvertFlags(initCmd, nCluster.GetMasterFlags()))
+		initCmd.Long = `Run this command in order to set up the Kubernetes & Quickon Control Plane`
 	}
 
 	initCmd.PreRun = func(cmd *cobra.Command, args []string) {
@@ -54,12 +62,16 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 				log.Errorf("k8s is not ready, please check your k8s cluster, just run %s ", color.SGreen("%s exp kubectl get nodes", globalToolPath))
 				os.Exit(0)
 			}
+		} else {
+			if len(nCluster.MasterIPs) == 0 {
+				nCluster.MasterIPs = append(nCluster.MasterIPs, exnet.LocalIPs()[0])
+			}
 		}
 	}
 	initCmd.Run = func(cmd *cobra.Command, args []string) {
 		if name == "native" {
 			log.Infof("start init native provider")
-			if err := qcexec.CommandRun(globalToolPath, "cluster", "init", fmt.Sprintf("--debug=%v", globalFlags.Debug)); err != nil {
+			if err := nCluster.InitNode(); err != nil {
 				log.Errorf("init k8s cluster failed, reason: %v", err)
 				return
 			}
