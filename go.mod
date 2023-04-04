@@ -18,7 +18,7 @@ require (
 	github.com/imroc/req/v3 v3.30.0
 	github.com/inconshreveable/go-update v0.0.0-20160112193335-8152e7eb6ccf
 	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213
-	github.com/kardianos/service v1.2.1-0.20211104163826-b9d1d5b7279b
+	github.com/kardianos/service v1.2.2
 	github.com/logrusorgru/aurora/v3 v3.0.0
 	github.com/manifoldco/promptui v0.9.0
 	github.com/mattn/go-isatty v0.0.17
@@ -56,7 +56,6 @@ require (
 
 // Replace to match K8s 1.25.8
 replace (
-	github.com/kardianos/service v1.2.1-0.20211104163826-b9d1d5b7279b => github.com/BeidouCloudPlatform/service v1.2.1-0.20211108101837-1fc58f473016
 	k8s.io/api => k8s.io/api v0.25.8
 	k8s.io/apimachinery => k8s.io/apimachinery v0.25.8
 	k8s.io/cli-runtime => k8s.io/cli-runtime v0.25.8
