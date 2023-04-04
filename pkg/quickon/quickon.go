@@ -394,7 +394,7 @@ func (m *Meta) Show() {
 	if len(m.IP) <= 0 {
 		m.IP = exnet.LocalIPs()[0]
 	}
-	resetPassArgs := []string{"manage", "reset-password", "--password", m.ConsolePassword}
+	resetPassArgs := []string{"quickon", "reset-password", "--password", m.ConsolePassword}
 	qcexec.CommandRun(os.Args[0], resetPassArgs...)
 	cfg, _ := config.LoadConfig()
 	cfg.ConsolePassword = m.ConsolePassword
