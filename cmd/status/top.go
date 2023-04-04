@@ -7,9 +7,12 @@
 package status
 
 import (
+	"fmt"
 	"github.com/easysoft/qcadmin/internal/pkg/status/top"
+	"github.com/ergoapi/util/color"
 	"github.com/spf13/cobra"
 	"k8s.io/kubectl/pkg/util/templates"
+	"os"
 )
 
 var (
@@ -26,6 +29,7 @@ func TopNodeCmd() *cobra.Command {
 		Short:                 "node provides an overview of the node",
 		Aliases:               []string{"nodes", "no"},
 		Example:               KRNodeExample,
+		Deprecated:            fmt.Sprintf("use %s instead", color.SGreen("%s cluster status nodes", os.Args[0])),
 		Run: func(cmd *cobra.Command, args []string) {
 			o.Validate()
 			o.RunResourceNode()

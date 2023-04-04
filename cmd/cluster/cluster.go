@@ -9,6 +9,7 @@ package cluster
 import (
 	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/cmd/flags"
+	statussubcmd "github.com/easysoft/qcadmin/cmd/status"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/pkg/cluster"
 	"github.com/ergoapi/util/exnet"
@@ -90,4 +91,16 @@ func CleanCommand(f factory.Factory) *cobra.Command {
 		},
 	}
 	return clean
+}
+
+func StatusCommand(f factory.Factory) *cobra.Command {
+	status := &cobra.Command{
+		Use:   "status",
+		Short: "status cluster",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return nil
+		},
+	}
+	status.AddCommand(statussubcmd.TopNodeCmd())
+	return status
 }
