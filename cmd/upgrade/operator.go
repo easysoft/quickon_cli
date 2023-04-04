@@ -32,7 +32,7 @@ func NewUpgradeOperator(f factory.Factory) *cobra.Command {
 }
 
 func (up option) DoOperator() {
-	args := []string{"manage", "plugins", "upgrade", "cne-operator"}
+	args := []string{"quickon", "plugins", "upgrade", "cne-operator"}
 	if up.log.GetLevel() == logrus.DebugLevel {
 		args = append(args, "--debug")
 	}

@@ -108,7 +108,7 @@ func (m *Meta) checkIngress() {
 	if defaultClass == nil {
 		m.log.Infof("not found default ingress class, will install nginx ingress")
 		m.log.Debug("start install default ingress: nginx-ingress-controller")
-		if err := qcexec.CommandRun(os.Args[0], "manage", "plugins", "enable", "ingress"); err != nil {
+		if err := qcexec.CommandRun(os.Args[0], "quickon", "plugins", "enable", "ingress"); err != nil {
 			m.log.Errorf("install ingress failed, reason: %v", err)
 		} else {
 			m.log.Done("install ingress: cne-ingress success")
@@ -126,7 +126,7 @@ func (m *Meta) checkStorage() {
 	if defaultClass == nil {
 		m.log.Infof("not found default storage class, will install default storage")
 		m.log.Debug("start install default storage: local-storage")
-		if err := qcexec.CommandRun(os.Args[0], "manage", "plugins", "enable", "storage"); err != nil {
+		if err := qcexec.CommandRun(os.Args[0], "quickon", "plugins", "enable", "storage"); err != nil {
 			m.log.Errorf("install storage failed, reason: %v", err)
 		} else {
 			m.log.Done("install storage: local-storage success")

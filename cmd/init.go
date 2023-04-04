@@ -101,7 +101,7 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 			log.Errorf("init quickon failed, reason: %v", err)
 			return
 		}
-		if err := qcexec.CommandRun(globalToolPath, "app", "install", "--name", appName, "--api-useip", fmt.Sprintf("--debug=%v", globalFlags.Debug)); err != nil {
+		if err := qcexec.CommandRun(globalToolPath, "quickon", "app", "install", "--name", appName, "--api-useip", fmt.Sprintf("--debug=%v", globalFlags.Debug)); err != nil {
 			log.Errorf("init quickon failed, reason: %v", err)
 			return
 		}

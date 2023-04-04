@@ -69,7 +69,7 @@ func NewCmdAppMarket(f factory.Factory) *cobra.Command {
 			//  spew.Dump(charts[it])
 			log.Infof("select install app: %s, version: %s", color.SGreen(charts[it].Chart.Name), color.SGreen(charts[it].Chart.AppVersion))
 			subdomain := fmt.Sprintf("%s-%s", charts[it].Chart.Name, exhash.MD5(time.Now().String())[:8])
-			installArgs := []string{"app", "install", charts[it].Chart.Name, "--domain", subdomain, "--api-useip"}
+			installArgs := []string{"quickon", "app", "install", charts[it].Chart.Name, "--domain", subdomain, "--api-useip"}
 			if log.GetLevel() == logrus.DebugLevel {
 				installArgs = append(installArgs, "--debug")
 			}
