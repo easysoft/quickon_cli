@@ -60,7 +60,7 @@ const (
 )
 
 const (
-	DefaultQuickonOssVersion = "stable-3.0" // 开源版本
+	DefaultQuickonOssVersion = "stable-2.6" // 开源版本
 	DefaultQuickonEEVersion  = "test-1.0"
 	K3sBinName               = "k3s"
 	K3sBinPath               = "/usr/local/bin/k3s"

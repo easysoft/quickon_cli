@@ -281,9 +281,9 @@ func (m *Meta) Init() error {
 		"--set", "minio.auth.username=" + cfg.S3.Username,
 		"--set", "minio.auth.password=" + cfg.S3.Password,
 	}
-	if len(chartversion) > 0 {
-		operatorargs = append(operatorargs, "--version", chartversion)
-	}
+	//if len(chartversion) > 0 {
+	//	operatorargs = append(operatorargs, "--version", chartversion)
+	//}
 	if helmstd, err := qcexec.Command(os.Args[0], operatorargs...).CombinedOutput(); err != nil {
 		m.log.Warnf("deploy cne-operator err: %v, std: %s", err, string(helmstd))
 	} else {
@@ -310,10 +310,10 @@ func (m *Meta) Init() error {
 	}
 	output, err := qcexec.Command(os.Args[0], helmargs...).CombinedOutput()
 	if err != nil {
-		m.log.Errorf("upgrade install qucheng web failed: %s", string(output))
+		m.log.Errorf("upgrade install quickon web failed: %s", string(output))
 		return err
 	}
-	m.log.Done("install qucheng success")
+	m.log.Done("install quickon success")
 	m.QuickONReady()
 	initfile := common.GetCustomConfig(common.InitFileName)
 	if err := file.Writefile(initfile, "init done", true); err != nil {
