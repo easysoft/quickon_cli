@@ -13,6 +13,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/easysoft/qcadmin/internal/pkg/types"
+
 	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
@@ -47,7 +49,46 @@ type Meta struct {
 
 func New(f factory.Factory) *Meta {
 	return &Meta{
-		log: f.GetLog(),
+		log:             f.GetLog(),
+		OssMode:         true,
+		Version:         common.DefaultQuickonOssVersion,
+		ConsolePassword: expass.PwGenAlphaNum(32),
+		QuickonType:     common.QuickonOSSType,
+	}
+}
+
+func (m *Meta) GetFlags() []types.Flag {
+	return []types.Flag{
+		{
+			Name:  "domain",
+			Usage: "quickon domain",
+			P:     &m.Domain,
+			V:     m.Domain,
+		},
+		{
+			Name:  "ip",
+			Usage: "quickon ip",
+			P:     &m.IP,
+			V:     m.IP,
+		},
+		{
+			Name:  "version",
+			Usage: fmt.Sprintf("quickon version(oss: %s/ee: %s)", common.DefaultQuickonOssVersion, common.DefaultQuickonEEVersion),
+			P:     &m.Version,
+			V:     m.Version,
+		},
+		{
+			Name:  "password",
+			Usage: "quickon console password",
+			P:     &m.ConsolePassword,
+			V:     m.ConsolePassword,
+		},
+		{
+			Name:  "oss-mode",
+			Usage: "quickon oss mode",
+			P:     &m.OssMode,
+			V:     m.OssMode,
+		},
 	}
 }
 

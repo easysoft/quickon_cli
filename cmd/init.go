@@ -10,6 +10,9 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/easysoft/qcadmin/internal/app/config"
+	"github.com/easysoft/qcadmin/pkg/quickon"
+
 	"github.com/easysoft/qcadmin/cmd/flags"
 	nativeCluster "github.com/easysoft/qcadmin/pkg/cluster"
 	"github.com/ergoapi/util/exnet"
@@ -44,14 +47,16 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 	globalToolPath := defaultArgs[0]
 	name := "native"
 	nCluster := nativeCluster.NewCluster(f)
+	quickonClient := quickon.New(f)
+	fs := quickonClient.GetFlags()
 	if file.CheckFileExists(common.GetKubeConfig()) {
 		name = "incluster"
 		initCmd.Long = `Found k8s config, run this command in order to set up Quickon Control Plane`
 	} else {
-		initCmd.Flags().AddFlagSet(flags.ConvertFlags(initCmd, nCluster.GetMasterFlags()))
+		fs = append(fs, nCluster.GetMasterFlags()...)
 		initCmd.Long = `Run this command in order to set up the Kubernetes & Quickon Control Plane`
 	}
-
+	initCmd.Flags().AddFlagSet(flags.ConvertFlags(initCmd, fs))
 	initCmd.PreRun = func(cmd *cobra.Command, args []string) {
 		if file.CheckFileExists(common.GetCustomConfig(common.InitFileName)) {
 			log.Donef("quickon is already initialized, just run %s get cluster status", color.SGreen("%s status", globalToolPath))
@@ -77,7 +82,22 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 				return
 			}
 		}
-		if err := qcexec.CommandRun(globalToolPath, "quickon", "init", fmt.Sprintf("--debug=%v", globalFlags.Debug)); err != nil {
+		if err := quickonClient.GetKubeClient(); err != nil {
+			log.Errorf("init quickon failed, reason: %v", err)
+			return
+		}
+		if err := quickonClient.Check(); err != nil {
+			log.Errorf("init quickon failed, reason: %v", err)
+			return
+		}
+		if !quickonClient.OssMode {
+			quickonClient.QuickonType = common.QuickonEEType
+		}
+		if len(quickonClient.IP) == 0 {
+			cfg, _ := config.LoadConfig()
+			quickonClient.IP = cfg.Cluster.InitNode
+		}
+		if err := quickonClient.Init(); err != nil {
 			log.Errorf("init quickon failed, reason: %v", err)
 			return
 		}
