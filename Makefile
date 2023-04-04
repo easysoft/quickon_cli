@@ -102,6 +102,5 @@ legacy: # legacy code check
 
 .PHONY : build prod-docker dev-push clean
 
-
 snapshot: ## local test goreleaser
-	goreleaser release --snapshot --rm-dist --skip-publish
+	goreleaser release --snapshot --clean --skip-publish
