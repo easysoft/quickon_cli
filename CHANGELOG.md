@@ -1,5 +1,17 @@
 # Changelog
 
+## v2.0.0-beta.4 (2023-04-04)
+
+ * [c8852de](https://github.com/easysoft/quickon_cli/commit/c8852de92c9800fedb264dbb3d9e870aecfab55c) fix(version): change oss default version; disable cne-operator version
+ * [bd9619f](https://github.com/easysoft/quickon_cli/commit/bd9619f8086f471211b5d55d6fe1bd3f6315a7b7) fix(typo): fix old manage cmd
+ * [dbd062b](https://github.com/easysoft/quickon_cli/commit/dbd062bfe3a342a2998a8b64e67eb0ea7dea8544) fix(init): update global init
+ * [e197fe0](https://github.com/easysoft/quickon_cli/commit/e197fe07351ef63bf331d471c7b2a2651e4f168e) fix(sec): fix kardianos/service
+ * [afeafde](https://github.com/easysoft/quickon_cli/commit/afeafdef5049c75ef32f1e884f49d9a5f88ffabf) fix(typo): fix kubeconfig path
+
+### Contributors
+
+ * ysicing
+
 ## v2.0.0-beta.3 (2023-04-03)
 
  * [7db2362](https://github.com/easysoft/quickon_cli/commit/7db2362d55922ce6cdcfd276e0e06f68ae6a5945) fix(init): imp init cmd message
