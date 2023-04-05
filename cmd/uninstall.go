@@ -24,8 +24,9 @@ func newCmdUninstall(f factory.Factory) *cobra.Command {
 	defaultArgs := os.Args
 	globalToolPath := defaultArgs[0]
 	uninstallCmd := &cobra.Command{
-		Use:   "uninstall",
-		Short: "Uninstall",
+		Use:     "uninstall",
+		Short:   "Uninstall cluster",
+		Aliases: []string{"un"},
 	}
 	uninstallCmd.Run = func(cmd *cobra.Command, args []string) {
 		log.Info("start uninstall")
@@ -34,7 +35,7 @@ func newCmdUninstall(f factory.Factory) *cobra.Command {
 			log.Errorf("uninstall quickon failed, reason: %v", err)
 			return
 		}
-		log.Donef("uninstall quickon ")
+		log.Done("uninstall quickon success")
 		if cleanCluster {
 			// TODO 检查集群是否是quickon安装的
 			log.Debugf("start uninstall cluster")
@@ -46,6 +47,6 @@ func newCmdUninstall(f factory.Factory) *cobra.Command {
 		}
 		log.Donef("uninstall success")
 	}
-	uninstallCmd.PersistentFlags().BoolVar(&cleanCluster, "clean-cluster", false, "clean cluster")
+	uninstallCmd.PersistentFlags().BoolVar(&cleanCluster, "all", false, "clean all")
 	return uninstallCmd
 }

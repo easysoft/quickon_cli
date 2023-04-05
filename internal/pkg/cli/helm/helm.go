@@ -8,7 +8,6 @@ package helm
 
 import (
 	"fmt"
-
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
 	"github.com/spf13/cobra"
@@ -24,6 +23,8 @@ func EmbedCommand(f factory.Factory) *cobra.Command {
 	helm.AddCommand(repoDel(f))
 	helm.AddCommand(chartUpgrade(f))
 	helm.AddCommand(chartUninstall(f))
+	helm.AddCommand(chartClean(f))
+	helm.AddCommand(chartList(f))
 	return helm
 }
 
@@ -151,5 +152,61 @@ func chartUninstall(f factory.Factory) *cobra.Command {
 	}
 	helm.Flags().StringVarP(&ns, "namespace", "n", "", "namespace")
 	helm.Flags().StringVar(&name, "name", "", "release name")
+	return helm
+}
+
+// chartClean clean all chart installed by quickon
+func chartClean(f factory.Factory) *cobra.Command {
+	var ns, name string
+	helm := &cobra.Command{
+		Use:   "clean",
+		Short: "clean all chart installed by quickon",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if ns == "" {
+				ns = "default"
+			}
+			hc, err := helm.NewClient(&helm.Config{Namespace: ns})
+			if err != nil {
+				return fmt.Errorf("helm create go client err: %v", err)
+			}
+			release, _ := hc.GetDetail(name)
+			if release != nil {
+				// _, err = hc.Clean(name)
+				return err
+			}
+			return nil
+		},
+	}
+	helm.Flags().StringVarP(&ns, "namespace", "n", "", "namespace")
+	helm.Flags().StringVar(&name, "name", "", "release name")
+	return helm
+}
+
+// chartList list all chart installed by quickon
+func chartList(f factory.Factory) *cobra.Command {
+	var ns string
+	var page, limit int
+	log := f.GetLog()
+	helm := &cobra.Command{
+		Use:   "list",
+		Short: "list all chart installed by quickon",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			hc, err := helm.NewClient(&helm.Config{Namespace: ns})
+			if err != nil {
+				return fmt.Errorf("helm create go client err: %v", err)
+			}
+			releases, _, err := hc.List(page, limit, "")
+			if err != nil {
+				return err
+			}
+			for _, release := range releases {
+				log.Infof("name: %s, namespace: %s", release.Name, release.Namespace)
+			}
+			return nil
+		},
+	}
+	helm.Flags().StringVarP(&ns, "namespace", "n", "", "namespace")
+	helm.Flags().IntVar(&page, "page", 1, "page")
+	helm.Flags().IntVar(&limit, "limit", 100, "limit")
 	return helm
 }
