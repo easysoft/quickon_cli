@@ -37,7 +37,7 @@ type Body struct {
 
 func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 	var name, domain string
-	var useip bool
+	var useIP bool
 	log := f.GetLog()
 	app := &cobra.Command{
 		Use:     "install",
@@ -53,7 +53,7 @@ func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 			}
 			cfg, _ := config.LoadConfig()
 			apiHost := cfg.Domain
-			if useip || apiHost == "" {
+			if useIP || apiHost == "" {
 				apiHost = fmt.Sprintf("http://%s:32379", exnet.LocalIPs()[0])
 			} else if !kutil.IsLegalDomain(apiHost) {
 				apiHost = fmt.Sprintf("http://console.%s", cfg.Domain)
@@ -86,7 +86,7 @@ func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 			}
 			log.Donef("app %s install success.", name)
 			log.Infof("please wait, the app is starting.")
-			hc, err := helm.NewClient(&helm.Config{Namespace: "default"})
+			hc, err := helm.NewClient(&helm.Config{Namespace: common.DefaultAppNamespace})
 			if err != nil {
 				log.Debugf("create helm err: %v", err)
 				return nil
@@ -125,7 +125,7 @@ func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 	}
 	app.Flags().StringVarP(&name, "name", "n", "zentao", "app name")
 	app.Flags().StringVarP(&domain, "domain", "d", "", "app subdomain")
-	app.Flags().BoolVar(&useip, "api-useip", true, "api use ip")
+	app.Flags().BoolVar(&useIP, "api-useip", true, "api use ip")
 	return app
 }
 

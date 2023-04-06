@@ -37,14 +37,13 @@ func newCmdBugReport(f factory.Factory) *cobra.Command {
 }
 
 func (br bugReportCmd) BugReport() error {
-	// TODO 详细信息
 	debugShell := fmt.Sprintf("%s/hack/manifests/scripts/diagnose.sh", common.GetDefaultDataDir())
 	br.log.Debugf("gen debug message script: %v", debugShell)
 	// 移除qcadmin初始化文件
 	if err := qcexec.CommandRun("/bin/bash", debugShell, os.Args[0]); err != nil {
 		return err
 	}
-	bugmsg := "found bug: submit the error message to Github or Gitee\n\t Github: https://github.com/easysoft/quickon_cli/issues/new?assignees=&labels=&template=bug-report.md\n\t Gitee: https://gitee.com/wwccss/qucheng_cli/issues\n"
-	br.log.Info(bugmsg)
+	bugMsg := "found bug: submit the error message to Github or Gitee\n\t Github: https://github.com/easysoft/quickon_cli/issues/new?assignees=&labels=&template=bug-report.md\n\t Gitee: https://gitee.com/wwccss/qucheng_cli/issues\n"
+	br.log.Info(bugMsg)
 	return nil
 }

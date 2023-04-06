@@ -44,13 +44,13 @@ func NewUpgradeQ(f factory.Factory) *cobra.Command {
 
 func (up option) DoQcadmin() {
 	up.log.StartWait("fetch latest version from remote...")
-	lastversion, err := version.PreCheckLatestVersion()
+	lastVersion, err := version.PreCheckLatestVersion()
 	up.log.StopWait()
 	if err != nil {
 		up.log.Errorf("fetch latest version err, reason: %v", err)
 		return
 	}
-	if lastversion == "" || lastversion == common.Version || strings.Contains(common.Version, lastversion) {
+	if lastVersion == "" || lastVersion == common.Version || strings.Contains(common.Version, lastVersion) {
 		up.log.Infof("The current version %s is the latest version", common.Version)
 		return
 	}
@@ -59,7 +59,7 @@ func (up option) DoQcadmin() {
 		up.log.Errorf("q executable err:%v", err)
 		return
 	}
-	up.log.StartWait(fmt.Sprintf("downloading version %s...", lastversion))
+	up.log.StartWait(fmt.Sprintf("downloading version %s...", lastVersion))
 	assetURL := fmt.Sprintf("https://pkg.qucheng.com/qucheng/cli/stable/qcadmin_%s_%s", runtime.GOOS, runtime.GOARCH)
 	err = selfupdate.UpdateTo(up.log, assetURL, cmdPath)
 	up.log.StopWait()
@@ -72,9 +72,9 @@ func (up option) DoQcadmin() {
 		os.Symlink(common.K3sDefaultDir, common.GetDefaultQuickonPlatformDir(""))
 	}
 	os.Chmod(common.GetDefaultQuickonBackupDir(cfg.DataDir), common.FileMode0777)
-	up.log.Donef("Successfully updated q to version %s", lastversion)
+	up.log.Donef("Successfully updated q to version %s", lastVersion)
 	up.log.Debugf("gen new version manifest")
-	up.log.Infof("Release note: \n\t release %s ", lastversion)
-	up.log.Infof("Upgrade docs: \n\t https://github.com/easysoft/quickon_cli/wiki/upgrade")
+	up.log.Infof("Release note: \n\t release %s ", lastVersion)
+	up.log.Infof("Upgrade docs: \n\t https://github.com/easysoft/quickon_cli/releases")
 	up.log.Infof("Support QQGroup: \n\t 768721743")
 }

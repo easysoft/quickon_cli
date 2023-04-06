@@ -73,6 +73,7 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 	rootCmd.AddCommand(newCmdExperimental(f))
 	rootCmd.AddCommand(newManCmd())
 	rootCmd.AddCommand(newCmdBugReport(f))
+	rootCmd.AddCommand(newCmdDebug(f))
 
 	args := os.Args
 	if len(args) > 1 {
@@ -121,7 +122,6 @@ func NewRootCmd(f factory.Factory) *cobra.Command {
 			}
 
 			log.StartFileLogging()
-			// TODO apply extra flags
 			return nil
 		},
 	}

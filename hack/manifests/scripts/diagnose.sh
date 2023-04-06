@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-[ $(id -u) -eq 0 ] || exec sudo $0 $@
+# shellcheck disable=SC2068
+[ $(id -u) -eq 0 ] || exec sudo "$0" $@
 
-qcmd=${1:-/usr/local/bin/qcadmin}
+qCmd=${1:-/usr/local/bin/qcadmin}
 
 current_dir=$(pwd)
 tmpdir=/tmp
@@ -13,9 +14,12 @@ is_ps_hang=false
 
 run() {
     echo
+    # shellcheck disable=SC2145
     echo "-----------------run $@------------------"
     timeout 10s $@
+    # shellcheck disable=SC2181
     if [ "$?" != "0" ]; then
+        # shellcheck disable=SC2145
         echo "failed to collect info: $@"
     fi
     echo "------------End of ${1}----------------"
@@ -36,7 +40,7 @@ command_exists() {
     command -v "$@" > /dev/null 2>&1
 }
 
-# Service status
+# Get Service Status
 service_status() {
     run service firewalld status | tee $diagnose_dir/service_status
     run service ntpd status | tee $diagnose_dir/service_status
@@ -44,8 +48,7 @@ service_status() {
 }
 
 
-#system info
-
+# get System Info
 system_info() {
     run uname -a | tee -a ${diagnose_dir}/os_info
     run uname -r | tee -a ${diagnose_dir}/os_info
@@ -58,7 +61,7 @@ system_info() {
     run cat /proc/vmstat | tee -a ${diagnose_dir}/os_info
 }
 
-#network
+# Get Network Info
 network_info() {
     # mkdir -p ${diagnose_dir}/network_info
     #run ifconfig
@@ -108,7 +111,6 @@ check_ps_hang() {
       echo "ps -ef command works fine" | tee -a ${diagnose_dir}/ps_command_status
   fi
 }
-
 
 #system status
 system_status() {
@@ -238,13 +240,13 @@ component() {
     done
 }
 
-quchenglog() {
-    mkdir -p ${diagnose_dir}/logs/qucheng
-    cp ~/.qc/log/* ${diagnose_dir}/logs/qucheng/
+quickon_log() {
+    mkdir -p ${diagnose_dir}/logs/quickon
+    cp ~/.qc/log/* ${diagnose_dir}/logs/quickon/
      if command_exists q; then
-        run q version | tee $diagnose_dir/logs/qucheng/q.log
-        run q status | tee $diagnose_dir/logs/qucheng/q.log
-        run q status node | tee $diagnose_dir/logs/qucheng/q.log
+        run q version | tee $diagnose_dir/logs/quickon/q.log
+        run q status | tee $diagnose_dir/logs/quickon/q.log
+        run q status node | tee $diagnose_dir/logs/quickon/q.log
      fi
 }
 
@@ -266,7 +268,7 @@ pd_collect() {
     system_status
     daemon_status
     common_logs
-    quchenglog
+    quickon_log
 
     # memory
     memory_info
@@ -277,4 +279,4 @@ pd_collect() {
 
 pd_collect
 
-echo "诊断信息: $tmpdir/diagnose_${timestamp}.tar.gz"
+echo "debug file: $tmpdir/diagnose_${timestamp}.tar.gz"
