@@ -110,10 +110,14 @@ func (s *Status) Format() error {
 		}
 		fmt.Fprintf(w, "\n")
 		fmt.Fprintf(w, "Qucheng Status: \n")
-		fmt.Fprintf(w, "  namespace:\t%s\n", color.SBlue(common.GetDefaultSystemNamespace(true)))
+		if s.QStatus.PodState["qucheng"].Disabled {
+			fmt.Fprintf(w, "  %s\t%s\n", "status", color.SBlue("disabled"))
+			w.Flush()
+			return output.EncodeText(os.Stdout, buf.Bytes())
+		}
 		cfg, _ := config.LoadConfig()
 		domain := ""
-		loginip := exnet.LocalIPs()[0]
+		loginIP := exnet.LocalIPs()[0]
 		if cfg != nil {
 			domain = cfg.Domain
 		}
@@ -124,8 +128,9 @@ func (s *Status) Format() error {
 			}
 			consoleURL = domain
 		} else {
-			consoleURL = fmt.Sprintf("http://%s:32379", loginip)
+			consoleURL = fmt.Sprintf("http://%s:32379", loginIP)
 		}
+		fmt.Fprintf(w, "  namespace:\t%s\n", color.SBlue(common.GetDefaultSystemNamespace(true)))
 		fmt.Fprintf(w, "  console:      %s(%s/%s)\n", color.SGreen(consoleURL), color.SGreen(common.QuchengDefaultUser), color.SGreen(cfg.ConsolePassword))
 		quchengOK := true
 		fmt.Fprintf(w, "  component status: \n")
