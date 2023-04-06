@@ -444,5 +444,9 @@ func (m *Meta) UnInstall() error {
 	repoCleanArgs := []string{"experimental", "helm", "repo-del"}
 	_ = qcexec.Command(os.Args[0], repoCleanArgs...).Run()
 	m.log.Done("uninstall helm repo success")
+	f := common.GetCustomConfig(common.InitFileName)
+	if file.CheckFileExists(f) {
+		os.Remove(f)
+	}
 	return nil
 }

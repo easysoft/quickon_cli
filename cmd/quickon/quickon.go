@@ -9,7 +9,6 @@ package quickon
 import (
 	"github.com/easysoft/qcadmin/cmd/flags"
 	"github.com/easysoft/qcadmin/common"
-
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/pkg/quickon"
