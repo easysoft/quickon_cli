@@ -1,5 +1,19 @@
 # Changelog
 
+## v2.0.0-beta.5 (2023-04-06)
+
+ * [92e5a51](https://github.com/easysoft/quickon_cli/commit/92e5a51c1e084e6f68fca7f1911d6baf5017257a) feat(update): imp ee install
+ * [1093e7a](https://github.com/easysoft/quickon_cli/commit/1093e7afa23d5368ddec55ce9fca99afd59e0a36) feat(helm): update helm op
+ * [d944dfe](https://github.com/easysoft/quickon_cli/commit/d944dfe53638590bf087c4e4ee6c8817df00a59d) fix(make): imp makefile
+ * [23def69](https://github.com/easysoft/quickon_cli/commit/23def690eb67b8414c810e0d9cdf002cd4796299) build(deps): bump github.com/mattn/go-isatty from 0.0.17 to 0.0.18 (#142)
+ * [6fcdcdf](https://github.com/easysoft/quickon_cli/commit/6fcdcdf7233c61600719c8f0ea18fa93f7259800) feat(status): deprecated status nodes
+ * [21a8e05](https://github.com/easysoft/quickon_cli/commit/21a8e05832b2c932229602d06751c0ae534785c6) fix(reset-password): fix reset-password typo
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v2.0.0-beta.4 (2023-04-04)
 
  * [c8852de](https://github.com/easysoft/quickon_cli/commit/c8852de92c9800fedb264dbb3d9e870aecfab55c) fix(version): change oss default version; disable cne-operator version
