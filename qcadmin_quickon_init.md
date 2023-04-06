@@ -13,7 +13,7 @@ qcadmin quickon init [flags]
   -h, --help              help for init
       --ip string         quickon ip
       --oss               quickon mode (default true)
-      --password string   quickon console password (default "OkMPQHx79xcK6dXUwP0NudBLQeH4pPkJ")
+      --password string   quickon console password (default "aCmbYuQCh1JLdk5c7ftSZ3WjuHXgforl")
       --version string    quickon version(oss: stable-2.6/ee: stable-1.0) (default "stable-2.6")
 ```
 
