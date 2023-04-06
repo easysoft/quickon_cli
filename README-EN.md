@@ -1,18 +1,18 @@
 # qcadmin(q)
 
 ![GitHub go.mod Go version (subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/easysoft/quickon_cli?filename=go.mod&style=flat-square)
-![GitHub Workflow Status (event)](https://img.shields.io/github/workflow/status/easysoft/quickon_cli/Release?style=flat-square)
+[![Release](https://github.com/easysoft/quickon_cli/actions/workflows/release.yml/badge.svg)](https://github.com/easysoft/quickon_cli/actions/workflows/release.yml)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/easysoft/quickon_cli?style=flat-square)
-[![codecov](https://codecov.io/gh/easysoft/quickon_cli/branch/master/graph/badge.svg)](https://codecov.io/gh/easysoft/quickon_cli)
 ![GitHub](https://img.shields.io/badge/license-ZPL%20%2B%20AGPL-blue)
 [![Go Report Card](https://goreportcard.com/badge/github.com/easysoft/quickon_cli)](https://goreportcard.com/report/github.com/easysoft/quickon_cli)
 [![Releases](https://img.shields.io/github/release-pre/easysoft/quickon_cli.svg)](https://github.com/easysoft/quickon_cli/releases)
+[![TODOs](https://img.shields.io/endpoint?url=https://api.tickgit.com/badge?repo=github.com/easysoft/quickon_cli)](https://www.tickgit.com/browse?repo=github.com/easysoft/quickon_cli)
 [![docs](https://img.shields.io/badge/docs-done-green)](https://www.qucheng.com/)
 [![Chat on QQ](https://img.shields.io/badge/chat-768721743-blueviolet?logo=TencentQQ)](https://img.qucheng.com/group/qq.jpg)
 
 > English | [中文](README.md)
 
-qcadmin is an open-source lightweight cli tool for managing qucheng.
+qcadmin is an open-source lightweight cli tool for managing quickon.
 
 ## Requirements
 
@@ -32,6 +32,10 @@ qcadmin is an open-source lightweight cli tool for managing qucheng.
     </tr>
 		<tr>
     <td><b>CentOS</b> <i>7.x</i></td>
+      <td>2 CPU cores, 4 GB memory, 40 GB disk space</td>
+    </tr>
+		<tr>
+    <td><b>Rocky</b> <i>9.x</i>, <i>8.x</i></td>
       <td>2 CPU cores, 4 GB memory, 40 GB disk space</td>
     </tr>
   </tbody>
@@ -75,18 +79,19 @@ q init -q edge
 
 ```bash
 # debian
-echo "deb [trusted=yes] https://repo.qucheng.com/quickon/ /" | tee /etc/apt/sources.list.d/qcadmin.list
+echo "deb [trusted=yes] https://repo.qucheng.com/quickon/apt/ /" | tee /etc/apt/sources.list.d/quickon.list
 apt update
 apt search qcadmin
 apt install qcadmin
 # centos7
-cat > /etc/yum.repos.d/qcadmin.repo << EOF
-[fury]
-name=Qucheng Yum Repo
-baseurl=https://yum.fury.io/qucheng/
+cat > /etc/yum.repos.d/quickon.repo << EOF
+[quickon]
+name=Quickon Repo
+baseurl=https://repo.qucheng.com/quickon/yum/
 enabled=1
 gpgcheck=0
 EOF
+
 yum makecache
 yum install qcadmin
 ```
@@ -96,6 +101,4 @@ yum install qcadmin
 ```bash
 # create qucheng cluster
 q init
-# create a k3s cluster with other cidr
-q init --podsubnet 10.42.0.0/16 --svcsubnet 10.43.0.0/16
 ```

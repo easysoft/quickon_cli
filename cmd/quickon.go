@@ -33,6 +33,7 @@ func newCmdQuickon(f factory.Factory) *cobra.Command {
 	quickonCmd := &cobra.Command{
 		Use:     "quickon",
 		Short:   "Quickon commands",
+		Aliases: []string{"qc", "qucheng"},
 		Version: "20230330",
 	}
 	quickonCmd.AddCommand(newCmdApp(f))

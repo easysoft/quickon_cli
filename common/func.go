@@ -172,8 +172,8 @@ func GetDefaultQuickONNamespace() []string {
 	return ns
 }
 
-func GetQuickONName(oss bool) string {
-	if oss {
+func GetQuickONName(t QuickonType) string {
+	if t == QuickonOSSType {
 		return DefaultQuchengName
 	}
 	return fmt.Sprintf("%s-biz", DefaultQuchengName)

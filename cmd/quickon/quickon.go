@@ -8,8 +8,8 @@ package quickon
 
 import (
 	"github.com/easysoft/qcadmin/cmd/flags"
-
 	"github.com/easysoft/qcadmin/common"
+
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/pkg/quickon"
@@ -43,7 +43,7 @@ func InitCommand(f factory.Factory) *cobra.Command {
 			return quickonClient.Check()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if !quickonClient.OssMode {
+			if !quickonClient.QuickonOSS {
 				quickonClient.QuickonType = common.QuickonEEType
 			}
 			if err := quickonClient.GetKubeClient(); err != nil {

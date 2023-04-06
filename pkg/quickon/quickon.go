@@ -41,7 +41,7 @@ type Meta struct {
 	IP              string
 	Version         string
 	ConsolePassword string
-	OssMode         bool
+	QuickonOSS      bool
 	QuickonType     common.QuickonType
 	kubeClient      *k8s.Client
 	log             log.Logger
@@ -50,7 +50,6 @@ type Meta struct {
 func New(f factory.Factory) *Meta {
 	return &Meta{
 		log:             f.GetLog(),
-		OssMode:         true,
 		Version:         common.DefaultQuickonOssVersion,
 		ConsolePassword: expass.PwGenAlphaNum(32),
 		QuickonType:     common.QuickonOSSType,
@@ -84,10 +83,10 @@ func (m *Meta) GetFlags() []types.Flag {
 			V:     m.ConsolePassword,
 		},
 		{
-			Name:  "oss-mode",
-			Usage: "quickon oss mode",
-			P:     &m.OssMode,
-			V:     m.OssMode,
+			Name:  "oss",
+			Usage: "quickon mode",
+			P:     &m.QuickonOSS,
+			V:     m.QuickonType == common.QuickonOSSType,
 		},
 	}
 }
@@ -290,7 +289,7 @@ func (m *Meta) Init() error {
 		m.log.Done("deployed cne-operator success")
 	}
 	helmchan := common.GetChannel(m.Version)
-	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.GetQuickONName(m.OssMode), "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultQuchengName, "--namespace", common.GetDefaultSystemNamespace(true), "--set", "env.APP_DOMAIN=" + m.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
+	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.GetQuickONName(m.QuickonType), "--namespace", common.GetDefaultSystemNamespace(true), "--set", "env.APP_DOMAIN=" + m.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
 	if helmchan != "stable" {
 		helmargs = append(helmargs, "--set", "env.PHP_DEBUG=2")
 		helmargs = append(helmargs, "--set", "cloud.switchChannel=true")
@@ -421,25 +420,29 @@ func (m *Meta) UnInstall() error {
 	m.log.Warnf("start clean quickon.")
 	// 清理helm安装应用
 	m.log.Info("start uninstall cne custom tools")
-	toolargs := []string{"experimental", "helm", "uninstall", "--name", "selfcert", "--namespace", common.GetDefaultSystemNamespace(true)}
-	if helmstd, err := qcexec.Command(os.Args[0], toolargs...).CombinedOutput(); err != nil {
-		m.log.Warnf("uninstall cne custom tools err: %v, std: %s", err, string(helmstd))
+	toolArgs := []string{"experimental", "helm", "uninstall", "--name", "selfcert", "--namespace", common.GetDefaultSystemNamespace(true)}
+	if cleanStd, err := qcexec.Command(os.Args[0], toolArgs...).CombinedOutput(); err != nil {
+		m.log.Warnf("uninstall cne custom tools err: %v, std: %s", err, string(cleanStd))
 	} else {
 		m.log.Done("uninstall cne custom tools success")
 	}
 	m.log.Info("start uninstall cne operator")
-	operatorargs := []string{"experimental", "helm", "uninstall", "--name", common.DefaultCneOperatorName, "--namespace", common.GetDefaultSystemNamespace(true)}
-	if helmstd, err := qcexec.Command(os.Args[0], operatorargs...).CombinedOutput(); err != nil {
-		m.log.Warnf("uninstall cne-operator err: %v, std: %s", err, string(helmstd))
+	operatorArgs := []string{"experimental", "helm", "uninstall", "--name", common.DefaultCneOperatorName, "--namespace", common.GetDefaultSystemNamespace(true)}
+	if cleanStd, err := qcexec.Command(os.Args[0], operatorArgs...).CombinedOutput(); err != nil {
+		m.log.Warnf("uninstall cne-operator err: %v, std: %s", err, string(cleanStd))
 	} else {
 		m.log.Done("uninstall cne-operator success")
 	}
 	m.log.Info("start uninstall cne quickon")
-	quickonargs := []string{"experimental", "helm", "uninstall", "--name", common.GetQuickONName(m.OssMode), "--namespace", common.GetDefaultSystemNamespace(true)}
-	if helmstd, err := qcexec.Command(os.Args[0], quickonargs...).CombinedOutput(); err != nil {
-		m.log.Warnf("uninstall quickon err: %v, std: %s", err, string(helmstd))
+	quickonCleanArgs := []string{"experimental", "helm", "uninstall", "--name", common.DefaultQuchengName, "--namespace", common.GetDefaultSystemNamespace(true)}
+	if cleanStd, err := qcexec.Command(os.Args[0], quickonCleanArgs...).CombinedOutput(); err != nil {
+		m.log.Warnf("uninstall quickon err: %v, std: %s", err, string(cleanStd))
 	} else {
 		m.log.Done("uninstall quickon success")
 	}
+	m.log.Info("start uninstall helm repo")
+	repoCleanArgs := []string{"experimental", "helm", "repo-del"}
+	_ = qcexec.Command(os.Args[0], repoCleanArgs...).Run()
+	m.log.Done("uninstall helm repo success")
 	return nil
 }

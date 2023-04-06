@@ -90,7 +90,7 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 			log.Errorf("init quickon failed, reason: %v", err)
 			return
 		}
-		if !quickonClient.OssMode {
+		if !quickonClient.QuickonOSS {
 			quickonClient.QuickonType = common.QuickonEEType
 		}
 		if len(quickonClient.IP) == 0 {
