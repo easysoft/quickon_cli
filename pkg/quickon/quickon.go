@@ -264,6 +264,7 @@ func (m *Meta) Init() error {
 	cfg.APIToken = token
 	cfg.S3.Username = expass.PwGenAlphaNum(8)
 	cfg.S3.Password = expass.PwGenAlphaNum(16)
+	cfg.Quickon.Type = m.QuickonType
 	cfg.SaveConfig()
 	chartversion := common.GetVersion(m.Version, m.QuickonType)
 	m.log.Info("start deploy cne custom tools")

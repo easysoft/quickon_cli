@@ -37,6 +37,11 @@ type Config struct {
 	S3              S3Config  `yaml:"s3" json:"s3"`
 	Cluster         Cluster   `yaml:"cluster" json:"cluster"`
 	DataDir         string    `yaml:"datadir" json:"datadir"`
+	Quickon         Quickon   `yaml:"quickon" json:"quickon"`
+}
+
+type Quickon struct {
+	Type common.QuickonType `yaml:"type" json:"type"`
 }
 
 type Cluster struct {

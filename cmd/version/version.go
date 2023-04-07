@@ -8,6 +8,7 @@ package version
 
 import (
 	"fmt"
+	"github.com/easysoft/qcadmin/internal/app/config"
 	"os"
 	"runtime"
 	"strings"
@@ -38,9 +39,11 @@ Client:
  URL:               https://github.com/easysoft/quickon_cli/releases/tag/v{{ .LastVersion }}
 {{- end }}
 {{- end}}
-{{- if .ServerDeployed }}{{with .Server}}
+{{- if .ServerDeployed }}
 
 Server:
+ Type:              {{ .Server.ServerType -}}
+{{with .Server.Components }}
  {{- range $component := .Components}}
  {{$component.Name}}:
 {{- if $component.CanUpgrade }}
@@ -83,7 +86,7 @@ type versionGet struct {
 
 type versionInfo struct {
 	Client clientVersion
-	Server *upgrade.Version
+	Server serverVersion
 }
 
 type clientVersion struct {
@@ -99,9 +102,14 @@ type clientVersion struct {
 	UpgradeMessage string
 }
 
+type serverVersion struct {
+	ServerType common.QuickonType
+	Components *upgrade.Version
+}
+
 // ServerDeployed returns true when the client could connect to the qucheng
 func (v versionInfo) ServerDeployed() bool {
-	return v.Server != nil
+	return v.Server.Components != nil
 }
 
 // PreCheckLatestVersion 检查最新版本
@@ -141,6 +149,13 @@ func ShowVersion(log logpkg.Logger) {
 			Arch:         runtime.GOARCH,
 			Experimental: true,
 		},
+		Server: serverVersion{
+			ServerType: common.QuickonOSSType,
+		},
+	}
+	cfg, _ := config.LoadConfig()
+	if cfg != nil && cfg.Quickon.Type != "" {
+		vd.Server.ServerType = cfg.Quickon.Type
 	}
 	log.StartWait("check update...")
 	lastversion, err := PreCheckLatestVersion()
@@ -163,7 +178,7 @@ func ShowVersion(log logpkg.Logger) {
 	if file.CheckFileExists(common.GetCustomConfig(common.InitFileName)) {
 		qv, err := upgrade.QuchengVersion()
 		if err == nil {
-			vd.Server = &qv
+			vd.Server.Components = &qv
 		}
 	}
 	if err := prettyPrintVersion(vd, tmpl); err != nil {
