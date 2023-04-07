@@ -40,6 +40,7 @@ func (lw *LogWriter) Write(p []byte) (n int, err error) {
 func RunCmd(name string, arg ...string) error {
 	log := log.GetInstance()
 	cmd := sysexec.Command(name, arg[:]...) // #nosec
+	// cmd.Dir = common.GetDefaultCacheDir()
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = NewLogWrite(log, "err")
 	cmd.Stdout = NewLogWrite(log, "")
@@ -56,6 +57,7 @@ func Trace(cmd *sysexec.Cmd) {
 
 func Command(name string, arg ...string) *sysexec.Cmd {
 	cmd := sysexec.Command(name, arg...) // #nosec
+	// cmd.Dir = common.GetDefaultCacheDir()
 	Trace(cmd)
 	return cmd
 }
@@ -66,11 +68,13 @@ func CommandRun(name string, arg ...string) error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin
+	// cmd.Dir = common.GetDefaultCacheDir()
 	return cmd.Run()
 }
 
 func CommandBashRunWithResp(cmdStr string) (string, error) {
 	cmd := sysexec.Command("/bin/bash", "-c", cmdStr) // #nosec
+	// cmd.Dir = common.GetDefaultCacheDir()
 	Trace(cmd)
 	result, err := cmd.CombinedOutput()
 	return string(result), err

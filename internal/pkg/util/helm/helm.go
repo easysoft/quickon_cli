@@ -9,6 +9,7 @@ package helm
 import (
 	"context"
 	"fmt"
+	"github.com/ergoapi/util/ztime"
 	"os"
 	"path/filepath"
 	"strings"
@@ -58,6 +59,7 @@ func NewClient(config *Config) (*Client, error) {
 	if !file.CheckFileExists(common.GetDefaultKubeConfig()) {
 		settings.KubeConfig = common.GetDefaultNewKubeConfig()
 	}
+	settings.RepositoryCache = common.GetDefaultCacheDir()
 	client.settings = settings
 	actionConfig := &action.Configuration{}
 	if err := actionConfig.Init(settings.RESTClientGetter(), config.Namespace, helmDriver, nolog); err != nil {
@@ -135,10 +137,15 @@ func (c Client) Upgrade(name, repoName, chartName, chartVersion string, values m
 	if len(chartVersion) > 0 {
 		client.ChartPathOptions.Version = chartVersion
 	}
+	// TODO 会加载本地的同名chart文件夹，需要优化
+	if _, err := os.Stat(chartName); err == nil {
+		os.Rename(chartName, chartName+"-bak."+ztime.NowUTC().Format("20060102150405"))
+	}
 	p, err := client.ChartPathOptions.LocateChart(chartName, c.settings)
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf("locate chart %s failed: %v", chartName, err))
 	}
+	c.log.Infof("chart name %s path: %s", chartName, p)
 	ct, err := loader.Load(p)
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf("load chart %s failed: %v", chartName, err))
