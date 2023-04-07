@@ -1,5 +1,20 @@
 # Changelog
 
+## v2.0.0-beta.6 (2023-04-06)
+
+ * [338e75a](https://github.com/easysoft/quickon_cli/commit/338e75a4f3041ba99a6ba756e775776f37bd702d) build(deps): bump github.com/spf13/cobra from 1.6.1 to 1.7.0 (#147)
+ * [5a4ddc9](https://github.com/easysoft/quickon_cli/commit/5a4ddc971f2dd29df5abf6fa580d54d5d7b7879d) fix(version): fix uninstall quickon show version typo
+ * [b546482](https://github.com/easysoft/quickon_cli/commit/b5464826ed70f5ca68f3ab68cb1d61eb8debbe81) fix(status): fix quickon uninstall show status
+ * [1e8d05b](https://github.com/easysoft/quickon_cli/commit/1e8d05b44bca1c788afd97935f6e3abf640b716e) fix(app): change default app ns
+ * [56957d0](https://github.com/easysoft/quickon_cli/commit/56957d0f046700f683bc14053034af48f553cb44) build(deps): bump github.com/docker/docker (#146)
+ * [a718435](https://github.com/easysoft/quickon_cli/commit/a7184355e4c6dc769c8039bc456dcb3cdb46811f) build(deps): bump github.com/schollz/progressbar/v3 (#144)
+ * [73e04c2](https://github.com/easysoft/quickon_cli/commit/73e04c22e90615495a896f5763198133fa6e384e) build(deps): bump peter-evans/create-pull-request from 4 to 5 (#143)
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v2.0.0-beta.5 (2023-04-06)
 
  * [92e5a51](https://github.com/easysoft/quickon_cli/commit/92e5a51c1e084e6f68fca7f1911d6baf5017257a) feat(update): imp ee install
