@@ -9,7 +9,7 @@ qcadmin uninstall [flags]
 ### Options
 
 ```
-      --all    clean all
+      --all    clean all (default true)
   -h, --help   help for uninstall
 ```
 
