@@ -148,13 +148,16 @@ func (c *Cluster) GetWorkerFlags() []types.Flag {
 
 func (c *Cluster) preinit(mip, ip string, sshClient ssh.Interface) error {
 	k3sbin := fmt.Sprintf("%s/hack/bin/k3s-%s-%s", common.GetDefaultDataDir(), runtime.GOOS, runtime.GOARCH)
-	if err := sshClient.Copy(ip, k3sbin, "/usr/local/bin/k3s"); err != nil {
-		return errors.Errorf("copy k3s bin (%s:%s -> %s:/usr/local/bin/k3s) failed, reason: %v", ip, mip, k3sbin, ip, err)
+	if err := sshClient.Copy(ip, k3sbin, common.K3sBinPath); err != nil {
+		return errors.Errorf("copy k3s bin (%s:%s -> %s:%s) failed, reason: %v", ip, mip, k3sbin, common.K3sBinPath, ip, err)
 	}
 	qbin, _ := os.Executable()
-	if err := sshClient.Copy(ip, qbin, "/usr/local/bin/qcadmin"); err != nil {
-		return errors.Errorf("copy k3s bin (%s:%s -> %s:/usr/local/bin/qcadmin) failed, reason: %v", ip, mip, qbin, ip, err)
+	if qbin != common.QcAdminBinPath {
+		if err := sshClient.Copy(ip, qbin, common.QcAdminBinPath); err != nil {
+			return errors.Errorf("copy q bin (%s:%s -> %s:%s) failed, reason: %v", ip, mip, qbin, common.QcAdminBinPath, ip, err)
+		}
 	}
+
 	if err := sshClient.CmdAsync(ip, "/usr/local/bin/qcadmin version"); err != nil {
 		return errors.Errorf("load q version failed, reason: %v", err)
 	}
@@ -228,6 +231,12 @@ func (c *Cluster) waitk3sReady(host string, sshClient ssh.Interface) error {
 		err := sshClient.Copy(host, "/etc/rancher/k3s/k3s.yaml", common.GetDefaultNewKubeConfig())
 		if err != nil {
 			return false, nil
+		}
+		// 本地不存在config文件, 同步最新的kubeconfig文件
+		if !file.CheckFileExists(common.GetDefaultKubeConfig()) {
+			if err := sshClient.Copy(host, common.GetDefaultNewKubeConfig(), common.GetDefaultKubeConfig()); err != nil {
+				return false, nil
+			}
 		}
 		return true, nil
 	})
