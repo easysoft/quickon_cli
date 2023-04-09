@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.0.0-beta.7 (2023-04-07)
+
+ * [f464193](https://github.com/easysoft/quickon_cli/commit/f4641939f997bd5222d5cb1a7297d02585fdfac3) fix(helm): fix helm install: if a directory with the same name already exists in the current directory
+ * [ac45679](https://github.com/easysoft/quickon_cli/commit/ac45679c9d22c63e8719ad482f4df52a482e7af6) fix(bin): fix copy busy
+
+### Contributors
+
+ * ysicing
+
 ## v2.0.0-beta.6 (2023-04-06)
 
  * [338e75a](https://github.com/easysoft/quickon_cli/commit/338e75a4f3041ba99a6ba756e775776f37bd702d) build(deps): bump github.com/spf13/cobra from 1.6.1 to 1.7.0 (#147)
