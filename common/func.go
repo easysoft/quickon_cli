@@ -82,19 +82,16 @@ func GetChannel(p string) string {
 	return p
 }
 
-// GetVersion 获取chartrepo channel地址
+// GetVersion 获取chartRepo channel地址
 func GetVersion(p string, qt QuickonType) string {
-	if strings.Contains(p, "-") {
-		v := strings.Split(p, "-")
-		if len(v) != 2 {
-			if qt == QuickonOSSType {
-				return DefaultQuickonOssVersion
-			}
-			return DefaultQuickonEEVersion
+	v := strings.Split(p, "-")
+	if len(v) != 2 {
+		if qt == QuickonOSSType {
+			return GetVersion(DefaultQuickonOssVersion, qt)
 		}
-		return v[1]
+		return GetVersion(DefaultQuickonEEVersion, qt)
 	}
-	return ""
+	return v[1]
 }
 
 func GetDefaultConfig() string {

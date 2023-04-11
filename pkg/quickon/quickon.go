@@ -49,8 +49,8 @@ type Meta struct {
 
 func New(f factory.Factory) *Meta {
 	return &Meta{
-		log:             f.GetLog(),
-		Version:         common.DefaultQuickonOssVersion,
+		log: f.GetLog(),
+		// Version:         common.DefaultQuickonOssVersion,
 		ConsolePassword: expass.PwGenAlphaNum(32),
 		QuickonType:     common.QuickonOSSType,
 	}
@@ -212,7 +212,8 @@ func (m *Meta) Init() error {
 			return err
 		}
 	}
-	m.log.Debug("start init quickon")
+	chartVersion := common.GetVersion(m.Version, m.QuickonType)
+	m.log.Debugf("start init quickon %v, version: %s", m.QuickonType, chartVersion)
 	if m.Domain == "" {
 		err := retry.Retry(time.Second*1, 3, func() (bool, error) {
 			domain, _, err := m.genSuffixHTTPHost(m.IP)
@@ -266,7 +267,6 @@ func (m *Meta) Init() error {
 	cfg.S3.Password = expass.PwGenAlphaNum(16)
 	cfg.Quickon.Type = m.QuickonType
 	cfg.SaveConfig()
-	chartversion := common.GetVersion(m.Version, m.QuickonType)
 	m.log.Info("start deploy cne custom tools")
 	toolargs := []string{"experimental", "helm", "upgrade", "--name", "selfcert", "--repo", common.DefaultHelmRepoName, "--chart", "selfcert", "--namespace", common.GetDefaultSystemNamespace(true)}
 	if helmstd, err := qcexec.Command(os.Args[0], toolargs...).CombinedOutput(); err != nil {
@@ -305,8 +305,8 @@ func (m *Meta) Init() error {
 	}
 	helmargs = append(helmargs, "--set", fmt.Sprintf("ingress.host=%s", hostdomain))
 
-	if len(chartversion) > 0 {
-		helmargs = append(helmargs, "--version", chartversion)
+	if len(chartVersion) > 0 {
+		helmargs = append(helmargs, "--version", chartVersion)
 	}
 	output, err := qcexec.Command(os.Args[0], helmargs...).CombinedOutput()
 	if err != nil {
@@ -315,9 +315,9 @@ func (m *Meta) Init() error {
 	}
 	m.log.Done("install quickon success")
 	m.QuickONReady()
-	initfile := common.GetCustomConfig(common.InitFileName)
-	if err := file.Writefile(initfile, "init done", true); err != nil {
-		m.log.Warnf("write init done file failed, reason: %v.\n\t please run: touch %s", err, initfile)
+	initFile := common.GetCustomConfig(common.InitFileName)
+	if err := file.Writefile(initFile, "init done", true); err != nil {
+		m.log.Warnf("write init done file failed, reason: %v.\n\t please run: touch %s", err, initFile)
 	}
 	m.Show()
 	return nil
