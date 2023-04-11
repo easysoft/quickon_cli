@@ -113,6 +113,57 @@
 
 ## v2.0.0-alpha.1 (2023-02-27)
 
+
+### Contributors
+
+
+## v2.0.0 (2023-04-11)
+
+ * [7a89e1a](https://github.com/easysoft/quickon_cli/commit/7a89e1a12a0e150dda07c7fe5e38cf06410eb3de) fix(quickon): add quickon typo
+ * [f464193](https://github.com/easysoft/quickon_cli/commit/f4641939f997bd5222d5cb1a7297d02585fdfac3) fix(helm): fix helm install: if a directory with the same name already exists in the current directory
+ * [ac45679](https://github.com/easysoft/quickon_cli/commit/ac45679c9d22c63e8719ad482f4df52a482e7af6) fix(bin): fix copy busy
+ * [338e75a](https://github.com/easysoft/quickon_cli/commit/338e75a4f3041ba99a6ba756e775776f37bd702d) build(deps): bump github.com/spf13/cobra from 1.6.1 to 1.7.0 (#147)
+ * [5a4ddc9](https://github.com/easysoft/quickon_cli/commit/5a4ddc971f2dd29df5abf6fa580d54d5d7b7879d) fix(version): fix uninstall quickon show version typo
+ * [b546482](https://github.com/easysoft/quickon_cli/commit/b5464826ed70f5ca68f3ab68cb1d61eb8debbe81) fix(status): fix quickon uninstall show status
+ * [1e8d05b](https://github.com/easysoft/quickon_cli/commit/1e8d05b44bca1c788afd97935f6e3abf640b716e) fix(app): change default app ns
+ * [56957d0](https://github.com/easysoft/quickon_cli/commit/56957d0f046700f683bc14053034af48f553cb44) build(deps): bump github.com/docker/docker (#146)
+ * [a718435](https://github.com/easysoft/quickon_cli/commit/a7184355e4c6dc769c8039bc456dcb3cdb46811f) build(deps): bump github.com/schollz/progressbar/v3 (#144)
+ * [73e04c2](https://github.com/easysoft/quickon_cli/commit/73e04c22e90615495a896f5763198133fa6e384e) build(deps): bump peter-evans/create-pull-request from 4 to 5 (#143)
+ * [92e5a51](https://github.com/easysoft/quickon_cli/commit/92e5a51c1e084e6f68fca7f1911d6baf5017257a) feat(update): imp ee install
+ * [1093e7a](https://github.com/easysoft/quickon_cli/commit/1093e7afa23d5368ddec55ce9fca99afd59e0a36) feat(helm): update helm op
+ * [d944dfe](https://github.com/easysoft/quickon_cli/commit/d944dfe53638590bf087c4e4ee6c8817df00a59d) fix(make): imp makefile
+ * [23def69](https://github.com/easysoft/quickon_cli/commit/23def690eb67b8414c810e0d9cdf002cd4796299) build(deps): bump github.com/mattn/go-isatty from 0.0.17 to 0.0.18 (#142)
+ * [6fcdcdf](https://github.com/easysoft/quickon_cli/commit/6fcdcdf7233c61600719c8f0ea18fa93f7259800) feat(status): deprecated status nodes
+ * [21a8e05](https://github.com/easysoft/quickon_cli/commit/21a8e05832b2c932229602d06751c0ae534785c6) fix(reset-password): fix reset-password typo
+ * [c8852de](https://github.com/easysoft/quickon_cli/commit/c8852de92c9800fedb264dbb3d9e870aecfab55c) fix(version): change oss default version; disable cne-operator version
+ * [bd9619f](https://github.com/easysoft/quickon_cli/commit/bd9619f8086f471211b5d55d6fe1bd3f6315a7b7) fix(typo): fix old manage cmd
+ * [dbd062b](https://github.com/easysoft/quickon_cli/commit/dbd062bfe3a342a2998a8b64e67eb0ea7dea8544) fix(init): update global init
+ * [e197fe0](https://github.com/easysoft/quickon_cli/commit/e197fe07351ef63bf331d471c7b2a2651e4f168e) fix(sec): fix kardianos/service
+ * [afeafde](https://github.com/easysoft/quickon_cli/commit/afeafdef5049c75ef32f1e884f49d9a5f88ffabf) fix(typo): fix kubeconfig path
+ * [7db2362](https://github.com/easysoft/quickon_cli/commit/7db2362d55922ce6cdcfd276e0e06f68ae6a5945) fix(init): imp init cmd message
+ * [efa05f8](https://github.com/easysoft/quickon_cli/commit/efa05f8f92d7950bc667f717984d354c63c8cfc4) fix(init): imp init flag
+ * [5de07a0](https://github.com/easysoft/quickon_cli/commit/5de07a0f358c1f32bd6912fb0282b538f38ff9b8) feat(update): fix cfg
+ * [237d5dc](https://github.com/easysoft/quickon_cli/commit/237d5dc7181df52f0d201a49619a268592a9b5e5) fix(ci): update action tz
+ * [77088d1](https://github.com/easysoft/quickon_cli/commit/77088d1e7992359327a0d1ef23f38f17f5f800c3) fix(ci): merge docs & changelog
+ * [1b4afc4](https://github.com/easysoft/quickon_cli/commit/1b4afc436136fa315d47c2334805520baa5dcd33) feat(uninstall): fix uninstall
+ * [dc56c65](https://github.com/easysoft/quickon_cli/commit/dc56c65b7177383b6eb9f8f24dc9a9808e3d4a3d) docs(update): update cli docs
+ * [94cc6a8](https://github.com/easysoft/quickon_cli/commit/94cc6a8fbd34bf1a651dd55ff54dc69ae9e27ea3) fix(ci): fix smoke install version
+ * [82f3850](https://github.com/easysoft/quickon_cli/commit/82f38507960efa71636486a83ce0354b6165b77c) refactor(subcmd): del app & precheck
+ * [79baca5](https://github.com/easysoft/quickon_cli/commit/79baca5e4c743cd2ff159a02e982a75ed73b5699) refactor(subcmd): del manage subcmd
+ * [c5a4bfc](https://github.com/easysoft/quickon_cli/commit/c5a4bfc1918446853d0b7aaa071fb49fb59679a0) chore(github): update github action test (#136)
+ * [1ea40e2](https://github.com/easysoft/quickon_cli/commit/1ea40e2441edbab647ee92a9640b74fc1bcd999d) feat(3.0): support 3.0 (#135)
+ * [bfb7b88](https://github.com/easysoft/quickon_cli/commit/bfb7b889455e3297720f54634f3b47755a878210) docs(update): update readme
+ * [0048d91](https://github.com/easysoft/quickon_cli/commit/0048d911981cf6200c9ea0c71fbe6e6b4663e0e2) fix(kube): fix kube path typo
+ * [e2c6cf9](https://github.com/easysoft/quickon_cli/commit/e2c6cf9a0cf209abc893c8ee35c1d240ab03574e) build(deps): bump actions/setup-go from 3 to 4 (#133)
+ * [5e6dfce](https://github.com/easysoft/quickon_cli/commit/5e6dfcef61196c877801d8c331d2b72821bd1617) feat(install): fix install typo
+ * [d385d5f](https://github.com/easysoft/quickon_cli/commit/d385d5f3f23f096b757149a8561401a66c8c58c1) build(deps): bump magnetikonline/action-golang-cache from 3 to 4 (#132)
+ * [25e202e](https://github.com/easysoft/quickon_cli/commit/25e202e157964d9c2f61822278fdc2f2df1604a3) feat(update): fix update
+ * [4fad7f7](https://github.com/easysoft/quickon_cli/commit/4fad7f79e4fd40880ce5b5d03527d436365257be) build(deps): bump github.com/shirou/gopsutil/v3 from 3.22.12 to 3.23.1 (#130)
+ * [415dbbf](https://github.com/easysoft/quickon_cli/commit/415dbbf6f60307c51073a99273c39edbc5c9cab9) style(lint): nolint gosec
+ * [f3a23ff](https://github.com/easysoft/quickon_cli/commit/f3a23ffb20bb19baa93a9f10df7539f29407111d) fix(ns): imp ns create
+ * [e4bb0bd](https://github.com/easysoft/quickon_cli/commit/e4bb0bdf0c5ed71529945cde91737a54c6a2a5ba) feat(ns): change default ns
+ * [6373a15](https://github.com/easysoft/quickon_cli/commit/6373a159763149658cf48063fe75629703acb95d) fix(kubeclient): fix kubeconfig default path
+ * [41572d6](https://github.com/easysoft/quickon_cli/commit/41572d6d5dfd2a7a9d286b5b966862a56e04c9bd) fix(status): fix status kubeconfig check
  * [99c8272](https://github.com/easysoft/quickon_cli/commit/99c8272260e0af34edf0ed526fe750d89a95b4b3) feat(quickon): imp quickon install
  * [201183d](https://github.com/easysoft/quickon_cli/commit/201183d9839a33d6a649b8e47360b3cac3736415) fix(typo): fix missing quickon cmd
  * [c3db971](https://github.com/easysoft/quickon_cli/commit/c3db971e17875758830e6c99607c47deca440bdf) build(deps): bump github.com/vishvananda/netlink (#127)
