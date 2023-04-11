@@ -125,7 +125,7 @@ download() {
 
 # --- download binary from cos url ---
 download_binary() {
-    BIN_URL=${COS_URL}/${VERSION}/qcadmin_linux_${SUFFIX} # qcadmin_linux_amd64
+    BIN_URL=${COS_URL}/${VERSION}/v2/qcadmin_linux_${SUFFIX} # qcadmin_linux_amd64
     info "Downloading binary ${COS_URL}/${VERSION}/q"
     download ${TMP_BIN} ${BIN_URL}
 }

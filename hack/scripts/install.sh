@@ -9,10 +9,10 @@ set -o noglob
 #
 # Example:
 #   Installing Quickon with ZenTao:
-#     curl ... | INSTALL_APP="zentao-open" sh -
+#     curl ... | INSTALL_APP="zentao" sh -
 #   - INSTALL_APP
 #     Install Market App when install Quickon.
-#     Defaults to 'zentao-open'
+#     Defaults to 'zentao'
 #   - INSTALL_DOMAIN
 #     If not set default use gen default domain
 
@@ -139,7 +139,7 @@ download() {
 
 # --- download binary from cos url ---
 download_binary() {
-    BIN_URL=${COS_URL}/${VERSION}/qcadmin_linux_${SUFFIX} # qcadmin_linux_amd64
+    BIN_URL=${COS_URL}/${VERSION}/v2/qcadmin_linux_${SUFFIX} # qcadmin_linux_amd64
     info "Downloading binary ${COS_URL}/${VERSION}/q"
     download ${TMP_BIN} ${BIN_URL}
 }
@@ -173,9 +173,9 @@ download_and_verify() {
 # --- install quickon
 install_quickon() {
   if [ -z "${INSTALL_DOMAIN}" ]; then
-    ${BIN_DIR}/q init --app ${INSTALL_APP:-zentao-open}
+    ${BIN_DIR}/q init --app ${INSTALL_APP:-zentao}
   else
-    ${BIN_DIR}/q init --app ${INSTALL_APP:-zentao-open} --domain ${INSTALL_DOMAIN}
+    ${BIN_DIR}/q init --app ${INSTALL_APP:-zentao} --domain ${INSTALL_DOMAIN}
   fi
 }
 
