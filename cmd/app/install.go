@@ -96,9 +96,14 @@ func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 				log.Debugf("helm list %s err: %v", name, err)
 				return nil
 			}
+			if len(release) == 0 {
+				// 2.6版本不支持
+				log.Infof("please login console check it.")
+				return nil
+			}
 			releaseValue, err := hc.GetAllValues(release[0].Name)
 			if err != nil {
-				log.Debugf("helm get allvalues %s err: %v", name, err)
+				log.Debugf("helm get all values %s err: %v", name, err)
 				return nil
 			}
 			host := getMapValue(getMap(getMap(releaseValue, "global"), "ingress"), "host")
