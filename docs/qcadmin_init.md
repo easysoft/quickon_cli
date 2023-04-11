@@ -21,14 +21,14 @@ qcadmin init [flags]
       --ip string             quickon ip
       --master stringArray    master ip list, e.g: 192.168.0.1:22
       --oss                   quickon mode (default true)
-      --password string       quickon console password (default "KI8XiaTeoWU2bRyPQPZAEcIKKmI7HAxS")
+      --password string       quickon console password (default "ddiTmC7He6OT8LgpJQRnjzGL5ylZ5wHL")
       --pkfile string         ssh private key, if not set, will use password
       --pkpass string         ssh private key password
       --pod-cidr string       k8s cluster pod cidr (default "10.42.0.0/16")
       --service-cidr string   k8s cluster service cidr (default "10.43.0.0/16")
       --skip-precheck         skip precheck
   -u, --username string       ssh user (default "root")
-      --version string        quickon version(oss: stable-2.6/ee: stable-1.0) (default "stable-2.6")
+      --version string        quickon version(oss: stable-2.6/ee: stable-1.0)
       --worker stringArray    worker ip list, e.g: 192.168.0.1:22
 ```
 

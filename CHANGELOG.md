@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.0.1 (2023-04-11)
+
+ * [c2a6ff7](https://github.com/easysoft/quickon_cli/commit/c2a6ff7f7c6c85f134af294b3d1eeb8654a29756) fix(typo): fix oss2.6 app install message typo
+ * [d1887b5](https://github.com/easysoft/quickon_cli/commit/d1887b5cf72a27d7c9324581b76a55cd98dbb267) fix(version): fix version typo
+ * [dc6807e](https://github.com/easysoft/quickon_cli/commit/dc6807e6a5cdffdb71eb77e05b2e0b6786298db9) feat(update): fix scripts download path
+ * [7a89e1a](https://github.com/easysoft/quickon_cli/commit/7a89e1a12a0e150dda07c7fe5e38cf06410eb3de) fix(quickon): add quickon typo
+
+### Contributors
+
+ * ysicing
+
 ## v2.0.0-beta.7 (2023-04-07)
 
  * [f464193](https://github.com/easysoft/quickon_cli/commit/f4641939f997bd5222d5cb1a7297d02585fdfac3) fix(helm): fix helm install: if a directory with the same name already exists in the current directory
