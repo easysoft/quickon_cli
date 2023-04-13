@@ -15,7 +15,7 @@ on:
     paths:
       - '**.go'
       - 'go.mod'
-      - '.github/**'
+      - '.gitea/**'
   pull_request:
     branches:
       - "*"
@@ -31,9 +31,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: https://ghproxy.com/https://github.com/actions/checkout@v3
       - name: Setup Go
-        uses: actions/setup-go@v4
+        uses: https://ghproxy.com/https://github.com/actions/setup-go@v4
         with:
           go-version: ${{ env.GO_VERSION }}
       - name: install gox
@@ -46,7 +46,7 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y upx
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v4
+        uses: https://ghproxy.com/https://github.com/goreleaser/goreleaser-action@v4
         with:
           version: latest
           args: release --rm-dist
