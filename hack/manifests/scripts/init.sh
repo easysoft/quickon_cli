@@ -16,9 +16,20 @@ if type apt >/dev/null 2>&1; then
 fi
 
 if type yum >/dev/null 2>&1; then
-	yum install -y -q nfs-utils iptables conntrack jq socat bash-completion rsync ipset ipvsadm htop net-tools wget libseccomp2 psmisc git curl nload ebtables ethtool
+	yum install -y -q nfs-utils iptables conntrack jq socat bash-completion rsync ipset ipvsadm htop net-tools wget psmisc git curl nload ebtables ethtool
   yum --setopt=tsflags=noscripts install -y -q iscsi-initiator-utils
   systemctl enable --now iscsid
+  systemctl disable firewalld || true
+  systemctl stop firewalld || true
+  systemctl mask firewalld || true
+  #  systemctl disable NetworkManager
+  #  systemctl stop NetworkManager
+  status=$(getenforce)
+  if [ "$status" != "Disabled" ]; then
+    setenforce 0
+    cp /etc/selinux/config /etc/selinux/config.bak
+    sed -i 's/^SELINUX=.*/SELINUX=disabled/g' /etc/selinux/config
+  fi
 fi
 
 if command -v systemctl; then
