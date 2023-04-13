@@ -39,16 +39,8 @@ builds:
     goarch:
       - amd64
       - arm64
-      # - mips
-      # - mipsle
-      # - s390x
-      # - riscv64
-    # gomips:
-    #   - softfloat
-    # hooks:
-    #   post:
-    #     - upx -9 -f -q "{{ .Path }}"
     main: main.go
+    id: qcadmin
     binary: qcadmin
 archives:
   - format: binary
@@ -60,23 +52,23 @@ snapshot:
 
 nfpms:
 - file_name_template: 'qcadmin_{{ .Tag }}_{{ .Os }}_{{ .Arch }}'
+  builds:
+  - qcadmin
+  package_name: qcadmin
+  priority: optional
+  vendor: https://github.com/easysoft/quickon_cli
   homepage: https://www.qucheng.com
   version_metadata: git
   description: |-
     Cloud Native application delivery platform cli
-  maintainer: qucheng
-  license: MIT
-  vendor: https://github.com/easysoft/quickon_cli
+  maintainer: easysoft
+  license: AGPL-3.0
   formats:
-  # - apk
   - deb
   - rpm
   bindir: /usr/bin
   section: utils
   contents:
-    - src: /usr/bin/qcadmin
-      dst: /usr/bin/q
-      type: symlink
     - src: ./completions/q.bash
       dst: /usr/share/bash-completion/completions/q
       file_info:
@@ -137,6 +129,14 @@ nfpms:
         mode: 0644
         owner: notRoot
         group: notRoot
+    - dst: /root/.qc
+      type: dir
+  scripts:
+    preinstall: ./hack/packaging/preinstall.sh
+    postinstall: ./hack/packaging/postinstall.sh
+    preremove: ./hack/packaging/preremove.sh
+    postremove: ./hack/packaging/postremove.sh
+
 changelog:
   sort: asc
   filters:
@@ -147,24 +147,10 @@ changelog:
       - '^feat(ci):'
       - '^chore(ci):'
       - '^chore(action):'
-      - Merge pull request
-      - Merge branch
-      - go mod tidy
-  groups:
-    - title: 'New Features'
-      regexp: "^.*feat[(\\w)]*:+.*$"
-      order: 0
-    - title: 'Bug fixes'
-      regexp: "^.*fix[(\\w)]*:+.*$"
-      order: 10
-    - title: Other work
-      order: 999
+      - '^Merge remote'
 
 release:
-  # If set to true, will not auto-publish the release.
-  # Default is false.
-  github:
-    owner: easysoft
-    name: quickon_cli
+  prerelease: auto
+  replace_existing_draft: true
+  mode: replace
 
-  name_template: "v{{ .Version }}"
