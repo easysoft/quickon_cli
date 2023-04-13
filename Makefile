@@ -9,7 +9,8 @@ GOPROXY = https://goproxy.cn,direct
 GOSUMDB = sum.golang.google.cn
 
 BUILD_RELEASE   ?= $(shell cat VERSION || echo "0.0.1")
-BUILD_DATE := $(shell date "+%F %T")
+BUILD_DATE := $(shell date "+%Y%m%d")
+GIT_BRANCH := $(shell  git branch -r --contains | head -1 | sed -E -e "s%(HEAD ->|origin|upstream)/?%%g" | xargs)
 GIT_COMMIT := $(shell git rev-parse --short HEAD || echo "abcdefgh")
 APP_VERSION := ${BUILD_RELEASE}-${BUILD_DATE}-${GIT_COMMIT}
 
@@ -104,3 +105,7 @@ legacy: # legacy code check
 
 snapshot: ## local test goreleaser
 	goreleaser release --snapshot --clean --skip-publish
+
+fix-version:
+	@echo "fix version"
+	cat examples/sonar-project.properties | sed "s#2.0.0#${APP_VERSION}#g" > sonar-project.properties
