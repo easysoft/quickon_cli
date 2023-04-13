@@ -23,5 +23,6 @@ func newCmdDebug(f factory.Factory) *cobra.Command {
 		Long:   fmt.Sprintf("\"%s debug\" contains misc debug facilities; it is not a stable interface.", os.Args[0]),
 	}
 	debugCmd.AddCommand(debug.HostInfoCommand(f))
+	debugCmd.AddCommand(debug.IngressNoHostCommand(f))
 	return debugCmd
 }

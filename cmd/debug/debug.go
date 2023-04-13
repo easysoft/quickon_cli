@@ -7,11 +7,22 @@
 package debug
 
 import (
-	"github.com/easysoft/qcadmin/internal/pkg/cli/helm"
+	"encoding/json"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/spf13/cobra"
+	"os"
+	hinfo "tailscale.com/hostinfo"
 )
 
 func HostInfoCommand(f factory.Factory) *cobra.Command {
-	return helm.EmbedCommand(f)
+	return &cobra.Command{
+		Use:   "hostinfo",
+		Short: "print hostinfo",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			hi := hinfo.New()
+			j, _ := json.MarshalIndent(hi, "", "  ")
+			os.Stdout.Write(j)
+			return nil
+		},
+	}
 }
