@@ -10,9 +10,10 @@ if type apt >/dev/null 2>&1; then
 	apt remove -y -qq ufw lxd lxd-client lxcfs lxc-common
 	apt install --no-install-recommends --no-install-suggests -y -qq nfs-common iptables conntrack jq socat bash-completion open-iscsi rsync ipset ipvsadm htop net-tools wget libseccomp2 psmisc git curl nload ebtables ethtool
   systemctl enable --now iscsid
-  # ufw
-  # sudo ufw allow from 10.42.0.0/16 to any
-  # sudo ufw allow from 10.43.0.0/16 to any
+  # ufw disable
+  # ufw allow 6443/tcp #apiserver
+  # ufw allow from 10.42.0.0/16 to any #pods
+  # ufw allow from 10.43.0.0/16 to any #services
 fi
 
 if type yum >/dev/null 2>&1; then

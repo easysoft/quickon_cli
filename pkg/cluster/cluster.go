@@ -64,7 +64,7 @@ func NewCluster(f factory.Factory) *Cluster {
 	}
 }
 
-func (c *Cluster) getSSHFlags() []types.Flag {
+func (c *Cluster) GetSSHFlags() []types.Flag {
 	return []types.Flag{
 		{
 			Name:      "username",
@@ -92,6 +92,11 @@ func (c *Cluster) getSSHFlags() []types.Flag {
 			V:     c.SSH.PkPasswd,
 			Usage: "ssh private key password",
 		},
+	}
+}
+
+func (c *Cluster) GetIPFlags() []types.Flag {
+	return []types.Flag{
 		{
 			Name:  "master",
 			P:     &c.MasterIPs,
@@ -137,7 +142,8 @@ func (c *Cluster) getMasterFlags() []types.Flag {
 }
 
 func (c *Cluster) GetMasterFlags() []types.Flag {
-	fs := c.getSSHFlags()
+	fs := c.GetSSHFlags()
+	fs = append(fs, c.GetIPFlags()...)
 	fs = append(fs, c.getMasterFlags()...)
 	return fs
 }
@@ -257,11 +263,12 @@ func (c *Cluster) joinNode(ip string, master bool, cfg *config.Config, sshClient
 	k3sargs := k3stpl.K3sArgs{
 		Master0:      false,
 		TypeMaster:   master,
+		CNI:          cfg.Cluster.CNI,
 		KubeAPI:      "kubeapi.k7s.local",
 		KubeToken:    cfg.Cluster.Token,
 		DataDir:      cfg.DataDir,
-		PodCIDR:      "",
-		ServiceCIDR:  "",
+		PodCIDR:      cfg.Cluster.PodCIDR,
+		ServiceCIDR:  cfg.Cluster.ServiceCIDR,
 		DataStore:    cfg.DB,
 		LocalStorage: true,
 	}
@@ -282,6 +289,9 @@ func (c *Cluster) joinNode(ip string, master bool, cfg *config.Config, sshClient
 		cfg.Cluster.Worker = append(cfg.Cluster.Worker, config.Node{
 			Host: ip,
 		})
+	}
+	if cfg.Global.SSH.User == "" {
+		cfg.Global.SSH = c.SSH
 	}
 	return cfg.SaveConfig()
 }
@@ -318,6 +328,14 @@ func (c *Cluster) InitNode() error {
 		}
 	}
 	return nil
+}
+
+func (c *Cluster) CheckAuthExist() bool {
+	cfg, _ := config.LoadConfig()
+	if cfg.Global.SSH.Passwd == "" || cfg.Global.SSH.Pk == "" || cfg.Global.SSH.PkData == "" {
+		return false
+	}
+	return true
 }
 
 func (c *Cluster) JoinNode() error {

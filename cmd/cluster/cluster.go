@@ -49,15 +49,25 @@ func InitCommand(f factory.Factory) *cobra.Command {
 
 func JoinCommand(f factory.Factory) *cobra.Command {
 	cluster := cluster.NewCluster(f)
+	authStatus := cluster.CheckAuthExist()
 	join := &cobra.Command{
 		Use:   "join",
 		Short: "join cluster",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if !authStatus && (len(cluster.SSH.Passwd) == 0 && len(cluster.SSH.Pk) == 0) {
+				return errors.New("missing ssh user or passwd or pk")
+			}
+			return nil
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return cluster.JoinNode()
 		},
 	}
-	join.Flags().StringSliceVar(&cluster.MasterIPs, "master", nil, "ips, like 192.168.0.1:22")
-	join.Flags().StringSliceVar(&cluster.WorkerIPs, "worker", nil, "ips, like 192.168.0.1:22")
+	fs := cluster.GetIPFlags()
+	if !authStatus {
+		fs = append(fs, cluster.GetSSHFlags()...)
+	}
+	join.Flags().AddFlagSet(flags.ConvertFlags(join, fs))
 	return join
 }
 
