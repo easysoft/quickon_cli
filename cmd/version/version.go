@@ -8,13 +8,14 @@ package version
 
 import (
 	"fmt"
-	"github.com/easysoft/qcadmin/internal/app/config"
 	"os"
 	"runtime"
 	"strings"
 	"text/tabwriter"
 	"text/template"
 	"time"
+
+	"github.com/easysoft/qcadmin/internal/app/config"
 
 	gv "github.com/Masterminds/semver/v3"
 	"github.com/cockroachdb/errors"

@@ -652,7 +652,7 @@ func (c *Client) ExecPodWithTTY(ctx context.Context, namespace, podName, contain
 		io.Writer
 	}{os.Stdin, os.Stdout}
 
-	err = exec.Stream(remotecommand.StreamOptions{
+	err = exec.StreamWithContext(ctx, remotecommand.StreamOptions{
 		Stdin:  screen,
 		Stdout: screen,
 		Stderr: screen,

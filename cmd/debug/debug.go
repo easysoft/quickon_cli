@@ -8,10 +8,11 @@ package debug
 
 import (
 	"encoding/json"
+	"os"
+
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/hostinfo"
 	"github.com/spf13/cobra"
-	"os"
 )
 
 func HostInfoCommand(f factory.Factory) *cobra.Command {
