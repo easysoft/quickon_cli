@@ -1,43 +1,50 @@
-## qcadmin experimental kubectl kustomize
+## qcadmin experimental kubectl events
 
-Build a kustomization target from a directory or URL.
+List events
 
 ### Synopsis
 
-Build a set of KRM resources using a 'kustomization.yaml' file. The DIR argument must be a path to a directory containing 'kustomization.yaml', or a git repository URL with a path suffix specifying same with respect to the repository root. If DIR is omitted, '.' is assumed.
+Display events
+
+ Prints a table of the most important information about events. You can request events for a namespace, for all namespace, or filtered to only those pertaining to a specified resource.
 
 ```
-qcadmin experimental kubectl kustomize DIR [flags]
+qcadmin experimental kubectl events [(-o|--output=)json|yaml|name|go-template|go-template-file|template|templatefile|jsonpath|jsonpath-as-json|jsonpath-file] [--for TYPE/NAME] [--watch] [--event=Normal,Warning]
 ```
 
 ### Examples
 
 ```
-  # Build the current working directory
-  kubectl kustomize
+  # List recent events in the default namespace.
+  kubectl events
   
-  # Build some shared configuration directory
-  kubectl kustomize /home/config/production
+  # List recent events in all namespaces.
+  kubectl events --all-namespaces
   
-  # Build from github
-  kubectl kustomize https://github.com/kubernetes-sigs/kustomize.git/examples/helloWorld?ref=v1.0.6
+  # List recent events for the specified pod, then wait for more events and list them as they arrive.
+  kubectl events --for pod/web-pod-13je7 --watch
+  
+  # List recent events in given format. Supported ones, apart from default, are json and yaml.
+  kubectl events -oyaml
+  
+  # List recent only events in given event types
+  kubectl events --types=Warning,Normal
 ```
 
 ### Options
 
 ```
-      --as-current-user          use the uid and gid of the command executor to run the function in the container
-      --enable-alpha-plugins     enable kustomize plugins
-      --enable-helm              Enable use of the Helm chart inflator generator.
-  -e, --env stringArray          a list of environment variables to be used by functions
-      --helm-command string      helm command (path to executable) (default "helm")
-  -h, --help                     help for kustomize
-      --load-restrictor string   if set to 'LoadRestrictionsNone', local kustomizations may load files from outside their root. This does, however, break the relocatability of the kustomization. (default "LoadRestrictionsRootOnly")
-      --mount stringArray        a list of storage options read from the filesystem
-      --network                  enable network access for functions that declare it
-      --network-name string      the docker network to run the container in (default "bridge")
-  -o, --output string            If specified, write output to this path.
-      --reorder string           Reorder the resources just before output. Use 'legacy' to apply a legacy reordering (Namespaces first, Webhooks last, etc). Use 'none' to suppress a final reordering. (default "legacy")
+  -A, --all-namespaces                If present, list the requested object(s) across all namespaces. Namespace in current context is ignored even if specified with --namespace.
+      --allow-missing-template-keys   If true, ignore any errors in templates when a field or map key is missing in the template. Only applies to golang and jsonpath output formats. (default true)
+      --chunk-size int                Return large lists in chunks rather than all at once. Pass 0 to disable. This flag is beta and may change in the future. (default 500)
+      --for string                    Filter events to only those pertaining to the specified resource.
+  -h, --help                          help for events
+      --no-headers                    When using the default output format, don't print headers.
+  -o, --output string                 Output format. One of: (json, yaml, name, go-template, go-template-file, template, templatefile, jsonpath, jsonpath-as-json, jsonpath-file).
+      --show-managed-fields           If true, keep the managedFields when printing objects in JSON or YAML format.
+      --template string               Template string or path to template file to use when -o=go-template, -o=go-template-file. The template format is golang templates [http://golang.org/pkg/text/template/#pkg-overview].
+      --types strings                 Output only events of given types.
+  -w, --watch                         After listing the requested events, watch for more events.
 ```
 
 ### Options inherited from parent commands
