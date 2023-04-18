@@ -9,9 +9,9 @@ package debug
 import (
 	"encoding/json"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+	"github.com/easysoft/qcadmin/internal/pkg/util/hostinfo"
 	"github.com/spf13/cobra"
 	"os"
-	hinfo "tailscale.com/hostinfo"
 )
 
 func HostInfoCommand(f factory.Factory) *cobra.Command {
@@ -19,7 +19,7 @@ func HostInfoCommand(f factory.Factory) *cobra.Command {
 		Use:   "hostinfo",
 		Short: "print hostinfo",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			hi := hinfo.New()
+			hi := hostinfo.New()
 			j, _ := json.MarshalIndent(hi, "", "  ")
 			os.Stdout.Write(j)
 			return nil
