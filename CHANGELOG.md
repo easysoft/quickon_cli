@@ -1,5 +1,27 @@
 # Changelog
 
+## v2.0.2 (2023-04-18)
+
+ * [7602db8](https://github.com/easysoft/quickon_cli/commit/7602db8a8aea2eb079313b181c50c0e999b5fa7d) fix(cluster): fix cluster join master failed
+ * [34feb5a](https://github.com/easysoft/quickon_cli/commit/34feb5a88ae0c56cf780ef31283b52ab1c8b43da) chore(ci): update ci
+ * [2a3ca2e](https://github.com/easysoft/quickon_cli/commit/2a3ca2e3f06c26f31f21555499ea5fddf7727430) fix(build): fix debug build
+ * [db28008](https://github.com/easysoft/quickon_cli/commit/db28008d1d6d31013f965459b6f3b1b0158e347b) build(deps): bump github.com/Masterminds/semver/v3 from 3.2.0 to 3.2.1 (#155)
+ * [67f3775](https://github.com/easysoft/quickon_cli/commit/67f3775121fd2d5d6469c93229675f2e13a777cc) feat(debug): add debug model
+ * [baa38c6](https://github.com/easysoft/quickon_cli/commit/baa38c61796cbb7517bf7c6d75484568518f21eb) fix(k8s): fix k8s version match expected regular expression
+ * [7c5da8b](https://github.com/easysoft/quickon_cli/commit/7c5da8be2cd5d0003cb3405982089268b7620363) fix(build): fix build & imp scan
+ * [3b0f3e9](https://github.com/easysoft/quickon_cli/commit/3b0f3e9b3cae5dd3a36d7ed269fed13d1e9f61eb) chore(sonar): add sonar scan
+ * [4c06fcc](https://github.com/easysoft/quickon_cli/commit/4c06fcce8a84562a5fe1d99ae96d197cb0aa9cc3) feat(mod): update go.mod
+ * [5385cba](https://github.com/easysoft/quickon_cli/commit/5385cba3d3ce68742fa13bdbf821d6ff79bad465) fix(package): fix deb & rpm package
+ * [2a13b16](https://github.com/easysoft/quickon_cli/commit/2a13b16206e6a51a1f079d53632a3b03cfb5e709) fix(action): fix gitea action
+ * [b5c9d86](https://github.com/easysoft/quickon_cli/commit/b5c9d8686393826759c985f6994b789d69f1e54d) feat(action): add gitea action
+ * [05a1003](https://github.com/easysoft/quickon_cli/commit/05a100323a4a2116b2eea5398db13a46603746f5) fix(init): fix init script
+ * [dd319c7](https://github.com/easysoft/quickon_cli/commit/dd319c70b16f87d41f653c4636102df43970c2c4) build(deps): bump github.com/shirou/gopsutil/v3 from 3.23.1 to 3.23.3 (#149)
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v2.0.1 (2023-04-11)
 
  * [c2a6ff7](https://github.com/easysoft/quickon_cli/commit/c2a6ff7f7c6c85f134af294b3d1eeb8654a29756) fix(typo): fix oss2.6 app install message typo
