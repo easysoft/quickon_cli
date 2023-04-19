@@ -13,3 +13,4 @@ patch.diff
 hack/manifests/service
 *.out
 .scannerwork
+sonar-project.properties

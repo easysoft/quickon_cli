@@ -108,4 +108,8 @@ snapshot: ## local test goreleaser
 
 fix-version:
 	@echo "fix version"
-	cat examples/sonar-project.properties | sed "s#2.0.0#${APP_VERSION}#g" > sonar-project.properties
+	cat examples/sonar-project.properties.example | sed "s#2.0.0#${APP_VERSION}#g" > sonar-project.properties
+
+fix-local-version:
+	@echo "fix version"
+	cat examples/sonar-project.properties.example | sed "s#2.0.0#${APP_VERSION}#g" | sed "s#quickon#pangu#g" > sonar-project.properties
