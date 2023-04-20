@@ -64,6 +64,7 @@ replace (
 	k8s.io/component-base => k8s.io/component-base v0.26.4
 	k8s.io/kubectl => k8s.io/kubectl v0.26.4
 	k8s.io/metrics => k8s.io/metrics v0.26.4
+	tailscale.com => tailscale.com v1.38.4
 )
 
 require (

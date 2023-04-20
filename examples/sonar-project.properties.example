@@ -1,3 +1,4 @@
 sonar.projectKey=qcadmin
 sonar.organization=quickon
 sonar.projectVersion=2.0.0
+sonar.exclusions=**/internal/static/**
