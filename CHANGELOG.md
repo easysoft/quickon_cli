@@ -1,5 +1,17 @@
 # Changelog
 
+## v2.0.3 (2023-04-22)
+
+ * [9ad9fb9](https://github.com/easysoft/quickon_cli/commit/9ad9fb9928abab99cf02396b12f7cd3412702a50) fix(upgrade): fix q upgrade from github
+ * [ffeeca6](https://github.com/easysoft/quickon_cli/commit/ffeeca6c08b79cb82bd163787c687299632540a3) feat(report): imp bug-report script
+ * [454cb1e](https://github.com/easysoft/quickon_cli/commit/454cb1ed09a1821fb7308f5c16604dfa9cbb6314) fix(#160): fix not found kubeconfig
+ * [137d47b](https://github.com/easysoft/quickon_cli/commit/137d47bb9f29a2f358a5f1cde73c9f017e2d1390) fix(jenkins): fix jenkins scan
+ * [f7acd99](https://github.com/easysoft/quickon_cli/commit/f7acd998c95d6829fff3a8e920084bba9d536912) feat(jenkins): add jenkins
+
+### Contributors
+
+ * ysicing
+
 ## v2.0.2 (2023-04-18)
 
  * [7602db8](https://github.com/easysoft/quickon_cli/commit/7602db8a8aea2eb079313b181c50c0e999b5fa7d) fix(cluster): fix cluster join master failed
