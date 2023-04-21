@@ -15,12 +15,11 @@ create_link() {
 
 summary() {
 	echo "----------------------------------------------------------------------"
-	echo "quickon package has been successfully installed."
+	echo "Quickon package has been successfully installed."
 	echo ""
 	echo " Please follow the next steps to start the software:"
 	echo ""
-	echo "    q init --help"
-	echo ""
+	echo "    q --help"
 	echo ""
 	echo "----------------------------------------------------------------------"
 }

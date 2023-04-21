@@ -164,7 +164,7 @@ func (c *Cluster) preinit(mip, ip string, sshClient ssh.Interface) error {
 		}
 	}
 
-	if err := sshClient.CmdAsync(ip, "/usr/local/bin/qcadmin version"); err != nil {
+	if err := sshClient.CmdAsync(ip, "/usr/bin/qcadmin version"); err != nil {
 		return errors.Errorf("load q version failed, reason: %v", err)
 	}
 	c.log.StartWait(ip + " start run init script")
@@ -174,7 +174,7 @@ func (c *Cluster) preinit(mip, ip string, sshClient ssh.Interface) error {
 	c.log.StopWait()
 	c.log.Donef("%s run init script success", ip)
 	// add master0 ip
-	hostsArgs := fmt.Sprintf("/usr/local/bin/qcadmin exp tools hosts add --domain kubeapi.k7s.local --ip %s", mip)
+	hostsArgs := fmt.Sprintf("/usr/bin/qcadmin exp tools hosts add --domain kubeapi.k7s.local --ip %s", mip)
 	if err := sshClient.CmdAsync(ip, hostsArgs); err != nil {
 		c.log.Debugf("cmd: %s", hostsArgs)
 		return errors.Errorf("%s add master0 (kubeapi.k7s.local --> %s) failed, reason: %v", ip, mip, err)

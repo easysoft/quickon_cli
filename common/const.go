@@ -76,7 +76,7 @@ const (
 	KubectlBinPath           = "/usr/local/bin/kubectl"
 	CRICrictl                = "/usr/local/bin/crictl"
 	CRICtr                   = "/usr/local/bin/ctr"
-	QcAdminBinPath           = "/usr/local/bin/qcadmin"
+	QcAdminBinPath           = "/usr/bin/qcadmin"
 	StatusWaitDuration       = 5 * time.Minute
 	WaitRetryInterval        = 5 * time.Second
 	DefaultHelmRepoName      = "install"
