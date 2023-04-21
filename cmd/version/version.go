@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"github.com/easysoft/qcadmin/internal/app/config"
+	"github.com/ergoapi/util/github"
 
 	gv "github.com/Masterminds/semver/v3"
 	"github.com/cockroachdb/errors"
@@ -114,7 +115,33 @@ func (v versionInfo) ServerDeployed() bool {
 }
 
 // PreCheckLatestVersion 检查最新版本
-func PreCheckLatestVersion() (string, error) {
+func PreCheckLatestVersion(log logpkg.Logger) (version, t string, err error) {
+	version, _ = checkLastVersionFromGithub()
+	if version != "" {
+		log.Debugf("fetch version from github: %s", version)
+		return version, "github", nil
+	}
+	version, err = checkLatestVersionFromAPI()
+	if err != nil {
+		return version, "api", err
+	}
+	log.Debugf("fetch version from api: %s", version)
+	return version, "api", nil
+}
+
+func checkLastVersionFromGithub() (string, error) {
+	pkg := github.Pkg{
+		Owner: "easysoft",
+		Repo:  "quickon_cli",
+	}
+	tag, err := pkg.LastTag()
+	if err != nil {
+		return "", err
+	}
+	return tag.Name, nil
+}
+
+func checkLatestVersionFromAPI() (string, error) {
 	lastVersion := &versionGet{}
 	client := req.C().SetLogger(nil).SetUserAgent(common.GetUG()).SetTimeout(time.Second * 5)
 	_, err := client.R().SetResult(lastVersion).Get(common.GetAPI("/api/release/last/qcadmin"))
@@ -150,33 +177,30 @@ func ShowVersion(log logpkg.Logger) {
 			Arch:         runtime.GOARCH,
 			Experimental: true,
 		},
-		Server: serverVersion{
-			ServerType: common.QuickonOSSType,
-		},
 	}
-	cfg, _ := config.LoadConfig()
-	if cfg != nil && cfg.Quickon.Type != "" {
-		vd.Server.ServerType = cfg.Quickon.Type
-	}
+
 	log.StartWait("check update...")
-	lastversion, err := PreCheckLatestVersion()
+	lastVersion, lastType, err := PreCheckLatestVersion(log)
 	log.StopWait()
 	if err != nil {
 		log.Debugf("get update message err: %v", err)
 		return
 	}
-	if lastversion != "" && !strings.Contains(common.Version, lastversion) {
-		nowversion := gv.MustParse(strings.TrimPrefix(common.Version, "v"))
-		needupgrade := nowversion.LessThan(gv.MustParse(lastversion))
-		// log.Debugf("lastversion: %s(%v), nowversion: %s(%v), needupgrade: %v", lastversion, gv.MustParse(lastversion), common.Version, nowversion, needupgrade)
-		if needupgrade {
+	if lastVersion != "" && !strings.Contains(common.Version, lastVersion) {
+		nowVersion := gv.MustParse(strings.TrimPrefix(common.Version, "v"))
+		needUpgrade := nowVersion.LessThan(gv.MustParse(lastVersion))
+		if needUpgrade {
 			vd.Client.CanUpgrade = true
-			vd.Client.LastVersion = lastversion
+			vd.Client.LastVersion = lastVersion
 			vd.Client.Version = color.SGreen(vd.Client.Version)
-			vd.Client.UpgradeMessage = fmt.Sprintf("Now you can use %s to upgrade cli to the latest version %s", color.SGreen("%s upgrade q", os.Args[0]), color.SGreen(lastversion))
+			vd.Client.UpgradeMessage = fmt.Sprintf("Now you can use %s to upgrade cli to the latest version %s by %s mode", color.SGreen("%s upgrade q", os.Args[0]), color.SGreen(lastVersion), color.SGreen(lastType))
 		}
 	}
 	if file.CheckFileExists(common.GetCustomConfig(common.InitFileName)) {
+		cfg, _ := config.LoadConfig()
+		if cfg != nil && cfg.Quickon.Type != "" {
+			vd.Server.ServerType = cfg.Quickon.Type
+		}
 		qv, err := upgrade.QuchengVersion()
 		if err == nil {
 			vd.Server.Components = &qv

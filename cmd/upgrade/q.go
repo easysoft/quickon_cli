@@ -44,7 +44,7 @@ func NewUpgradeQ(f factory.Factory) *cobra.Command {
 
 func (up option) DoQcadmin() {
 	up.log.StartWait("fetch latest version from remote...")
-	lastVersion, err := version.PreCheckLatestVersion()
+	lastVersion, lastType, err := version.PreCheckLatestVersion(up.log)
 	up.log.StopWait()
 	if err != nil {
 		up.log.Errorf("fetch latest version err, reason: %v", err)
@@ -61,6 +61,9 @@ func (up option) DoQcadmin() {
 	}
 	up.log.StartWait(fmt.Sprintf("downloading version %s...", lastVersion))
 	assetURL := fmt.Sprintf("https://pkg.qucheng.com/qucheng/cli/stable/qcadmin_%s_%s", runtime.GOOS, runtime.GOARCH)
+	if lastType == "github" {
+		assetURL = fmt.Sprintf("https://ghproxy.com/https://github.com/easysoft/quickon_cli/releases/download/%s/qcadmin_%s_%s", lastVersion, runtime.GOOS, runtime.GOARCH)
+	}
 	err = selfupdate.UpdateTo(up.log, assetURL, cmdPath)
 	up.log.StopWait()
 	if err != nil {
