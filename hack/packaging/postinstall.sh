@@ -1,11 +1,14 @@
 #!/bin/sh
 # Determine OS platform
 # shellcheck source=/dev/null
-. /etc/os-release
 
 create_link() {
   # shellcheck disable=SC2015
 	[ -f "/usr/bin/q" ] && rm -rf /usr/bin/q || true
+	# shellcheck disable=SC2015
+	[ -f "/usr/local/bin/q" ] && rm -rf /usr/local/bin/q || true
+	# shellcheck disable=SC2015
+	[ -f "/usr/local/bin/qcadmin" ] && rm -rf /usr/local/bin/qcadmin || true
   # shellcheck disable=SC2015
   [ -f "/usr/bin/qcadmin" ] && ln -s /usr/bin/qcadmin /usr/bin/q || true
 }

@@ -234,13 +234,13 @@ func (c *Cluster) waitk3sReady(host string, sshClient ssh.Interface) error {
 		try++
 		c.log.Debugf("the %d/%d time tring to check k8s status", try, defaultBackoff.Steps)
 		// TODO 地址错误问题
-		err := sshClient.Copy(host, "/etc/rancher/k3s/k3s.yaml", common.GetDefaultNewKubeConfig())
+		err := sshClient.Copy(host, "/etc/rancher/k3s/k3s.yaml", common.DefaultQuickONKubeConfig())
 		if err != nil {
 			return false, nil
 		}
 		// 本地不存在config文件, 同步最新的kubeconfig文件
-		if !file.CheckFileExists(common.GetDefaultKubeConfig()) {
-			if err := sshClient.Copy(host, common.GetDefaultNewKubeConfig(), common.GetDefaultKubeConfig()); err != nil {
+		if !file.CheckFileExists(common.DefaultKubeConfig()) {
+			if err := sshClient.Copy(host, common.DefaultQuickONKubeConfig(), common.DefaultKubeConfig()); err != nil {
 				return false, nil
 			}
 		}
@@ -395,7 +395,7 @@ func (c *Cluster) DeleteNode() error {
 	cfg, _ := config.LoadConfig()
 	var wg sync.WaitGroup
 	sshClient := ssh.NewSSHClient(&cfg.Global.SSH, true)
-	kubeClient, err := k8s.NewSimpleClient(common.GetDefaultNewKubeConfig())
+	kubeClient, err := k8s.NewSimpleClient(common.GetKubeConfig())
 	if err != nil {
 		return errors.Errorf("load k8s client failed, reason: %v", err)
 	}

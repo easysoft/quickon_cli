@@ -22,7 +22,6 @@ import (
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
-	"github.com/ergoapi/util/file"
 	"github.com/gofrs/flock"
 	"helm.sh/helm/v3/cmd/helm/search"
 	"helm.sh/helm/v3/pkg/action"
@@ -57,9 +56,7 @@ func NewClient(config *Config) (*Client, error) {
 	settings := cli.New()
 	client := &Client{}
 	settings.SetNamespace(config.Namespace)
-	if !file.CheckFileExists(common.GetDefaultKubeConfig()) {
-		settings.KubeConfig = common.GetDefaultNewKubeConfig()
-	}
+	settings.KubeConfig = common.GetKubeConfig()
 	settings.RepositoryCache = common.GetDefaultCacheDir()
 	client.settings = settings
 	actionConfig := &action.Configuration{}

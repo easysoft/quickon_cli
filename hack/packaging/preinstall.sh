@@ -1,7 +1,6 @@
 #!/bin/sh
 # Determine OS platform
 # shellcheck source=/dev/null
-. /etc/os-release
 
 ensure_sudo() {
 	if [ "$(id -u)" = "0" ]; then

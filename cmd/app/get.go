@@ -34,9 +34,8 @@ func NewCmdAppGet(f factory.Factory) *cobra.Command {
 			if err != nil {
 				return err
 			}
-			extargs := []string{"exp", "kubectl", "get", "-o", "wide", "pods,deploy,pvc,svc,ing", "-l", "release=" + appdata.K8Name, "--kubeconfig", common.GetDefaultNewKubeConfig()}
-			// extargs = append(extargs, args...)
-			return qcexec.CommandRun(os.Args[0], extargs...)
+			extArgs := []string{"exp", "kubectl", "get", "-o", "wide", "pods,deploy,pvc,svc,ing", "-l", "release=" + appdata.K8Name, "--kubeconfig", common.GetKubeConfig()}
+			return qcexec.CommandRun(os.Args[0], extArgs...)
 		},
 	}
 	app.Flags().BoolVar(&useip, "api-useip", false, "api use ip")

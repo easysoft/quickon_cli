@@ -134,12 +134,12 @@ func domainAdd(f factory.Factory) *cobra.Command {
 			if err := helmClient.UpdateRepo(); err != nil {
 				log.Warnf("update repo failed, reason: %v", err)
 			}
-			if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/hack/haogstls/haogs.yaml", common.GetDefaultDataDir()), "-n", common.GetDefaultSystemNamespace(true), "--kubeconfig", common.GetDefaultNewKubeConfig()).Run(); err != nil {
+			if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/hack/haogstls/haogs.yaml", common.GetDefaultDataDir()), "-n", common.GetDefaultSystemNamespace(true), "--kubeconfig", common.GetKubeConfig()).Run(); err != nil {
 				log.Warnf("load tls cert for %s failed, reason: %v", common.GetDefaultSystemNamespace(true), err)
 			} else {
 				log.Donef("load tls cert for %s success", common.GetDefaultSystemNamespace(true))
 			}
-			if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/hack/haogstls/haogs.yaml", common.GetDefaultDataDir()), "-n", "default", "--kubeconfig", common.GetDefaultNewKubeConfig()).Run(); err != nil {
+			if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", fmt.Sprintf("%s/hack/haogstls/haogs.yaml", common.GetDefaultDataDir()), "-n", "default", "--kubeconfig", common.GetKubeConfig()).Run(); err != nil {
 				log.Warnf("load tls cert for default failed, reason: %v", err)
 			} else {
 				log.Done("load tls cert for default success")

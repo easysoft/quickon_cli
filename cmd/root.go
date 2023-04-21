@@ -242,12 +242,3 @@ func HandlePluginCommand(pluginHandler PluginHandler, cmdArgs []string) error {
 
 	return nil
 }
-
-// func initConfig() {
-// 	if globalFlags.ConfigPath == "" {
-// 		globalFlags.ConfigPath = common.GetDefaultConfig()
-// 	}
-// 	viper.SetConfigFile(globalFlags.ConfigPath)
-// 	viper.AutomaticEnv()
-// 	viper.ReadInConfig()
-// }

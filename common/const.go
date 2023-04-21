@@ -172,7 +172,7 @@ ExecStart=/usr/local/bin/k3s \
     {{if not .Master0 -}}
       --server https://{{ .KubeAPI }}:6443 \
     {{end -}}
-      --data-dir {{.DataDir}} \
+			--data-dir {{.DataDir}} \
       --docker \
       --pause-image hub.qucheng.com/library/rancher/mirrored-pause:3.6 \
       --kube-proxy-arg "proxy-mode=ipvs" "masquerade-all=true" \

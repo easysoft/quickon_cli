@@ -8,7 +8,6 @@ package common
 
 import (
 	"fmt"
-	"os"
 	"runtime"
 	"strings"
 
@@ -99,25 +98,26 @@ func GetDefaultConfig() string {
 	return home + "/" + DefaultCfgDir + "/cluster.yaml"
 }
 
-func GetDefaultKubeConfig() string {
+func DefaultKubeConfig() string {
 	d := fmt.Sprintf("%v/.kube", zos.GetHomeDir())
-	os.MkdirAll(d, FileMode0644)
+	// os.MkdirAll(d, FileMode0644)
 	return fmt.Sprintf("%v/config", d)
 }
 
-func GetDefaultNewKubeConfig() string {
+func DefaultQuickONKubeConfig() string {
 	home := zos.GetHomeDir()
 	d := home + "/" + DefaultCfgDir + "/.kube"
-	os.MkdirAll(d, FileMode0644)
+	// os.MkdirAll(d, FileMode0644)
 	return fmt.Sprintf("%v/config", d)
 }
 
+// GetKubeConfig get kubeconfig
 func GetKubeConfig() string {
-	kubecfg := GetDefaultNewKubeConfig()
-	if file.CheckFileExists(kubecfg) {
-		return kubecfg
+	kubeCfg := DefaultQuickONKubeConfig()
+	if file.CheckFileExists(kubeCfg) {
+		return kubeCfg
 	}
-	return GetDefaultKubeConfig()
+	return DefaultKubeConfig()
 }
 
 func GetCustomConfig(name string) string {
