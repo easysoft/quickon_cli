@@ -12,7 +12,7 @@ require (
 	github.com/docker/docker v23.0.3+incompatible
 	github.com/easysoft/quickon-api v0.6.1
 	github.com/emirpasic/gods v1.18.1
-	github.com/ergoapi/util v0.3.18
+	github.com/ergoapi/util v0.3.19
 	github.com/gofrs/flock v0.8.1
 	github.com/gosuri/uitable v0.0.4
 	github.com/imroc/req/v3 v3.30.0
