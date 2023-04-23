@@ -38,6 +38,12 @@ type Config struct {
 	Cluster         Cluster   `yaml:"cluster" json:"cluster"`
 	DataDir         string    `yaml:"datadir" json:"datadir"`
 	Quickon         Quickon   `yaml:"quickon" json:"quickon"`
+	Install         Install   `yaml:"install,omitempty" json:"install,omitempty"`
+}
+
+type Install struct {
+	Type string `yaml:"type" json:"type"`
+	Pkg  string `yaml:"pkg" json:"pkg"`
 }
 
 type Quickon struct {

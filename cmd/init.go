@@ -53,7 +53,7 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 		name = "incluster"
 		initCmd.Long = `Found k8s config, run this command in order to set up Quickon Control Plane`
 	} else {
-		fs = append(fs, nCluster.GetMasterFlags()...)
+		fs = append(fs, nCluster.GetInitFlags()...)
 		initCmd.Long = `Run this command in order to set up the Kubernetes & Quickon Control Plane`
 	}
 	initCmd.Flags().AddFlagSet(flags.ConvertFlags(initCmd, fs))

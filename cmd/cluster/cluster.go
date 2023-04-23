@@ -43,7 +43,7 @@ func InitCommand(f factory.Factory) *cobra.Command {
 			return cluster.InitNode()
 		},
 	}
-	init.Flags().AddFlagSet(flags.ConvertFlags(init, cluster.GetMasterFlags()))
+	init.Flags().AddFlagSet(flags.ConvertFlags(init, cluster.GetInitFlags()))
 	return init
 }
 

@@ -49,6 +49,7 @@ type Cluster struct {
 	DataDir     string
 	PodCIDR     string
 	ServiceCIDR string
+	OffLine     bool
 }
 
 func NewCluster(f factory.Factory) *Cluster {
@@ -61,7 +62,27 @@ func NewCluster(f factory.Factory) *Cluster {
 		SSH: types.SSH{
 			User: "root",
 		},
+		OffLine: false,
 	}
+}
+
+func (c *Cluster) getInitFlags() []types.Flag {
+	return []types.Flag{
+		{
+			Name:  "offline",
+			P:     &c.OffLine,
+			V:     c.OffLine,
+			Usage: `offline install, only whitelist users are supported`,
+		},
+	}
+}
+
+func (c *Cluster) GetInitFlags() []types.Flag {
+	fs := c.GetSSHFlags()
+	fs = append(fs, c.GetIPFlags()...)
+	fs = append(fs, c.getMasterFlags()...)
+	fs = append(fs, c.getInitFlags()...)
+	return fs
 }
 
 func (c *Cluster) GetSSHFlags() []types.Flag {
@@ -224,6 +245,12 @@ func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error
 		Init: true,
 	})
 	cfg.Cluster.Token = k3sargs.KubeToken
+	if c.OffLine {
+		cfg.Install.Type = "offline"
+		cfg.Install.Pkg = common.GetDefaultDataDir()
+	} else {
+		cfg.Install.Type = "online"
+	}
 	return cfg.SaveConfig()
 }
 
