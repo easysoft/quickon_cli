@@ -82,6 +82,7 @@ const (
 	DefaultHelmRepoName      = "install"
 	DefaultSystem            = "cne-system"
 	DefaultSystemNamespace   = "quickon-system"
+	DefaultStorageNamespace  = "quickon-storage"
 	DefaultAppNamespace      = "quickon-app"
 	DefaultCINamespace       = "quickon-ci"
 	DefaultQuchengName       = "qucheng"

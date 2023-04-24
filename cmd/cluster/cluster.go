@@ -114,3 +114,16 @@ func StatusCommand(f factory.Factory) *cobra.Command {
 	status.AddCommand(statussubcmd.TopNodeCmd())
 	return status
 }
+
+func StorageCommand(f factory.Factory) *cobra.Command {
+	storage := &cobra.Command{
+		Use:     "csi",
+		Aliases: []string{"storage"},
+		Short:   "cluster csi",
+		Hidden:  true,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return nil
+		},
+	}
+	return storage
+}
