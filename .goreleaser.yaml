@@ -5,15 +5,11 @@ project_name: qcadmin
 env:
   - GO111MODULE=on
 
-# gomod:
-#   proxy: true
-
 before:
   hooks:
     - make generate
     - ./hack/scripts/gencompletions.sh
     - ./hack/scripts/genmanpages.sh
-    # - make default
 builds:
   - ldflags:
       - -w -s -X github.com/easysoft/qcadmin/common.Version={{.Summary}}
@@ -136,7 +132,6 @@ nfpms:
     postinstall: ./hack/packaging/postinstall.sh
     preremove: ./hack/packaging/preremove.sh
     postremove: ./hack/packaging/postremove.sh
-
 changelog:
   sort: asc
   filters:

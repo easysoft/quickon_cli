@@ -4,7 +4,7 @@
 // (2) Affero General Public License 3.0 (AGPL 3.0)
 // license that can be found in the LICENSE file.
 
-//go:generate hack/scripts/getbin.sh
+//go:generate hack/scripts/getk3s.sh
 //go:generate go run internal/pkg/cli/codegen/codegen.go
 
 package main
