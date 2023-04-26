@@ -27,7 +27,10 @@
 
 ### 容器运行时
 
-默认使用k3s内置的`Containerd`, 如果本地已经安装docker，则优先使用docker, 不推荐使用`docker`
+- 内置`containerd`
+- docker(本地已安装)
+
+> 多节点时不推荐混用
 
 ### k8s/k3s版本
 

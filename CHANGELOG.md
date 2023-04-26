@@ -1,5 +1,21 @@
 # Changelog
 
+## v2.0.4 (2023-04-26)
+
+ * [321d51a](https://github.com/easysoft/quickon_cli/commit/321d51a1b18c9f9fc538a9c3469e40f7dfb4662b) fix(#2): fix clean cluster failed
+ * [c9b50b4](https://github.com/easysoft/quickon_cli/commit/c9b50b4f4ee3d27beba34f938cf7d1af2e8f6e4b) style(docs): update docs & fmt code
+ * [9cf8f1e](https://github.com/easysoft/quickon_cli/commit/9cf8f1e83f30ba2903f7b4851c7a43a7f9fed74b) chore(gitea): add gitea action
+ * [8259919](https://github.com/easysoft/quickon_cli/commit/8259919ef1b662a760ecfac0c36ed8954bf4b95e) feat(script): add longhorn
+ * [9ffcf73](https://github.com/easysoft/quickon_cli/commit/9ffcf73c47ae570d864e0e26742995235235b9fb) fix(script): add openebs jiva install
+ * [d164103](https://github.com/easysoft/quickon_cli/commit/d16410351bfc5effee8cc6bb66eb8d361324a828) fix(typo): fix build
+ * [730c989](https://github.com/easysoft/quickon_cli/commit/730c98925b6c67a1e2c6e868d1aeeea3c54be913) style(plugin): imp root explugin load func
+ * [c82edbd](https://github.com/easysoft/quickon_cli/commit/c82edbd3a06b8a5e4b3480c2391a01fa4547e610) feat(update): imp install
+ * [606bdb0](https://github.com/easysoft/quickon_cli/commit/606bdb002e7fbb18d572a2db36f085e1c5d199b6) feat(update): fix version
+
+### Contributors
+
+ * ysicing
+
 ## v2.0.3 (2023-04-22)
 
  * [9ad9fb9](https://github.com/easysoft/quickon_cli/commit/9ad9fb9928abab99cf02396b12f7cd3412702a50) fix(upgrade): fix q upgrade from github
