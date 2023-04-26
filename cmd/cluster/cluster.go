@@ -12,6 +12,7 @@ import (
 	statussubcmd "github.com/easysoft/qcadmin/cmd/status"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/pkg/cluster"
+	"github.com/ergoapi/util/confirm"
 	"github.com/ergoapi/util/exnet"
 	"github.com/spf13/cobra"
 )
@@ -93,11 +94,18 @@ func DeleteCommand(f factory.Factory) *cobra.Command {
 
 func CleanCommand(f factory.Factory) *cobra.Command {
 	cluster := cluster.NewCluster(f)
+	log := f.GetLog()
 	clean := &cobra.Command{
-		Use:   "clean",
-		Short: "clean cluster",
+		Use:     "clean",
+		Short:   "clean cluster",
+		Version: "2.0.4",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return cluster.Clean()
+			status, _ := confirm.Confirm("Are you sure to clean cluster")
+			if status {
+				return cluster.Clean()
+			}
+			log.Donef("cancel clean cluster")
+			return nil
 		},
 	}
 	return clean

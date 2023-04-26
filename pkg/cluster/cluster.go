@@ -14,6 +14,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/ergoapi/util/exnet"
+
 	"k8s.io/apimachinery/pkg/util/wait"
 
 	"github.com/cockroachdb/errors"
@@ -323,8 +325,14 @@ func (c *Cluster) joinNode(ip string, master bool, cfg *config.Config, sshClient
 	return cfg.SaveConfig()
 }
 
+func (c *Cluster) CheckNodeInitStatus(master, node string, sshClient ssh.Interface) error {
+	// TODO 检查是否已经初始化过
+	c.log.Infof("check node %s init status", node)
+	return nil
+}
+
 func (c *Cluster) InitNode() error {
-	c.log.Info("init node")
+	c.log.Info("start init cluster node")
 	c.MasterIPs = exstr.DuplicateStrElement(c.MasterIPs)
 	c.WorkerIPs = exstr.DuplicateStrElement(c.WorkerIPs)
 	otherMaster := c.MasterIPs[1:]
@@ -442,9 +450,14 @@ func (c *Cluster) DeleteNode() error {
 func (c *Cluster) Clean() error {
 	c.log.Info("start clean cluster")
 	cfg, _ := config.LoadConfig()
+	ips := cfg.GetIPs()
+	if len(ips) == 0 {
+		ips = append(ips, exnet.LocalIPs()[0])
+	}
 	sshClient := ssh.NewSSHClient(&cfg.Global.SSH, true)
 	var wg sync.WaitGroup
-	for _, ip := range cfg.GetIPs() {
+	for _, ip := range ips {
+		c.log.Debugf("clean node %s", ip)
 		wg.Add(1)
 		go c.cleanNode(ip, sshClient, &wg)
 	}
