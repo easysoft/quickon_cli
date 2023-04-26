@@ -259,7 +259,7 @@ func (m *Meta) Init() error {
 	} else {
 		m.log.Infof("use custom domain %s, you should add dns record to your domain: *.%s -> %s", m.Domain, color.SGreen(m.Domain), color.SGreen(m.IP))
 	}
-	token := expass.RandomPassword(32)
+	token := expass.PwGenAlphaNum(32)
 	cfg, _ := config.LoadConfig()
 	cfg.Domain = m.Domain
 	cfg.APIToken = token
@@ -316,7 +316,7 @@ func (m *Meta) Init() error {
 	m.log.Done("install quickon success")
 	m.QuickONReady()
 	initFile := common.GetCustomConfig(common.InitFileName)
-	if err := file.Writefile(initFile, "init done", true); err != nil {
+	if err := file.WriteFile(initFile, "init done", true); err != nil {
 		m.log.Warnf("write init done file failed, reason: %v.\n\t please run: touch %s", err, initFile)
 	}
 	m.Show()

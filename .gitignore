@@ -14,6 +14,7 @@ hack/manifests/service
 *.out
 .scannerwork
 sonar-project.properties
+vendor
 
 go.work
 go.work.sum

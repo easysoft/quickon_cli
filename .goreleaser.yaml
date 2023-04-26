@@ -10,6 +10,7 @@ before:
     - make generate
     - ./hack/scripts/gencompletions.sh
     - ./hack/scripts/genmanpages.sh
+
 builds:
   - ldflags:
       - -w -s -X github.com/easysoft/qcadmin/common.Version={{.Summary}}
@@ -38,11 +39,14 @@ builds:
     main: main.go
     id: qcadmin
     binary: qcadmin
+
 archives:
   - format: binary
     name_template: "qcadmin_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+
 checksum:
   name_template: 'checksums.txt'
+
 snapshot:
   name_template: "{{ .Version }}-snapshot-{{ .ShortCommit }}"
 
@@ -132,6 +136,7 @@ nfpms:
     postinstall: ./hack/packaging/postinstall.sh
     preremove: ./hack/packaging/preremove.sh
     postremove: ./hack/packaging/postremove.sh
+
 changelog:
   sort: asc
   filters:
@@ -148,4 +153,3 @@ release:
   prerelease: auto
   replace_existing_draft: true
   mode: replace
-

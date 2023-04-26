@@ -32,5 +32,5 @@ func main() {
 	if err != nil {
 		return
 	}
-	file.Writefile("VERSION", strings.TrimPrefix(version.Next(tag.Name, false, false, true), "v"), true)
+	file.WriteFile("VERSION", strings.TrimPrefix(version.Next(tag.Name, false, false, true), "v"), true)
 }

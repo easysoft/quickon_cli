@@ -119,7 +119,7 @@ func canonicalLocalPath(s string) (string, error) {
 		}
 		return res, nil
 	}
-	return zos.HomeExpand(s)
+	return zos.ExpandPath(s), nil
 }
 
 // downloadByWget used wget

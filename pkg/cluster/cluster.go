@@ -223,7 +223,7 @@ func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error
 	}
 	master0tplSrc := fmt.Sprintf("%s/master0.%s", common.GetDefaultCacheDir(), cfg.Cluster.InitNode)
 	master0tplDst := fmt.Sprintf("/%s/.k3s.service", c.SSH.User)
-	file.Writefile(master0tplSrc, k3sargs.Manifests(""), true)
+	file.WriteFile(master0tplSrc, k3sargs.Manifests(""), true)
 	if err := sshClient.Copy(cfg.Cluster.InitNode, master0tplSrc, master0tplDst); err != nil {
 		return errors.Errorf("copy master0 %s tpl failed, reason: %v", cfg.Cluster.InitNode, err)
 	}
@@ -301,7 +301,7 @@ func (c *Cluster) joinNode(ip string, master bool, cfg *config.Config, sshClient
 	}
 	tplSrc := fmt.Sprintf("%s/%s.%s", common.GetDefaultCacheDir(), t, ip)
 	tplDst := fmt.Sprintf("/%s/.k3s.service", c.SSH.User)
-	file.Writefile(tplSrc, k3sargs.Manifests(""), true)
+	file.WriteFile(tplSrc, k3sargs.Manifests(""), true)
 	if err := sshClient.Copy(ip, tplSrc, tplDst); err != nil {
 		return errors.Errorf("%s copy tpl (%s:%s->%s:%s) failed, reason: %v", t, cfg.Cluster.InitNode, tplSrc, ip, tplDst, err)
 	}
