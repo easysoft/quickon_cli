@@ -7,8 +7,13 @@
 package main
 
 import (
+	"strings"
+
 	"github.com/easysoft/qcadmin/cmd"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+	"github.com/ergoapi/util/file"
+	"github.com/ergoapi/util/github"
+	"github.com/ergoapi/util/version"
 	"github.com/spf13/cobra/doc"
 )
 
@@ -19,4 +24,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	pkg := github.Pkg{
+		Owner: "easysoft",
+		Repo:  "quickon_cli",
+	}
+	tag, err := pkg.LastTag()
+	if err != nil {
+		return
+	}
+	file.WriteFile("VERSION", strings.TrimPrefix(version.Next(tag.Name, false, false, true), "v"), true)
 }
