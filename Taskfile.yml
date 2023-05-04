@@ -49,7 +49,6 @@ tasks:
   gofmt:
     cmds:
       - go install golang.org/x/tools/cmd/goimports@latest
-      - go install golang.org/x/tools/cmd/gofmt@latest
       - gofmt -s -w .
       - goimports -w .
 
