@@ -1,0 +1,127 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GOPROXY: 'https://goproxy.cn,direct'
+  GOSUMDB: sum.golang.google.cn
+  VERSION_PKG: github.com/easysoft/qcadmin/common
+  ROOT_DIR: $(pwd)
+  BUILD_DIR: $(pwd)/_output
+  BIN_DIR: $(pwd)/bin
+  BUILD_RELEASE: v$(cat VERSION || echo "0.0.1")
+  BUILD_DATE: $(date +%Y%m%d)
+  GIT_BRANCH: $(git branch -r --contains | head -1 | sed -E -e "s%(HEAD ->|origin|upstream)/?%%g" | xargs)
+  GIT_COMMIT: $(git rev-parse --short HEAD || echo "abcdefgh")
+  LOCAL_OS: $(go version | awk '{print $NF}')
+  GOOS: $(go env GOOS)
+  GOARCH: $(go env GOARCH)
+  LDFLAGS: "-w -s \
+    -X '{{.VERSION_PKG}}.Version={{.BUILD_RELEASE}}' \
+    -X '{{.VERSION_PKG}}.BuildDate={{.BUILD_DATE}}' \
+    -X '{{.VERSION_PKG}}.GitCommitHash={{.GIT_COMMIT}}' \
+    -X 'k8s.io/client-go/pkg/version.gitVersion={{.BUILD_RELEASE}}' \
+    -X 'k8s.io/client-go/pkg/version.gitCommit={{.GIT_COMMIT}}' \
+    -X 'k8s.io/client-go/pkg/version.gitTreeState=dirty' \
+    -X 'k8s.io/client-go/pkg/version.buildDate={{.BUILD_DATE}}' \
+    -X 'k8s.io/client-go/pkg/version.gitMajor=1' \
+    -X 'k8s.io/client-go/pkg/version.gitMinor=24' \
+    -X 'k8s.io/component-base/version.gitVersion={{.BUILD_RELEASE}}' \
+    -X 'k8s.io/component-base/version.gitCommit={{.GIT_COMMIT}}' \
+    -X 'k8s.io/component-base/version.gitTreeState=dirty' \
+    -X 'k8s.io/component-base/version.gitMajor=1' \
+    -X 'k8s.io/component-base/version.gitMinor=24' \
+    -X 'k8s.io/component-base/version.buildDate={{.BUILD_DATE}}'"
+
+tasks:
+  gencopyright:
+    cmds:
+      - go install github.com/google/addlicense@latest
+      - hack/scripts/gencopyright.sh
+
+  godoc:
+    desc: update docs
+    cmds:
+      - rm -rf ./docs/*.md
+      - go run ./docs/docs.go
+      - cp -a README.md docs/index.md
+
+  gofmt:
+    cmds:
+      - go install golang.org/x/tools/cmd/goimports@latest
+      - go install golang.org/x/tools/cmd/gofmt@latest
+      - gofmt -s -w .
+      - goimports -w .
+
+  golint:
+    cmds:
+      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+      - golangci-lint run -v ./...
+
+  lint:
+    cmds:
+      - task: gofmt
+      - task: golint
+
+  fmt:
+    cmds:
+      - task: gencopyright
+      - task: godoc
+      - task: gofmt
+      - task: golint
+
+  generate:
+    desc: generate code
+    cmds:
+      - go generate ./...
+
+  linux:
+    desc: build linux for remote test
+    vars:
+      GOOS: linux
+      GOARCH: amd64
+    deps:
+      - generate
+    cmds:
+      - go install github.com/mitchellh/gox@latest
+      - gox -os={{.GOOS}} -arch={{.GOARCH}} -output="{{.BUILD_DIR}}/qcadmin_{{.GOOS}}_{{.GOARCH}}" -ldflags "{{.LDFLAGS}}"
+    status:
+      - test -f {{.BUILD_DIR}}/qcadmin_{{.GOOS}}_{{.GOARCH}}
+
+  local:
+    desc: build local for test
+    deps:
+      - generate
+    cmds:
+      - go install github.com/mitchellh/gox@latest
+      - gox -os={{.GOOS}} -arch={{.GOARCH}} -output="{{.BUILD_DIR}}/qcadmin_{{.GOOS}}_{{.GOARCH}}" -ldflags "{{.LDFLAGS}}"
+    status:
+      - test -f {{.BUILD_DIR}}/qcadmin_{{.GOOS}}_{{.GOARCH}}
+
+  clean:
+    desc: Clean Up Build Cache Files
+    cmds:
+      - rm -rf _output
+      - rm -rf dist
+
+  snapshot:
+    desc: Build Snapshot Version
+    cmds:
+      - task: clean
+      - go install github.com/goreleaser/goreleaser@latest
+      - goreleaser release --snapshot --clean --skip-publish
+
+  version-ci:
+    desc: ci fix version
+    cmds:
+      - cat examples/sonar-project.properties.example | sed "s#2.0.0#${APP_VERSION}#g" > sonar-project.properties
+
+  version-local:
+    desc: local fix version
+    cmds:
+      - cat examples/sonar-project.properties.example | sed "s#2.0.0#${APP_VERSION}#g" | sed "s#quickon#pangu#g" > sonar-project.properties
+
+  default:
+    cmds:
+      - task: linux
+

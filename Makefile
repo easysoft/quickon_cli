@@ -4,6 +4,8 @@ VERSION_PKG := github.com/easysoft/qcadmin/common
 ROOT_DIR := $(CURDIR)
 BUILD_DIR := $(ROOT_DIR)/_output
 BIN_DIR := $(BUILD_DIR)/bin
+LOCAL_OS := $(shell go version | awk '{print \$NF}')
+
 GO111MODULE = on
 GOPROXY = https://goproxy.cn,direct
 GOSUMDB = sum.golang.google.cn
@@ -83,7 +85,7 @@ dev: generate ## dev test
     		-ldflags ${LDFLAGS}
 
 local: ## dev test
-	GO_ENABLED=1 gox -os="darwin" -output="dist/{{.Dir}}_{{.OS}}_{{.Arch}}" -ldflags ${LDFLAGS}
+	GO_ENABLED=1 gox -osarch="darwin/arm64" -output="dist/{{.Dir}}_{{.OS}}_{{.Arch}}" -ldflags ${LDFLAGS}
 
 clean: ## clean
 	rm -rf dist

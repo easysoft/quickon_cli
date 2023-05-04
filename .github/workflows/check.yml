@@ -40,21 +40,19 @@ jobs:
         uses: magnetikonline/action-golang-cache@v4
         with:
           go-version-file: go.mod
-      - name: install addlicense
+      - name: install task
         run: |
-          echo "install addlicense"
-          go install github.com/google/addlicense@latest
+          echo "install task"
+          go install github.com/go-task/task/v3/cmd/task@latest
       - name: Run Check License
         run: |
-          export TZ='Asia/Shanghai'
-          export PATH=$PATH:$(go env GOPATH)/bin
-          make gencopyright
+          task gencopyright
           modifyCode=$(git status  -s | grep M | wc -l)
           git status  -s
           if [ $modifyCode -eq 0 ] ; then
              echo "Lic check ok"
           else
-             echo "Failed git modify files num is $modifyCode. Lic check error,please exec 'make gencopyright' in your code "
+             echo "Failed git modify files num is $modifyCode. Lic check error,please exec 'task gencopyright' in your code "
              exit -1
           fi
   lint:
@@ -72,16 +70,41 @@ jobs:
         uses: magnetikonline/action-golang-cache@v4
         with:
           go-version-file: go.mod
+      - name: install task
+        run: |
+          echo "install task"
+          go install github.com/go-task/task/v3/cmd/task@latest
       - name: Run Linter
-        run: make lint
+        run: |
+          task lint
+          modifyCode=$(git status  -s | grep M | wc -l)
+          git status  -s
+          if [ $modifyCode -eq 0 ] ; then
+              echo "Lic check ok"
+          else
+              echo "Failed git modify files num is $modifyCode. Lic check error,please exec 'task gencopyright' in your code "
+              exit -1
+          fi
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      - name: Cache Go Dependencies
+        uses: magnetikonline/action-golang-cache@v4
+        with:
+          go-version-file: go.mod
+      - name: install task
+        run: |
+          echo "install task"
+          go install github.com/go-task/task/v3/cmd/task@latest
       - name: fix version
         run: |
-          make fix-version
+          task version-ci
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:

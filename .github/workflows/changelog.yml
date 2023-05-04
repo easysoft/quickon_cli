@@ -25,9 +25,13 @@ jobs:
         uses: magnetikonline/action-golang-cache@v4
         with:
           go-version-file: go.mod
+      - name: install task
+        run: |
+          echo "install task"
+          go install github.com/go-task/task/v3/cmd/task@latest
       - name: Build docs
         run: |
-          make doc
+          task godoc
       - name: Publish docs
         uses: peaceiris/actions-gh-pages@v3
         with:

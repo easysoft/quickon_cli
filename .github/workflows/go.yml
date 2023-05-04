@@ -44,6 +44,10 @@ jobs:
         run: |
           echo "install gox"
           go install github.com/mitchellh/gox@latest
+      - name: install task
+        run: |
+          echo "install task"
+          go install github.com/go-task/task/v3/cmd/task@latest
       - name: install upx
         run: |
           echo "install upx"
@@ -51,12 +55,8 @@ jobs:
           sudo apt-get install -y upx
       - name: build qcadmin
         run: |
-          export TZ='Asia/Shanghai'
-          export PATH=$PATH:$(go env GOPATH)/bin
-          make generate
-          make build
-          # make upx
-          ./dist/qcadmin_linux_amd64 version
+          task linux
+          ./_output/qcadmin_linux_amd64 version
       - name: "Upload Binary"
         uses: actions/upload-artifact@v3
         with: { name: qcadmin_linux_amd64, path: dist/qcadmin_linux_amd64 }

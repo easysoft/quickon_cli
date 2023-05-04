@@ -18,3 +18,7 @@ vendor
 
 go.work
 go.work.sum
+
+_output
+bin
+.task
