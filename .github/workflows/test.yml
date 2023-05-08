@@ -29,7 +29,7 @@ on:
 
 jobs:
   build:
-    name: "PreBuild"
+    name: "build"
     timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
@@ -55,24 +55,8 @@ jobs:
       - name: build qcadmin
         run: |
           task linux
-          ./_output/qcadmin_linux_amd64 version
-      - name: "Upload Binary"
-        uses: actions/upload-artifact@v3
-        with: { name: qcadmin_linux_amd64, path: dist/qcadmin_linux_amd64 }
-
-  test:
-    name: "Smoke Test"
-    needs: build
-    timeout-minutes: 20
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: "Download Binary"
-        uses: actions/download-artifact@v3
-        with: { name: qcadmin_linux_amd64, path: dist/artifacts/ }
       - name: test qcadmin
-        working-directory: dist/artifacts/
         run: |
-          chmod +x qcadmin_linux_amd64
-          sudo ./qcadmin_linux_amd64 cluster init --debug
-          sudo ./qcadmin_linux_amd64 quickon init --domain local.demo --version test-2.6 --debug
+          ./_output/qcadmin_linux_amd64 version
+          sudo ./_output/qcadmin_linux_amd64 cluster init --debug
+          sudo ./_output/qcadmin_linux_amd64 quickon init --domain local.demo --version test-2.6 --debug
