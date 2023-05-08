@@ -1,12 +1,11 @@
-name: go
+name: build for test
 
 env:
   # Common versions
   GO_VERSION: '1.20'
   TZ: Asia/Shanghai
 
-permissions:
-  contents: read
+permissions: write-all
 
 on:
   push:
@@ -70,9 +69,9 @@ jobs:
       - uses: actions/checkout@v3
       - name: "Download Binary"
         uses: actions/download-artifact@v3
-        with: { name: qcadmin_linux_amd64, path: dist/artifacts/ }
+        with: { name: qcadmin_linux_amd64, path: dist }
       - name: test qcadmin
-        working-directory: dist/artifacts/
+        working-directory: dist
         run: |
           chmod +x qcadmin_linux_amd64
           sudo ./qcadmin_linux_amd64 cluster init --debug
