@@ -14,11 +14,11 @@ hack/manifests/service
 *.out
 .scannerwork
 sonar-project.properties
-vendor
+vendor/
 
 go.work
 go.work.sum
 
-_output
-bin
+_output/
+bin/
 .task

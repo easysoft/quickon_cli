@@ -1,8 +1,8 @@
-vendor
+vendor/
 .devcontainer
-.gitea
+.gitea/
 .github
-dist
+dist/
 completions
 hack/bin/k3s-*
 **/zz_*.go

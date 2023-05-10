@@ -84,8 +84,8 @@ tasks:
     cmds:
       - go install github.com/mitchellh/gox@latest
       - gox -os={{.GOOS}} -arch={{.GOARCH}} -output="{{.BUILD_DIR}}/qcadmin_{{.GOOS}}_{{.GOARCH}}" -ldflags "{{.LDFLAGS}}"
-    status:
-      - test -f {{.BUILD_DIR}}/qcadmin_{{.GOOS}}_{{.GOARCH}}
+#    status:
+#      - test -f {{.BUILD_DIR}}/qcadmin_{{.GOOS}}_{{.GOARCH}}
 
   local:
     desc: build local for test
@@ -94,8 +94,8 @@ tasks:
     cmds:
       - go install github.com/mitchellh/gox@latest
       - gox -os={{.GOOS}} -arch={{.GOARCH}} -output="{{.BUILD_DIR}}/qcadmin_{{.GOOS}}_{{.GOARCH}}" -ldflags "{{.LDFLAGS}}"
-    status:
-      - test -f {{.BUILD_DIR}}/qcadmin_{{.GOOS}}_{{.GOARCH}}
+#    status:
+#      - test -f {{.BUILD_DIR}}/qcadmin_{{.GOOS}}_{{.GOARCH}}
 
   clean:
     desc: Clean Up Build Cache Files
@@ -122,5 +122,6 @@ tasks:
 
   default:
     cmds:
+      - task: clean
       - task: linux
 
