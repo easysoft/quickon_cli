@@ -4,7 +4,7 @@ Initialize a Kubernetes & Quickon cluster
 
 ### Synopsis
 
-Found k8s config, run this command in order to set up Quickon Control Plane
+Run this command in order to set up the Kubernetes & Quickon Control Plane
 
 ```
 qcadmin init [flags]
@@ -13,14 +13,24 @@ qcadmin init [flags]
 ### Options
 
 ```
-      --app string        app name (default "zentao")
-      --domain string     quickon domain
-  -h, --help              help for init
-      --ip string         quickon ip
-      --oss               quickon mode (default true)
-      --password string   quickon console password (default "WTX1mhRvxBrirDSTJsI7Sz7VK9naEizK")
-      --skip-precheck     skip precheck
-      --version string    quickon version(oss: stable-2.6/ee: stable-1.0)
+      --app string            app name (default "zentao")
+      --cni string            k8s networking plugin, support flannel, wireguard, custom (default "flannel")
+      --data-dir string       cluster & quickon data dir (default "/opt/quickon")
+      --domain string         quickon domain
+  -h, --help                  help for init
+      --ip string             quickon ip
+      --master stringArray    master ip list, e.g: 192.168.0.1:22
+      --offline               offline install, only whitelist users are supported
+      --oss                   quickon mode (default true)
+      --password string       quickon console password (default "h1srotWpVgkuSl2wH6clb6b9JKX1WsYy")
+      --pkfile string         ssh private key, if not set, will use password
+      --pkpass string         ssh private key password
+      --pod-cidr string       k8s cluster pod cidr (default "10.42.0.0/16")
+      --service-cidr string   k8s cluster service cidr (default "10.43.0.0/16")
+      --skip-precheck         skip precheck
+  -u, --username string       ssh user (default "root")
+      --version string        quickon version(oss: stable-2.6/ee: stable-1.0)
+      --worker stringArray    worker ip list, e.g: 192.168.0.1:22
 ```
 
 ### Options inherited from parent commands
