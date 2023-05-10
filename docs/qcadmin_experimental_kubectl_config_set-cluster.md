@@ -49,7 +49,7 @@ qcadmin experimental kubectl config set-cluster NAME [--server=server] [--certif
       --as string                   Username to impersonate for the operation. User could be a regular user or a service account in a namespace.
       --as-group stringArray        Group to impersonate for the operation, this flag can be repeated to specify multiple groups.
       --as-uid string               UID to impersonate for the operation.
-      --cache-dir string            Default cache directory (default "/Users/ysicing/.kube/cache")
+      --cache-dir string            Default cache directory (default "/home/runner/.kube/cache")
       --client-certificate string   Path to a client certificate file for TLS
       --client-key string           Path to a client key file for TLS
       --cluster string              The name of the kubeconfig cluster to use

@@ -1,5 +1,23 @@
 # Changelog
 
+## v2.0.5 (2023-05-10)
+
+ * [ff86748](https://github.com/easysoft/quickon_cli/commit/ff8674861d16cc559a16ab78347b7501d34fbdce) feat(tap): add gentap script
+ * [fa25462](https://github.com/easysoft/quickon_cli/commit/fa2546285d92754bb16b9ef72a0072ceb9eb0096) feat(exp): add exp support install for linux
+ * [8e8ad0f](https://github.com/easysoft/quickon_cli/commit/8e8ad0f8ddf096fc5e4af337e2877a4f864ef402) chore(build): fix ci build typo
+ * [2819d47](https://github.com/easysoft/quickon_cli/commit/2819d47a4ba30a5ba124d996c8e11ba08761b21d) style(update): fmt code
+ * [b4e0c3c](https://github.com/easysoft/quickon_cli/commit/b4e0c3c2b87afe8b99fb470ea423dd0850fb1ae3) docs(update): update docs
+ * [4ac80eb](https://github.com/easysoft/quickon_cli/commit/4ac80ebe900a867524de6398636c0804d8b60adb) style(update): update code
+ * [a5f3adc](https://github.com/easysoft/quickon_cli/commit/a5f3adc3e11c93d1256e4f898e09bb2d016fa8b7) fix(action): fix action test for quickon
+ * [5097699](https://github.com/easysoft/quickon_cli/commit/5097699431b36dc6630ac7017abb77c469fc9c03) feat(action): fix github action
+ * [9e807a2](https://github.com/easysoft/quickon_cli/commit/9e807a2b78cd332dcafa7e18427169a22c25af50) feat(action): update
+ * [939eabc](https://github.com/easysoft/quickon_cli/commit/939eabc160f2af050f458cc633519d50052f641e) fix(typo): fix ci typo
+ * [2c03c9f](https://github.com/easysoft/quickon_cli/commit/2c03c9f5e27b889eaef1b8523513a675067bc1a0) feat(update): add task
+
+### Contributors
+
+ * ysicing
+
 ## v2.0.4 (2023-04-26)
 
  * [321d51a](https://github.com/easysoft/quickon_cli/commit/321d51a1b18c9f9fc538a9c3469e40f7dfb4662b) fix(#2): fix clean cluster failed
