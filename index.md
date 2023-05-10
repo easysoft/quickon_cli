@@ -18,7 +18,7 @@
 
 ### Linux 发行版
 
-* **Debian**  *11(推荐), 10*
+* **Debian**  *12, 11(推荐), 10*
 * **Rocky** *9, 8*
 * **Ubuntu**  *20.04, 18.04*
 * **CentOS**  *7*
@@ -63,8 +63,10 @@
 ```bash
 # Clone the repo
 # Build and run the executable
-make generate
-make build
+#make generate
+#make build
+task local
+task
 ```
 
 #### 2. 二进制安装
