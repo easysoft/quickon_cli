@@ -8,6 +8,7 @@ package cmd
 
 import (
 	"github.com/easysoft/qcadmin/cmd/experimental"
+	"github.com/ergoapi/util/zos"
 
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/spf13/cobra"
@@ -25,6 +26,8 @@ func newCmdExperimental(f factory.Factory) *cobra.Command {
 	experimentalCmd.AddCommand(experimental.SSHCommand(f))
 	experimentalCmd.AddCommand(experimental.SCPCommand(f))
 	experimentalCmd.AddCommand(experimental.K3sTPLCommand(f))
-	experimentalCmd.AddCommand(experimental.InstallCommand(f))
+	if zos.IsLinux() {
+		experimentalCmd.AddCommand(experimental.InstallCommand(f))
+	}
 	return experimentalCmd
 }

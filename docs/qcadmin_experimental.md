@@ -20,6 +20,7 @@ Experimental commands that may be modified or deprecated
 
 * [qcadmin](qcadmin.md)	 - Easily bootstrap a secure control plane for QuCheng
 * [qcadmin experimental helm](qcadmin_experimental_helm.md)	 - The Kubernetes package manager
+* [qcadmin experimental install](qcadmin_experimental_install.md)	 - install tools, like: helm, kubectl
 * [qcadmin experimental k3stpl](qcadmin_experimental_k3stpl.md)	 - 
 * [qcadmin experimental kubectl](qcadmin_experimental_kubectl.md)	 - Kubectl controls the Kubernetes cluster manager
 * [qcadmin experimental scp](qcadmin_experimental_scp.md)	 - scp util tool
