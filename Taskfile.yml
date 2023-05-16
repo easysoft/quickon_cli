@@ -65,7 +65,6 @@ tasks:
   fmt:
     cmds:
       - task: gencopyright
-      - task: godoc
       - task: gofmt
       - task: golint
 
