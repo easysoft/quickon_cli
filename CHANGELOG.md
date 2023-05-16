@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.0.6 (2023-05-16)
+
+ * [a4c3a87](https://github.com/easysoft/quickon_cli/commit/a4c3a87b60e70b40e43007298ce6bf53b985bedc) feat(debug): add debug gops
+ * [a93dfae](https://github.com/easysoft/quickon_cli/commit/a93dfae2bd8a89c7d363bd1aa74d838db52497c5) fix(copyright): fix fmt copyright
+
+### Contributors
+
+ * ysicing
+
 ## v2.0.5 (2023-05-10)
 
  * [ff86748](https://github.com/easysoft/quickon_cli/commit/ff8674861d16cc559a16ab78347b7501d34fbdce) feat(tap): add gentap script
