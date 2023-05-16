@@ -144,7 +144,7 @@ func checkLastVersionFromGithub() (string, error) {
 func checkLatestVersionFromAPI() (string, error) {
 	lastVersion := &versionGet{}
 	client := req.C().SetLogger(nil).SetUserAgent(common.GetUG()).SetTimeout(time.Second * 5)
-	_, err := client.R().SetResult(lastVersion).Get(common.GetAPI("/api/release/last/qcadmin"))
+	_, err := client.R().SetSuccessResult(lastVersion).Get(common.GetAPI("/api/release/last/qcadmin"))
 	if err != nil {
 		return "", err
 	}

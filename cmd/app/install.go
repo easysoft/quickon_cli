@@ -70,13 +70,13 @@ func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 				SetHeader("accept", "application/json").
 				SetHeader("TOKEN", cfg.APIToken).
 				SetBody(&Body{Chart: name, Domain: domain}).
-				SetResult(&result).
+				SetSuccessResult(&result).
 				Post(fmt.Sprintf("%s/instance-apiInstall.html", apiHost))
 			if err != nil {
 				log.Errorf("install app %s failed, reason: %v", name, err)
 				return fmt.Errorf("install app %s failed, reason: %v", name, err)
 			}
-			if !resp.IsSuccess() {
+			if !resp.IsSuccessState() {
 				log.Errorf("install app %s failed, reason: bad response status %v", name, resp.Status)
 				return fmt.Errorf("install app %s failed, reason: bad response status %v", name, resp.Status)
 			}

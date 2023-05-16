@@ -90,13 +90,13 @@ func NewResetPassword(f factory.Factory) *cobra.Command {
 				SetHeader("accept", "application/json").
 				SetHeader("TOKEN", cfg.APIToken).
 				SetBody(&Body{Password: password}).
-				SetResult(&result).
+				SetSuccessResult(&result).
 				Post(fmt.Sprintf("%s/admin-resetpassword.html", apiHost))
 			if err != nil {
 				log.Errorf("update password failed, reason: %v", err)
 				return
 			}
-			if !resp.IsSuccess() {
+			if !resp.IsSuccessState() {
 				log.Errorf("update password failed, reason: bad response status %v", resp.Status)
 				return
 			}

@@ -52,7 +52,7 @@ func SearchCustomDomain(iip, secretKey, domain string) string {
 	client := req.C().SetLogger(nil).SetUserAgent(common.GetUG())
 	_, err := client.R().
 		SetHeader("Content-Type", "application/json").
-		SetResult(&respbody).
+		SetSuccessResult(&respbody).
 		SetBody(&reqbody).
 		Post(common.GetAPI("/api/qdnsv2/oss/custom"))
 
@@ -77,7 +77,7 @@ func UpgradeTLSDDomain(iip, secretKey, domain string) error {
 	}
 	client := req.C().SetLogger(nil).SetUserAgent(common.GetUG())
 	_, err := client.R().
-		SetResult(&respbody).
+		SetSuccessResult(&respbody).
 		SetBody(&reqbody).
 		Post(common.GetAPI("/api/qdnsv2/oss/tls"))
 	return err
@@ -100,7 +100,7 @@ func GenerateDomain(iip, secretKey, domain string) (string, string, error) {
 	client := req.C().SetLogger(nil).SetUserAgent(common.GetUG())
 	_, err := client.R().
 		SetHeader("Content-Type", "application/json").
-		SetResult(&respbody).
+		SetSuccessResult(&respbody).
 		SetBody(&reqbody).
 		Post(common.GetAPI("/api/qdnsv2/oss/record"))
 

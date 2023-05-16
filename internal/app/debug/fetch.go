@@ -94,7 +94,7 @@ func GetNameByURL(url string, debug, useip bool) (*AppData, error) {
 	if err != nil {
 		return nil, fmt.Errorf("fetch api failed, reason: %v", err)
 	}
-	if !resp.IsSuccess() {
+	if !resp.IsSuccessState() {
 		return nil, fmt.Errorf("fetch api failed, reason: bad response status %v", resp.Status)
 	}
 	json.Unmarshal([]byte(resp.String()), &result)

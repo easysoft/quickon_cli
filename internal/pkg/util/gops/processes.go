@@ -17,6 +17,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ergoapi/util/exstr"
+
 	"github.com/google/gops/goprocess"
 	"github.com/shirou/gopsutil/v3/process"
 )
@@ -86,7 +88,7 @@ func pad(s string, total int) string {
 // ProcessInfo takes arguments starting with pid|:addr and grabs all kinds of
 // useful Go process information.
 func ProcessInfo(args []string) {
-	pid, _ := strconv.Atoi(args[0])
+	pid := exstr.Str2Int32(args[0])
 	var period time.Duration
 	var err error
 	if len(args) >= 2 {
@@ -99,11 +101,11 @@ func ProcessInfo(args []string) {
 	processInfo(pid, period)
 }
 
-func processInfo(pid int, period time.Duration) {
+func processInfo(pid int32, period time.Duration) {
 	if period < 0 {
 		log.Fatalf("Cannot determine CPU usage for negative duration %v", period)
 	}
-	p, err := process.NewProcess(int32(pid))
+	p, err := process.NewProcess(pid)
 	if err != nil {
 		log.Fatalf("Cannot read process info: %v", err)
 	}
