@@ -23,7 +23,7 @@ if type apt >/dev/null 2>&1; then
 fi
 
 if type yum >/dev/null 2>&1; then
-	yum install -y -q nfs-utils iptables conntrack jq socat bash-completion rsync ipset ipvsadm htop net-tools wget psmisc git curl nload ebtables ethtool
+	yum install -y -q nfs-utils iptables conntrack jq socat bash-completion rsync ipset ipvsadm htop net-tools wget psmisc git curl nload ebtables ethtool nfs-utils
   yum --setopt=tsflags=noscripts install -y -q iscsi-initiator-utils
   systemctl enable --now iscsid
   systemctl disable firewalld || true
