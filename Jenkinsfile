@@ -29,13 +29,13 @@ pipeline {
             success {
               container('xuanimbot') {
                 sh 'git config --global --add safe.directory $(pwd)'
-                sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%an)" --title "sonar scanner" --url "https://sonar.qc.oop.cc/dashboard?id=quickon_cli&branch=${GIT_BRANCH}" --content "sonar scanner quickon_cli success" --debug --custom'
+                sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "sonar scanner" --url "https://sonar.qc.oop.cc/dashboard?id=quickon_cli&branch=${GIT_BRANCH}" --content "sonar scanner quickon_cli success" --debug --custom'
               }
             }
             failure {
               container('xuanimbot') {
                 sh 'git config --global --add safe.directory $(pwd)'
-                sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%an)" --title "sonar scanner" --url "https://sonar.qc.oop.cc/dashboard?id=quickon_cli&branch=${GIT_BRANCH}" --content "sonar scanner quickon_cli failure" --debug --custom'
+                sh '/usr/local/bin/xuanimbot  --users "$(git show -s --format=%ce)" --title "sonar scanner" --url "https://sonar.qc.oop.cc/dashboard?id=quickon_cli&branch=${GIT_BRANCH}" --content "sonar scanner quickon_cli failure" --debug --custom'
               }
             }
           }
