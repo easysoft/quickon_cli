@@ -222,6 +222,8 @@ func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error
 		// TODO EE
 		DataStore:    "",
 		LocalStorage: true,
+		OffLine:      c.OffLine,
+		Master0IP:    cfg.Cluster.InitNode,
 	}
 	master0tplSrc := fmt.Sprintf("%s/master0.%s", common.GetDefaultCacheDir(), cfg.Cluster.InitNode)
 	master0tplDst := fmt.Sprintf("/%s/.k3s.service", c.SSH.User)

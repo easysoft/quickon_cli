@@ -8,6 +8,7 @@ package k3stpl
 
 import (
 	"bytes"
+	"github.com/ergoapi/util/exnet"
 	"html/template"
 	"os"
 
@@ -28,6 +29,8 @@ type K3sArgs struct {
 	DataDir      string
 	LocalStorage bool
 	CNI          string
+	OffLine      bool
+	Master0IP    string
 }
 
 func render(data K3sArgs, temp string) string {
@@ -54,6 +57,9 @@ func (k3s K3sArgs) Manifests(template string) string {
 	} else {
 		k3s.CNI = ""
 	}
+	if k3s.OffLine && len(k3s.Master0IP) == 0 {
+		k3s.Master0IP = exnet.LocalIPs()[0]
+	}
 	return render(k3s, template)
 }
 
@@ -79,5 +85,7 @@ func EmbedCommand(f factory.Factory) *cobra.Command {
 	rootCmd.Flags().StringVar(&k3sargs.KubeAPI, "kubeapi", "", "kubeapi")
 	rootCmd.Flags().BoolVar(&k3sargs.TypeMaster, "master", true, "master")
 	rootCmd.Flags().BoolVar(&k3sargs.Master0, "master0", false, "master0")
+	rootCmd.Flags().BoolVar(&k3sargs.OffLine, "offline", false, "offline")
+	rootCmd.Flags().StringVar(&k3sargs.Master0IP, "master0ip", "", "master0ip, only work offline mode")
 	return rootCmd
 }
