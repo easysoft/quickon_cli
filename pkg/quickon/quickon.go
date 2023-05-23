@@ -41,6 +41,7 @@ type Meta struct {
 	IP              string
 	Version         string
 	ConsolePassword string
+	OffLine         bool
 	QuickonOSS      bool
 	QuickonType     common.QuickonType
 	kubeClient      *k8s.Client
@@ -87,6 +88,12 @@ func (m *Meta) GetFlags() []types.Flag {
 			Usage: "quickon mode",
 			P:     &m.QuickonOSS,
 			V:     m.QuickonType == common.QuickonOSSType,
+		},
+		{
+			Name:  "offline",
+			Usage: "quickon offline install mode",
+			P:     &m.OffLine,
+			V:     false,
 		},
 	}
 }
@@ -303,6 +310,14 @@ func (m *Meta) Init() error {
 	} else {
 		hostdomain = fmt.Sprintf("console.%s", hostdomain)
 	}
+
+	if m.OffLine {
+		helmargs = append(helmargs, "--set", fmt.Sprintf("cloud.host=http://market-cne-market-api.quickon-system.svc:8088"))
+		helmargs = append(helmargs, "--set", fmt.Sprintf("env.CNE_MARKET_API_SCHEMA=http"))
+		helmargs = append(helmargs, "--set", fmt.Sprintf("env.CNE_MARKET_API_HOST=market-cne-market-api.quickon-system.svc"))
+		helmargs = append(helmargs, "--set", fmt.Sprintf("env.CNE_MARKET_API_PORT=8088"))
+	}
+
 	helmargs = append(helmargs, "--set", fmt.Sprintf("ingress.host=%s", hostdomain))
 
 	if len(chartVersion) > 0 {
@@ -314,6 +329,53 @@ func (m *Meta) Init() error {
 		return err
 	}
 	m.log.Done("install quickon success")
+	if m.OffLine {
+		// patch quickon
+		cmfileName := fmt.Sprintf("%s-%s-files", common.DefaultQuchengName, common.GetQuickONName(m.QuickonType))
+		m.log.Debugf("fetch quickon files from %s", cmfileName)
+		for i := 0; i < 20; i++ {
+			time.Sleep(5 * time.Second)
+			foundRepofiles, _ := m.kubeClient.GetConfigMap(ctx, common.GetDefaultSystemNamespace(true), cmfileName, metav1.GetOptions{})
+			if foundRepofiles != nil {
+				foundRepofiles.Data["repositories.yaml"] = fmt.Sprintf(`apiVersion: ""
+generated: "0001-01-01T00:00:00Z"
+repositories:
+- caFile: ""
+  certFile: ""
+  insecure_skip_tls_verify: true
+  keyFile: ""
+  name: qucheng-stable
+  pass_credentials_all: false
+  password: ""
+  url: http://%s:32377
+  username: ""
+`, exnet.LocalIPs()[0])
+				_, err := m.kubeClient.UpdateConfigMap(ctx, foundRepofiles, metav1.UpdateOptions{})
+				if err != nil {
+					m.log.Warnf("patch offline repo file, check: kubectl get cm/%s  -n %s", cmfileName, common.GetDefaultSystemNamespace(true))
+				}
+				// 重建pod
+				pods, _ := m.kubeClient.ListPods(ctx, common.GetDefaultSystemNamespace(true), metav1.ListOptions{})
+				podName := fmt.Sprintf("%-%", common.DefaultQuchengName, common.GetQuickONName(m.QuickonType))
+				for _, pod := range pods.Items {
+					if strings.HasPrefix(pod.Name, podName) {
+						if err := m.kubeClient.DeletePod(ctx, pod.Name, common.GetDefaultSystemNamespace(true), metav1.DeleteOptions{}); err != nil {
+							m.log.Warnf("recreate quickon pods")
+						}
+					}
+				}
+				break
+			}
+		}
+
+		// install cne-market
+		m.log.Infof("start deploy cne cne-market")
+		marketargs := []string{"experimental", "helm", "upgrade", "--name", "market", "--repo", common.DefaultHelmRepoName, "--chart", "cne-market-api", "--namespace", common.GetDefaultSystemNamespace(true)}
+		output, err := qcexec.Command(os.Args[0], marketargs...).CombinedOutput()
+		if err != nil {
+			m.log.Warnf("upgrade install quickon market failed: %s", string(output))
+		}
+	}
 	m.QuickONReady()
 	initFile := common.GetCustomConfig(common.InitFileName)
 	if err := file.WriteFile(initFile, "init done", true); err != nil {
