@@ -356,7 +356,7 @@ repositories:
 				}
 				// 重建pod
 				pods, _ := m.kubeClient.ListPods(ctx, common.GetDefaultSystemNamespace(true), metav1.ListOptions{})
-				podName := fmt.Sprintf("%-%", common.DefaultQuchengName, common.GetQuickONName(m.QuickonType))
+				podName := fmt.Sprintf("%s-%s", common.DefaultQuchengName, common.GetQuickONName(m.QuickonType))
 				for _, pod := range pods.Items {
 					if strings.HasPrefix(pod.Name, podName) {
 						if err := m.kubeClient.DeletePod(ctx, pod.Name, common.GetDefaultSystemNamespace(true), metav1.DeleteOptions{}); err != nil {

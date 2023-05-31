@@ -8,9 +8,10 @@ package k3stpl
 
 import (
 	"bytes"
-	"github.com/ergoapi/util/exnet"
 	"html/template"
 	"os"
+
+	"github.com/ergoapi/util/exnet"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"

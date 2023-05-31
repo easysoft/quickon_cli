@@ -35,6 +35,7 @@ vars:
 
 tasks:
   gencopyright:
+    desc: generate code license
     cmds:
       - go install github.com/google/addlicense@latest
       - hack/scripts/gencopyright.sh
@@ -58,11 +59,13 @@ tasks:
       - golangci-lint run -v ./...
 
   lint:
+    desc: lint code
     cmds:
       - task: gofmt
       - task: golint
 
   fmt:
+    desc: format code
     cmds:
       - task: gencopyright
       - task: gofmt
@@ -120,6 +123,7 @@ tasks:
       - cat examples/sonar-project.properties.example | sed "s#2.0.0#${APP_VERSION}#g" | sed "s#quickon#pangu#g" > sonar-project.properties
 
   default:
+    desc: default linux
     cmds:
       - task: clean
       - task: linux
