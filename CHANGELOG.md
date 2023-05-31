@@ -1,5 +1,18 @@
 # Changelog
 
+## v2.0.7 (2023-05-31)
+
+ * [2acf959](https://github.com/easysoft/quickon_cli/commit/2acf959ecc412c70a675675ff3c76599a5afad9b) fix(patch): fix typo
+ * [c2a5952](https://github.com/easysoft/quickon_cli/commit/c2a5952b2425cd1fcb64e996452ad588a312e0d9) feat(quickon): fix quickon offline
+ * [d54cf0e](https://github.com/easysoft/quickon_cli/commit/d54cf0e10c318e48083396582570b22cf4568aaa) fix(cluster): fix cluster offline typo
+ * [3628f6c](https://github.com/easysoft/quickon_cli/commit/3628f6c79f32be0962bcde268e1159d248ae9808) style(mod): update go mod
+ * [7b606ca](https://github.com/easysoft/quickon_cli/commit/7b606ca046178b65612e608f7d63e09900ae858d) fix(iptables): fix #164
+ * [ee7479f](https://github.com/easysoft/quickon_cli/commit/ee7479f4ce377697b1a39af64901b49fdf40c867) fix(sec): update go mod fix sec
+
+### Contributors
+
+ * ysicing
+
 ## v2.0.6 (2023-05-16)
 
  * [a4c3a87](https://github.com/easysoft/quickon_cli/commit/a4c3a87b60e70b40e43007298ce6bf53b985bedc) feat(debug): add debug gops
