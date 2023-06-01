@@ -32,6 +32,7 @@ type K3sArgs struct {
 	CNI          string
 	OffLine      bool
 	Master0IP    string
+	Registry     string
 }
 
 func render(data K3sArgs, temp string) string {
@@ -61,6 +62,9 @@ func (k3s K3sArgs) Manifests(template string) string {
 	if k3s.OffLine && len(k3s.Master0IP) == 0 {
 		k3s.Master0IP = exnet.LocalIPs()[0]
 	}
+	if k3s.Registry == "" {
+		k3s.Registry = "hub.qucheng.com"
+	}
 	return render(k3s, template)
 }
 
@@ -87,6 +91,8 @@ func EmbedCommand(f factory.Factory) *cobra.Command {
 	rootCmd.Flags().BoolVar(&k3sargs.TypeMaster, "master", true, "master type")
 	rootCmd.Flags().BoolVar(&k3sargs.Master0, "master0", false, "master0")
 	rootCmd.Flags().BoolVar(&k3sargs.OffLine, "offline", false, "offline")
+	rootCmd.Flags().BoolVar(&k3sargs.LocalStorage, "local-storage", true, "local-storage")
 	rootCmd.Flags().StringVar(&k3sargs.Master0IP, "master0ip", "", "master0ip, only work offline mode")
+	rootCmd.Flags().StringVar(&k3sargs.Registry, "registry", "hub.qucheng.com", "registry")
 	return rootCmd
 }

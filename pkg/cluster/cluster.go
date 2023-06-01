@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"strings"
 	"sync"
 	"time"
 
@@ -52,6 +53,9 @@ type Cluster struct {
 	PodCIDR     string
 	ServiceCIDR string
 	OffLine     bool
+	Registry    string
+	Storage     string
+	DataStore   string
 }
 
 func NewCluster(f factory.Factory) *Cluster {
@@ -64,7 +68,10 @@ func NewCluster(f factory.Factory) *Cluster {
 		SSH: types.SSH{
 			User: "root",
 		},
-		OffLine: false,
+		DataStore: "",
+		Storage:   "local",
+		Registry:  "hub.qucheng.com",
+		OffLine:   false,
 	}
 }
 
@@ -75,6 +82,26 @@ func (c *Cluster) getInitFlags() []types.Flag {
 			P:     &c.OffLine,
 			V:     c.OffLine,
 			Usage: `offline install, only whitelist users are supported`,
+		},
+		{
+			Name:   "hub",
+			P:      &c.Registry,
+			V:      c.Registry,
+			EnvVar: "hub.qucheng.com",
+			Usage:  `custom image hub, e.g: hub.qucheng.com`,
+		},
+		{
+			Name:   "storage",
+			P:      &c.Storage,
+			V:      c.Storage,
+			EnvVar: "local",
+			Usage:  `storage, support local,nfs,longhorn`,
+		},
+		{
+			Name:  "datastore",
+			P:     &c.DataStore,
+			V:     c.DataStore,
+			Usage: `datastore, e.g: mysql://root:123456@tcp(localhost:3306)/k3s?charset=utf8&parseTime=True&loc=Local`,
 		},
 	}
 }
@@ -156,10 +183,11 @@ func (c *Cluster) getMasterFlags() []types.Flag {
 			Usage: "k8s cluster service cidr",
 		},
 		{
-			Name:  "data-dir",
-			P:     &c.DataDir,
-			V:     c.DataDir,
-			Usage: "cluster & quickon data dir",
+			Name:      "data-dir",
+			P:         &c.DataDir,
+			V:         c.DataDir,
+			ShortHand: "d",
+			Usage:     "cluster & quickon data dir",
 		},
 	}
 }
@@ -211,17 +239,17 @@ func (c *Cluster) preinit(mip, ip string, sshClient ssh.Interface) error {
 func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error {
 	c.log.Infof("master0 ip: %s", cfg.Cluster.InitNode)
 	k3sargs := k3stpl.K3sArgs{
-		Master0:     true,
-		TypeMaster:  true,
-		KubeAPI:     "kubeapi.k7s.local",
-		KubeToken:   expass.PwGenAlphaNum(16),
-		DataDir:     c.DataDir,
-		PodCIDR:     c.PodCIDR,
-		ServiceCIDR: c.ServiceCIDR,
-		CNI:         c.CNI,
-		// TODO EE
-		DataStore:    "",
-		LocalStorage: true,
+		Master0:      true,
+		TypeMaster:   true,
+		KubeAPI:      "kubeapi.k7s.local",
+		KubeToken:    expass.PwGenAlphaNum(16),
+		DataDir:      c.DataDir,
+		PodCIDR:      c.PodCIDR,
+		ServiceCIDR:  c.ServiceCIDR,
+		CNI:          c.CNI,
+		DataStore:    c.DataStore,
+		LocalStorage: strings.ToLower(c.Storage) == "local",
+		Registry:     c.Registry,
 		OffLine:      c.OffLine,
 		Master0IP:    cfg.Cluster.InitNode,
 	}
@@ -242,6 +270,8 @@ func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error
 	cfg.Cluster.PodCIDR = c.PodCIDR
 	cfg.Cluster.ServiceCIDR = c.ServiceCIDR
 	cfg.Cluster.CNI = c.CNI
+	cfg.Cluster.Registry = c.Registry
+	cfg.Storage.Type = c.Storage
 	cfg.DB = k3sargs.DataStore
 	cfg.DataDir = k3sargs.DataDir
 	cfg.Cluster.Master = append(cfg.Cluster.Master, config.Node{

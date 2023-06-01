@@ -15,12 +15,24 @@ import (
 	"github.com/ergoapi/util/confirm"
 	"github.com/ergoapi/util/exnet"
 	"github.com/spf13/cobra"
+	"k8s.io/kubectl/pkg/util/templates"
 )
 
-const initExample = `q cluster init --podsubnet "10.42.0.0/16" \
- 			--svcsubnet "10.43.0.0/16" \
-			--eip 1.1.1.1  \
-			--san kubeapi.k8s.io`
+var (
+	initExample = templates.Examples(`
+		# init default cluster
+		q cluster init
+
+		# init cluster with custom cidr
+		q cluster init --pod-cidr 10.100.0.0/16 --service-cidr 10.200.0.0/16
+
+		# init cluster use mysql as datastore
+		q cluster init --datastore mysql://root:123456@localhost:3306/k3s
+
+		# more args
+		q cluster init --help
+	`)
+)
 
 // k3s server --tls-san --data-dir --cluster-cidr --service-cidr \
 // --token --server --cluster-init --datastore-endpoint --disable  servicelb, traefik, local-storage
@@ -29,71 +41,71 @@ const initExample = `q cluster init --podsubnet "10.42.0.0/16" \
 // --pause-image \
 
 func InitCommand(f factory.Factory) *cobra.Command {
-	cluster := cluster.NewCluster(f)
+	myCluster := cluster.NewCluster(f)
 	init := &cobra.Command{
 		Use:     "init",
 		Short:   "init cluster",
 		Example: initExample,
 		PreRun: func(cmd *cobra.Command, args []string) {
-			if len(cluster.MasterIPs) == 0 {
-				cluster.MasterIPs = append(cluster.MasterIPs, exnet.LocalIPs()[0])
+			if len(myCluster.MasterIPs) == 0 {
+				myCluster.MasterIPs = append(myCluster.MasterIPs, exnet.LocalIPs()[0])
 			}
 			// 禁止重复初始化
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return cluster.InitNode()
+			return myCluster.InitNode()
 		},
 	}
-	init.Flags().AddFlagSet(flags.ConvertFlags(init, cluster.GetInitFlags()))
+	init.Flags().AddFlagSet(flags.ConvertFlags(init, myCluster.GetInitFlags()))
 	return init
 }
 
 func JoinCommand(f factory.Factory) *cobra.Command {
-	cluster := cluster.NewCluster(f)
-	authStatus := cluster.CheckAuthExist()
+	myCluster := cluster.NewCluster(f)
+	authStatus := myCluster.CheckAuthExist()
 	join := &cobra.Command{
 		Use:   "join",
 		Short: "join cluster",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if !authStatus && (len(cluster.SSH.Passwd) == 0 && len(cluster.SSH.Pk) == 0) {
+			if !authStatus && (len(myCluster.SSH.Passwd) == 0 && len(myCluster.SSH.Pk) == 0) {
 				return errors.New("missing ssh user or passwd or pk")
 			}
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return cluster.JoinNode()
+			return myCluster.JoinNode()
 		},
 	}
-	fs := cluster.GetIPFlags()
+	fs := myCluster.GetIPFlags()
 	if !authStatus {
-		fs = append(fs, cluster.GetSSHFlags()...)
+		fs = append(fs, myCluster.GetSSHFlags()...)
 	}
 	join.Flags().AddFlagSet(flags.ConvertFlags(join, fs))
 	return join
 }
 
 func DeleteCommand(f factory.Factory) *cobra.Command {
-	cluster := cluster.NewCluster(f)
-	delete := &cobra.Command{
+	myCluster := cluster.NewCluster(f)
+	deleteCmd := &cobra.Command{
 		Use:     "delete",
 		Short:   "delete node(s)",
 		Aliases: []string{"del"},
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if len(cluster.IPs) == 0 {
+			if len(myCluster.IPs) == 0 {
 				return errors.New("missing node ips")
 			}
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return cluster.DeleteNode()
+			return myCluster.DeleteNode()
 		},
 	}
-	delete.Flags().StringSliceVar(&cluster.IPs, "ips", nil, "ips, like 192.168.0.1:22")
-	return delete
+	deleteCmd.Flags().StringSliceVar(&myCluster.IPs, "ips", nil, "ips, like 192.168.0.1:22")
+	return deleteCmd
 }
 
 func CleanCommand(f factory.Factory) *cobra.Command {
-	cluster := cluster.NewCluster(f)
+	myCluster := cluster.NewCluster(f)
 	log := f.GetLog()
 	clean := &cobra.Command{
 		Use:     "clean",
@@ -102,7 +114,7 @@ func CleanCommand(f factory.Factory) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			status, _ := confirm.Confirm("Are you sure to clean cluster")
 			if status {
-				return cluster.Clean()
+				return myCluster.Clean()
 			}
 			log.Donef("cancel clean cluster")
 			return nil
@@ -121,17 +133,4 @@ func StatusCommand(f factory.Factory) *cobra.Command {
 	}
 	status.AddCommand(statussubcmd.TopNodeCmd())
 	return status
-}
-
-func StorageCommand(f factory.Factory) *cobra.Command {
-	storage := &cobra.Command{
-		Use:     "csi",
-		Aliases: []string{"storage"},
-		Short:   "cluster csi",
-		Hidden:  true,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return nil
-		},
-	}
-	return storage
 }

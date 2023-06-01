@@ -39,6 +39,11 @@ type Config struct {
 	DataDir         string    `yaml:"datadir" json:"datadir"`
 	Quickon         Quickon   `yaml:"quickon" json:"quickon"`
 	Install         Install   `yaml:"install,omitempty" json:"install,omitempty"`
+	Storage         Storage   `yaml:"storage,omitempty" json:"storage,omitempty"`
+}
+
+type Storage struct {
+	Type string `yaml:"type" json:"type"`
 }
 
 type Install struct {
@@ -60,6 +65,7 @@ type Cluster struct {
 	Worker      []Node `yaml:"worker" json:"worker"`
 	InitNode    string `yaml:"init_node" json:"init_node"`
 	Token       string `yaml:"token" json:"token"`
+	Registry    string `yaml:"registry" json:"registry"`
 }
 
 type Global struct {

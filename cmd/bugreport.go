@@ -26,9 +26,10 @@ func newCmdBugReport(f factory.Factory) *cobra.Command {
 		log: f.GetLog(),
 	}
 	cmd := &cobra.Command{
-		Use:   "bug-report",
-		Short: "Display system information for bug report",
-		Long:  "this command shares no personally-identifiable information, and is unused unless you share the bug identifier with our team.",
+		Use:     "bugreport",
+		Aliases: []string{"bug-report"},
+		Short:   "Display system information for bug report",
+		Long:    "this command shares no personally-identifiable information, and is unused unless you share the bug identifier with our team.",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return br.BugReport()
 		},
