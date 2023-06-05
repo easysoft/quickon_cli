@@ -9,6 +9,7 @@ package cmd
 import (
 	"github.com/easysoft/qcadmin/cmd/cluster"
 	"github.com/easysoft/qcadmin/cmd/precheck"
+	"github.com/easysoft/qcadmin/cmd/storage"
 
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/spf13/cobra"
@@ -40,5 +41,6 @@ func newCmdCluster(f factory.Factory) *cobra.Command {
 	clusterCmd.AddCommand(cluster.DeleteCommand(f))
 	clusterCmd.AddCommand(cluster.CleanCommand(f))
 	clusterCmd.AddCommand(cluster.StatusCommand(f))
+	clusterCmd.AddCommand(storage.NewCmdStorage(f))
 	return clusterCmd
 }

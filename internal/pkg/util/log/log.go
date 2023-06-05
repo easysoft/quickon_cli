@@ -10,13 +10,16 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/easysoft/qcadmin/internal/pkg/util/log/survey"
+
 	"github.com/easysoft/qcadmin/common"
 	"github.com/mgutz/ansi"
 	"github.com/sirupsen/logrus"
 )
 
 var defaultLog Logger = &stdoutLogger{
-	level: logrus.InfoLevel,
+	survey: survey.NewSurvey(),
+	level:  logrus.InfoLevel,
 }
 
 // Discard is a logger implementation that just discards every log statement

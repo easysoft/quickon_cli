@@ -1,14 +1,14 @@
 #!/bin/bash
 
 command_exists() {
-	command -v "$@" > /dev/null 2>&1
+  command -v "$@" > /dev/null 2>&1
 }
 
 # 安装了docker
 if command_exists docker && [ -e /var/run/docker.sock ]; then
-		(
-			docker ps -a
-		) || true
+  (
+    docker ps -a
+  ) || true
 elif command_exists crictl; then
   (
     defaultdir=$(cat .qc/config/cluster.yaml | grep datadir | awk '{print $2}')

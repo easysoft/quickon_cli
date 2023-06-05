@@ -430,6 +430,6 @@ func (s *stdoutLogger) Question(params *survey.QuestionOptions) (string, error) 
 		return "", errors.Errorf("Cannot ask question '%s' because log level is too low", params.Question)
 	}
 
-	s.WriteString("\n")
+	// s.WriteString("\n")
 	return s.survey.Question(params)
 }
