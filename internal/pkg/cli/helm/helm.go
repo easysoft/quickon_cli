@@ -22,10 +22,79 @@ func EmbedCommand(f factory.Factory) *cobra.Command {
 	helm.AddCommand(repoUpdate(f))
 	helm.AddCommand(repoAdd(f))
 	helm.AddCommand(repoDel(f))
+	helm.AddCommand(repoList(f))
+	helm.AddCommand(repoInit(f))
 	helm.AddCommand(chartUpgrade(f))
 	helm.AddCommand(chartUninstall(f))
 	helm.AddCommand(chartClean(f))
 	helm.AddCommand(chartList(f))
+	return helm
+}
+
+func repoInit(f factory.Factory) *cobra.Command {
+	logpkg := f.GetLog()
+	var name, url string
+	helm := &cobra.Command{
+		Use:   "repo-init",
+		Short: "init helm repo",
+		PostRunE: func(cmd *cobra.Command, args []string) error {
+			logpkg.Debug("update helm repo")
+			hc, err := helm.NewClient(&helm.Config{Namespace: ""})
+			if err != nil {
+				return fmt.Errorf("helm create go client err: %v", err)
+			}
+			return hc.UpdateRepo()
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			hc, err := helm.NewClient(&helm.Config{Namespace: ""})
+			if err != nil {
+				return fmt.Errorf("helm create go client err: %v", err)
+			}
+			repos, _ := hc.ListRepo()
+			if len(repos) == 0 {
+				logpkg.Debug("repo count 0, will add helm repo")
+				return hc.AddRepo(name, url, "", "")
+			}
+			notexist := true
+			for _, r := range repos {
+				if r.Name == name {
+					notexist = false
+					break
+				}
+			}
+			if notexist {
+				logpkg.Debugf("not found repo %s, will add helm repo", name)
+				return hc.AddRepo(name, url, "", "")
+			}
+			logpkg.Debugf("found repo %s, will update helm repo", name)
+			return nil
+		},
+	}
+	helm.Flags().StringVarP(&name, "name", "n", "install", "repo name")
+	helm.Flags().StringVarP(&url, "url", "u", "https://hub.qucheng.com/chartrepo/stable", "repo url")
+	return helm
+}
+
+func repoList(f factory.Factory) *cobra.Command {
+	helm := &cobra.Command{
+		Use:   "repo-list",
+		Short: "list helm repo",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			logpkg := f.GetLog()
+			hc, err := helm.NewClient(&helm.Config{Namespace: ""})
+			if err != nil {
+				return fmt.Errorf("helm create go client err: %v", err)
+			}
+			repos, err := hc.ListRepo()
+			if err != nil {
+				return fmt.Errorf("helm list repo err: %v", err)
+			}
+			for _, r := range repos {
+				logpkg.Infof("name: %s, url: %s", r.Name, r.URL)
+			}
+			return nil
+		},
+	}
 	return helm
 }
 

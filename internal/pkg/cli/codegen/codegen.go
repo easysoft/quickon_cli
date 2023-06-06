@@ -8,6 +8,7 @@ package main
 
 import (
 	"os"
+	"runtime"
 
 	"github.com/BeidouCloudPlatform/go-bindata/v4"
 	"github.com/sirupsen/logrus"
@@ -23,7 +24,7 @@ func main() {
 			},
 		},
 		Package:    "data",
-		Arch:       "arm64",
+		Arch:       runtime.GOARCH,
 		NoCompress: true,
 		NoMemCopy:  true,
 		NoMetadata: true,
@@ -32,51 +33,83 @@ func main() {
 	if err := bindata.Translate(bc); err != nil {
 		logrus.Fatal(err)
 	}
+	// bc = &bindata.Config{
+	// 	Input: []bindata.InputConfig{
+	// 		{
+	// 			Path:      "hack/bin",
+	// 			Recursive: true,
+	// 		},
+	// 	},
+	// 	Package:    "data",
+	// 	Arch:       "amd64",
+	// 	NoCompress: true,
+	// 	NoMemCopy:  true,
+	// 	NoMetadata: true,
+	// 	Output:     "internal/static/data/zz_generated_bindata.go",
+	// }
+	// if err := bindata.Translate(bc); err != nil {
+	// 	logrus.Fatal(err)
+	// }
+	// bc = &bindata.Config{
+	// 	Input: []bindata.InputConfig{
+	// 		{
+	// 			Path:      "hack/manifests/scripts",
+	// 			Recursive: true,
+	// 		},
+	// 	},
+	// 	Package:    "scripts",
+	// 	NoCompress: true,
+	// 	NoMemCopy:  true,
+	// 	NoMetadata: true,
+	// 	Output:     "internal/static/scripts/zz_generated_bindata.go.go",
+	// }
+	// if err := bindata.Translate(bc); err != nil {
+	// 	logrus.Fatal(err)
+	// }
+	// bc = &bindata.Config{
+	// 	Input: []bindata.InputConfig{
+	// 		{
+	// 			Path:      "hack/manifests/plugins",
+	// 			Recursive: true,
+	// 		},
+	// 	},
+	// 	Package:    "plugins",
+	// 	NoCompress: true,
+	// 	NoMemCopy:  true,
+	// 	NoMetadata: true,
+	// 	Output:     "internal/static/plugins/zz_generated_bindata.go.go",
+	// }
+	// if err := bindata.Translate(bc); err != nil {
+	// 	logrus.Fatal(err)
+	// }
+	// bc = &bindata.Config{
+	// 	Input: []bindata.InputConfig{
+	// 		{
+	// 			Path:      "hack/manifests/storage",
+	// 			Recursive: true,
+	// 		},
+	// 	},
+	// 	Package:    "storage",
+	// 	NoCompress: true,
+	// 	NoMemCopy:  true,
+	// 	NoMetadata: true,
+	// 	Output:     "internal/static/storage/zz_generated_bindata.go.go",
+	// }
+	// if err := bindata.Translate(bc); err != nil {
+	// 	logrus.Fatal(err)
+	// }
 	bc = &bindata.Config{
 		Input: []bindata.InputConfig{
 			{
-				Path:      "hack/bin",
+				Path:      "hack/manifests",
 				Recursive: true,
 			},
 		},
-		Package:    "data",
-		Arch:       "amd64",
+		Package:    "manifests",
 		NoCompress: true,
 		NoMemCopy:  true,
 		NoMetadata: true,
-		Output:     "internal/static/data/zz_generated_bindata.go",
-	}
-	if err := bindata.Translate(bc); err != nil {
-		logrus.Fatal(err)
-	}
-	bc = &bindata.Config{
-		Input: []bindata.InputConfig{
-			{
-				Path:      "hack/manifests/scripts",
-				Recursive: true,
-			},
-		},
-		Package:    "scripts",
-		NoCompress: true,
-		NoMemCopy:  true,
-		NoMetadata: true,
-		Output:     "internal/static/scripts/zz_generated_bindata.go.go",
-	}
-	if err := bindata.Translate(bc); err != nil {
-		logrus.Fatal(err)
-	}
-	bc = &bindata.Config{
-		Input: []bindata.InputConfig{
-			{
-				Path:      "hack/manifests/plugins",
-				Recursive: true,
-			},
-		},
-		Package:    "deploy",
-		NoCompress: true,
-		NoMemCopy:  true,
-		NoMetadata: true,
-		Output:     "internal/static/deploy/zz_generated_bindata.go.go",
+		Output:     "internal/static/manifests/zz_generated_bindata.go.go",
 	}
 	if err := bindata.Translate(bc); err != nil {
 		logrus.Fatal(err)

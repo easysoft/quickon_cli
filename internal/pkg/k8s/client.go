@@ -230,22 +230,14 @@ func (c *Client) GetDefaultSC(ctx context.Context) (*storagev1.StorageClass, err
 	return nil, fmt.Errorf("no default storage class found")
 }
 
-func (c *Client) PatchDefaultSC(ctx context.Context) (*storagev1.StorageClass, error) {
-	sc, err := c.GetDefaultSC(ctx)
-	if err == nil {
-		return sc, nil
-	}
-	scs, err := c.ListSC(ctx, metav1.ListOptions{})
-	if err != nil {
-		return nil, err
-	}
-	scnew := scs.Items[0]
-	scan := scnew.Annotations
+func (c *Client) PatchDefaultSC(ctx context.Context, sc *storagev1.StorageClass, isDefaultSC bool) error {
+	scan := sc.Annotations
 	scan = exmap.MergeLabels(scan, map[string]string{
-		"storageclass.kubernetes.io/is-default-class": "true",
+		"storageclass.kubernetes.io/is-default-class": fmt.Sprintf("%v", isDefaultSC),
 	})
-	scnew.Annotations = scan
-	return c.Clientset.StorageV1().StorageClasses().Update(ctx, &scnew, metav1.UpdateOptions{})
+	sc.Annotations = scan
+	_, err := c.Clientset.StorageV1().StorageClasses().Update(ctx, sc, metav1.UpdateOptions{})
+	return err
 }
 
 func (c *Client) ListNodes(ctx context.Context, opts metav1.ListOptions) (*corev1.NodeList, error) {

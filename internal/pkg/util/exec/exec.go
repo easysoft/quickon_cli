@@ -15,6 +15,7 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	elog "github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/ergoapi/util/environ"
+	"github.com/sirupsen/logrus"
 )
 
 type LogWriter struct {
@@ -56,6 +57,9 @@ func Trace(cmd *sysexec.Cmd) {
 }
 
 func Command(name string, arg ...string) *sysexec.Cmd {
+	if log.GetInstance().GetLevel() == logrus.DebugLevel {
+		arg = append(arg, "--debug")
+	}
 	cmd := sysexec.Command(name, arg...) // #nosec
 	// cmd.Dir = common.GetDefaultCacheDir()
 	Trace(cmd)

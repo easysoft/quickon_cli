@@ -12,9 +12,8 @@ import (
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/static/data"
-	"github.com/easysoft/qcadmin/internal/static/deploy"
 	"github.com/easysoft/qcadmin/internal/static/haogstls"
-	"github.com/easysoft/qcadmin/internal/static/scripts"
+	"github.com/easysoft/qcadmin/internal/static/manifests"
 	"github.com/ergoapi/util/file"
 )
 
@@ -23,10 +22,7 @@ func StageFiles() error {
 	if err := data.Stage(dataDir); err != nil {
 		return err
 	}
-	if err := deploy.Stage(dataDir); err != nil {
-		return err
-	}
-	if err := scripts.Stage(dataDir); err != nil {
+	if err := manifests.Stage(dataDir); err != nil {
 		return err
 	}
 	if err := haogstls.Stage(dataDir); err != nil {
