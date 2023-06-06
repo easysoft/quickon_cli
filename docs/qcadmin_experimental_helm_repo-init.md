@@ -1,15 +1,17 @@
-## qcadmin experimental helm repo-update
+## qcadmin experimental helm repo-init
 
-update information of available charts locally from chart repositories
+init helm repo
 
 ```
-qcadmin experimental helm repo-update [flags]
+qcadmin experimental helm repo-init [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for repo-update
+  -h, --help          help for repo-init
+  -n, --name string   repo name (default "install")
+  -u, --url string    repo url (default "https://hub.qucheng.com/chartrepo/stable")
 ```
 
 ### Options inherited from parent commands

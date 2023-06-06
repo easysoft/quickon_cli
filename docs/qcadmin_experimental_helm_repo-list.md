@@ -1,15 +1,15 @@
-## qcadmin experimental helm repo-update
+## qcadmin experimental helm repo-list
 
-update information of available charts locally from chart repositories
+list helm repo
 
 ```
-qcadmin experimental helm repo-update [flags]
+qcadmin experimental helm repo-list [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for repo-update
+  -h, --help   help for repo-list
 ```
 
 ### Options inherited from parent commands

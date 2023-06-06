@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.0.8 (2023-06-06)
+
+ * [86f7525](https://github.com/easysoft/quickon_cli/commit/86f7525d65b2306c7cc07bf9d5c3e1a5cf3a01ca) fix(typo): fix arm64 build
+ * [002c15e](https://github.com/easysoft/quickon_cli/commit/002c15e85da363a123fbdf4cdd8194148fb76166) feat(storage): add cluster storage subcmd
+ * [3efdb2d](https://github.com/easysoft/quickon_cli/commit/3efdb2dcc29ef9240d6c299b284eb3c4617fbc2f) fix(log): fix log question panic
+ * [5f960a6](https://github.com/easysoft/quickon_cli/commit/5f960a665f817327afa42e4e84a5cb916cd6aed6) feat(cluster): update cluster init args
+
+### Contributors
+
+ * ysicing
+
 ## v2.0.7 (2023-05-31)
 
  * [2acf959](https://github.com/easysoft/quickon_cli/commit/2acf959ecc412c70a675675ff3c76599a5afad9b) fix(patch): fix typo
