@@ -8,7 +8,6 @@ package main
 
 import (
 	"os"
-	"runtime"
 
 	"github.com/BeidouCloudPlatform/go-bindata/v4"
 	"github.com/sirupsen/logrus"
@@ -24,7 +23,7 @@ func main() {
 			},
 		},
 		Package:    "data",
-		Arch:       runtime.GOARCH,
+		Arch:       "arm64",
 		NoCompress: true,
 		NoMemCopy:  true,
 		NoMetadata: true,
@@ -33,23 +32,23 @@ func main() {
 	if err := bindata.Translate(bc); err != nil {
 		logrus.Fatal(err)
 	}
-	// bc = &bindata.Config{
-	// 	Input: []bindata.InputConfig{
-	// 		{
-	// 			Path:      "hack/bin",
-	// 			Recursive: true,
-	// 		},
-	// 	},
-	// 	Package:    "data",
-	// 	Arch:       "amd64",
-	// 	NoCompress: true,
-	// 	NoMemCopy:  true,
-	// 	NoMetadata: true,
-	// 	Output:     "internal/static/data/zz_generated_bindata.go",
-	// }
-	// if err := bindata.Translate(bc); err != nil {
-	// 	logrus.Fatal(err)
-	// }
+	bc = &bindata.Config{
+		Input: []bindata.InputConfig{
+			{
+				Path:      "hack/bin",
+				Recursive: true,
+			},
+		},
+		Package:    "data",
+		Arch:       "amd64",
+		NoCompress: true,
+		NoMemCopy:  true,
+		NoMetadata: true,
+		Output:     "internal/static/data/zz_generated_bindata.go",
+	}
+	if err := bindata.Translate(bc); err != nil {
+		logrus.Fatal(err)
+	}
 	// bc = &bindata.Config{
 	// 	Input: []bindata.InputConfig{
 	// 		{
