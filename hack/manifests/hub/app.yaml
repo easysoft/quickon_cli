@@ -1,0 +1,6 @@
+storage:
+  type: local
+  local:
+    directory: /opt/quickon/hub/app/data
+  cache:
+    enable: true

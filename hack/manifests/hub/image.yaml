@@ -1,0 +1,15 @@
+version: 0.1
+log:
+  level: debug
+  formatter: text
+  fields:
+    service: registry
+storage:
+  cache:
+    blobdescriptor: inmemory
+  filesystem:
+    rootdirectory: /opt/quickon/hub/image/data
+http:
+  addr: :32378
+  headers:
+    X-Content-Type-Options: [nosniff]

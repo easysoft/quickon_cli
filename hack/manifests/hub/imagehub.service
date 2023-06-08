@@ -1,0 +1,14 @@
+[Unit]
+Description=Quickon Image Hub
+After=network.target
+
+[Service]
+User=root
+Group=root
+ExecStart=/usr/bin/q-image-hub serve /opt/quickon/hub/image/config.yml
+Restart=always
+RestartSec=10
+LimitNOFILE=1048576
+
+[Install]
+WantedBy=multi-user.target

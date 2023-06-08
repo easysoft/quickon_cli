@@ -1,0 +1,14 @@
+[Unit]
+Description=Quickon App Hub
+After=network.target
+
+[Service]
+User=root
+Group=root
+ExecStart=/usr/bin/q-app-hub --port=32377 --config /opt/quickon/hub/app/config.yaml --storage=local --storage-local-rootdir=/opt/quickon/hub/app/data
+Restart=always
+RestartSec=10
+LimitNOFILE=1048576
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+mirrors:
+  "docker.io":
+    endpoint:
+      - "http://hub.quickon.me:32378"
+      - "http://127.0.0.1:32378"
+  "hub.qucheng.com":
+    endpoint:
+      - "http://127.0.0.1:32378"
+  "hub.quickon.me:32378":
+    endpoint:
+      - "http://hub.quickon.me:32378"
+      - "http://127.0.0.1:32378"
+  "127.0.0.1:32378":
+    endpoint:
+      - "http://127.0.0.1:32378"
