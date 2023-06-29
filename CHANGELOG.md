@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.0.9 (2023-06-29)
+
+ * [3b601fb](https://github.com/easysoft/quickon_cli/commit/3b601fbde654f6f458fa7f4901e687bdaae243f2) fix(pod): fix new version podinstall
+ * [73023cf](https://github.com/easysoft/quickon_cli/commit/73023cf6f1c2cb1a24fcde75d676bc26aff766e3) feat(k3s): update k3s to v1.24.15+k3s1
+ * [70cc58f](https://github.com/easysoft/quickon_cli/commit/70cc58fc6182677ad43cd44a087c67601229915d) feat(hub): add hub config test file
+ * [36f8ddf](https://github.com/easysoft/quickon_cli/commit/36f8ddfa80ecdac08cef1ecd182a02cad9cce6c5) feat(debug): add kubevirt test
+
+### Contributors
+
+ * ysicing
+
 ## v2.0.8 (2023-06-06)
 
  * [86f7525](https://github.com/easysoft/quickon_cli/commit/86f7525d65b2306c7cc07bf9d5c3e1a5cf3a01ca) fix(typo): fix arm64 build
