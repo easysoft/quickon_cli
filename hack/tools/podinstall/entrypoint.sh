@@ -12,7 +12,9 @@ helm repo add install https://hub.qucheng.com/chartrepo/stable
 
 helm repo update
 
-kubectl create ns cne-system
+kubectl create ns quickon-system
+kubectl create ns quickon-app
+kubectl create ns quickon-ci
 
 export APP_DOMAIN=${APP_DOMAIN:-k3s.local}
 export APP_DOMAIN=$(echo -e $APP_DOMAIN | sed 's/[[:space:]]//g' | xargs -I {} echo {})
@@ -34,9 +36,19 @@ ingress:
   host: ${APP_DOMAIN}
 EOF
 
-helm upgrade -i ingress install/nginx-ingress-controller -n cne-system
-helm upgrade -i cne-operator install/cne-operator -n cne-system
-helm upgrade -i qucheng install/qucheng -f /tmp/qucheng.yaml -n cne-system
+cat > /tmp/operator.yaml <<EOF
+minio:
+  auth:
+    password: Z6Ho2LdLZb8AAXuv
+    username: FaBux6M2
+  ingress:
+    enabled: true
+    host: s3.${APP_DOMAIN}
+EOF
+
+helm upgrade -i ingress install/nginx-ingress-controller -n quickon-system
+helm upgrade -i cne-operator install/cne-operator -f /tmp/operator.yaml -n quickon-system
+helm upgrade -i qucheng install/qucheng -f /tmp/qucheng.yaml -n quickon-system
 
 [ -d "/qcli/root/.kube" ] || mkdir -pv /qcli/root/.kube
 [ -d "/qcli/root/.qc/config" ] || mkdir -pv /qcli/root/.qc/config
@@ -48,16 +60,34 @@ cp -a /usr/local/bin/helm /qcli/qbin/helm
 
 cat > /qcli/root/.qc/config/cluster.yaml <<EOF
 api_token: ${APP_TOKEN}
-cluster_id: ""
+cluster:
+  cid: b31b9178-ca9f-4acd-b9a1-c5277d631fe2
+  cni: flannel
+  init_node: ${APP_NODE_IP}
+  master:
+  - host: ${APP_NODE_IP}
+    init: true
+  pod-cidr: 10.42.0.0/16
+  registry: hub.qucheng.com
+  svc-cidr: 10.43.0.0/16
+  token: YywCEEPKVhaDEgF4
+  worker: null
 console-password: pass4Quickon
-db: sqlite
+datadir: /opt/quickon
+db: ""
 domain: ${APP_DOMAIN}
-init_node: ${APP_NODE_IP}
-master:
-- host: ${APP_NODE_IP}
-  name: ${APP_NODE_IP}
-token: ""
-worker: null
+global:
+  ssh: {}
+install:
+  pkg: ""
+  type: online
+quickon:
+  type: oss
+storage:
+  type: local
+s3:
+  password: Z6Ho2LdLZb8AAXuv
+  username: FaBux6M2
 EOF
 
 [ -f "/qcli/k3syaml/k3s.yaml" ] && cp -a /qcli/k3syaml/k3s.yaml /qcli/root/.kube/config
@@ -86,6 +116,7 @@ wait_for_tls() {
 
 wait_for_tls && (
   kubectl apply -f https://pkg.qucheng.com/ssl/${TOP_DOMAIN}/${APP_DOMAIN}/tls.yaml -n default
-  kubectl apply -f https://pkg.qucheng.com/ssl/${TOP_DOMAIN}/${APP_DOMAIN}/tls.yaml -n cne-system
+  kubectl apply -f https://pkg.qucheng.com/ssl/${TOP_DOMAIN}/${APP_DOMAIN}/tls.yaml -n quickon-app
+  kubectl apply -f https://pkg.qucheng.com/ssl/${TOP_DOMAIN}/${APP_DOMAIN}/tls.yaml -n quickon-system
   kubectl apply -f https://pkg.qucheng.com/ssl/${TOP_DOMAIN}/${APP_DOMAIN}/tls.yaml -n kube-system
 ) || echo "load tls failed"
