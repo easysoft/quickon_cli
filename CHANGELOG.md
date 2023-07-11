@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.0.10 (2023-07-11)
+
+ * [3c50614](https://github.com/easysoft/quickon_cli/commit/3c50614ff159230d097e4d04f0b649a5728179b4) refactor(app): add deprecated cmd app
+ * [65b93ad](https://github.com/easysoft/quickon_cli/commit/65b93ad20e89c9fcb394982afd4c3e824a96e0fc) style(fmt): fmt version show
+
+### Contributors
+
+ * ysicing
+
 ## v2.0.9 (2023-06-29)
 
  * [3b601fb](https://github.com/easysoft/quickon_cli/commit/3b601fbde654f6f458fa7f4901e687bdaae243f2) fix(pod): fix new version podinstall
