@@ -73,6 +73,9 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 	rootCmd.AddCommand(newCmdBugReport(f))
 	rootCmd.AddCommand(newCmdDebug(f))
 
+	// Deprecated commands, will be removed in the future
+	rootCmd.AddCommand(newCmdApp(f))
+
 	args := os.Args
 	if len(args) > 1 {
 		pluginHandler := excmd.NewDefaultPluginHandler(common.GetDefaultBinDir(), common.ValidPrefixes)
