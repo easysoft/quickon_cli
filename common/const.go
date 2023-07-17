@@ -141,7 +141,7 @@ ExecStartPre=-/sbin/modprobe overlay
 ExecStart=/usr/local/bin/k3s \
     {{if .TypeMaster -}}
       server \
-      --tls-san kubeapi.haogs.cn \
+      --tls-san kubeapi.corp.cc \
       --tls-san apiserver.cluster.local \
       --tls-san {{ .KubeAPI }} \
       {{if .PodCIDR -}}

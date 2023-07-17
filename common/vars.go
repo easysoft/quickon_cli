@@ -36,7 +36,7 @@ var (
 
 var (
 	ValidPrefixes     = []string{"qcadmin", "qc"}
-	ValidDomainSuffix = []string{"haogs.cn", "corp.cc"}
+	ValidDomainSuffix = []string{"corp.cc"}
 )
 
 var CloudAPI = []cloudAPIS{

@@ -676,7 +676,7 @@ func RunInitNodeChecks(execer utilsexec.Interface, cfg *types.Metadata, ignorePr
 			InPathCheck{executable: "crictl", mandatory: false, exec: execer},
 			InPathCheck{executable: "conntrack", mandatory: false, exec: execer},
 			InPathCheck{executable: "ip", mandatory: true, exec: execer},
-			InPathCheck{executable: "iptables", mandatory: true, exec: execer},
+			InPathCheck{executable: "iptables", mandatory: false, exec: execer},
 			InPathCheck{executable: "mount", mandatory: true, exec: execer},
 			InPathCheck{executable: "nsenter", mandatory: true, exec: execer},
 			InPathCheck{executable: "ebtables", mandatory: false, exec: execer},
@@ -684,9 +684,9 @@ func RunInitNodeChecks(execer utilsexec.Interface, cfg *types.Metadata, ignorePr
 			InPathCheck{executable: "socat", mandatory: false, exec: execer},
 			InPathCheck{executable: "tc", mandatory: false, exec: execer},
 			InPathCheck{executable: "touch", mandatory: true, exec: execer},
-			InPathCheck{executable: "route", mandatory: true, exec: execer},
-			InPathCheck{executable: "wget", mandatory: true, exec: execer},
-			InPathCheck{executable: "curl", mandatory: true, exec: execer})
+			InPathCheck{executable: "route", mandatory: false, exec: execer},
+			InPathCheck{executable: "wget", mandatory: false, exec: execer},
+			InPathCheck{executable: "curl", mandatory: false, exec: execer})
 	}
 	checks = append(checks,
 		SystemVerificationCheck{},

@@ -43,19 +43,20 @@ var defaultBackoff = wait.Backoff{
 }
 
 type Cluster struct {
-	log         log.Logger
-	MasterIPs   []string
-	WorkerIPs   []string
-	IPs         []string
-	SSH         types.SSH
-	CNI         string
-	DataDir     string
-	PodCIDR     string
-	ServiceCIDR string
-	OffLine     bool
-	Registry    string
-	Storage     string
-	DataStore   string
+	log                   log.Logger
+	MasterIPs             []string
+	WorkerIPs             []string
+	IPs                   []string
+	SSH                   types.SSH
+	CNI                   string
+	DataDir               string
+	PodCIDR               string
+	ServiceCIDR           string
+	OffLine               bool
+	Registry              string
+	Storage               string
+	DataStore             string
+	IgnorePreflightErrors bool
 }
 
 func NewCluster(f factory.Factory) *Cluster {
@@ -68,10 +69,11 @@ func NewCluster(f factory.Factory) *Cluster {
 		SSH: types.SSH{
 			User: "root",
 		},
-		DataStore: "",
-		Storage:   "local",
-		Registry:  "hub.qucheng.com",
-		OffLine:   false,
+		DataStore:             "",
+		Storage:               "local",
+		Registry:              "hub.qucheng.com",
+		OffLine:               false,
+		IgnorePreflightErrors: false,
 	}
 }
 
@@ -102,6 +104,12 @@ func (c *Cluster) getInitFlags() []types.Flag {
 			P:     &c.DataStore,
 			V:     c.DataStore,
 			Usage: `datastore, e.g: mysql://root:123456@tcp(localhost:3306)/k3s?charset=utf8&parseTime=True&loc=Local`,
+		},
+		{
+			Name:  "ignore-preflight-errors",
+			P:     &c.IgnorePreflightErrors,
+			V:     c.IgnorePreflightErrors,
+			Usage: `ignore precheck error`,
 		},
 	}
 }

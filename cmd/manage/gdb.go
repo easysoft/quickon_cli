@@ -78,7 +78,7 @@ func NewCmdGdbList(f factory.Factory) *cobra.Command {
 			}
 			iac, _, _ := selectDBAction.Run()
 			if actions[iac].Name == "manage" {
-				// https://console.dev.haogs.cn/adminer/?server=10.10.16.15%3A3306&username=root&db=ysicing&password=password123
+				// https://console.example.corp.cc/adminer/?server=10.10.16.15%3A3306&username=root&db=ysicing&password=password123
 				if err := fakeUserInfo(qclient, &gdbServices[it]); err != nil {
 					return fmt.Errorf("call k8s api err: %v", err)
 				}
