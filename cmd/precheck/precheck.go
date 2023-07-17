@@ -21,8 +21,8 @@ func (pc PreCheck) Run() error {
 	log := log.GetInstance()
 	log.Info("start pre-flight checks")
 	if err := preflight.RunInitNodeChecks(utilsexec.New(), &types.Metadata{
-		ServiceCidr: "10.100.0.0/16",
-		ClusterCidr: "10.101.0.0/16",
+		ServiceCidr: "10.42.0.0/16",
+		ClusterCidr: "10.43.0.0/16",
 	}, pc.IgnorePreflightErrors); err != nil {
 		return err
 	}

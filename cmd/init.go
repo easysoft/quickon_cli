@@ -14,6 +14,7 @@ import (
 	"github.com/easysoft/qcadmin/pkg/quickon"
 
 	"github.com/easysoft/qcadmin/cmd/flags"
+	"github.com/easysoft/qcadmin/cmd/precheck"
 	nativeCluster "github.com/easysoft/qcadmin/pkg/cluster"
 	"github.com/ergoapi/util/exnet"
 
@@ -42,6 +43,7 @@ func init() {
 }
 
 func newCmdInit(f factory.Factory) *cobra.Command {
+	var preCheck precheck.PreCheck
 	log := f.GetLog()
 	defaultArgs := os.Args
 	globalToolPath := defaultArgs[0]
@@ -69,6 +71,10 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 				os.Exit(0)
 			}
 		} else {
+			if err := preCheck.Run(); err != nil {
+				log.Errorf("precheck failed, reason: %v", err)
+				os.Exit(-1)
+			}
 			if len(nCluster.MasterIPs) == 0 {
 				nCluster.MasterIPs = append(nCluster.MasterIPs, exnet.LocalIPs()[0])
 			}

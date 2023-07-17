@@ -9,6 +9,7 @@ package cluster
 import (
 	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/cmd/flags"
+	"github.com/easysoft/qcadmin/cmd/precheck"
 	statussubcmd "github.com/easysoft/qcadmin/cmd/status"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/pkg/cluster"
@@ -41,16 +42,21 @@ var (
 // --pause-image \
 
 func InitCommand(f factory.Factory) *cobra.Command {
+	var preCheck precheck.PreCheck
 	myCluster := cluster.NewCluster(f)
 	init := &cobra.Command{
 		Use:     "init",
 		Short:   "init cluster",
 		Example: initExample,
-		PreRun: func(cmd *cobra.Command, args []string) {
+		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(myCluster.MasterIPs) == 0 {
 				myCluster.MasterIPs = append(myCluster.MasterIPs, exnet.LocalIPs()[0])
 			}
 			// 禁止重复初始化
+			if err := preCheck.Run(); err != nil {
+				return err
+			}
+			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return myCluster.InitNode()
