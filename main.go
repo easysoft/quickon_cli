@@ -10,6 +10,9 @@
 package main
 
 import (
+	"log"
+	"os"
+
 	"github.com/docker/docker/pkg/reexec"
 	"github.com/easysoft/qcadmin/cmd"
 	"github.com/easysoft/qcadmin/cmd/boot"
@@ -22,7 +25,8 @@ func init() {
 
 func main() {
 	if err := boot.OnBoot(); err != nil {
-		panic(err)
+		log.Fatalf("failed to boot, err: %s", err)
+		os.Exit(1)
 	}
 	cmd.Execute()
 }

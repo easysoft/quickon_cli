@@ -27,8 +27,10 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"sync"
 
 	"github.com/cockroachdb/errors"
+	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
 
@@ -43,6 +45,7 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/initsystem"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+	qnetutil "github.com/easysoft/qcadmin/internal/pkg/util/netutil"
 )
 
 const (
@@ -168,6 +171,80 @@ type IsPrivilegedUserCheck struct{}
 // Name returns name for IsPrivilegedUserCheck
 func (IsPrivilegedUserCheck) Name() string {
 	return "IsPrivilegedUser"
+}
+
+type NetworkCheck struct{}
+
+// Name returns name for NetworkCheck
+func (NetworkCheck) Name() string {
+	return "Network"
+}
+
+// Check validates if the user is privileged.
+func (NetworkCheck) Check() error {
+	log := log.GetInstance()
+	if gw, err := qnetutil.CheckDefaultRoute(); err == nil {
+		log.Donef("default route %s reachable via icmp", color.SGreen(gw.String()))
+	} else {
+		log.Warnf("default route %s unreachable via icmp", color.SRed(gw.String()))
+	}
+	if ns, err := qnetutil.GetDefaultNameserver(); err == nil {
+		a := "reachable"
+		if !qnetutil.CheckReachabilityWithICMP(ns) {
+			a = "unreachable"
+		}
+		if err := qnetutil.CheckNameserverAvailability(ns + ":53"); err != nil {
+			log.Warnf("nameserver: %s (ICMP %s, DNS unreachable: %s)", color.SRed(ns), a, err)
+		} else {
+			log.Donef("nameserver: %s (ICMP %s, DNS reachable)", color.SGreen(ns), a)
+		}
+	} else {
+		log.Warnf("failed to reading default nameserver from system: %s", err)
+	}
+	var wg sync.WaitGroup
+	wg.Add(5)
+	go func() {
+		defer wg.Done()
+		if err := qnetutil.CheckCaptivePortal(); err == nil {
+			log.Donef("captive portal %s detected success", color.SGreen(common.DefaultGenerate204URL))
+		} else {
+			log.Warnf("captive portal %s detected failed: %s", color.SRed(common.DefaultGenerate204URL), err)
+		}
+	}()
+	go func() {
+		defer wg.Done()
+		if err := qnetutil.CheckCaptivePortal(common.MiuiGenerate204URL); err == nil {
+			log.Donef("captive portal %s detected success", color.SGreen(common.MiuiGenerate204URL))
+		} else {
+			log.Warnf("captive portal %s detected failed: %s", color.SRed(common.MiuiGenerate204URL), err)
+		}
+	}()
+	go func() {
+		defer wg.Done()
+		if err := qnetutil.CheckNameserverAvailability("119.29.29.29:53"); err != nil {
+			log.Warnf("remote dns %s is unavailable: %s", color.SRed("119.29.29.29"), err)
+		} else {
+			log.Donef("remote dns %s is available", color.SGreen("119.29.29.29"))
+		}
+	}()
+	go func() {
+		defer wg.Done()
+		if err := qnetutil.CheckNameserverAvailability("1.2.4.8:53"); err != nil {
+			log.Warnf("remote dns %s is unavailable: %s", color.SRed("1.2.4.8"), err)
+		} else {
+			log.Donef("remote dns %s is available", color.SGreen("1.2.4.8"))
+		}
+	}()
+	go func() {
+		defer wg.Done()
+		if loc, err := qnetutil.GetCloudflareEdgeTrace(); err == nil {
+			log.Donef("match Cloudflare CDN: %s", color.SGreen(loc))
+		} else {
+			log.Warnf("miss Cloudflare CDN failed")
+		}
+	}()
+	wg.Wait()
+	return nil
 }
 
 // DirAvailableCheck checks if the given directory either does not exist, or is empty.
@@ -629,6 +706,7 @@ func (MemCheck) Name() string {
 // The boolean flag 'downloadCerts' controls whether we should skip checks on certificates because we are downloading them.
 // If the flag is set to true we should skip checks already executed by RunJoinNodeChecks.
 func RunInitNodeChecks(execer utilsexec.Interface, cfg *types.Metadata, ignorePreflightErrors bool) error {
+	log := log.GetInstance()
 	if err := RunRootCheckOnly(ignorePreflightErrors); err != nil {
 		return err
 	}
@@ -649,6 +727,7 @@ func RunInitNodeChecks(execer utilsexec.Interface, cfg *types.Metadata, ignorePr
 		PortOpenCheck{port: 443},
 		PortOpenCheck{port: 6443},
 		PortOpenCheck{port: 32379},
+		NetworkCheck{},
 		// FileAvailableCheck{Path: kubeadmconstants.GetStaticPodFilepath(kubeadmconstants.KubeAPIServer, manifestsDir)},
 		// FileAvailableCheck{Path: kubeadmconstants.GetStaticPodFilepath(kubeadmconstants.KubeControllerManager, manifestsDir)},
 		// FileAvailableCheck{Path: kubeadmconstants.GetStaticPodFilepath(kubeadmconstants.KubeScheduler, manifestsDir)},
@@ -694,7 +773,11 @@ func RunInitNodeChecks(execer utilsexec.Interface, cfg *types.Metadata, ignorePr
 		// ServiceCheck{Service: "kubelet", CheckIfActive: false},
 		// PortOpenCheck{port: kubeadmconstants.KubeletPort}
 	)
-	return RunChecks(checks, os.Stderr, ignorePreflightErrors)
+	if err := RunChecks(checks, os.Stderr, ignorePreflightErrors); err != nil {
+		return err
+	}
+	log.Done("preflight checks passed")
+	return nil
 }
 
 // RunRootCheckOnly initializes checks slice of structs and call RunChecks
