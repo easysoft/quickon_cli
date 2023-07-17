@@ -25,7 +25,7 @@ qcadmin init [flags]
       --master stringArray        master ip list, e.g: 192.168.0.1:22
       --offline                   quickon offline install mode
       --oss                       quickon mode (default true)
-      --password string           quickon console password (default "fcZ7hzR38xZEaqNiU63aVE7QpHiU5s33")
+      --password string           quickon console password (default "lHxMeJpQTBLN4EKeTvwzOdAwVTjfyons")
       --pkfile string             ssh private key, if not set, will use password
       --pkpass string             ssh private key password
       --pod-cidr string           k8s cluster pod cidr (default "10.42.0.0/16")

@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.0.12 (2023-07-17)
+
+ * [7e4e55d](https://github.com/easysoft/quickon_cli/commit/7e4e55de627783fd289df0dd8265412384fccc30) feat(precheck): add network precheck
+
+### Contributors
+
+ * ysicing
+
 ## v2.0.11 (2023-07-17)
 
  * [ef8c7e9](https://github.com/easysoft/quickon_cli/commit/ef8c7e9e37e96d803fa43cfad9eaf98e006c103c) feat(check): feat skip precheck
