@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.0.11 (2023-07-17)
+
+ * [ef8c7e9](https://github.com/easysoft/quickon_cli/commit/ef8c7e9e37e96d803fa43cfad9eaf98e006c103c) feat(check): feat skip precheck
+ * [90be55c](https://github.com/easysoft/quickon_cli/commit/90be55c2fefcc1dc1d071d5183ff9730ee3d10f8) feat(init): imp precheck init
+
+### Contributors
+
+ * ysicing
+
 ## v2.0.10 (2023-07-11)
 
  * [3c50614](https://github.com/easysoft/quickon_cli/commit/3c50614ff159230d097e4d04f0b649a5728179b4) refactor(app): add deprecated cmd app
