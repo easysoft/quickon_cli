@@ -14,7 +14,7 @@ qcadmin quickon init [flags]
       --ip string         quickon ip
       --offline           quickon offline install mode
       --oss               quickon mode (default true)
-      --password string   quickon console password (default "UtpLM5HA6vPxtezIgKw2Jq5EibvNx3CS")
+      --password string   quickon console password (default "Y9tW95Hma1jiZxunZwchJTj2ms2GqnEt")
       --version string    quickon version(oss: stable-2.6/ee: stable-1.0)
 ```
 
