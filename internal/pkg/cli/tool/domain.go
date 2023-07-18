@@ -25,7 +25,6 @@ import (
 	"github.com/imroc/req/v3"
 	"github.com/spf13/cobra"
 	"helm.sh/helm/v3/pkg/strvals"
-	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -55,11 +54,11 @@ func domainClean(f factory.Factory) *cobra.Command {
 			secretKey := cfg.Cluster.ID
 			if len(secretKey) == 0 {
 				kclient, _ := k8s.NewSimpleClient()
-				cm, err := kclient.Clientset.CoreV1().ConfigMaps(common.GetDefaultSystemNamespace(true)).Get(context.TODO(), "q-suffix-host", metav1.GetOptions{})
+				ns, err := kclient.GetNamespace(context.TODO(), common.DefaultKubeSystem, metav1.GetOptions{})
 				if err != nil {
 					return
 				}
-				secretKey = cm.Data["auth"]
+				secretKey = string(ns.ObjectMeta.GetUID())
 				cfg.Cluster.ID = secretKey
 				cfg.SaveConfig()
 			}
@@ -101,29 +100,21 @@ func domainAdd(f factory.Factory) *cobra.Command {
 			}
 			if len(customdomain) == 0 {
 				kclient, _ := k8s.NewSimpleClient()
-				cm, err := kclient.Clientset.CoreV1().ConfigMaps(common.GetDefaultSystemNamespace(true)).Get(context.TODO(), "q-suffix-host", metav1.GetOptions{})
+				ns, err := kclient.GetNamespace(context.TODO(), common.DefaultKubeSystem, metav1.GetOptions{})
 				if err != nil {
-					if errors.IsNotFound(err) {
-						log.Debug("q-suffix-host not found, create it")
-						cm = suffixdomain.GenerateSuffixConfigMap("q-suffix-host", common.GetDefaultSystemNamespace(true))
-						if _, err := kclient.Clientset.CoreV1().ConfigMaps(common.GetDefaultSystemNamespace(true)).Create(context.TODO(), cm, metav1.CreateOptions{}); err != nil {
-							log.Errorf("k8s api err: %v", err)
-							return
-						}
-					} else {
-						log.Errorf("conn k8s err: %v", err)
-						return
-					}
+					log.Errorf("conn k8s err: %v", err)
+					return
 				}
-				auth := cm.Data["auth"]
+				secretKey := string(ns.ObjectMeta.GetUID())
 				ip := exnet.LocalIPs()[0]
 				// TODO
-				domain, _, err = suffixdomain.GenerateDomain(ip, auth, suffixdomain.GenCustomDomain(suffixdomain.SearchCustomDomain(ip, auth, "")))
+				domain, _, err = suffixdomain.GenerateDomain(ip, secretKey, suffixdomain.GenCustomDomain(suffixdomain.SearchCustomDomain(ip, secretKey, "")))
 				if len(domain) == 0 {
 					log.Warnf("gen domain failed: %v, use default domain: demo.corp.cc", err)
 					domain = "demo.corp.cc"
 				}
 				cfg.Domain = domain
+				cfg.Cluster.ID = secretKey
 			} else {
 				cfg.Domain = customdomain
 			}

@@ -79,6 +79,7 @@ const (
 	QcAdminBinPath           = "/usr/bin/qcadmin"
 	StatusWaitDuration       = 5 * time.Minute
 	WaitRetryInterval        = 5 * time.Second
+	DefaultKubeSystem        = "kube-system"
 	DefaultHelmRepoName      = "install"
 	DefaultSystem            = "cne-system"
 	DefaultSystemNamespace   = "quickon-system"

@@ -28,12 +28,11 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/internal/pkg/util/ssh"
-	"github.com/ergoapi/util/exid"
 	"github.com/ergoapi/util/expass"
 	"github.com/ergoapi/util/exstr"
 	"github.com/ergoapi/util/file"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 )
 
@@ -275,7 +274,11 @@ func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error
 	if err := c.waitk3sReady(cfg.Cluster.InitNode, sshClient); err != nil {
 		return err
 	}
-	cfg.Cluster.ID = exid.GenUUID()
+	kclient, _ := k8s.NewSimpleClient()
+	if ns, _ := kclient.GetNamespace(context.TODO(), common.DefaultKubeSystem, metav1.GetOptions{}); ns != nil {
+		cfg.Cluster.ID = string(ns.GetUID())
+	}
+
 	cfg.Cluster.PodCIDR = c.PodCIDR
 	cfg.Cluster.ServiceCIDR = c.ServiceCIDR
 	cfg.Cluster.CNI = c.CNI
@@ -494,12 +497,6 @@ func (c *Cluster) Clean() error {
 	ips := cfg.GetIPs()
 	if len(ips) == 0 {
 		ips = append(ips, exnet.LocalIPs()[0])
-	}
-	if strings.HasSuffix(cfg.Domain, "haogs.cn") || strings.HasSuffix(cfg.Domain, "corp.cc") {
-		c.log.Infof("clean domain %s", cfg.Domain)
-		if err := qcexec.Command(os.Args[0], "domain", "clean", cfg.Domain).Run(); err != nil {
-			c.log.Warnf("clean domain %s failed, reason: %v", cfg.Domain, err)
-		}
 	}
 	sshClient := ssh.NewSSHClient(&cfg.Global.SSH, true)
 	var wg sync.WaitGroup

@@ -426,21 +426,11 @@ func (m *Meta) readyQuickON(ctx context.Context) error {
 }
 
 func (m *Meta) getOrCreateUUIDAndAuth() (auth string, err error) {
-	// cm := &corev1.ConfigMap{}
-	cm, err := m.kubeClient.Clientset.CoreV1().ConfigMaps(common.GetDefaultSystemNamespace(true)).Get(context.TODO(), "q-suffix-host", metav1.GetOptions{})
+	ns, err := m.kubeClient.GetNamespace(context.TODO(), common.DefaultKubeSystem, metav1.GetOptions{})
 	if err != nil {
-		if !kubeerr.IsNotFound(err) {
-			return "", err
-		}
-		if kubeerr.IsNotFound(err) {
-			m.log.Debug("q-suffix-host not found, create it")
-			cm = suffixdomain.GenerateSuffixConfigMap("q-suffix-host", common.GetDefaultSystemNamespace(true))
-			if _, err := m.kubeClient.Clientset.CoreV1().ConfigMaps(common.GetDefaultSystemNamespace(true)).Create(context.TODO(), cm, metav1.CreateOptions{}); err != nil {
-				return "", err
-			}
-		}
+		return "", err
 	}
-	return cm.Data["auth"], nil
+	return string(ns.GetUID()), nil
 }
 
 func (m *Meta) genSuffixHTTPHost(ip string) (domain, tls string, err error) {
@@ -485,6 +475,7 @@ func (m *Meta) Show() {
 
 func (m *Meta) UnInstall() error {
 	m.log.Warnf("start clean quickon.")
+	cfg, _ := config.LoadConfig()
 	// 清理helm安装应用
 	m.log.Info("start uninstall cne custom tools")
 	toolArgs := []string{"experimental", "helm", "uninstall", "--name", "selfcert", "--namespace", common.GetDefaultSystemNamespace(true)}
@@ -511,6 +502,12 @@ func (m *Meta) UnInstall() error {
 	repoCleanArgs := []string{"experimental", "helm", "repo-del"}
 	_ = qcexec.Command(os.Args[0], repoCleanArgs...).Run()
 	m.log.Done("uninstall helm repo success")
+	if strings.HasSuffix(cfg.Domain, "haogs.cn") || strings.HasSuffix(cfg.Domain, "corp.cc") {
+		m.log.Infof("clean domain %s", cfg.Domain)
+		if err := qcexec.Command(os.Args[0], "exp", "tools", "domain", "clean", cfg.Domain).Run(); err != nil {
+			m.log.Warnf("clean domain %s failed, reason: %v", cfg.Domain, err)
+		}
+	}
 	f := common.GetCustomConfig(common.InitFileName)
 	if file.CheckFileExists(f) {
 		os.Remove(f)
