@@ -196,9 +196,9 @@ func (nc NetworkCheck) Check() error {
 			a = "unreachable"
 		}
 		if err := qnetutil.CheckNameserverAvailability(ns + ":53"); err != nil {
-			log.Warnf("nameserver: %s (ICMP %s, DNS unreachable: %s)", color.SRed(ns), a, err)
+			log.Warnf("nameserver %s (ICMP %s, DNS unreachable: %s)", color.SRed(ns), a, err)
 		} else {
-			log.Donef("nameserver: %s (ICMP %s, DNS reachable)", color.SGreen(ns), a)
+			log.Donef("nameserver %s (ICMP %s, DNS reachable)", color.SGreen(ns), a)
 		}
 	} else {
 		log.Warnf("failed to reading default nameserver from system: %s", err)
@@ -256,12 +256,12 @@ func (nc NetworkCheck) Check() error {
 	go func() {
 		defer wg.Done()
 		if nc.offline {
-			log.Infof("skipping match CDN Edge trace")
+			log.Infof("skipping match cdn edge trace")
 		} else {
 			if loc, err := qnetutil.GetCloudflareEdgeTrace(); err == nil {
-				log.Donef("match Cloudflare CDN: %s", color.SGreen(loc))
+				log.Donef("match cdn edge trace loc %s", color.SGreen(loc))
 			} else {
-				log.Warnf("miss Cloudflare CDN failed")
+				log.Warnf("miss cdn edge trace")
 			}
 		}
 	}()

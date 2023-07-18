@@ -88,7 +88,8 @@ func GenerateDomain(iip, secretKey, domain string) (string, string, error) {
 	log := log.GetInstance()
 	var respbody RespBody
 	if !kutil.IsLegalDomain(domain) {
-		return "", "", fmt.Errorf("domain not allow")
+		log.Infof("use custom domain %s", color.SGreen(domain))
+		return domain, "", nil
 	}
 	subDomain, mainDomain := kutil.SplitDomain(domain)
 	reqbody := ReqBody{

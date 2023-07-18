@@ -235,33 +235,37 @@ func (m *Meta) Init() error {
 			m.Domain = "demo.corp.cc"
 			m.log.Warnf("gen suffix domain failed, reason: %v, use default domain: %s", err, m.Domain)
 		}
-		m.log.Infof("load %s tls cert", m.Domain)
-		defaultTLS := fmt.Sprintf("%s/tls-haogs-cn.yaml", common.GetDefaultCacheDir())
-		m.log.StartWait(fmt.Sprintf("start issuing domain %s certificate, may take 3-5min", m.Domain))
-		waittls := time.Now()
-		for {
-			if file.CheckFileExists(defaultTLS) {
-				m.log.StopWait()
-				m.log.Done("download tls cert success")
-				if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.GetDefaultSystemNamespace(true), "--kubeconfig", common.GetKubeConfig()).Run(); err != nil {
-					m.log.Warnf("load default tls cert failed, reason: %v", err)
-				} else {
-					m.log.Done("load default tls cert success")
+		if kutil.IsLegalDomain(m.Domain) {
+			m.log.Infof("load %s tls cert", m.Domain)
+			defaultTLS := fmt.Sprintf("%s/tls-haogs-cn.yaml", common.GetDefaultCacheDir())
+			m.log.StartWait(fmt.Sprintf("start issuing domain %s certificate, may take 3-5min", m.Domain))
+			waittls := time.Now()
+			for {
+				if file.CheckFileExists(defaultTLS) {
+					m.log.StopWait()
+					m.log.Done("download tls cert success")
+					if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.GetDefaultSystemNamespace(true), "--kubeconfig", common.GetKubeConfig()).Run(); err != nil {
+						m.log.Warnf("load default tls cert failed, reason: %v", err)
+					} else {
+						m.log.Done("load default tls cert success")
+					}
+					qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", "default", "--kubeconfig", common.GetKubeConfig()).Run()
+					break
 				}
-				qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", "default", "--kubeconfig", common.GetKubeConfig()).Run()
-				break
+				_, mainDomain := kutil.SplitDomain(m.Domain)
+				domainTLS := fmt.Sprintf("https://pkg.qucheng.com/ssl/%s/%s/tls.yaml", mainDomain, m.Domain)
+				qcexec.Command(os.Args[0], "experimental", "tools", "wget", "-t", domainTLS, "-d", defaultTLS).Run()
+				m.log.Debug("wait for tls cert ready...")
+				time.Sleep(time.Second * 5)
+				trywaitsc := time.Now()
+				if trywaitsc.Sub(waittls) > time.Minute*3 {
+					// TODO  timeout
+					m.log.Debugf("wait tls cert ready, timeout: %v", trywaitsc.Sub(waittls).Seconds())
+					break
+				}
 			}
-			_, mainDomain := kutil.SplitDomain(m.Domain)
-			domainTLS := fmt.Sprintf("https://pkg.qucheng.com/ssl/%s/%s/tls.yaml", mainDomain, m.Domain)
-			qcexec.Command(os.Args[0], "experimental", "tools", "wget", "-t", domainTLS, "-d", defaultTLS).Run()
-			m.log.Debug("wait for tls cert ready...")
-			time.Sleep(time.Second * 5)
-			trywaitsc := time.Now()
-			if trywaitsc.Sub(waittls) > time.Minute*3 {
-				// TODO  timeout
-				m.log.Debugf("wait tls cert ready, timeout: %v", trywaitsc.Sub(waittls).Seconds())
-				break
-			}
+		} else {
+			m.log.Infof("use custom domain %s, you should add dns record to your domain: *.%s -> %s", m.Domain, color.SGreen(m.Domain), color.SGreen(m.IP))
 		}
 	} else {
 		m.log.Infof("use custom domain %s, you should add dns record to your domain: *.%s -> %s", m.Domain, color.SGreen(m.Domain), color.SGreen(m.IP))
