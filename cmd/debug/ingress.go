@@ -15,6 +15,7 @@ func IngressNoHostCommand(f factory.Factory) *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			// TODO 需要二次确认
 		},
+		Hidden: true,
 	}
 	return ingress
 }
