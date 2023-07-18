@@ -33,6 +33,7 @@ import (
 	"github.com/ergoapi/util/exstr"
 	"github.com/ergoapi/util/file"
 
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 )
 
@@ -493,6 +494,12 @@ func (c *Cluster) Clean() error {
 	ips := cfg.GetIPs()
 	if len(ips) == 0 {
 		ips = append(ips, exnet.LocalIPs()[0])
+	}
+	if strings.HasSuffix(cfg.Domain, "haogs.cn") || strings.HasSuffix(cfg.Domain, "corp.cc") {
+		c.log.Infof("clean domain %s", cfg.Domain)
+		if err := qcexec.Command(os.Args[0], "domain", "clean", cfg.Domain).Run(); err != nil {
+			c.log.Warnf("clean domain %s failed, reason: %v", cfg.Domain, err)
+		}
 	}
 	sshClient := ssh.NewSSHClient(&cfg.Global.SSH, true)
 	var wg sync.WaitGroup

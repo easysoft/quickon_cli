@@ -26,7 +26,7 @@ func newCmdUninstall(f factory.Factory) *cobra.Command {
 	uninstallCmd := &cobra.Command{
 		Use:     "uninstall",
 		Short:   "Uninstall cluster",
-		Aliases: []string{"un"},
+		Aliases: []string{"un", "clean"},
 	}
 	uninstallCmd.Run = func(cmd *cobra.Command, args []string) {
 		log.Info("start uninstall")
