@@ -71,7 +71,9 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 				os.Exit(0)
 			}
 		} else {
-			if err := preCheck.Run(); err != nil && !nCluster.IgnorePreflightErrors {
+			preCheck.OffLine = nCluster.OffLine
+			preCheck.IgnorePreflightErrors = nCluster.IgnorePreflightErrors
+			if err := preCheck.Run(); err != nil {
 				log.Errorf("precheck failed, reason: %v", err)
 				os.Exit(-1)
 			}

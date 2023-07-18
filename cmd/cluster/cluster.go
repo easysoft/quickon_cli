@@ -53,7 +53,9 @@ func InitCommand(f factory.Factory) *cobra.Command {
 				myCluster.MasterIPs = append(myCluster.MasterIPs, exnet.LocalIPs()[0])
 			}
 			// 禁止重复初始化
-			if err := preCheck.Run(); err != nil && !myCluster.IgnorePreflightErrors {
+			preCheck.IgnorePreflightErrors = myCluster.IgnorePreflightErrors
+			preCheck.OffLine = myCluster.OffLine
+			if err := preCheck.Run(); err != nil {
 				return err
 			}
 			return nil

@@ -26,6 +26,7 @@ func newCmdPreCheck(f factory.Factory) *cobra.Command {
 		Args: cobra.NoArgs,
 	}
 	cmd.PersistentFlags().BoolVar(&pc.IgnorePreflightErrors, "ignore", false, "ignore precheck error")
+	cmd.PersistentFlags().BoolVar(&pc.OffLine, "offline", false, "offline mode")
 	return cmd
 }
 

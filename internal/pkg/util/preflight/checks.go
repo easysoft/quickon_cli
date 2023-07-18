@@ -173,7 +173,9 @@ func (IsPrivilegedUserCheck) Name() string {
 	return "IsPrivilegedUser"
 }
 
-type NetworkCheck struct{}
+type NetworkCheck struct {
+	offline bool
+}
 
 // Name returns name for NetworkCheck
 func (NetworkCheck) Name() string {
@@ -181,7 +183,7 @@ func (NetworkCheck) Name() string {
 }
 
 // Check validates if the user is privileged.
-func (NetworkCheck) Check() error {
+func (nc NetworkCheck) Check() error {
 	log := log.GetInstance()
 	if gw, err := qnetutil.CheckDefaultRoute(); err == nil {
 		log.Donef("default route %s reachable via icmp", color.SGreen(gw.String()))
@@ -205,42 +207,62 @@ func (NetworkCheck) Check() error {
 	wg.Add(5)
 	go func() {
 		defer wg.Done()
-		if err := qnetutil.CheckCaptivePortal(); err == nil {
-			log.Donef("captive portal %s detected success", color.SGreen(common.DefaultGenerate204URL))
+		if nc.offline {
+			log.Infof("skipping captive portal %s detection", color.SGreen(common.DefaultGenerate204URL))
 		} else {
-			log.Warnf("captive portal %s detected failed: %s", color.SRed(common.DefaultGenerate204URL), err)
+			if err := qnetutil.CheckCaptivePortal(); err == nil {
+				log.Donef("captive portal %s detected success", color.SGreen(common.DefaultGenerate204URL))
+			} else {
+				log.Warnf("captive portal %s detected failed: %s", color.SRed(common.DefaultGenerate204URL), err)
+			}
 		}
 	}()
 	go func() {
 		defer wg.Done()
-		if err := qnetutil.CheckCaptivePortal(common.MiuiGenerate204URL); err == nil {
-			log.Donef("captive portal %s detected success", color.SGreen(common.MiuiGenerate204URL))
+		if nc.offline {
+			log.Infof("skipping captive portal %s detection", color.SGreen(common.MiuiGenerate204URL))
 		} else {
-			log.Warnf("captive portal %s detected failed: %s", color.SRed(common.MiuiGenerate204URL), err)
+			if err := qnetutil.CheckCaptivePortal(common.MiuiGenerate204URL); err == nil {
+				log.Donef("captive portal %s detected success", color.SGreen(common.MiuiGenerate204URL))
+			} else {
+				log.Warnf("captive portal %s detected failed: %s", color.SRed(common.MiuiGenerate204URL), err)
+			}
 		}
 	}()
 	go func() {
 		defer wg.Done()
-		if err := qnetutil.CheckNameserverAvailability("119.29.29.29:53"); err != nil {
-			log.Warnf("remote dns %s is unavailable: %s", color.SRed("119.29.29.29"), err)
+		if nc.offline {
+			log.Infof("skipping detection remote dns %s", color.SGreen("119.29.29.29"))
 		} else {
-			log.Donef("remote dns %s is available", color.SGreen("119.29.29.29"))
+			if err := qnetutil.CheckNameserverAvailability("119.29.29.29:53"); err != nil {
+				log.Warnf("remote dns %s is unavailable: %s", color.SRed("119.29.29.29"), err)
+			} else {
+				log.Donef("remote dns %s is available", color.SGreen("119.29.29.29"))
+			}
 		}
 	}()
 	go func() {
 		defer wg.Done()
-		if err := qnetutil.CheckNameserverAvailability("1.2.4.8:53"); err != nil {
-			log.Warnf("remote dns %s is unavailable: %s", color.SRed("1.2.4.8"), err)
+		if nc.offline {
+			log.Infof("skipping detection remote dns %s", color.SGreen("1.2.4.8"))
 		} else {
-			log.Donef("remote dns %s is available", color.SGreen("1.2.4.8"))
+			if err := qnetutil.CheckNameserverAvailability("1.2.4.8:53"); err != nil {
+				log.Warnf("remote dns %s is unavailable: %s", color.SRed("1.2.4.8"), err)
+			} else {
+				log.Donef("remote dns %s is available", color.SGreen("1.2.4.8"))
+			}
 		}
 	}()
 	go func() {
 		defer wg.Done()
-		if loc, err := qnetutil.GetCloudflareEdgeTrace(); err == nil {
-			log.Donef("match Cloudflare CDN: %s", color.SGreen(loc))
+		if nc.offline {
+			log.Infof("skipping match CDN Edge trace")
 		} else {
-			log.Warnf("miss Cloudflare CDN failed")
+			if loc, err := qnetutil.GetCloudflareEdgeTrace(); err == nil {
+				log.Donef("match Cloudflare CDN: %s", color.SGreen(loc))
+			} else {
+				log.Warnf("miss Cloudflare CDN failed")
+			}
 		}
 	}()
 	wg.Wait()
@@ -705,7 +727,7 @@ func (MemCheck) Name() string {
 // The boolean flag 'isSecondaryControlPlane' controls whether we are running checks in a --join-control-plane scenario.
 // The boolean flag 'downloadCerts' controls whether we should skip checks on certificates because we are downloading them.
 // If the flag is set to true we should skip checks already executed by RunJoinNodeChecks.
-func RunInitNodeChecks(execer utilsexec.Interface, cfg *types.Metadata, ignorePreflightErrors bool) error {
+func RunInitNodeChecks(execer utilsexec.Interface, cfg *types.Metadata, ignorePreflightErrors, offline bool) error {
 	log := log.GetInstance()
 	if err := RunRootCheckOnly(ignorePreflightErrors); err != nil {
 		return err
@@ -727,7 +749,7 @@ func RunInitNodeChecks(execer utilsexec.Interface, cfg *types.Metadata, ignorePr
 		PortOpenCheck{port: 443},
 		PortOpenCheck{port: 6443},
 		PortOpenCheck{port: 32379},
-		NetworkCheck{},
+		NetworkCheck{offline: offline},
 		// FileAvailableCheck{Path: kubeadmconstants.GetStaticPodFilepath(kubeadmconstants.KubeAPIServer, manifestsDir)},
 		// FileAvailableCheck{Path: kubeadmconstants.GetStaticPodFilepath(kubeadmconstants.KubeControllerManager, manifestsDir)},
 		// FileAvailableCheck{Path: kubeadmconstants.GetStaticPodFilepath(kubeadmconstants.KubeScheduler, manifestsDir)},
