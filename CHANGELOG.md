@@ -1,5 +1,17 @@
 # Changelog
 
+## v2.1.0 (2023-07-18)
+
+ * [7996157](https://github.com/easysoft/quickon_cli/commit/7996157dd5f6e8b261a2b150925fbd491f51903c) fix(cluster): fix cluster & domain
+ * [8016eb9](https://github.com/easysoft/quickon_cli/commit/8016eb927cb40e8dc74b9e4f6d6d20df2cd1aaaf) feat(domain): fix use custom domain by gendomain
+ * [ece08f7](https://github.com/easysoft/quickon_cli/commit/ece08f7fdd70126adaa1e0b5d7db0d60edf94411) fix(offline): fix offline netcheck
+ * [48afebb](https://github.com/easysoft/quickon_cli/commit/48afebb15db28ba65dc4034eda190f92f63493e6) fix(uninstall): imp clean
+ * [e9e59c7](https://github.com/easysoft/quickon_cli/commit/e9e59c70057f3979561574d07467d5ddfdf78aaa) feat(debug): debug add netcheck
+
+### Contributors
+
+ * ysicing
+
 ## v2.0.12 (2023-07-17)
 
  * [7e4e55d](https://github.com/easysoft/quickon_cli/commit/7e4e55de627783fd289df0dd8265412384fccc30) feat(precheck): add network precheck
