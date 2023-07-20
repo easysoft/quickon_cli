@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.2.0 (2023-07-20)
+
+ * [58ac393](https://github.com/easysoft/quickon_cli/commit/58ac3934d227cbf0943de532038a9490ec81063a) fix(#7): deprecated ip
+ * [78b51c9](https://github.com/easysoft/quickon_cli/commit/78b51c9328e2154996d5ecae9c1811a8b2b79064) fix(ip): fix not found cfg ip is null
+
+### Contributors
+
+ * ysicing
+
 ## v2.1.0 (2023-07-18)
 
  * [7996157](https://github.com/easysoft/quickon_cli/commit/7996157dd5f6e8b261a2b150925fbd491f51903c) fix(cluster): fix cluster & domain
