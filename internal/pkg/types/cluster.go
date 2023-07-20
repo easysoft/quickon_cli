@@ -63,6 +63,7 @@ type Flag struct {
 	ShortHand string
 	Usage     string
 	Required  bool
+	Hidden    bool
 	EnvVar    string
 }
 

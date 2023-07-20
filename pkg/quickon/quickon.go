@@ -66,10 +66,11 @@ func (m *Meta) GetFlags() []types.Flag {
 			V:     m.Domain,
 		},
 		{
-			Name:  "ip",
-			Usage: "quickon ip",
-			P:     &m.IP,
-			V:     m.IP,
+			Name:   "ip",
+			Usage:  "quickon ip",
+			P:      &m.IP,
+			V:      m.IP,
+			Hidden: true,
 		},
 		{
 			Name:  "version",

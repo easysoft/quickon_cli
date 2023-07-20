@@ -71,6 +71,9 @@ func ConvertFlags(cmd *cobra.Command, fs []types.Flag) *pflag.FlagSet {
 				if f.Required {
 					_ = cobra.MarkFlagRequired(pf, f.Name)
 				}
+				if f.Hidden {
+					pf.MarkHidden(f.Name)
+				}
 			}
 		} else {
 			if cmd.Flags().Lookup(f.Name) == nil {
@@ -91,6 +94,9 @@ func ConvertFlags(cmd *cobra.Command, fs []types.Flag) *pflag.FlagSet {
 				}
 				if f.Required {
 					_ = cobra.MarkFlagRequired(pf, f.Name)
+				}
+				if f.Hidden {
+					pf.MarkHidden(f.Name)
 				}
 			}
 		}
