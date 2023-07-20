@@ -102,8 +102,13 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 			quickonClient.QuickonType = common.QuickonEEType
 		}
 		if len(quickonClient.IP) == 0 {
+			// TODO fix ip, not allow PublicIP
 			cfg, _ := config.LoadConfig()
-			quickonClient.IP = cfg.Cluster.InitNode
+			ip := cfg.Cluster.InitNode
+			if len(ip) == 0 {
+				ip = exnet.LocalIPs()[0]
+			}
+			quickonClient.IP = ip
 		}
 		if err := quickonClient.Init(); err != nil {
 			log.Errorf("init quickon failed, reason: %v", err)

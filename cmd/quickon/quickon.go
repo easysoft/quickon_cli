@@ -12,6 +12,7 @@ import (
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/pkg/quickon"
+	"github.com/ergoapi/util/exnet"
 	"github.com/spf13/cobra"
 )
 
@@ -50,7 +51,11 @@ func InitCommand(f factory.Factory) *cobra.Command {
 			}
 			if len(quickonClient.IP) == 0 {
 				cfg, _ := config.LoadConfig()
-				quickonClient.IP = cfg.Cluster.InitNode
+				ip := cfg.Cluster.InitNode
+				if len(ip) == 0 {
+					ip = exnet.LocalIPs()[0]
+				}
+				quickonClient.IP = ip
 			}
 			return quickonClient.Init()
 		},
