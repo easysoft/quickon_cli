@@ -159,6 +159,9 @@ ExecStart=/usr/local/bin/k3s \
         --datastore-endpoint {{ .DataStore }} \
       {{else -}}
         --cluster-init \
+        --etcd-expose-metrics \
+        --etcd-snapshot-name auto-snapshot \
+        --etcd-snapshot-compress \
       {{end -}}
       {{if .LocalStorage -}}
         --disable servicelb,traefik \
@@ -179,7 +182,7 @@ ExecStart=/usr/local/bin/k3s \
     {{if not .Master0 -}}
       --server https://{{ .KubeAPI }}:6443 \
     {{end -}}
-          --data-dir {{.DataDir}} \
+      --data-dir {{.DataDir}} \
       --docker \
       --pause-image {{ .Registry }}/rancher/mirrored-pause:3.6 \
       --prefer-bundled-bin \

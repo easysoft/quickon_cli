@@ -9,7 +9,7 @@ require (
 	github.com/cheggaaa/pb/v3 v3.1.2
 	github.com/cockroachdb/errors v1.9.1
 	github.com/containerd/continuity v0.3.0
-	github.com/docker/docker v23.0.3+incompatible
+	github.com/docker/docker v23.0.5+incompatible
 	github.com/easysoft/quickon-api v0.6.1
 	github.com/emirpasic/gods v1.18.1
 	github.com/ergoapi/util v0.5.0
@@ -26,7 +26,7 @@ require (
 	github.com/manifoldco/promptui v0.9.0
 	github.com/mattn/go-isatty v0.0.19
 	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d
-	github.com/miekg/dns v1.1.43
+	github.com/miekg/dns v1.1.54
 	github.com/moby/term v0.0.0-20221205130635-1aeaba878587
 	github.com/muesli/mango-cobra v1.2.0
 	github.com/muesli/roff v0.1.0
@@ -61,8 +61,6 @@ require (
 	tailscale.com v1.42.0
 )
 
-replace tailscale.com => tailscale.com v1.40.1
-
 require (
 	github.com/6tail/lunar-go v1.3.3 // indirect
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230106234847-43070de90fa1 // indirect
@@ -72,7 +70,7 @@ require (
 	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/sprig/v3 v3.2.3 // indirect
 	github.com/Masterminds/squirrel v1.5.3 // indirect
-	github.com/Microsoft/go-winio v0.6.0 // indirect
+	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20230426101702-58e86b294756 // indirect
 	github.com/VividCortex/ewma v1.2.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20200428143746-21a406dcc535 // indirect
@@ -89,7 +87,7 @@ require (
 	github.com/cyphar/filepath-securejoin v0.2.3 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/daviddengcn/go-colortext v1.0.0 // indirect
-	github.com/docker/cli v23.0.1+incompatible // indirect
+	github.com/docker/cli v23.0.5+incompatible // indirect
 	github.com/docker/distribution v2.8.2+incompatible // indirect
 	github.com/docker/docker-credential-helpers v0.7.0 // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
@@ -116,7 +114,7 @@ require (
 	github.com/golang-module/carbon/v2 v2.2.3 // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
-	github.com/google/btree v1.0.1 // indirect
+	github.com/google/btree v1.1.2 // indirect
 	github.com/google/gnostic v0.6.9 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/go-github/v53 v53.2.0 // indirect
@@ -138,7 +136,7 @@ require (
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/kisielk/errcheck v1.6.3 // indirect
-	github.com/klauspost/compress v1.16.0 // indirect
+	github.com/klauspost/compress v1.16.5 // indirect
 	github.com/kr/fs v0.1.0 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
@@ -190,7 +188,7 @@ require (
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/tklauser/go-sysconf v0.3.11 // indirect
 	github.com/tklauser/numcpus v0.6.0 // indirect
-	github.com/vishvananda/netns v0.0.0-20211101163701-50045581ed74 // indirect
+	github.com/vishvananda/netns v0.0.4 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
@@ -221,7 +219,7 @@ require (
 	k8s.io/kube-openapi v0.0.0-20230515203736-54b630e78af5 // indirect
 	oras.land/oras-go v1.2.3 // indirect
 	rsc.io/goversion v1.2.0 // indirect
-	sigs.k8s.io/controller-runtime v0.14.5 // indirect
+	sigs.k8s.io/controller-runtime v0.14.6 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/kustomize/api v0.13.4 // indirect
 	sigs.k8s.io/kustomize/kustomize/v5 v5.0.1 // indirect
