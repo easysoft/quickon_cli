@@ -62,7 +62,7 @@ func nfs(f factory.Factory) *cobra.Command {
 					return err
 				}
 				if an == "yes" {
-					if err := qcexec.CommandRun("bash", "-c", "/root/.qc/data/hack/manifests/storage/nfs-server.sh"); err != nil {
+					if err := qcexec.CommandRun("bash", "-c", common.GetCustomScripts("hack/manifests/storage/nfs-server.sh")); err != nil {
 						return errors.Errorf("%s run init script failed, reason: %v", ip, err)
 					}
 					ip = exnet.LocalIPs()[0]

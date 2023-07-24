@@ -175,3 +175,7 @@ func GetQuickONName(t QuickonType) string {
 	}
 	return fmt.Sprintf("%s-biz", DefaultQuchengName)
 }
+
+func GetCustomScripts(path string) string {
+	return fmt.Sprintf("%s/%s", GetDefaultDataDir(), path)
+}

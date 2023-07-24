@@ -1,6 +1,7 @@
 #!/bin/bash
 
-datadir=${1:-"/opt/quickon/platform"}
+datadir=${1:-"/opt/quickon"}
+platformdir="$datadir/platform"
 logdir=${2:-"/root/.qc/log"}
 
 command_exists() {
@@ -14,5 +15,5 @@ fi
 
 k3sbin=$(command -v k3s)
 
-$k3sbin etcd-snapshot save --name qcli --data-dir $datadir --snapshot-compress --log $logdir/etcd-snapshot-cli.log
-$k3sbin etcd-snapshot ls --data-dir $datadir | grep -v "auto"
+$k3sbin etcd-snapshot save --name qcli --data-dir $platformdir --snapshot-compress --log $logdir/etcd-snapshot-cli.log
+$k3sbin etcd-snapshot ls --data-dir $platformdir | grep -v "auto"

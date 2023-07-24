@@ -227,7 +227,7 @@ func (c *Cluster) preinit(mip, ip string, sshClient ssh.Interface) error {
 		return errors.Errorf("load q version failed, reason: %v", err)
 	}
 	c.log.StartWait(ip + " start run init script")
-	if err := sshClient.CmdAsync(ip, "/root/.qc/data/hack/manifests/scripts/init.sh"); err != nil {
+	if err := sshClient.CmdAsync(ip, common.GetCustomScripts("hack/manifests/scripts/init.sh")); err != nil {
 		return errors.Errorf("%s run init script failed, reason: %v", ip, err)
 	}
 	c.log.StopWait()
@@ -238,7 +238,7 @@ func (c *Cluster) preinit(mip, ip string, sshClient ssh.Interface) error {
 		c.log.Debugf("cmd: %s", hostsArgs)
 		return errors.Errorf("%s add master0 (kubeapi.k7s.local --> %s) failed, reason: %v", ip, mip, err)
 	}
-	if err := sshClient.CmdAsync(ip, "/root/.qc/data/hack/manifests/scripts/node.sh"); err != nil {
+	if err := sshClient.CmdAsync(ip, common.GetCustomScripts("hack/manifests/scripts/node.sh")); err != nil {
 		return errors.Errorf("%s run init script failed, reason: %v", ip, err)
 	}
 	return nil
@@ -449,7 +449,7 @@ func (c *Cluster) JoinNode() error {
 func (c *Cluster) cleanNode(ip string, sshClient ssh.Interface, wg *sync.WaitGroup) {
 	defer wg.Done()
 	c.log.StartWait(fmt.Sprintf("start clean node: %s", ip))
-	err := sshClient.CmdAsync(ip, "/root/.qc/data/hack/manifests/scripts/cleankube.sh")
+	err := sshClient.CmdAsync(ip, common.GetCustomScripts("hack/manifests/scripts/cleankube.sh"))
 	c.log.StopWait()
 	if err != nil {
 		c.log.Warnf("clean node %s failed, reason: %v", ip, err)
