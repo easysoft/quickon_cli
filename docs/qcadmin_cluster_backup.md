@@ -1,15 +1,19 @@
-## qcadmin cluster status
+## qcadmin cluster backup
 
-status cluster
+backup cluster
+
+### Synopsis
+
+backup cluster
 
 ```
-qcadmin cluster status [flags]
+qcadmin cluster backup [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for status
+  -h, --help   help for backup
 ```
 
 ### Options inherited from parent commands
