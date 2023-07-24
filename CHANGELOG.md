@@ -1,5 +1,14 @@
 # Changelog
 
+## v2.2.1 (2023-07-24)
+
+ * [ff5f52d](https://github.com/easysoft/quickon_cli/commit/ff5f52d3661c8dc32c5fe5204ba6c02c8902b203) feat(backup): support etcd backup
+ * [8630a4b](https://github.com/easysoft/quickon_cli/commit/8630a4b4fced54872b6434908248948f50b71537) feat(backup): add backup
+
+### Contributors
+
+ * ysicing
+
 ## v2.2.0 (2023-07-20)
 
  * [58ac393](https://github.com/easysoft/quickon_cli/commit/58ac3934d227cbf0943de532038a9490ec81063a) fix(#7): deprecated ip
