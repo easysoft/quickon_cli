@@ -1,5 +1,18 @@
 # Changelog
 
+## v2.2.2 (2023-07-26)
+
+ * [d1b9eb5](https://github.com/easysoft/quickon_cli/commit/d1b9eb53dc69b813290e5fd575915a9aca53653c) feat(debug): add port-forward
+ * [f3283c1](https://github.com/easysoft/quickon_cli/commit/f3283c1fcade01adec012b9a6c4e309f4d0d9abd) feat(storage): add longhorn & nfs beta support
+ * [1969a4b](https://github.com/easysoft/quickon_cli/commit/1969a4b7eddf9efa56c206a6ebf634bf08f2f0e1) feat(storage): add longhorn support
+ * [e939985](https://github.com/easysoft/quickon_cli/commit/e939985b4aaec840239ad74f9749a0274f6b800c) feat(update): update
+ * [b53d3c7](https://github.com/easysoft/quickon_cli/commit/b53d3c7f8ae2f132bcfabdcea46eef560eb7d0ca) build(deps): bump github.com/imroc/req/v3 from 3.35.0 to 3.37.2 (#174)
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v2.2.1 (2023-07-24)
 
  * [ff5f52d](https://github.com/easysoft/quickon_cli/commit/ff5f52d3661c8dc32c5fe5204ba6c02c8902b203) feat(backup): support etcd backup
