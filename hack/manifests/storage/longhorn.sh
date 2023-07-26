@@ -5,7 +5,9 @@
 # (2) Affero General Public License 3.0 (AGPL 3.0)
 # license that can be found in the LICENSE file.
 
+qcadmin exp helm repo-list | grep install || (
+  qcadmin exp helm repo-add --name install --url https://hub.qucheng.com/chartrepo/stable
+)
+qcadmin exp helm repo-update
 
-helm repo add q-stable https://hub.qucheng.com/chartrepo/stable
-helm repo update
-helm upgrade -i openebs q-stable/longhorn -n quickon-storage --create-namespace
+helm upgrade -i longhorn q-stable/longhorn -n quickon-storage --create-namespace

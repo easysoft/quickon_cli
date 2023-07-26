@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-[ -f "/.nfs-export.done" ] && exit 0
-
 if type apt >/dev/null 2>&1; then
   apt update
   apt install -y nfs-common nfs-kernel-server
@@ -29,5 +27,3 @@ echo "$SPATH *(insecure,rw,sync,no_root_squash,no_subtree_check)" > /etc/exports
 exportfs -r
 
 showmount -e 127.0.0.1
-
-touch /.nfs-export.done

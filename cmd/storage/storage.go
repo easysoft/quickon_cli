@@ -39,9 +39,36 @@ func NewCmdStorage(f factory.Factory) *cobra.Command {
 		Short: "storage commands",
 		Long:  "manage cluster storage",
 	}
+	s.AddCommand(longhorn(f))
 	s.AddCommand(nfs(f))
 	s.AddCommand(defaultStorage(f))
 	return s
+}
+
+func longhorn(f factory.Factory) *cobra.Command {
+	var ip, path, name string
+	logpkg := f.GetLog()
+	cmd := &cobra.Command{
+		Use:   "longhorn",
+		Short: "deploy longhorn storage",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if err := qcexec.CommandRun("bash", "-c", common.GetCustomScripts("hack/manifests/storage/longhorn_environment_check.sh")); err != nil {
+				return errors.Errorf("longhorn environment check failed, reason: %v", err)
+			}
+			return nil
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if err := qcexec.CommandRun("bash", "-c", common.GetCustomScripts("hack/manifests/storage/longhorn.sh")); err != nil {
+				return errors.Errorf("longhorn install failed, reason: %v", err)
+			}
+			logpkg.Infof("install longhorn storage success")
+			return nil
+		},
+	}
+	cmd.Flags().StringVar(&ip, "ip", "", "cloud cfs/nas ip")
+	cmd.Flags().StringVar(&path, "path", "", "cloud cfs/nas path")
+	cmd.Flags().StringVar(&name, "name", "q-nfs", "storage class name")
+	return cmd
 }
 
 func nfs(f factory.Factory) *cobra.Command {
