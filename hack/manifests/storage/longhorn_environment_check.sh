@@ -39,7 +39,7 @@ info() {
     else
      log_title=''
     fi
-    echo -e "${CYAN}[INFO] ${log_title} ${NO_COLOR}$1"
+    echo -e "${CYAN}[INFO]  ${log_title} ${NO_COLOR}$1"
   fi
 }
 
@@ -53,7 +53,7 @@ warn() {
     else
      log_title=''
     fi
-    echo -e "${YELLOW}[WARN] ${log_title} ${NO_COLOR}$1"
+    echo -e "${YELLOW}[WARN]  ${log_title} ${NO_COLOR}$1"
   fi
 }
 

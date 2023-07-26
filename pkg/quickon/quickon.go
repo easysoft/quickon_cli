@@ -131,12 +131,16 @@ func (m *Meta) checkStorage() {
 	defaultClass, _ := m.kubeClient.GetDefaultSC(context.Background())
 	m.log.StopWait()
 	if defaultClass == nil {
+		// TODO default storage
 		m.log.Infof("not found default storage class, will install default storage")
-		m.log.Debug("start install default storage: local-storage")
-		if err := qcexec.CommandRun(os.Args[0], "quickon", "plugins", "enable", "storage"); err != nil {
+		m.log.Debug("start install default storage: longhorn")
+		if err := qcexec.CommandRun(os.Args[0], "cluster", "storage", "longhorn"); err != nil {
 			m.log.Errorf("install storage failed, reason: %v", err)
 		} else {
-			m.log.Done("install storage: local-storage success")
+			m.log.Done("install storage: longhorn success")
+		}
+		if err := qcexec.CommandRun(os.Args[0], "cluster", "storage", "set-default"); err != nil {
+			m.log.Errorf("set default storageclass failed, reason: %v", err)
 		}
 	} else {
 		m.log.Infof("found exist default storage class: %s", defaultClass.Name)

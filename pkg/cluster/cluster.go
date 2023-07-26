@@ -26,6 +26,7 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/cli/k3stpl"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/internal/pkg/util/ssh"
 	"github.com/ergoapi/util/expass"
@@ -405,6 +406,11 @@ func (c *Cluster) InitNode() error {
 		if err := c.joinNode(host, false, cfg, sshClient); err != nil {
 			c.log.Warnf("skip join worker: %s, reason: %v", host, err)
 		}
+	}
+	if c.Storage == "longhorn" || c.Storage == "nfs" {
+		c.log.Infof("install %s as storageclass", c.Storage)
+		scArgs := []string{"cluster", "storage", c.Storage}
+		return qcexec.CommandRun(os.Args[0], scArgs...)
 	}
 	return nil
 }

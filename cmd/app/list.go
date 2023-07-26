@@ -78,7 +78,7 @@ func NewCmdAppList(f factory.Factory) *cobra.Command {
 					log.Debugf("authUsername: %s, authPassword: %s", authUsername, authPassword)
 					log.Infof("app meta:\n\t   username: %s\n\t   password: %s\n\t   url: %s", color.SBlue(authUsername), color.SBlue(authPassword), color.SBlue(host))
 				} else {
-					log.Infof("app meta:\n\turl: %s", color.SBlue(host))
+					log.Infof("app meta:\n\t url: %s", color.SBlue(host))
 				}
 				return nil
 			}

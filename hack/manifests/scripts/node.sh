@@ -12,15 +12,15 @@ set -o noglob
 # --- helper functions for logs ---
 info()
 {
-    echo '[INFO] ' "$@"
+    echo '[INFO]  ' "$@"
 }
 warn()
 {
-    echo '[WARN] ' "$@" >&2
+    echo '[WARN]  ' "$@" >&2
 }
 fatal()
 {
-    echo '[ERROR] ' "$@" >&2
+    echo '[ERROR]  ' "$@" >&2
     exit 1
 }
 

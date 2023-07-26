@@ -46,7 +46,6 @@ func NewCmdStorage(f factory.Factory) *cobra.Command {
 }
 
 func longhorn(f factory.Factory) *cobra.Command {
-	var ip, path, name string
 	logpkg := f.GetLog()
 	cmd := &cobra.Command{
 		Use:   "longhorn",
@@ -65,9 +64,6 @@ func longhorn(f factory.Factory) *cobra.Command {
 			return nil
 		},
 	}
-	cmd.Flags().StringVar(&ip, "ip", "", "cloud cfs/nas ip")
-	cmd.Flags().StringVar(&path, "path", "", "cloud cfs/nas path")
-	cmd.Flags().StringVar(&name, "name", "q-nfs", "storage class name")
 	return cmd
 }
 
@@ -157,6 +153,9 @@ func defaultStorage(f factory.Factory) *cobra.Command {
 						return err
 					}
 				}
+			}
+			if len(scItems) == 1 {
+				return kubeClient.PatchDefaultSC(ctx, scs.Items[0].DeepCopy(), true)
 			}
 			newDefaultSCName, err := logpkg.Question(&survey.QuestionOptions{
 				Question:     "select default storage class",
