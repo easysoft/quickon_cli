@@ -13,14 +13,18 @@ import (
 	"os"
 	"time"
 
+	"github.com/easysoft/qcadmin/common"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+	"github.com/ergoapi/util/exnet"
+	"github.com/ergoapi/util/zos"
 
 	"github.com/pkg/browser"
 )
 
-func PortForwardCommand(ctx context.Context, ns, svc string, sport, dport int) error {
+func PortForwardCommand(ctx context.Context, ns, svc string, sport int) error {
 	log := log.GetInstance()
+	dport := exnet.GetFreePort()
 	args := []string{
 		"experimental",
 		"kubectl",
@@ -29,18 +33,21 @@ func PortForwardCommand(ctx context.Context, ns, svc string, sport, dport int) e
 		fmt.Sprintf("svc/%s", svc),
 		"--address", "0.0.0.0",
 		"--address", "::",
+		"--kubeconfig", common.GetKubeConfig(),
 		fmt.Sprintf("%d:%d", dport, sport)}
+
+	url := fmt.Sprintf("%s:%d", exnet.LocalIPs()[0], dport)
+	log.Infof("listen to: %s", url)
 
 	go func() {
 		time.Sleep(5 * time.Second)
-		url := fmt.Sprintf("http://localhost:%d", dport)
 
 		// avoid cluttering stdout/stderr when opening the browser
 		browser.Stdout = io.Discard
 		browser.Stderr = io.Discard
-		log.Infof("Opening %q in your browser...", url)
-		browser.OpenURL(url)
+		if zos.IsMacOS() {
+			browser.OpenURL(url)
+		}
 	}()
-	_, err := qcexec.CommandRespByte(os.Args[0], args...)
-	return err
+	return qcexec.CommandRun(os.Args[0], args...)
 }

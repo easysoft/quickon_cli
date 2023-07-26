@@ -26,5 +26,6 @@ func newCmdDebug(f factory.Factory) *cobra.Command {
 	debugCmd.AddCommand(debug.IngressNoHostCommand(f))
 	debugCmd.AddCommand(debug.GOpsCommand(f))
 	debugCmd.AddCommand(debug.NetcheckCommand(f))
+	debugCmd.AddCommand(debug.PortForwardCommand(f))
 	return debugCmd
 }
