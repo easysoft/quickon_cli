@@ -26,6 +26,8 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+	_ "github.com/easysoft/qcadmin/pkg/providers/devops"
+	_ "github.com/easysoft/qcadmin/pkg/providers/quickon"
 )
 
 var (

@@ -52,7 +52,8 @@ type Install struct {
 }
 
 type Quickon struct {
-	Type common.QuickonType `yaml:"type" json:"type"`
+	Type   common.QuickonType `yaml:"type" json:"type"`
+	DevOps bool               `yaml:"devops" json:"devops"`
 }
 
 type Cluster struct {
