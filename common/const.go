@@ -87,6 +87,7 @@ const (
 	DefaultAppNamespace      = "quickon-app"
 	DefaultCINamespace       = "quickon-ci"
 	DefaultQuchengName       = "qucheng"
+	DefaultZentaoPassName    = "zentaopass"
 	DefaultCneOperatorName   = "cne-operator"
 	DefaultIngressName       = "nginx-ingress-controller"
 	DefaultDBName            = "qucheng-mysql"

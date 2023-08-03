@@ -10,58 +10,68 @@ import (
 	"github.com/easysoft/qcadmin/cmd/flags"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
+	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+	"github.com/easysoft/qcadmin/pkg/providers"
 	"github.com/easysoft/qcadmin/pkg/quickon"
 	"github.com/ergoapi/util/exnet"
 	"github.com/spf13/cobra"
 )
 
-func CheckCommand(f factory.Factory) *cobra.Command {
-	check := &cobra.Command{
-		Use:   "check",
-		Short: "check cluster ready",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			quickonClient := quickon.New(f)
-			if err := quickonClient.GetKubeClient(); err != nil {
-				return err
-			}
-			return quickonClient.Check()
-		},
+var (
+	initCmd = &cobra.Command{
+		Use: "init",
 	}
-	return check
+	skip      bool
+	cProvider = "devops"
+	cp        providers.Provider
+)
+
+func init() {
+	initCmd.Flags().StringVarP(&cProvider, "provider", "p", cProvider, "Provider is a module which provides an interface for managing cloud resources")
 }
 
 func InitCommand(f factory.Factory) *cobra.Command {
-	quickonClient := quickon.New(f)
-	init := &cobra.Command{
-		Use:   "init",
-		Short: "init quickon",
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := quickonClient.GetKubeClient(); err != nil {
-				return err
-			}
-			return quickonClient.Check()
-		},
-		RunE: func(cmd *cobra.Command, args []string) error {
-			if !quickonClient.QuickonOSS {
-				quickonClient.QuickonType = common.QuickonEEType
-			}
-			if err := quickonClient.GetKubeClient(); err != nil {
-				return err
-			}
-			if len(quickonClient.IP) == 0 {
-				cfg, _ := config.LoadConfig()
-				ip := cfg.Cluster.InitNode
-				if len(ip) == 0 {
-					ip = exnet.LocalIPs()[0]
-				}
-				quickonClient.IP = ip
-			}
-			return quickonClient.Init()
-		},
+	log := f.GetLog()
+	pStr := flags.FlagHackLookup("--provider")
+	var fs []types.Flag
+	if pStr != "" {
+		if reg, err := providers.GetProvider(pStr); err != nil {
+			log.Warn(err)
+		} else {
+			cp = reg
+		}
+		fs = append(fs, cp.GetFlags()...)
 	}
-	init.Flags().AddFlagSet(flags.ConvertFlags(init, quickonClient.GetFlags()))
-	return init
+	quickonClient := quickon.New(f)
+	fs = append(fs, quickonClient.GetFlags()...)
+	initCmd.Short = "init quickon"
+	initCmd.PreRunE = func(cmd *cobra.Command, args []string) error {
+		if err := quickonClient.GetKubeClient(); err != nil {
+			return err
+		}
+		return quickonClient.Check()
+	}
+
+	initCmd.RunE = func(cmd *cobra.Command, args []string) error {
+		if !quickonClient.QuickonOSS {
+			quickonClient.QuickonType = common.QuickonEEType
+		}
+		if err := quickonClient.GetKubeClient(); err != nil {
+			return err
+		}
+		if len(quickonClient.IP) == 0 {
+			cfg, _ := config.LoadConfig()
+			ip := cfg.Cluster.InitNode
+			if len(ip) == 0 {
+				ip = exnet.LocalIPs()[0]
+			}
+			quickonClient.IP = ip
+		}
+		return quickonClient.Init()
+	}
+	initCmd.Flags().AddFlagSet(flags.ConvertFlags(initCmd, fs))
+	return initCmd
 }
 
 func UninstallCommand(f factory.Factory) *cobra.Command {
@@ -78,4 +88,19 @@ func UninstallCommand(f factory.Factory) *cobra.Command {
 		},
 	}
 	return uninstall
+}
+
+func CheckCommand(f factory.Factory) *cobra.Command {
+	check := &cobra.Command{
+		Use:   "check",
+		Short: "check cluster ready",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			quickonClient := quickon.New(f)
+			if err := quickonClient.GetKubeClient(); err != nil {
+				return err
+			}
+			return quickonClient.Check()
+		},
+	}
+	return check
 }

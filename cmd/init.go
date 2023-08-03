@@ -11,6 +11,7 @@ import (
 	"os"
 
 	"github.com/easysoft/qcadmin/internal/app/config"
+	"github.com/easysoft/qcadmin/pkg/providers"
 	"github.com/easysoft/qcadmin/pkg/quickon"
 
 	"github.com/easysoft/qcadmin/cmd/flags"
@@ -20,6 +21,7 @@ import (
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
+	"github.com/easysoft/qcadmin/internal/pkg/types"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/file"
@@ -35,24 +37,39 @@ var (
 		Use:   "init",
 		Short: "Initialize a Kubernetes & Quickon cluster",
 	}
-	skip    bool
-	appName string
+	skip      bool
+	cProvider = "devops"
+	cp        providers.Provider
+	appName   string
 )
 
 func init() {
+	initCmd.Flags().StringVarP(&cProvider, "provider", "p", cProvider, "Provider is a module which provides an interface for managing cloud resources")
 	initCmd.PersistentFlags().BoolVar(&skip, "skip-precheck", false, "skip precheck")
 	initCmd.PersistentFlags().StringVar(&appName, "app", "zentao", "app name")
 }
 
 func newCmdInit(f factory.Factory) *cobra.Command {
-	var preCheck precheck.PreCheck
 	log := f.GetLog()
+	pStr := flags.FlagHackLookup("--provider")
+	var fs []types.Flag
+	if pStr != "" {
+		if reg, err := providers.GetProvider(pStr); err != nil {
+			log.Warn(err)
+		} else {
+			cp = reg
+		}
+		fs = append(fs, cp.GetFlags()...)
+	}
+
+	var preCheck precheck.PreCheck
+
 	defaultArgs := os.Args
 	globalToolPath := defaultArgs[0]
 	name := "native"
 	nCluster := nativeCluster.NewCluster(f)
 	quickonClient := quickon.New(f)
-	fs := quickonClient.GetFlags()
+	fs = quickonClient.GetFlags()
 	if file.CheckFileExists(common.GetKubeConfig()) {
 		name = "incluster"
 		initCmd.Long = `Found k8s config, run this command in order to set up Quickon Control Plane`
