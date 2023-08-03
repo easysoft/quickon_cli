@@ -35,40 +35,42 @@ func InitCommand(f factory.Factory) *cobra.Command {
 	log := f.GetLog()
 	pStr := flags.FlagHackLookup("--provider")
 	var fs []types.Flag
-	if pStr != "" {
-		if reg, err := providers.GetProvider(pStr); err != nil {
-			log.Warn(err)
-		} else {
-			cp = reg
-		}
-		fs = append(fs, cp.GetFlags()...)
+	if pStr == "" {
+		pStr = cProvider
 	}
-	quickonClient := quickon.New(f)
-	fs = append(fs, quickonClient.GetFlags()...)
+	if reg, err := providers.GetProvider(pStr); err != nil {
+		log.Warn(err)
+	} else {
+		cp = reg
+	}
+	fs = append(fs, cp.GetFlags()...)
+	meta := cp.GetMeta()
+	// quickonClient := quickon.New(f)
+	// fs = append(fs, quickonClient.GetFlags()...)
 	initCmd.Short = "init quickon"
 	initCmd.PreRunE = func(cmd *cobra.Command, args []string) error {
-		if err := quickonClient.GetKubeClient(); err != nil {
+		if err := cp.GetKubeClient(); err != nil {
 			return err
 		}
-		return quickonClient.Check()
+		return cp.Check()
 	}
 
 	initCmd.RunE = func(cmd *cobra.Command, args []string) error {
-		if !quickonClient.QuickonOSS {
-			quickonClient.QuickonType = common.QuickonEEType
+		if !meta.QuickonOSS {
+			meta.QuickonType = common.QuickonEEType
 		}
-		if err := quickonClient.GetKubeClient(); err != nil {
+		if err := cp.GetKubeClient(); err != nil {
 			return err
 		}
-		if len(quickonClient.IP) == 0 {
+		if len(meta.IP) == 0 {
 			cfg, _ := config.LoadConfig()
 			ip := cfg.Cluster.InitNode
 			if len(ip) == 0 {
 				ip = exnet.LocalIPs()[0]
 			}
-			quickonClient.IP = ip
+			meta.IP = ip
 		}
-		return quickonClient.Init()
+		return cp.Install()
 	}
 	initCmd.Flags().AddFlagSet(flags.ConvertFlags(initCmd, fs))
 	return initCmd

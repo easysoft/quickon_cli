@@ -12,6 +12,7 @@ import (
 
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+	"github.com/easysoft/qcadmin/pkg/quickon"
 )
 
 // Factory is a function that returns a Provider.Interface.
@@ -24,6 +25,9 @@ var (
 
 type Provider interface {
 	GetProviderName() string
+	GetMeta() *quickon.Meta
+	GetKubeClient() error
+	Check() error
 	GetFlags() []types.Flag
 	Install() error
 	Show() error

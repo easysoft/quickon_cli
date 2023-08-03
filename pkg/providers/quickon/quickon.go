@@ -9,11 +9,13 @@ package quickon
 import (
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/pkg/providers"
+	"github.com/easysoft/qcadmin/pkg/quickon"
 )
 
 const providerName = "quickon"
 
 type Quickon struct {
+	quickon.Meta
 }
 
 func init() {
@@ -31,13 +33,32 @@ func (q *Quickon) GetProviderName() string {
 }
 
 func (q *Quickon) GetFlags() []types.Flag {
-	return nil
+	fs := q.GetCustomFlags()
+	fs = append(fs, types.Flag{
+		Name:  "password",
+		Usage: "quickon console password",
+		P:     &q.ConsolePassword,
+		V:     q.ConsolePassword,
+	})
+	return fs
 }
 
 func (q *Quickon) Install() error {
-	return nil
+	return q.Init()
 }
 
 func (q *Quickon) Show() error {
-	return nil
+	return q.Show()
+}
+
+func (q *Quickon) GetKubeClient() error {
+	return q.GetKubeClient()
+}
+
+func (q *Quickon) Check() error {
+	return q.Check()
+}
+
+func (q *Quickon) GetMeta() *quickon.Meta {
+	return &q.Meta
 }

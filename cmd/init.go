@@ -69,7 +69,7 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 	name := "native"
 	nCluster := nativeCluster.NewCluster(f)
 	quickonClient := quickon.New(f)
-	fs = quickonClient.GetFlags()
+	fs = quickonClient.GetCustomFlags()
 	if file.CheckFileExists(common.GetKubeConfig()) {
 		name = "incluster"
 		initCmd.Long = `Found k8s config, run this command in order to set up Quickon Control Plane`

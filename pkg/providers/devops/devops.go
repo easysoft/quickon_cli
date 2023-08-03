@@ -9,11 +9,13 @@ package devops
 import (
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/pkg/providers"
+	"github.com/easysoft/qcadmin/pkg/quickon"
 )
 
 const providerName = "devops"
 
 type Devops struct {
+	quickon.Meta
 }
 
 func init() {
@@ -26,18 +28,33 @@ func newProvider() *Devops {
 	return &Devops{}
 }
 
+// GetProviderName returns the name of the provider
 func (q *Devops) GetProviderName() string {
 	return providerName
 }
 
+// GetFlags returns the flags of the provider
 func (q *Devops) GetFlags() []types.Flag {
-	return nil
+	return q.GetCustomFlags()
 }
 
+// Install installs the provider
 func (q *Devops) Install() error {
-	return nil
+	return q.Install()
 }
 
 func (q *Devops) Show() error {
-	return nil
+	return q.Show()
+}
+
+func (q *Devops) GetKubeClient() error {
+	return q.GetKubeClient()
+}
+
+func (q *Devops) Check() error {
+	return q.Check()
+}
+
+func (q *Devops) GetMeta() *quickon.Meta {
+	return &q.Meta
 }

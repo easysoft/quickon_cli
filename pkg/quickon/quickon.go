@@ -57,7 +57,7 @@ func New(f factory.Factory) *Meta {
 	}
 }
 
-func (m *Meta) GetFlags() []types.Flag {
+func (m *Meta) GetCustomFlags() []types.Flag {
 	return []types.Flag{
 		{
 			Name:  "domain",
@@ -77,12 +77,6 @@ func (m *Meta) GetFlags() []types.Flag {
 			Usage: fmt.Sprintf("quickon version(oss: %s/ee: %s)", common.DefaultQuickonOssVersion, common.DefaultQuickonEEVersion),
 			P:     &m.Version,
 			V:     m.Version,
-		},
-		{
-			Name:  "password",
-			Usage: "quickon console password",
-			P:     &m.ConsolePassword,
-			V:     m.ConsolePassword,
 		},
 		{
 			Name:  "oss",
