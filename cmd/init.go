@@ -44,14 +44,14 @@ var (
 )
 
 func init() {
-	initCmd.Flags().StringVarP(&cProvider, "provider", "p", cProvider, "Provider is a module which provides an interface for managing cloud resources")
+	initCmd.Flags().StringVarP(&cProvider, "mode", "m", cProvider, "Provider is a module which provides an interface for managing cloud resources")
 	initCmd.PersistentFlags().BoolVar(&skip, "skip-precheck", false, "skip precheck")
 	initCmd.PersistentFlags().StringVar(&appName, "app", "zentao", "app name")
 }
 
 func newCmdInit(f factory.Factory) *cobra.Command {
 	log := f.GetLog()
-	pStr := flags.FlagHackLookup("--provider")
+	pStr := flags.FlagHackLookup("--mode")
 	var fs []types.Flag
 	if pStr != "" {
 		if reg, err := providers.GetProvider(pStr); err != nil {

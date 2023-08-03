@@ -80,13 +80,13 @@ func (m *Meta) GetCustomFlags() []types.Flag {
 		},
 		{
 			Name:  "oss",
-			Usage: "quickon mode",
+			Usage: "type, oss or ee, default: oss",
 			P:     &m.QuickonOSS,
 			V:     m.QuickonType == common.QuickonOSSType,
 		},
 		{
 			Name:  "offline",
-			Usage: "quickon offline install mode",
+			Usage: "offline install mode, default: false",
 			P:     &m.OffLine,
 			V:     false,
 		},
