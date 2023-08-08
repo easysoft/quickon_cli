@@ -10,10 +10,14 @@ import (
 	"fmt"
 
 	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
+	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/providers"
 	"github.com/easysoft/qcadmin/pkg/quickon"
+	"github.com/ergoapi/util/color"
+	"github.com/ergoapi/util/exnet"
 )
 
 const providerName = "devops"
@@ -31,8 +35,10 @@ func init() {
 func newProvider() *Devops {
 	return &Devops{
 		MetaData: &quickon.Meta{
-			Log:        log.GetInstance(),
-			DevopsMode: true,
+			Log:         log.GetInstance(),
+			DevopsMode:  true,
+			QuickonType: common.QuickonOSSType,
+			Version:     common.GetZenTaoVersion("", common.QuickonOSSType),
 		},
 	}
 }
@@ -60,8 +66,25 @@ func (q *Devops) Install() error {
 }
 
 func (q *Devops) Show() {
-	// devops show
-	q.MetaData.Show()
+	if len(q.MetaData.IP) <= 0 {
+		q.MetaData.IP = exnet.LocalIPs()[0]
+	}
+	cfg, _ := config.LoadConfig()
+	domain := cfg.Domain
+
+	q.MetaData.Log.Info("----------------------------\t")
+	if len(domain) > 0 {
+		if !kutil.IsLegalDomain(cfg.Domain) {
+			domain = fmt.Sprintf("http://zentao.%s", cfg.Domain)
+		} else {
+			domain = fmt.Sprintf("https://%s", cfg.Domain)
+		}
+	} else {
+		domain = fmt.Sprintf("http://%s:32379", q.MetaData.IP)
+	}
+	q.MetaData.Log.Donef("console: %s", color.SGreen(domain))
+	q.MetaData.Log.Donef("docs: %s", common.ZentaoDocs)
+	q.MetaData.Log.Done("support: 768721743(QQGroup)")
 }
 
 func (q *Devops) GetKubeClient() error {

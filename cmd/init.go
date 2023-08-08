@@ -59,7 +59,8 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 		} else {
 			cp = reg
 		}
-		fs = append(fs, cp.GetFlags()...)
+		cpFlags := cp.GetFlags()
+		fs = append(fs, cpFlags...)
 	}
 
 	var preCheck precheck.PreCheck

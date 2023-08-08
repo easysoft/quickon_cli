@@ -69,7 +69,11 @@ func InitCommand(f factory.Factory) *cobra.Command {
 			}
 			meta.IP = ip
 		}
-		return cp.Install()
+		if err := cp.Install(); err != nil {
+			return err
+		}
+		cp.Show()
+		return nil
 	}
 	initCmd.Flags().AddFlagSet(flags.ConvertFlags(initCmd, fs))
 	return initCmd

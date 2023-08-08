@@ -214,10 +214,11 @@ func (m *Meta) Init() error {
 			return err
 		}
 	}
+	m.Log.Debugf("version: %v, type: %v", m.Version, m.QuickonType)
 	chartVersion := common.GetVersion(m.Version, m.QuickonType)
 	if m.DevopsMode {
 		// TODO: 获取zentao devops chart version
-		chartVersion = m.Version
+		chartVersion = common.GetZenTaoVersion(m.Version, m.QuickonType)
 		m.Log.Debugf("start init zentao devops, version: %s", chartVersion)
 		cfg.Quickon.Type = m.QuickonType
 		cfg.Quickon.DevOps = true
@@ -301,7 +302,7 @@ func (m *Meta) Init() error {
 		m.Log.Done("deployed operator success")
 	}
 	helmchan := common.GetChannel(m.Version)
-	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.GetQuickONName(m.QuickonType), "--namespace", common.GetDefaultSystemNamespace(true), "--set", "env.APP_DOMAIN=" + m.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
+	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.GetQuickONName(m.DevopsMode, m.QuickonType), "--namespace", common.GetDefaultSystemNamespace(true), "--set", "env.APP_DOMAIN=" + m.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
 	if helmchan != "stable" {
 		helmargs = append(helmargs, "--set", "env.PHP_DEBUG=2")
 		helmargs = append(helmargs, "--set", "cloud.switchChannel=true")
@@ -331,15 +332,16 @@ func (m *Meta) Init() error {
 	if len(chartVersion) > 0 {
 		helmargs = append(helmargs, "--version", chartVersion)
 	}
+
 	output, err := qcexec.Command(os.Args[0], helmargs...).CombinedOutput()
 	if err != nil {
 		m.Log.Errorf("upgrade install web failed: %s", string(output))
 		return err
 	}
-	m.Log.Done("install success")
+	m.Log.Donef("install %s success", common.GetQuickONName(m.DevopsMode, m.QuickonType))
 	if m.OffLine {
 		// patch quickon
-		cmfileName := fmt.Sprintf("%s-%s-files", common.DefaultQuchengName, common.GetQuickONName(m.QuickonType))
+		cmfileName := fmt.Sprintf("%s-%s-files", common.DefaultQuchengName, common.GetQuickONName(m.DevopsMode, m.QuickonType))
 		m.Log.Debugf("fetch quickon files from %s", cmfileName)
 		for i := 0; i < 20; i++ {
 			time.Sleep(5 * time.Second)
@@ -364,11 +366,11 @@ repositories:
 				}
 				// 重建pod
 				pods, _ := m.kubeClient.ListPods(ctx, common.GetDefaultSystemNamespace(true), metav1.ListOptions{})
-				podName := fmt.Sprintf("%s-%s", common.DefaultQuchengName, common.GetQuickONName(m.QuickonType))
+				podName := fmt.Sprintf("%s-%s", common.DefaultQuchengName, common.GetQuickONName(m.DevopsMode, m.QuickonType))
 				for _, pod := range pods.Items {
 					if strings.HasPrefix(pod.Name, podName) {
 						if err := m.kubeClient.DeletePod(ctx, pod.Name, common.GetDefaultSystemNamespace(true), metav1.DeleteOptions{}); err != nil {
-							m.Log.Warnf("recreate quickon pods")
+							m.Log.Warnf("recreate %s pods", common.GetQuickONName(m.DevopsMode, m.QuickonType))
 						}
 					}
 				}
@@ -389,7 +391,6 @@ repositories:
 	if err := file.WriteFile(initFile, "init done", true); err != nil {
 		m.Log.Warnf("write init done file failed, reason: %v.\n\t please run: touch %s", err, initFile)
 	}
-	m.Show()
 	return nil
 }
 
@@ -448,33 +449,6 @@ func (m *Meta) genSuffixHTTPHost(ip string) (domain, tls string, err error) {
 		return "", "", err
 	}
 	return domain, tls, nil
-}
-
-func (m *Meta) Show() {
-	if len(m.IP) <= 0 {
-		m.IP = exnet.LocalIPs()[0]
-	}
-	resetPassArgs := []string{"quickon", "reset-password", "--password", m.ConsolePassword}
-	qcexec.CommandRun(os.Args[0], resetPassArgs...)
-	cfg, _ := config.LoadConfig()
-	cfg.ConsolePassword = m.ConsolePassword
-	cfg.SaveConfig()
-	domain := cfg.Domain
-
-	m.Log.Info("----------------------------\t")
-	if len(domain) > 0 {
-		if !kutil.IsLegalDomain(cfg.Domain) {
-			domain = fmt.Sprintf("http://console.%s", cfg.Domain)
-		} else {
-			domain = fmt.Sprintf("https://%s", cfg.Domain)
-		}
-	} else {
-		domain = fmt.Sprintf("http://%s:32379", m.IP)
-	}
-	m.Log.Donef("console: %s, username: %s, password: %s",
-		color.SGreen(domain), color.SGreen(common.QuchengDefaultUser), color.SGreen(m.ConsolePassword))
-	m.Log.Donef("docs: %s", common.QuchengDocs)
-	m.Log.Done("support: 768721743(QQGroup)")
 }
 
 func (m *Meta) UnInstall() error {

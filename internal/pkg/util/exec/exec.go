@@ -12,6 +12,7 @@ import (
 	sysexec "os/exec"
 	"strings"
 
+	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	elog "github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/ergoapi/util/environ"
@@ -48,11 +49,11 @@ func RunCmd(name string, arg ...string) error {
 	return cmd.Run()
 }
 
-func Trace(cmd *sysexec.Cmd) {
-	log := log.GetFileLogger("trace.log")
-	if environ.GetEnv("TRACE", "false") == "true" {
+func trace(cmd *sysexec.Cmd) {
+	log := log.GetFileLogger(fmt.Sprintf("trace.%s.log", common.Version))
+	if environ.GetEnv("QTRACE_DISABLE", "false") == "false" {
 		key := strings.Join(cmd.Args, " ")
-		log.Debugf("+ %s\n", key)
+		log.Debugf("%s", key)
 	}
 }
 
@@ -62,13 +63,13 @@ func Command(name string, arg ...string) *sysexec.Cmd {
 	}
 	cmd := sysexec.Command(name, arg...) // #nosec
 	// cmd.Dir = common.GetDefaultCacheDir()
-	Trace(cmd)
+	trace(cmd)
 	return cmd
 }
 
 func CommandRun(name string, arg ...string) error {
 	cmd := sysexec.Command(name, arg...) // #nosec
-	Trace(cmd)
+	trace(cmd)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin
@@ -79,23 +80,23 @@ func CommandRun(name string, arg ...string) error {
 func CommandBashRunWithResp(cmdStr string) (string, error) {
 	cmd := sysexec.Command("/bin/bash", "-c", cmdStr) // #nosec
 	// cmd.Dir = common.GetDefaultCacheDir()
-	Trace(cmd)
+	trace(cmd)
 	result, err := cmd.CombinedOutput()
 	return string(result), err
 }
 
-func CommandRespByte(command string, args ...string) ([]byte, error) {
-	log := log.GetInstance()
-	c := Command(command, args...)
-	bytes, err := c.CombinedOutput()
-	if err != nil {
-		cmdStr := fmt.Sprintf("%s %s", command, strings.Join(args, " "))
-		log.Debugf("❌ Unable to execute %q:", cmdStr)
-		if len(bytes) > 0 {
-			log.Debugf(" %s", string(bytes))
-		}
-		return []byte{}, fmt.Errorf("unable to execute %q: %w", cmdStr, err)
-	}
+// func CommandRespByte(command string, args ...string) ([]byte, error) {
+// 	log := log.GetInstance()
+// 	c := Command(command, args...)
+// 	bytes, err := c.CombinedOutput()
+// 	if err != nil {
+// 		cmdStr := fmt.Sprintf("%s %s", command, strings.Join(args, " "))
+// 		log.Debugf("❌ Unable to execute %q:", cmdStr)
+// 		if len(bytes) > 0 {
+// 			log.Debugf(" %s", string(bytes))
+// 		}
+// 		return []byte{}, fmt.Errorf("unable to execute %q: %w", cmdStr, err)
+// 	}
 
-	return bytes, err
-}
+// 	return bytes, err
+// }

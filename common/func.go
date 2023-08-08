@@ -98,9 +98,9 @@ func GetZenTaoVersion(p string, qt QuickonType) string {
 	v := strings.Split(p, "-")
 	if len(v) != 2 {
 		if qt == QuickonOSSType {
-			return GetVersion(DefaultQuickonOSSVersion, qt)
+			return GetVersion(DefaultZentaoDevOPSOSSVersion, qt)
 		}
-		return GetVersion(DefaultQuickonEEVersion, qt)
+		return GetVersion(DefaultZentaoDevOPSOSSVersion, qt)
 	}
 	return v[1]
 }
@@ -181,18 +181,21 @@ func GetDefaultQuickONNamespace() []string {
 	return ns
 }
 
-func GetQuickONName(t QuickonType) string {
+func GetQuickONName(devops bool, t QuickonType) string {
 	if t == QuickonOSSType {
-		return DefaultQuchengName
+		return GetReleaseName(devops)
 	}
-	return fmt.Sprintf("%s-biz", DefaultQuchengName)
+	return fmt.Sprintf("%s-biz", GetReleaseName(devops))
 }
 
 func GetCustomScripts(path string) string {
 	return fmt.Sprintf("%s/%s", GetDefaultDataDir(), path)
 }
 
-// GetServiceName get service name
-func GetServiceName() string {
+// GetReleaseName get chart release name
+func GetReleaseName(devops bool) string {
+	if devops == true {
+		return DefaultZentaoPassName
+	}
 	return DefaultQuchengName
 }
