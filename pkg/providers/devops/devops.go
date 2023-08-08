@@ -7,6 +7,9 @@
 package devops
 
 import (
+	"fmt"
+
+	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/providers"
@@ -28,7 +31,8 @@ func init() {
 func newProvider() *Devops {
 	return &Devops{
 		MetaData: &quickon.Meta{
-			Log: log.GetInstance(),
+			Log:        log.GetInstance(),
+			DevopsMode: true,
 		},
 	}
 }
@@ -40,7 +44,14 @@ func (q *Devops) GetProviderName() string {
 
 // GetFlags returns the flags of the provider
 func (q *Devops) GetFlags() []types.Flag {
-	return q.MetaData.GetCustomFlags()
+	fs := q.MetaData.GetCustomFlags()
+	fs = append(fs, types.Flag{
+		Name:  "version",
+		Usage: fmt.Sprintf("zentao devops version %s", common.DefaultZentaoDevOPSOSSVersion),
+		P:     &q.MetaData.Version,
+		V:     q.MetaData.Version,
+	})
+	return fs
 }
 
 // Install installs the provider
@@ -49,6 +60,7 @@ func (q *Devops) Install() error {
 }
 
 func (q *Devops) Show() {
+	// devops show
 	q.MetaData.Show()
 }
 

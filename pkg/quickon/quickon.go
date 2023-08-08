@@ -41,6 +41,7 @@ type Meta struct {
 	IP              string
 	Version         string
 	ConsolePassword string
+	DevopsMode      bool
 	OffLine         bool
 	QuickonOSS      bool
 	QuickonType     common.QuickonType
@@ -51,7 +52,7 @@ type Meta struct {
 func New(f factory.Factory) *Meta {
 	return &Meta{
 		Log: f.GetLog(),
-		// Version:         common.DefaultQuickonOssVersion,
+		// Version:         common.DefaultQuickonOSSVersion,
 		ConsolePassword: expass.PwGenAlphaNum(32),
 		QuickonType:     common.QuickonOSSType,
 	}
@@ -71,12 +72,6 @@ func (m *Meta) GetCustomFlags() []types.Flag {
 			P:      &m.IP,
 			V:      m.IP,
 			Hidden: true,
-		},
-		{
-			Name:  "version",
-			Usage: fmt.Sprintf("quickon version(oss: %s/ee: %s)", common.DefaultQuickonOssVersion, common.DefaultQuickonEEVersion),
-			P:     &m.Version,
-			V:     m.Version,
 		},
 		{
 			Name:  "oss",
@@ -193,7 +188,8 @@ func (m *Meta) addHelmRepo() error {
 }
 
 func (m *Meta) Init() error {
-	m.Log.Info("executing init quickon logic...")
+	cfg, _ := config.LoadConfig()
+	m.Log.Info("executing init logic...")
 	ctx := context.Background()
 	m.Log.Debug("waiting for storage to be ready...")
 	waitsc := time.Now()
@@ -219,7 +215,16 @@ func (m *Meta) Init() error {
 		}
 	}
 	chartVersion := common.GetVersion(m.Version, m.QuickonType)
-	m.Log.Debugf("start init quickon %v, version: %s", m.QuickonType, chartVersion)
+	if m.DevopsMode {
+		// TODO: 获取zentao devops chart version
+		chartVersion = m.Version
+		m.Log.Debugf("start init zentao devops, version: %s", chartVersion)
+		cfg.Quickon.Type = m.QuickonType
+		cfg.Quickon.DevOps = true
+	} else {
+		m.Log.Debugf("start init quickon %v, version: %s", m.QuickonType, chartVersion)
+		cfg.Quickon.Type = m.QuickonType
+	}
 	if m.Domain == "" {
 		err := retry.Retry(time.Second*1, 3, func() (bool, error) {
 			domain, _, err := m.genSuffixHTTPHost(m.IP)
@@ -270,34 +275,30 @@ func (m *Meta) Init() error {
 		m.Log.Infof("use custom domain %s, you should add dns record to your domain: *.%s -> %s", m.Domain, color.SGreen(m.Domain), color.SGreen(m.IP))
 	}
 	token := expass.PwGenAlphaNum(32)
-	cfg, _ := config.LoadConfig()
+
 	cfg.Domain = m.Domain
 	cfg.APIToken = token
 	cfg.S3.Username = expass.PwGenAlphaNum(8)
 	cfg.S3.Password = expass.PwGenAlphaNum(16)
-	cfg.Quickon.Type = m.QuickonType
 	cfg.SaveConfig()
-	m.Log.Info("start deploy cne custom tools")
+	m.Log.Info("start deploy custom tools")
 	toolargs := []string{"experimental", "helm", "upgrade", "--name", "selfcert", "--repo", common.DefaultHelmRepoName, "--chart", "selfcert", "--namespace", common.GetDefaultSystemNamespace(true)}
 	if helmstd, err := qcexec.Command(os.Args[0], toolargs...).CombinedOutput(); err != nil {
-		m.Log.Warnf("deploy cne custom tools err: %v, std: %s", err, string(helmstd))
+		m.Log.Warnf("deploy custom tools err: %v, std: %s", err, string(helmstd))
 	} else {
-		m.Log.Done("deployed cne custom tools success")
+		m.Log.Done("deployed custom tools success")
 	}
-	m.Log.Info("start deploy cne operator")
+	m.Log.Info("start deploy operator")
 	operatorargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultCneOperatorName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultCneOperatorName, "--namespace", common.GetDefaultSystemNamespace(true),
 		"--set", "minio.ingress.enabled=true",
 		"--set", "minio.ingress.host=s3." + m.Domain,
 		"--set", "minio.auth.username=" + cfg.S3.Username,
 		"--set", "minio.auth.password=" + cfg.S3.Password,
 	}
-	//if len(chartversion) > 0 {
-	//	operatorargs = append(operatorargs, "--version", chartversion)
-	//}
 	if helmstd, err := qcexec.Command(os.Args[0], operatorargs...).CombinedOutput(); err != nil {
-		m.Log.Warnf("deploy cne-operator err: %v, std: %s", err, string(helmstd))
+		m.Log.Warnf("deploy operator err: %v, std: %s", err, string(helmstd))
 	} else {
-		m.Log.Done("deployed cne-operator success")
+		m.Log.Done("deployed operator success")
 	}
 	helmchan := common.GetChannel(m.Version)
 	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.GetQuickONName(m.QuickonType), "--namespace", common.GetDefaultSystemNamespace(true), "--set", "env.APP_DOMAIN=" + m.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
@@ -311,7 +312,11 @@ func (m *Meta) Init() error {
 		helmargs = append(helmargs, "--set", "ingress.tls.enabled=true")
 		helmargs = append(helmargs, "--set", "ingress.tls.secretName=tls-haogs-cn")
 	} else {
-		hostdomain = fmt.Sprintf("console.%s", hostdomain)
+		if m.DevopsMode {
+			hostdomain = fmt.Sprintf("zentao.%s", hostdomain)
+		} else {
+			hostdomain = fmt.Sprintf("console.%s", hostdomain)
+		}
 	}
 
 	if m.OffLine {
@@ -328,10 +333,10 @@ func (m *Meta) Init() error {
 	}
 	output, err := qcexec.Command(os.Args[0], helmargs...).CombinedOutput()
 	if err != nil {
-		m.Log.Errorf("upgrade install quickon web failed: %s", string(output))
+		m.Log.Errorf("upgrade install web failed: %s", string(output))
 		return err
 	}
-	m.Log.Done("install quickon success")
+	m.Log.Done("install success")
 	if m.OffLine {
 		// patch quickon
 		cmfileName := fmt.Sprintf("%s-%s-files", common.DefaultQuchengName, common.GetQuickONName(m.QuickonType))
@@ -372,11 +377,11 @@ repositories:
 		}
 
 		// install cne-market
-		m.Log.Infof("start deploy cne cne-market")
+		m.Log.Infof("start deploy cloudapp market")
 		marketargs := []string{"experimental", "helm", "upgrade", "--name", "market", "--repo", common.DefaultHelmRepoName, "--chart", "cne-market-api", "--namespace", common.GetDefaultSystemNamespace(true)}
 		output, err := qcexec.Command(os.Args[0], marketargs...).CombinedOutput()
 		if err != nil {
-			m.Log.Warnf("upgrade install quickon market failed: %s", string(output))
+			m.Log.Warnf("upgrade install cloudapp market failed: %s", string(output))
 		}
 	}
 	m.QuickONReady()
@@ -402,12 +407,12 @@ func (m *Meta) QuickONReady() {
 func (m *Meta) readyQuickON(ctx context.Context) error {
 	t1 := ztime.NowUnix()
 	client := req.C().SetLogger(nil).SetUserAgent(common.GetUG()).SetTimeout(time.Second * 1)
-	m.Log.StartWait("waiting for qucheng ready")
+	m.Log.StartWait("waiting for quickon ready")
 	status := false
 	for {
 		t2 := ztime.NowUnix() - t1
 		if t2 > 180 {
-			m.Log.Warnf("waiting for qucheng ready 3min timeout: check your network or storage. after install you can run: q status")
+			m.Log.Warnf("waiting for quickon ready 3min timeout: check your network or storage. after install you can run: q status")
 			break
 		}
 		_, err := client.R().Get(fmt.Sprintf("http://%s:32379", exnet.LocalIPs()[0]))
@@ -419,7 +424,7 @@ func (m *Meta) readyQuickON(ctx context.Context) error {
 	}
 	m.Log.StopWait()
 	if status {
-		m.Log.Donef("qucheng ready, cost: %v", time.Since(time.Unix(t1, 0)))
+		m.Log.Donef("quickon ready, cost: %v", time.Since(time.Unix(t1, 0)))
 	}
 	return nil
 }

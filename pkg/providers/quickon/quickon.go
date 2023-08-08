@@ -7,6 +7,8 @@
 package quickon
 
 import (
+	"fmt"
+
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
@@ -31,6 +33,7 @@ func newProvider() *Quickon {
 	return &Quickon{
 		MetaData: &quickon.Meta{
 			Log:             log.GetInstance(),
+			DevopsMode:      false,
 			ConsolePassword: expass.PwGenAlphaNum(32),
 			QuickonType:     common.QuickonOSSType,
 		},
@@ -48,6 +51,11 @@ func (q *Quickon) GetFlags() []types.Flag {
 		Usage: "quickon console password",
 		P:     &q.MetaData.ConsolePassword,
 		V:     q.MetaData.ConsolePassword,
+	}, types.Flag{
+		Name:  "version",
+		Usage: fmt.Sprintf("quickon version(oss: %s/ee: %s)", common.DefaultQuickonOSSVersion, common.DefaultQuickonEEVersion),
+		P:     &q.MetaData.Version,
+		V:     q.MetaData.Version,
 	})
 	return fs
 }
@@ -57,6 +65,7 @@ func (q *Quickon) Install() error {
 }
 
 func (q *Quickon) Show() {
+	// quickon show
 	q.MetaData.Show()
 }
 

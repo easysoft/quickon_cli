@@ -37,15 +37,16 @@ func InstallCommand(f factory.Factory) *cobra.Command {
 				return errors.New("missing args: helm or kubectl")
 			}
 			tool := args[0]
-			if tool != "helm" && tool != "kubectl" {
-				return fmt.Errorf("not support tool: %s, only suppor helm, kubectl", tool)
+			if tool != "helm" && tool != "kubectl" && tool != "etcdctl" && tool != "mc" {
+				// TODO add more tools
+				return fmt.Errorf("not support tool: %s, only suppor helm, kubectl, etcdctl", tool)
 			}
 			return nil
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			f.GetLog().Info(args)
+			f.GetLog().Debugf("cli args: %v", args)
 			tool := args[0]
-			remoteURL := fmt.Sprintf("https://pkg.qucheng.com/qucheng/cli/stable/%s/%s-%s-%s", tool, tool, runtime.GOOS, runtime.GOARCH)
+			remoteURL := fmt.Sprintf("https://pkg.qucheng.com/qucheng/cli/stable/tools/%s-%s-%s", tool, runtime.GOOS, runtime.GOARCH)
 			localURL := fmt.Sprintf("%s/qc-%s", common.GetDefaultBinDir(), tool)
 			res, err := downloader.Download(remoteURL, localURL)
 			if err != nil {
@@ -54,7 +55,7 @@ func InstallCommand(f factory.Factory) *cobra.Command {
 			}
 			f.GetLog().Debugf("download %s result: %v", tool, res.Status)
 			_ = os.Chmod(localURL, common.FileMode0755)
-			f.GetLog().Donef(fmt.Sprintf("download %s success\n\tusage: %s", tool, color.SGreen("%s %s", os.Args[0], tool)))
+			f.GetLog().Donef(fmt.Sprintf("download %s success\n\t usage:   %s", tool, color.SGreen("%s %s", os.Args[0], tool)))
 		},
 	}
 	return installCmd

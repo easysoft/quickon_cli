@@ -86,7 +86,19 @@ func GetVersion(p string, qt QuickonType) string {
 	v := strings.Split(p, "-")
 	if len(v) != 2 {
 		if qt == QuickonOSSType {
-			return GetVersion(DefaultQuickonOssVersion, qt)
+			return GetVersion(DefaultQuickonOSSVersion, qt)
+		}
+		return GetVersion(DefaultQuickonEEVersion, qt)
+	}
+	return v[1]
+}
+
+// GetZenTaoVersion 获取chartRepo channel地址
+func GetZenTaoVersion(p string, qt QuickonType) string {
+	v := strings.Split(p, "-")
+	if len(v) != 2 {
+		if qt == QuickonOSSType {
+			return GetVersion(DefaultQuickonOSSVersion, qt)
 		}
 		return GetVersion(DefaultQuickonEEVersion, qt)
 	}
@@ -178,4 +190,9 @@ func GetQuickONName(t QuickonType) string {
 
 func GetCustomScripts(path string) string {
 	return fmt.Sprintf("%s/%s", GetDefaultDataDir(), path)
+}
+
+// GetServiceName get service name
+func GetServiceName() string {
+	return DefaultQuchengName
 }
