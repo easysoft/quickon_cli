@@ -22,7 +22,6 @@ var (
 	initCmd = &cobra.Command{
 		Use: "init",
 	}
-	skip      bool
 	cProvider = "devops"
 	cp        providers.Provider
 )

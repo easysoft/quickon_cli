@@ -8,6 +8,7 @@ package devops
 
 import (
 	"github.com/easysoft/qcadmin/internal/pkg/types"
+	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/providers"
 	"github.com/easysoft/qcadmin/pkg/quickon"
 )
@@ -15,7 +16,7 @@ import (
 const providerName = "devops"
 
 type Devops struct {
-	quickon.Meta
+	MetaData *quickon.Meta
 }
 
 func init() {
@@ -25,7 +26,11 @@ func init() {
 }
 
 func newProvider() *Devops {
-	return &Devops{}
+	return &Devops{
+		MetaData: &quickon.Meta{
+			Log: log.GetInstance(),
+		},
+	}
 }
 
 // GetProviderName returns the name of the provider
@@ -35,26 +40,26 @@ func (q *Devops) GetProviderName() string {
 
 // GetFlags returns the flags of the provider
 func (q *Devops) GetFlags() []types.Flag {
-	return q.GetCustomFlags()
+	return q.MetaData.GetCustomFlags()
 }
 
 // Install installs the provider
 func (q *Devops) Install() error {
-	return q.Install()
+	return q.MetaData.Init()
 }
 
-func (q *Devops) Show() error {
-	return q.Show()
+func (q *Devops) Show() {
+	q.MetaData.Show()
 }
 
 func (q *Devops) GetKubeClient() error {
-	return q.GetKubeClient()
+	return q.MetaData.GetKubeClient()
 }
 
 func (q *Devops) Check() error {
-	return q.Check()
+	return q.MetaData.Check()
 }
 
 func (q *Devops) GetMeta() *quickon.Meta {
-	return &q.Meta
+	return q.MetaData
 }

@@ -58,17 +58,18 @@
 	},
 	"extensions": [
 		"golang.Go",
-		"eamodio.gitlens", // IDE Git information
-		"davidanson.vscode-markdownlint", // Markdown linting
-		"ms-azuretools.vscode-docker", // Docker integration and linting
+		"eamodio.gitlens",
+		"davidanson.vscode-markdownlint",
+		"ms-azuretools.vscode-docker",
 		"ms-kubernetes-tools.vscode-kubernetes-tools",
-		"shardulm94.trailing-spaces", // Show trailing spaces
-		"Gruntfuggly.todo-tree", // Highlights TODO comments
-		"bierner.emojisense", // Emoji sense for markdown
-		"stkb.rewrap", // rewrap comments after n characters on one line
-		"vscode-icons-team.vscode-icons", // Better file extension icons
-		"redhat.vscode-yaml", // Kubernetes, Drone syntax highlighting
-		"mohsen1.prettify-json", // Prettify JSON data
+		"shardulm94.trailing-spaces",
+		"Gruntfuggly.todo-tree",
+		"bierner.emojisense",
+		"stkb.rewrap",
+		"vscode-icons-team.vscode-icons",
+		"redhat.vscode-yaml",
+		"mohsen1.prettify-json",
+		"donjayamanne.githistory"
 	],
 	"runArgs": [
 		"--cap-add=SYS_PTRACE",

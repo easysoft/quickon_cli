@@ -22,3 +22,4 @@ go.work.sum
 _output/
 bin/
 .task
+.history

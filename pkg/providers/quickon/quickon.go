@@ -7,15 +7,18 @@
 package quickon
 
 import (
+	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
+	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/providers"
 	"github.com/easysoft/qcadmin/pkg/quickon"
+	"github.com/ergoapi/util/expass"
 )
 
 const providerName = "quickon"
 
 type Quickon struct {
-	quickon.Meta
+	MetaData *quickon.Meta
 }
 
 func init() {
@@ -25,7 +28,13 @@ func init() {
 }
 
 func newProvider() *Quickon {
-	return &Quickon{}
+	return &Quickon{
+		MetaData: &quickon.Meta{
+			Log:             log.GetInstance(),
+			ConsolePassword: expass.PwGenAlphaNum(32),
+			QuickonType:     common.QuickonOSSType,
+		},
+	}
 }
 
 func (q *Quickon) GetProviderName() string {
@@ -33,32 +42,32 @@ func (q *Quickon) GetProviderName() string {
 }
 
 func (q *Quickon) GetFlags() []types.Flag {
-	fs := q.GetCustomFlags()
+	fs := q.MetaData.GetCustomFlags()
 	fs = append(fs, types.Flag{
 		Name:  "password",
 		Usage: "quickon console password",
-		P:     &q.ConsolePassword,
-		V:     q.ConsolePassword,
+		P:     &q.MetaData.ConsolePassword,
+		V:     q.MetaData.ConsolePassword,
 	})
 	return fs
 }
 
 func (q *Quickon) Install() error {
-	return q.Init()
+	return q.MetaData.Init()
 }
 
-func (q *Quickon) Show() error {
-	return q.Show()
+func (q *Quickon) Show() {
+	q.MetaData.Show()
 }
 
 func (q *Quickon) GetKubeClient() error {
-	return q.GetKubeClient()
+	return q.MetaData.GetKubeClient()
 }
 
 func (q *Quickon) Check() error {
-	return q.Check()
+	return q.MetaData.Check()
 }
 
 func (q *Quickon) GetMeta() *quickon.Meta {
-	return &q.Meta
+	return q.MetaData
 }

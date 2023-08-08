@@ -2,6 +2,7 @@ vendor/
 .devcontainer
 .gitea/
 .github
+.history
 dist/
 completions
 hack/bin/k3s-*

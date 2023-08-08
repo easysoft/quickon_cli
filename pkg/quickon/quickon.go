@@ -45,12 +45,12 @@ type Meta struct {
 	QuickonOSS      bool
 	QuickonType     common.QuickonType
 	kubeClient      *k8s.Client
-	log             log.Logger
+	Log             log.Logger
 }
 
 func New(f factory.Factory) *Meta {
 	return &Meta{
-		log: f.GetLog(),
+		Log: f.GetLog(),
 		// Version:         common.DefaultQuickonOssVersion,
 		ConsolePassword: expass.PwGenAlphaNum(32),
 		QuickonType:     common.QuickonOSSType,
@@ -103,43 +103,43 @@ func (m *Meta) GetKubeClient() error {
 }
 
 func (m *Meta) checkIngress() {
-	m.log.StartWait("check default ingress class")
+	m.Log.StartWait("check default ingress class")
 	defaultClass, _ := m.kubeClient.ListDefaultIngressClass(context.Background(), metav1.ListOptions{})
-	m.log.StopWait()
+	m.Log.StopWait()
 	if defaultClass == nil {
-		m.log.Infof("not found default ingress class, will install nginx ingress")
-		m.log.Debug("start install default ingress: nginx-ingress-controller")
+		m.Log.Infof("not found default ingress class, will install nginx ingress")
+		m.Log.Debug("start install default ingress: nginx-ingress-controller")
 		if err := qcexec.CommandRun(os.Args[0], "quickon", "plugins", "enable", "ingress"); err != nil {
-			m.log.Errorf("install ingress failed, reason: %v", err)
+			m.Log.Errorf("install ingress failed, reason: %v", err)
 		} else {
-			m.log.Done("install ingress: cne-ingress success")
+			m.Log.Done("install ingress: cne-ingress success")
 		}
 	} else {
-		m.log.Infof("found exist default ingress class: %s", defaultClass.Name)
+		m.Log.Infof("found exist default ingress class: %s", defaultClass.Name)
 	}
-	m.log.Done("check default ingress done")
+	m.Log.Done("check default ingress done")
 }
 
 func (m *Meta) checkStorage() {
-	m.log.StartWait("check default storage class")
+	m.Log.StartWait("check default storage class")
 	defaultClass, _ := m.kubeClient.GetDefaultSC(context.Background())
-	m.log.StopWait()
+	m.Log.StopWait()
 	if defaultClass == nil {
 		// TODO default storage
-		m.log.Infof("not found default storage class, will install default storage")
-		m.log.Debug("start install default storage: longhorn")
+		m.Log.Infof("not found default storage class, will install default storage")
+		m.Log.Debug("start install default storage: longhorn")
 		if err := qcexec.CommandRun(os.Args[0], "cluster", "storage", "longhorn"); err != nil {
-			m.log.Errorf("install storage failed, reason: %v", err)
+			m.Log.Errorf("install storage failed, reason: %v", err)
 		} else {
-			m.log.Done("install storage: longhorn success")
+			m.Log.Done("install storage: longhorn success")
 		}
 		if err := qcexec.CommandRun(os.Args[0], "cluster", "storage", "set-default"); err != nil {
-			m.log.Errorf("set default storageclass failed, reason: %v", err)
+			m.Log.Errorf("set default storageclass failed, reason: %v", err)
 		}
 	} else {
-		m.log.Infof("found exist default storage class: %s", defaultClass.Name)
+		m.Log.Infof("found exist default storage class: %s", defaultClass.Name)
 	}
-	m.log.Done("check default storage done")
+	m.Log.Done("check default storage done")
 }
 
 func (m *Meta) Check() error {
@@ -155,7 +155,7 @@ func (m *Meta) Check() error {
 }
 
 func (m *Meta) initNS() error {
-	m.log.Debugf("init quickon default namespace.")
+	m.Log.Debugf("init quickon default namespace.")
 	for _, ns := range common.GetDefaultQuickONNamespace() {
 		_, err := m.kubeClient.GetNamespace(context.TODO(), ns, metav1.GetOptions{})
 		if err != nil {
@@ -167,7 +167,7 @@ func (m *Meta) initNS() error {
 			}
 		}
 	}
-	m.log.Donef("init quickon default namespace success.")
+	m.Log.Donef("init quickon default namespace success.")
 	return nil
 }
 
@@ -176,38 +176,38 @@ func (m *Meta) addHelmRepo() error {
 	if err != nil {
 		errmsg := string(output)
 		if !strings.Contains(errmsg, "exists") {
-			m.log.Errorf("init quickon helm repo failed, reason: %s", string(output))
+			m.Log.Errorf("init quickon helm repo failed, reason: %s", string(output))
 			return err
 		}
-		m.log.Debugf("quickon helm repo already exists")
+		m.Log.Debugf("quickon helm repo already exists")
 	} else {
-		m.log.Done("add quickon helm repo success")
+		m.Log.Done("add quickon helm repo success")
 	}
 	output, err = qcexec.Command(os.Args[0], "experimental", "helm", "repo-update").CombinedOutput()
 	if err != nil {
-		m.log.Errorf("update quickon helm repo failed, reason: %s", string(output))
+		m.Log.Errorf("update quickon helm repo failed, reason: %s", string(output))
 		return err
 	}
-	m.log.Done("update quickon helm repo success")
+	m.Log.Done("update quickon helm repo success")
 	return nil
 }
 
 func (m *Meta) Init() error {
-	m.log.Info("executing init quickon logic...")
+	m.Log.Info("executing init quickon logic...")
 	ctx := context.Background()
-	m.log.Debug("waiting for storage to be ready...")
+	m.Log.Debug("waiting for storage to be ready...")
 	waitsc := time.Now()
 	// wait.BackoffUntil TODO
 	for {
 		sc, _ := m.kubeClient.GetDefaultSC(ctx)
 		if sc != nil {
-			m.log.Donef("default storage %s is ready", sc.Name)
+			m.Log.Donef("default storage %s is ready", sc.Name)
 			break
 		}
 		time.Sleep(time.Second * 5)
 		trywaitsc := time.Now()
 		if trywaitsc.Sub(waitsc) > time.Minute*3 {
-			m.log.Warnf("wait storage ready, timeout: %v", trywaitsc.Sub(waitsc).Seconds())
+			m.Log.Warnf("wait storage ready, timeout: %v", trywaitsc.Sub(waitsc).Seconds())
 			break
 		}
 	}
@@ -219,7 +219,7 @@ func (m *Meta) Init() error {
 		}
 	}
 	chartVersion := common.GetVersion(m.Version, m.QuickonType)
-	m.log.Debugf("start init quickon %v, version: %s", m.QuickonType, chartVersion)
+	m.Log.Debugf("start init quickon %v, version: %s", m.QuickonType, chartVersion)
 	if m.Domain == "" {
 		err := retry.Retry(time.Second*1, 3, func() (bool, error) {
 			domain, _, err := m.genSuffixHTTPHost(m.IP)
@@ -227,26 +227,26 @@ func (m *Meta) Init() error {
 				return false, err
 			}
 			m.Domain = domain
-			m.log.Infof("generate suffix domain: %s, ip: %v", color.SGreen(m.Domain), color.SGreen(m.IP))
+			m.Log.Infof("generate suffix domain: %s, ip: %v", color.SGreen(m.Domain), color.SGreen(m.IP))
 			return true, nil
 		})
 		if err != nil {
 			m.Domain = "demo.corp.cc"
-			m.log.Warnf("gen suffix domain failed, reason: %v, use default domain: %s", err, m.Domain)
+			m.Log.Warnf("gen suffix domain failed, reason: %v, use default domain: %s", err, m.Domain)
 		}
 		if kutil.IsLegalDomain(m.Domain) {
-			m.log.Infof("load %s tls cert", m.Domain)
+			m.Log.Infof("load %s tls cert", m.Domain)
 			defaultTLS := fmt.Sprintf("%s/tls-haogs-cn.yaml", common.GetDefaultCacheDir())
-			m.log.StartWait(fmt.Sprintf("start issuing domain %s certificate, may take 3-5min", m.Domain))
+			m.Log.StartWait(fmt.Sprintf("start issuing domain %s certificate, may take 3-5min", m.Domain))
 			waittls := time.Now()
 			for {
 				if file.CheckFileExists(defaultTLS) {
-					m.log.StopWait()
-					m.log.Done("download tls cert success")
+					m.Log.StopWait()
+					m.Log.Done("download tls cert success")
 					if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.GetDefaultSystemNamespace(true), "--kubeconfig", common.GetKubeConfig()).Run(); err != nil {
-						m.log.Warnf("load default tls cert failed, reason: %v", err)
+						m.Log.Warnf("load default tls cert failed, reason: %v", err)
 					} else {
-						m.log.Done("load default tls cert success")
+						m.Log.Done("load default tls cert success")
 					}
 					qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", "default", "--kubeconfig", common.GetKubeConfig()).Run()
 					break
@@ -254,20 +254,20 @@ func (m *Meta) Init() error {
 				_, mainDomain := kutil.SplitDomain(m.Domain)
 				domainTLS := fmt.Sprintf("https://pkg.qucheng.com/ssl/%s/%s/tls.yaml", mainDomain, m.Domain)
 				qcexec.Command(os.Args[0], "experimental", "tools", "wget", "-t", domainTLS, "-d", defaultTLS).Run()
-				m.log.Debug("wait for tls cert ready...")
+				m.Log.Debug("wait for tls cert ready...")
 				time.Sleep(time.Second * 5)
 				trywaitsc := time.Now()
 				if trywaitsc.Sub(waittls) > time.Minute*3 {
 					// TODO  timeout
-					m.log.Debugf("wait tls cert ready, timeout: %v", trywaitsc.Sub(waittls).Seconds())
+					m.Log.Debugf("wait tls cert ready, timeout: %v", trywaitsc.Sub(waittls).Seconds())
 					break
 				}
 			}
 		} else {
-			m.log.Infof("use custom domain %s, you should add dns record to your domain: *.%s -> %s", m.Domain, color.SGreen(m.Domain), color.SGreen(m.IP))
+			m.Log.Infof("use custom domain %s, you should add dns record to your domain: *.%s -> %s", m.Domain, color.SGreen(m.Domain), color.SGreen(m.IP))
 		}
 	} else {
-		m.log.Infof("use custom domain %s, you should add dns record to your domain: *.%s -> %s", m.Domain, color.SGreen(m.Domain), color.SGreen(m.IP))
+		m.Log.Infof("use custom domain %s, you should add dns record to your domain: *.%s -> %s", m.Domain, color.SGreen(m.Domain), color.SGreen(m.IP))
 	}
 	token := expass.PwGenAlphaNum(32)
 	cfg, _ := config.LoadConfig()
@@ -277,14 +277,14 @@ func (m *Meta) Init() error {
 	cfg.S3.Password = expass.PwGenAlphaNum(16)
 	cfg.Quickon.Type = m.QuickonType
 	cfg.SaveConfig()
-	m.log.Info("start deploy cne custom tools")
+	m.Log.Info("start deploy cne custom tools")
 	toolargs := []string{"experimental", "helm", "upgrade", "--name", "selfcert", "--repo", common.DefaultHelmRepoName, "--chart", "selfcert", "--namespace", common.GetDefaultSystemNamespace(true)}
 	if helmstd, err := qcexec.Command(os.Args[0], toolargs...).CombinedOutput(); err != nil {
-		m.log.Warnf("deploy cne custom tools err: %v, std: %s", err, string(helmstd))
+		m.Log.Warnf("deploy cne custom tools err: %v, std: %s", err, string(helmstd))
 	} else {
-		m.log.Done("deployed cne custom tools success")
+		m.Log.Done("deployed cne custom tools success")
 	}
-	m.log.Info("start deploy cne operator")
+	m.Log.Info("start deploy cne operator")
 	operatorargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultCneOperatorName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultCneOperatorName, "--namespace", common.GetDefaultSystemNamespace(true),
 		"--set", "minio.ingress.enabled=true",
 		"--set", "minio.ingress.host=s3." + m.Domain,
@@ -295,9 +295,9 @@ func (m *Meta) Init() error {
 	//	operatorargs = append(operatorargs, "--version", chartversion)
 	//}
 	if helmstd, err := qcexec.Command(os.Args[0], operatorargs...).CombinedOutput(); err != nil {
-		m.log.Warnf("deploy cne-operator err: %v, std: %s", err, string(helmstd))
+		m.Log.Warnf("deploy cne-operator err: %v, std: %s", err, string(helmstd))
 	} else {
-		m.log.Done("deployed cne-operator success")
+		m.Log.Done("deployed cne-operator success")
 	}
 	helmchan := common.GetChannel(m.Version)
 	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.GetQuickONName(m.QuickonType), "--namespace", common.GetDefaultSystemNamespace(true), "--set", "env.APP_DOMAIN=" + m.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
@@ -328,14 +328,14 @@ func (m *Meta) Init() error {
 	}
 	output, err := qcexec.Command(os.Args[0], helmargs...).CombinedOutput()
 	if err != nil {
-		m.log.Errorf("upgrade install quickon web failed: %s", string(output))
+		m.Log.Errorf("upgrade install quickon web failed: %s", string(output))
 		return err
 	}
-	m.log.Done("install quickon success")
+	m.Log.Done("install quickon success")
 	if m.OffLine {
 		// patch quickon
 		cmfileName := fmt.Sprintf("%s-%s-files", common.DefaultQuchengName, common.GetQuickONName(m.QuickonType))
-		m.log.Debugf("fetch quickon files from %s", cmfileName)
+		m.Log.Debugf("fetch quickon files from %s", cmfileName)
 		for i := 0; i < 20; i++ {
 			time.Sleep(5 * time.Second)
 			foundRepofiles, _ := m.kubeClient.GetConfigMap(ctx, common.GetDefaultSystemNamespace(true), cmfileName, metav1.GetOptions{})
@@ -355,7 +355,7 @@ repositories:
 `, exnet.LocalIPs()[0])
 				_, err := m.kubeClient.UpdateConfigMap(ctx, foundRepofiles, metav1.UpdateOptions{})
 				if err != nil {
-					m.log.Warnf("patch offline repo file, check: kubectl get cm/%s  -n %s", cmfileName, common.GetDefaultSystemNamespace(true))
+					m.Log.Warnf("patch offline repo file, check: kubectl get cm/%s  -n %s", cmfileName, common.GetDefaultSystemNamespace(true))
 				}
 				// 重建pod
 				pods, _ := m.kubeClient.ListPods(ctx, common.GetDefaultSystemNamespace(true), metav1.ListOptions{})
@@ -363,7 +363,7 @@ repositories:
 				for _, pod := range pods.Items {
 					if strings.HasPrefix(pod.Name, podName) {
 						if err := m.kubeClient.DeletePod(ctx, pod.Name, common.GetDefaultSystemNamespace(true), metav1.DeleteOptions{}); err != nil {
-							m.log.Warnf("recreate quickon pods")
+							m.Log.Warnf("recreate quickon pods")
 						}
 					}
 				}
@@ -372,17 +372,17 @@ repositories:
 		}
 
 		// install cne-market
-		m.log.Infof("start deploy cne cne-market")
+		m.Log.Infof("start deploy cne cne-market")
 		marketargs := []string{"experimental", "helm", "upgrade", "--name", "market", "--repo", common.DefaultHelmRepoName, "--chart", "cne-market-api", "--namespace", common.GetDefaultSystemNamespace(true)}
 		output, err := qcexec.Command(os.Args[0], marketargs...).CombinedOutput()
 		if err != nil {
-			m.log.Warnf("upgrade install quickon market failed: %s", string(output))
+			m.Log.Warnf("upgrade install quickon market failed: %s", string(output))
 		}
 	}
 	m.QuickONReady()
 	initFile := common.GetCustomConfig(common.InitFileName)
 	if err := file.WriteFile(initFile, "init done", true); err != nil {
-		m.log.Warnf("write init done file failed, reason: %v.\n\t please run: touch %s", err, initFile)
+		m.Log.Warnf("write init done file failed, reason: %v.\n\t please run: touch %s", err, initFile)
 	}
 	m.Show()
 	return nil
@@ -395,19 +395,19 @@ func (m *Meta) QuickONReady() {
 		return m.readyQuickON(ctx)
 	})
 	if err := clusterWaitGroup.Wait(); err != nil {
-		m.log.Error(err)
+		m.Log.Error(err)
 	}
 }
 
 func (m *Meta) readyQuickON(ctx context.Context) error {
 	t1 := ztime.NowUnix()
 	client := req.C().SetLogger(nil).SetUserAgent(common.GetUG()).SetTimeout(time.Second * 1)
-	m.log.StartWait("waiting for qucheng ready")
+	m.Log.StartWait("waiting for qucheng ready")
 	status := false
 	for {
 		t2 := ztime.NowUnix() - t1
 		if t2 > 180 {
-			m.log.Warnf("waiting for qucheng ready 3min timeout: check your network or storage. after install you can run: q status")
+			m.Log.Warnf("waiting for qucheng ready 3min timeout: check your network or storage. after install you can run: q status")
 			break
 		}
 		_, err := client.R().Get(fmt.Sprintf("http://%s:32379", exnet.LocalIPs()[0]))
@@ -417,9 +417,9 @@ func (m *Meta) readyQuickON(ctx context.Context) error {
 		}
 		time.Sleep(time.Second * 10)
 	}
-	m.log.StopWait()
+	m.Log.StopWait()
 	if status {
-		m.log.Donef("qucheng ready, cost: %v", time.Since(time.Unix(t1, 0)))
+		m.Log.Donef("qucheng ready, cost: %v", time.Since(time.Unix(t1, 0)))
 	}
 	return nil
 }
@@ -456,7 +456,7 @@ func (m *Meta) Show() {
 	cfg.SaveConfig()
 	domain := cfg.Domain
 
-	m.log.Info("----------------------------\t")
+	m.Log.Info("----------------------------\t")
 	if len(domain) > 0 {
 		if !kutil.IsLegalDomain(cfg.Domain) {
 			domain = fmt.Sprintf("http://console.%s", cfg.Domain)
@@ -466,45 +466,45 @@ func (m *Meta) Show() {
 	} else {
 		domain = fmt.Sprintf("http://%s:32379", m.IP)
 	}
-	m.log.Donef("console: %s, username: %s, password: %s",
+	m.Log.Donef("console: %s, username: %s, password: %s",
 		color.SGreen(domain), color.SGreen(common.QuchengDefaultUser), color.SGreen(m.ConsolePassword))
-	m.log.Donef("docs: %s", common.QuchengDocs)
-	m.log.Done("support: 768721743(QQGroup)")
+	m.Log.Donef("docs: %s", common.QuchengDocs)
+	m.Log.Done("support: 768721743(QQGroup)")
 }
 
 func (m *Meta) UnInstall() error {
-	m.log.Warnf("start clean quickon.")
+	m.Log.Warnf("start clean quickon.")
 	cfg, _ := config.LoadConfig()
 	// 清理helm安装应用
-	m.log.Info("start uninstall cne custom tools")
+	m.Log.Info("start uninstall cne custom tools")
 	toolArgs := []string{"experimental", "helm", "uninstall", "--name", "selfcert", "--namespace", common.GetDefaultSystemNamespace(true)}
 	if cleanStd, err := qcexec.Command(os.Args[0], toolArgs...).CombinedOutput(); err != nil {
-		m.log.Warnf("uninstall cne custom tools err: %v, std: %s", err, string(cleanStd))
+		m.Log.Warnf("uninstall cne custom tools err: %v, std: %s", err, string(cleanStd))
 	} else {
-		m.log.Done("uninstall cne custom tools success")
+		m.Log.Done("uninstall cne custom tools success")
 	}
-	m.log.Info("start uninstall cne operator")
+	m.Log.Info("start uninstall cne operator")
 	operatorArgs := []string{"experimental", "helm", "uninstall", "--name", common.DefaultCneOperatorName, "--namespace", common.GetDefaultSystemNamespace(true)}
 	if cleanStd, err := qcexec.Command(os.Args[0], operatorArgs...).CombinedOutput(); err != nil {
-		m.log.Warnf("uninstall cne-operator err: %v, std: %s", err, string(cleanStd))
+		m.Log.Warnf("uninstall cne-operator err: %v, std: %s", err, string(cleanStd))
 	} else {
-		m.log.Done("uninstall cne-operator success")
+		m.Log.Done("uninstall cne-operator success")
 	}
-	m.log.Info("start uninstall cne quickon")
+	m.Log.Info("start uninstall cne quickon")
 	quickonCleanArgs := []string{"experimental", "helm", "uninstall", "--name", common.DefaultQuchengName, "--namespace", common.GetDefaultSystemNamespace(true)}
 	if cleanStd, err := qcexec.Command(os.Args[0], quickonCleanArgs...).CombinedOutput(); err != nil {
-		m.log.Warnf("uninstall quickon err: %v, std: %s", err, string(cleanStd))
+		m.Log.Warnf("uninstall quickon err: %v, std: %s", err, string(cleanStd))
 	} else {
-		m.log.Done("uninstall quickon success")
+		m.Log.Done("uninstall quickon success")
 	}
-	m.log.Info("start uninstall helm repo")
+	m.Log.Info("start uninstall helm repo")
 	repoCleanArgs := []string{"experimental", "helm", "repo-del"}
 	_ = qcexec.Command(os.Args[0], repoCleanArgs...).Run()
-	m.log.Done("uninstall helm repo success")
+	m.Log.Done("uninstall helm repo success")
 	if strings.HasSuffix(cfg.Domain, "haogs.cn") || strings.HasSuffix(cfg.Domain, "corp.cc") {
-		m.log.Infof("clean domain %s", cfg.Domain)
+		m.Log.Infof("clean domain %s", cfg.Domain)
 		if err := qcexec.Command(os.Args[0], "exp", "tools", "domain", "clean", cfg.Domain).Run(); err != nil {
-			m.log.Warnf("clean domain %s failed, reason: %v", cfg.Domain, err)
+			m.Log.Warnf("clean domain %s failed, reason: %v", cfg.Domain, err)
 		}
 	}
 	f := common.GetCustomConfig(common.InitFileName)
