@@ -7,12 +7,10 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/pkg/providers"
-	"github.com/easysoft/qcadmin/pkg/quickon"
 
 	"github.com/easysoft/qcadmin/cmd/flags"
 	"github.com/easysoft/qcadmin/cmd/precheck"
@@ -22,7 +20,6 @@ import (
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
-	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/file"
 	"github.com/spf13/cobra"
@@ -44,14 +41,14 @@ var (
 )
 
 func init() {
-	initCmd.Flags().StringVarP(&cProvider, "mode", "m", cProvider, "Provider is a module which provides an interface for managing cloud resources")
+	initCmd.Flags().StringVar(&cProvider, "provider", cProvider, "Provider is a module which provides an interface for managing cloud resources")
 	initCmd.PersistentFlags().BoolVar(&skip, "skip-precheck", false, "skip precheck")
-	initCmd.PersistentFlags().StringVar(&appName, "app", "zentao", "app name")
+	// initCmd.PersistentFlags().StringVar(&appName, "app", "zentao", "app name")
 }
 
 func newCmdInit(f factory.Factory) *cobra.Command {
 	log := f.GetLog()
-	pStr := flags.FlagHackLookup("--mode")
+	pStr := flags.FlagHackLookup("--provider")
 	var fs []types.Flag
 	if pStr != "" {
 		if reg, err := providers.GetProvider(pStr); err != nil {
@@ -69,8 +66,8 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 	globalToolPath := defaultArgs[0]
 	name := "native"
 	nCluster := nativeCluster.NewCluster(f)
-	quickonClient := quickon.New(f)
-	fs = quickonClient.GetCustomFlags()
+	// quickonClient := quickon.New(f)
+	// fs = quickonClient.GetCustomFlags()
 	if file.CheckFileExists(common.GetKubeConfig()) {
 		name = "incluster"
 		initCmd.Long = `Found k8s config, run this command in order to set up Quickon Control Plane`
@@ -78,6 +75,7 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 		fs = append(fs, nCluster.GetInitFlags()...)
 		initCmd.Long = `Run this command in order to set up the Kubernetes & Quickon Control Plane`
 	}
+	meta := cp.GetMeta()
 	initCmd.Flags().AddFlagSet(flags.ConvertFlags(initCmd, fs))
 	initCmd.PreRun = func(cmd *cobra.Command, args []string) {
 		if file.CheckFileExists(common.GetCustomConfig(common.InitFileName)) {
@@ -110,34 +108,31 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 				return
 			}
 		}
-		if err := quickonClient.GetKubeClient(); err != nil {
+		if err := cp.GetKubeClient(); err != nil {
 			log.Errorf("init quickon failed, reason: %v", err)
 			return
 		}
-		if err := quickonClient.Check(); err != nil {
+		if err := cp.Check(); err != nil {
 			log.Errorf("init quickon failed, reason: %v", err)
 			return
 		}
-		if !quickonClient.QuickonOSS {
-			quickonClient.QuickonType = common.QuickonEEType
+		if !meta.QuickonOSS {
+			meta.QuickonType = common.QuickonEEType
 		}
-		if len(quickonClient.IP) == 0 {
+		if len(meta.IP) == 0 {
 			// TODO fix ip, not allow PublicIP
 			cfg, _ := config.LoadConfig()
 			ip := cfg.Cluster.InitNode
 			if len(ip) == 0 {
 				ip = exnet.LocalIPs()[0]
 			}
-			quickonClient.IP = ip
+			meta.IP = ip
 		}
-		if err := quickonClient.Init(); err != nil {
+		if err := cp.Install(); err != nil {
 			log.Errorf("init quickon failed, reason: %v", err)
 			return
 		}
-		if err := qcexec.CommandRun(globalToolPath, "quickon", "app", "install", "--name", appName, "--api-useip", fmt.Sprintf("--debug=%v", globalFlags.Debug)); err != nil {
-			log.Errorf("init quickon failed, reason: %v", err)
-			return
-		}
+		cp.Show()
 	}
 	return initCmd
 }

@@ -44,6 +44,7 @@ func newProvider() *Quickon {
 			ConsolePassword: expass.PwGenAlphaNum(32),
 			QuickonType:     common.QuickonOSSType,
 			Version:         common.GetVersion("", common.QuickonOSSType),
+			App:             "zentao",
 		},
 	}
 }
@@ -64,6 +65,11 @@ func (q *Quickon) GetFlags() []types.Flag {
 		Usage: fmt.Sprintf("quickon version(oss: %s/ee: %s)", common.DefaultQuickonOSSVersion, common.DefaultQuickonEEVersion),
 		P:     &q.MetaData.Version,
 		V:     q.MetaData.Version,
+	}, types.Flag{
+		Name:  "app",
+		Usage: "default quickon install app",
+		P:     &q.MetaData.App,
+		V:     q.MetaData.App,
 	})
 	return fs
 }

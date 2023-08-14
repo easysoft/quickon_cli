@@ -2,7 +2,7 @@ name: check
 
 env:
   # Common versions
-  GO_VERSION: '1.20'
+  GO_VERSION: '1.21'
   TZ: Asia/Shanghai
 
 permissions: write-all

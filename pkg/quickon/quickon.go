@@ -45,6 +45,7 @@ type Meta struct {
 	OffLine         bool
 	QuickonOSS      bool
 	QuickonType     common.QuickonType
+	App             string
 	kubeClient      *k8s.Client
 	Log             log.Logger
 }
