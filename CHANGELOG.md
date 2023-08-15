@@ -1,5 +1,24 @@
 # Changelog
 
+## v3.0.0-alpha.1 (2023-08-15)
+
+ * [aa4d130](https://github.com/easysoft/quickon_cli/commit/aa4d130a648b9f7433f4a92537b3961da5ab21bf) fix(init): imp init & uninstall
+ * [bd51c8f](https://github.com/easysoft/quickon_cli/commit/bd51c8fd325ad69c439075044030220d1b5088f4) fix(init): fix build init
+ * [f7968de](https://github.com/easysoft/quickon_cli/commit/f7968de476f4742974ba72ef08ee9313f58f2280) fix(init): fix devops init
+ * [38b0e3f](https://github.com/easysoft/quickon_cli/commit/38b0e3f3686b6ad1eb6c5134908e0b45f41c8b4e) fix(exp): imp exp install custom tools
+ * [2d8f598](https://github.com/easysoft/quickon_cli/commit/2d8f598fbfdf1f2ce9678c42c14fd25efb5df9e7) fix(install): fix quickon deploy
+ * [e4370c2](https://github.com/easysoft/quickon_cli/commit/e4370c2bd14059a14628759136d2822e0c6c5e2e) feat(update): update
+ * [2643f14](https://github.com/easysoft/quickon_cli/commit/2643f141f1ff1cc5df2a4a22fa48a29bd3afba57) fix(init): fix init
+ * [6a289fc](https://github.com/easysoft/quickon_cli/commit/6a289fc74b50bdfc6a3287a21ab097fb56861a88) feat(devops): support devops
+ * [bf73222](https://github.com/easysoft/quickon_cli/commit/bf732229f2c3eb76319a3d85be2925b6e9200ab6) feat(k3s): update k3s to v1.24.16
+ * [f3d134b](https://github.com/easysoft/quickon_cli/commit/f3d134b18bdd3e5ca254ed357336e1a7c35659b1) feat(devops): imp devops
+ * [5309c34](https://github.com/easysoft/quickon_cli/commit/5309c34347ac6ff1d09403bd7eec90fbc0a0c8bd) build(deps): bump github.com/shirou/gopsutil/v3 from 3.23.3 to 3.23.6
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v2.2.2 (2023-07-26)
 
  * [d1b9eb5](https://github.com/easysoft/quickon_cli/commit/d1b9eb53dc69b813290e5fd575915a9aca53653c) feat(debug): add port-forward
