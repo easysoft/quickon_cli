@@ -37,28 +37,26 @@ var (
 	skip      bool
 	cProvider = "devops"
 	cp        providers.Provider
-	appName   string
 )
 
 func init() {
 	initCmd.Flags().StringVar(&cProvider, "provider", cProvider, "Provider is a module which provides an interface for managing cloud resources")
 	initCmd.PersistentFlags().BoolVar(&skip, "skip-precheck", false, "skip precheck")
-	// initCmd.PersistentFlags().StringVar(&appName, "app", "zentao", "app name")
 }
 
 func newCmdInit(f factory.Factory) *cobra.Command {
 	log := f.GetLog()
 	pStr := flags.FlagHackLookup("--provider")
 	var fs []types.Flag
-	if pStr != "" {
-		if reg, err := providers.GetProvider(pStr); err != nil {
-			log.Warn(err)
-		} else {
-			cp = reg
-		}
-		cpFlags := cp.GetFlags()
-		fs = append(fs, cpFlags...)
+	if pStr == "" {
+		pStr = cProvider
 	}
+	if reg, err := providers.GetProvider(pStr); err != nil {
+		log.Warn(err)
+	} else {
+		cp = reg
+	}
+	fs = append(fs, cp.GetFlags()...)
 
 	var preCheck precheck.PreCheck
 
@@ -66,8 +64,6 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 	globalToolPath := defaultArgs[0]
 	name := "native"
 	nCluster := nativeCluster.NewCluster(f)
-	// quickonClient := quickon.New(f)
-	// fs = quickonClient.GetCustomFlags()
 	if file.CheckFileExists(common.GetKubeConfig()) {
 		name = "incluster"
 		initCmd.Long = `Found k8s config, run this command in order to set up Quickon Control Plane`

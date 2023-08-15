@@ -8,16 +8,14 @@
 
 [ $(id -u) -eq 0 ] || exec sudo $0 $@
 
-# qcmd=${1:-"/usr/local/bin/qcadmin"}
+qcmd=${1:-"/usr/local/bin/qcadmin"}
 
-# if [ -f "${qcmd}" ]; then
-#   echo "${qcmd} clean doamin"
-#   ${qcmd} experimental tools domain clean
-#   echo "${qcmd} clean helm"
-#   ${qcmd} experimental helm uninstall --name cne-api -n cne-system
-#   ${qcmd} experimental helm uninstall --name qucheng -n cne-system
-#   ${qcmd} experimental helm repo-del
-# fi
+if [ -f "${qcmd}" ]; then
+  echo "${qcmd} clean doamin"
+  ${qcmd} experimental tools domain clean
+  echo "${qcmd} clean helm"
+  ${qcmd} experimental helm repo-del
+fi
 
 for bin in /var/lib/rancher/k3s/data/**/bin/; do
     [ -d $bin ] && export PATH=$PATH:$bin:$bin/aux
@@ -59,8 +57,24 @@ killtree() {
     ) 2>/dev/null
 }
 
+remove_interfaces() {
+    # Delete network interface(s) that match 'master cni0'
+    ip link show 2>/dev/null | grep 'master cni0' | while read ignore iface ignore; do
+        iface=${iface%%@*}
+        [ -z "$iface" ] || ip link delete $iface
+    done
+
+    # Delete cni related interfaces
+    ip link delete cni0
+    ip link delete flannel.1
+    ip link delete flannel-v6.1
+    ip link delete kube-ipvs0
+    ip link delete flannel-wg
+    ip link delete flannel-wg-v6
+}
+
 getshims() {
-    ps -e -o pid= -o args= | sed -e 's/^ *//; s/\s\s*/\t/;' | grep -w 'k3s/data/[^/]*/bin/containerd-shim' | cut -f1
+    ps -e -o pid= -o args= | sed -e 's/^ *//; s/\s\s*/\t/;' | grep -w 'data/[^/]*/bin/containerd-shim' | cut -f1
 }
 
 killtree $({ set +x; } 2>/dev/null; getshims; set -x)
@@ -74,6 +88,7 @@ do_unmount_and_remove() {
 }
 
 do_unmount_and_remove '/run/k3s'
+do_unmount_and_remove '/opt/quickon/platform'
 do_unmount_and_remove '/var/lib/rancher/k3s'
 do_unmount_and_remove '/var/lib/kubelet/pods'
 do_unmount_and_remove '/var/lib/kubelet/plugins'
@@ -82,18 +97,10 @@ do_unmount_and_remove '/run/netns/cni-'
 # Remove CNI namespaces
 ip netns show 2>/dev/null | grep cni- | xargs -r -t -n 1 ip netns delete
 
-# Delete network interface(s) that match 'master cni0'
-ip link show 2>/dev/null | grep 'master cni0' | while read ignore iface ignore; do
-    iface=${iface%%@*}
-    [ -z "$iface" ] || ip link delete $iface
-done
-ip link delete cni0
-ip link delete flannel.1
-ip link delete flannel-v6.1
-ip link delete kube-ipvs0
-ip link delete flannel-wg
-ip link delete flannel-wg-v6
+remove_interfaces
+
 rm -rf /var/lib/cni/
+
 iptables-save | grep -v KUBE- | grep -v CNI- | grep -v flannel | iptables-restore
 ip6tables-save | grep -v KUBE- | grep -v CNI- | grep -v flannel | ip6tables-restore
 

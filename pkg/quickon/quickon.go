@@ -151,7 +151,7 @@ func (m *Meta) Check() error {
 }
 
 func (m *Meta) initNS() error {
-	m.Log.Debugf("init quickon default namespace.")
+	m.Log.Debugf("init platform default namespace")
 	for _, ns := range common.GetDefaultQuickONNamespace() {
 		_, err := m.kubeClient.GetNamespace(context.TODO(), ns, metav1.GetOptions{})
 		if err != nil {
@@ -302,6 +302,13 @@ func (m *Meta) Init() error {
 	} else {
 		m.Log.Done("deployed operator success")
 	}
+	// TODO check operator ready
+	if err := m.OperatorReady(); err != nil {
+		m.Log.Warnf("check operator ready failed, reason: %v", err)
+	} else {
+		m.Log.Done("check operator ready success")
+	}
+
 	helmchan := common.GetChannel(m.Version)
 	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.GetQuickONName(m.DevopsMode, m.QuickonType), "--namespace", common.GetDefaultSystemNamespace(true), "--set", "env.APP_DOMAIN=" + m.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
 	if helmchan != "stable" {
@@ -406,15 +413,33 @@ func (m *Meta) QuickONReady() {
 	}
 }
 
+// OperatorReady OperatorReady
+func (m *Meta) OperatorReady() error {
+	m.Log.Debugf("waiting for operator ready")
+	for i := 1; i <= 10; i++ {
+		deploy, err := m.kubeClient.GetDeployment(context.Background(), common.GetDefaultSystemNamespace(true), common.DefaultCneOperatorName, metav1.GetOptions{})
+		if err != nil {
+			time.Sleep(time.Duration(i) * 2 * time.Second)
+			continue
+		}
+		ready := deploy.Status.ReadyReplicas == *deploy.Spec.Replicas
+		if ready {
+			return nil
+		}
+		time.Sleep(time.Duration(i) * 2 * time.Second)
+	}
+	return errors.Errorf("operator not ready")
+}
+
 func (m *Meta) readyQuickON(ctx context.Context) error {
 	t1 := ztime.NowUnix()
 	client := req.C().SetLogger(nil).SetUserAgent(common.GetUG()).SetTimeout(time.Second * 1)
-	m.Log.StartWait("waiting for quickon ready")
+	m.Log.StartWait("waiting for ready")
 	status := false
 	for {
 		t2 := ztime.NowUnix() - t1
 		if t2 > 180 {
-			m.Log.Warnf("waiting for quickon ready 3min timeout: check your network or storage. after install you can run: q status")
+			m.Log.Warnf("waiting for ready 3min timeout: check your network or storage. after install you can run: q status")
 			break
 		}
 		_, err := client.R().Get(fmt.Sprintf("http://%s:32379", exnet.LocalIPs()[0]))
