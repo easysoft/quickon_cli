@@ -690,6 +690,7 @@ func (ncc NumCPUCheck) Check() error {
 // NumDiskCheck checks if current number of Disk is not less than required
 type NumDiskCheck struct {
 	NumDisk int
+	LowDisk int
 }
 
 // Name returns the label for NumDiskCheck
@@ -706,10 +707,14 @@ func (ndc NumDiskCheck) Check() error {
 		return errors.Errorf("disk check failed, reason: %v", err)
 	}
 	numDisk := float64(mountRoot.Total) / 1024.0 / 1024.0 / 1024.0
-	if numDisk < float64(ndc.NumDisk) {
-		return errors.Errorf("the number of available Disk %.2f GB is less than the required %d GB", numDisk, ndc.NumDisk)
+	if numDisk < float64(ndc.LowDisk) {
+		return errors.Errorf("the number of available Disk %.2f GB is less than the required %d GB", numDisk, ndc.LowDisk)
 	}
-	log.Donef("the number of available Disk %.2f GB is greater than the required %d GB", numDisk, ndc.NumDisk)
+	if numDisk < float64(ndc.NumDisk) {
+		log.Warnf("the number of available Disk %.2f GB, suggest the number of available Disk greater than the required %d GB", numDisk, ndc.NumDisk)
+	} else {
+		log.Donef("the number of available Disk %.2f GB is greater than the required %d GB", numDisk, ndc.NumDisk)
+	}
 	return nil
 }
 
@@ -740,7 +745,7 @@ func RunInitNodeChecks(execer utilsexec.Interface, cfg *types.Metadata, ignorePr
 	// manifestsDir := filepath.Join(kubeadmconstants.KubernetesDir, kubeadmconstants.ManifestsSubDirName)
 	checks := []Checker{
 		NumCPUCheck{NumCPU: common.ControlPlaneNumCPU},
-		NumDiskCheck{NumDisk: common.ControlPlaneNumDisk},
+		NumDiskCheck{NumDisk: common.ControlPlaneNumDisk, LowDisk: common.ControlPlaneLowDisk},
 		// Linux only
 		// TODO: support other OS, if control-plane is supported on it.
 		MemCheck{Mem: common.ControlPlaneMem},

@@ -37,6 +37,8 @@ const (
 	ControlPlaneMem = 1700
 	// ControlPlaneNumDisk is the number of Disk required on control-plane
 	ControlPlaneNumDisk = 40
+	// ControlPlaneLowDisk is the number of Disk required on node
+	ControlPlaneLowDisk = 20
 )
 
 const (
