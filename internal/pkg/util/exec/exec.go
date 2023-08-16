@@ -9,7 +9,9 @@ package exec
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	sysexec "os/exec"
+	"runtime"
 	"strings"
 
 	"github.com/easysoft/qcadmin/common"
@@ -85,18 +87,16 @@ func CommandBashRunWithResp(cmdStr string) (string, error) {
 	return string(result), err
 }
 
-// func CommandRespByte(command string, args ...string) ([]byte, error) {
-// 	log := log.GetInstance()
-// 	c := Command(command, args...)
-// 	bytes, err := c.CombinedOutput()
-// 	if err != nil {
-// 		cmdStr := fmt.Sprintf("%s %s", command, strings.Join(args, " "))
-// 		log.Debugf("❌ Unable to execute %q:", cmdStr)
-// 		if len(bytes) > 0 {
-// 			log.Debugf(" %s", string(bytes))
-// 		}
-// 		return []byte{}, fmt.Errorf("unable to execute %q: %w", cmdStr, err)
-// 	}
-
-// 	return bytes, err
-// }
+// CommandClearScreen clear screen
+func CommandClearScreen() {
+	switch runtime.GOOS {
+	case "windows":
+		cmd := exec.Command("cmd", "/c", "cls")
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+	case "linux", "darwin":
+		cmd := exec.Command("clear")
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+	}
+}
