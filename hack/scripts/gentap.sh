@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-version=$(cat VERSION)
+version=$(git describe --tags --abbrev=0 | sed 's/v//')
 
-version=$(cat VERSION)
 # shellcheck disable=SC2002
 macosAMD64sha=$(cat dist/checksums.txt | grep qcadmin_darwin_amd64 | awk '{print $1}')
 # shellcheck disable=SC2002
