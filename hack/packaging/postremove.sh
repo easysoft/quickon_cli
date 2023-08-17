@@ -8,6 +8,6 @@
 # Determine OS platform
 # shellcheck source=/dev/null
 
-echo "Removing quickon package."
+echo "Removing zentao(quickon) package."
 
 exit 0

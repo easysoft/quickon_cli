@@ -11,21 +11,28 @@
 create_link() {
   # shellcheck disable=SC2015
 	[ -f "/usr/bin/q" ] && rm -rf /usr/bin/q || true
+  # shellcheck disable=SC2015
+  [ -f "/usr/bin/z" ] && rm -rf /usr/bin/z || true
 	# shellcheck disable=SC2015
 	[ -f "/usr/local/bin/q" ] && rm -rf /usr/local/bin/q || true
+	# shellcheck disable=SC2015
+	[ -f "/usr/local/bin/z" ] && rm -rf /usr/local/bin/z || true
 	# shellcheck disable=SC2015
 	[ -f "/usr/local/bin/qcadmin" ] && rm -rf /usr/local/bin/qcadmin || true
   # shellcheck disable=SC2015
   [ -f "/usr/bin/qcadmin" ] && ln -s /usr/bin/qcadmin /usr/bin/q || true
+  # shellcheck disable=SC2015
+  [ -f "/usr/bin/qcadmin" ] && ln -s /usr/bin/qcadmin /usr/bin/z || true
+
 }
 
 summary() {
 	echo "----------------------------------------------------------------------"
-	echo "Quickon package has been successfully installed."
+	echo "Zentao(z)/Quickon(q) package has been successfully installed."
 	echo ""
 	echo " Please follow the next steps to start the software:"
 	echo ""
-	echo "    q --help"
+	echo "    z --help"
 	echo ""
 	echo "----------------------------------------------------------------------"
 }

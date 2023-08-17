@@ -11,3 +11,5 @@
 # shellcheck disable=SC2015
 [ -f "/usr/bin/q" ] && rm -rf /usr/bin/q || true
 [ -f "/usr/local/bin/q" ] && rm -rf /usr/local/bin/q || true
+[ -f "/usr/bin/z" ] && rm -rf /usr/bin/z || true
+[ -f "/usr/local/bin/z" ] && rm -rf /usr/local/bin/z || true
