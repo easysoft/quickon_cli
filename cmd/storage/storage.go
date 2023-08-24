@@ -10,6 +10,7 @@ import (
 	"context"
 	"os"
 
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
@@ -17,7 +18,6 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/util/log/survey"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/exnet"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/kubectl/pkg/util/templates"
