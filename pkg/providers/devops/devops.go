@@ -82,9 +82,9 @@ func (q *Devops) Show() {
 	} else {
 		domain = fmt.Sprintf("http://%s:32379", q.MetaData.IP)
 	}
+	q.MetaData.Log.Donef("🎉 zentao devops install success, docs: %s", common.ZentaoDocs)
+	q.MetaData.Log.Info("----------------------------\t")
 	q.MetaData.Log.Donef("console: %s", color.SGreen(domain))
-	q.MetaData.Log.Donef("docs: %s", common.ZentaoDocs)
-	q.MetaData.Log.Done("support: 768721743(QQGroup)")
 }
 
 func (q *Devops) GetKubeClient() error {
