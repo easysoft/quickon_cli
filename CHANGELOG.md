@@ -1,5 +1,20 @@
 # Changelog
 
+## v3.0.0-alpha.2 (2023-08-25)
+
+ * [59cb272](https://github.com/easysoft/quickon_cli/commit/59cb272a6b8048f23234a1a7f5060dff17a7b611) style(install): update install script
+ * [d39be07](https://github.com/easysoft/quickon_cli/commit/d39be07a4a170f03e5ef047375c789604d62bd82) style(mod): update go mod
+ * [9e165dd](https://github.com/easysoft/quickon_cli/commit/9e165ddfcb9017308b93b2002b788edabda18c1d) build(deps): bump helm.sh/helm/v3 from 3.12.0 to 3.12.3
+ * [636be61](https://github.com/easysoft/quickon_cli/commit/636be6130060e38a97a2423995c1236788e339ff) style(code): update
+ * [87d77a2](https://github.com/easysoft/quickon_cli/commit/87d77a273d512505a93f01cc7c684515b2bab0b1) fix(exec): fix exec
+ * [71f9ee3](https://github.com/easysoft/quickon_cli/commit/71f9ee31d3bd5b81d64363ad3b07bf4b94d9e605) fix(precheck): imp disk check
+ * [f44061e](https://github.com/easysoft/quickon_cli/commit/f44061e8dfe1328a5837724d192e0faab87dcb4d) fix(tap & mod): update gentap & gomod
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.0.0-alpha.1 (2023-08-15)
 
  * [aa4d130](https://github.com/easysoft/quickon_cli/commit/aa4d130a648b9f7433f4a92537b3961da5ab21bf) fix(init): imp init & uninstall
