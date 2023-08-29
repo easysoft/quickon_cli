@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.0.0-beta.1 (2023-08-29)
+
+ * [0044bad](https://github.com/easysoft/quickon_cli/commit/0044bad8cbc877408197a2943e52e3c104184228) fix(quickon): fix quickon install app
+ * [2d27cda](https://github.com/easysoft/quickon_cli/commit/2d27cdafed6876a2de97b6e80eade2bf554eadfa) feat(cluster): support stop cluster
+ * [1c5c901](https://github.com/easysoft/quickon_cli/commit/1c5c901a1ac7f76b74a1734bc36feefc7cf90354) feat(quickon): add uninstall confirm
+ * [592ff27](https://github.com/easysoft/quickon_cli/commit/592ff2733c1e4af2cecd4cdd6afea6af19fce2fc) fix(action): fix action
+ * [0745cd9](https://github.com/easysoft/quickon_cli/commit/0745cd92c2c09599c370660e43019a13fb6d0a49) feat(devops): update devops init
+ * [94fcad6](https://github.com/easysoft/quickon_cli/commit/94fcad6c2e40c4be64d6b2d305df28db355a9944) fix(install): imp installed show
+
+### Contributors
+
+ * ysicing
+
 ## v3.0.0-alpha.2 (2023-08-25)
 
  * [59cb272](https://github.com/easysoft/quickon_cli/commit/59cb272a6b8048f23234a1a7f5060dff17a7b611) style(install): update install script
