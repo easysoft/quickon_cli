@@ -43,6 +43,7 @@ func newCmdCluster(f factory.Factory) *cobra.Command {
 	clusterCmd.AddCommand(cluster.DeleteCommand(f))
 	clusterCmd.AddCommand(cluster.CleanCommand(f))
 	clusterCmd.AddCommand(cluster.StatusCommand(f))
+	clusterCmd.AddCommand(cluster.StopCommand(f))
 	clusterCmd.AddCommand(storage.NewCmdStorage(f))
 	clusterCmd.AddCommand(backup.NewCmdBackupCluster(f))
 	return clusterCmd

@@ -142,3 +142,22 @@ func StatusCommand(f factory.Factory) *cobra.Command {
 	status.AddCommand(statussubcmd.TopNodeCmd())
 	return status
 }
+
+func StopCommand(f factory.Factory) *cobra.Command {
+	myCluster := cluster.NewCluster(f)
+	log := f.GetLog()
+	stop := &cobra.Command{
+		Use:     "stop",
+		Short:   "stop cluster",
+		Version: "3.0.0",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			status, _ := confirm.Confirm("Are you sure to stop cluster")
+			if status {
+				return myCluster.Stop()
+			}
+			log.Donef("cancel stop cluster")
+			return nil
+		},
+	}
+	return stop
+}

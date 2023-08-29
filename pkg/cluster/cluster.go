@@ -515,3 +515,35 @@ func (c *Cluster) Clean() error {
 	c.log.Done("clean cluster success")
 	return nil
 }
+
+// Stop 关闭集群
+func (c *Cluster) Stop() error {
+	c.log.Info("start stop cluster")
+	cfg, _ := config.LoadConfig()
+	ips := cfg.GetIPs()
+	if len(ips) == 0 {
+		ips = append(ips, exnet.LocalIPs()[0])
+	}
+	sshClient := ssh.NewSSHClient(&cfg.Global.SSH, true)
+	var wg sync.WaitGroup
+	for _, ip := range ips {
+		c.log.Debugf("stop node %s", ip)
+		wg.Add(1)
+		go c.stopNode(ip, sshClient, &wg)
+	}
+	wg.Wait()
+	c.log.Done("stop cluster success")
+	return nil
+}
+
+func (c *Cluster) stopNode(ip string, sshClient ssh.Interface, wg *sync.WaitGroup) {
+	defer wg.Done()
+	c.log.StartWait(fmt.Sprintf("start stop node: %s", ip))
+	err := sshClient.CmdAsync(ip, common.GetCustomScripts("hack/manifests/scripts/stopnode.sh"))
+	c.log.StopWait()
+	if err != nil {
+		c.log.Warnf("stop node %s failed, reason: %v", ip, err)
+		return
+	}
+	c.log.Donef("stop node %s success", ip)
+}
