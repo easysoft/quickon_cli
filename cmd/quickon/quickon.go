@@ -13,6 +13,7 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/pkg/providers"
 	"github.com/easysoft/qcadmin/pkg/quickon"
+	"github.com/ergoapi/util/confirm"
 	"github.com/ergoapi/util/exnet"
 	"github.com/spf13/cobra"
 )
@@ -76,16 +77,22 @@ func InitCommand(f factory.Factory) *cobra.Command {
 }
 
 func UninstallCommand(f factory.Factory) *cobra.Command {
+	log := f.GetLog()
 	quickonClient := quickon.New(f)
 	uninstall := &cobra.Command{
 		Use:     "uninstall",
-		Short:   "uninstall quickon",
+		Short:   "uninstall quickon(devops)",
 		Aliases: []string{"clean"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := quickonClient.GetKubeClient(); err != nil {
 				return err
 			}
-			return quickonClient.UnInstall()
+			status, _ := confirm.Confirm("Are you sure to uninstall quickon(devops)")
+			if status {
+				return quickonClient.UnInstall()
+			}
+			log.Donef("cancel uninstall quickon(devops)")
+			return nil
 		},
 	}
 	return uninstall
