@@ -1,15 +1,15 @@
-## qcadmin cluster clean
+## qcadmin cluster stop
 
-clean cluster
+stop cluster
 
 ```
-qcadmin cluster clean [flags]
+qcadmin cluster stop [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for clean
+  -h, --help   help for stop
 ```
 
 ### Options inherited from parent commands
