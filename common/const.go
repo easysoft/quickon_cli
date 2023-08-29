@@ -97,7 +97,7 @@ const (
 	DefaultCneOperatorName        = "cne-operator"
 	DefaultIngressName            = "nginx-ingress-controller"
 	DefaultDBName                 = "qucheng-mysql"
-	DefaultKubeAPIDomain          = "kubeapi.k7s.local"
+	DefaultKubeAPIDomain          = "kubeapi.quickon.local"
 	InitFileName                  = ".initdone"
 	InitLockFileName              = ".qlock"
 	InitModeCluster               = ".incluster"

@@ -29,7 +29,6 @@ func newCmdUninstall(f factory.Factory) *cobra.Command {
 		Aliases: []string{"un", "clean"},
 	}
 	uninstallCmd.Run = func(cmd *cobra.Command, args []string) {
-		log.Info("start uninstall")
 		log.Debugf("start uninstall quickon")
 		if err := qcexec.CommandRun(globalToolPath, "quickon", "uninstall", fmt.Sprintf("--debug=%v", globalFlags.Debug)); err != nil {
 			log.Errorf("uninstall quickon failed, reason: %v", err)

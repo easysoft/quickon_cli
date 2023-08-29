@@ -20,6 +20,7 @@ import (
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/expass"
+	"github.com/sirupsen/logrus"
 
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 )
@@ -75,7 +76,10 @@ func (q *Quickon) GetFlags() []types.Flag {
 }
 
 func (q *Quickon) Install() error {
-	return q.MetaData.Init()
+	if err := q.MetaData.Init(); err != nil {
+		return fmt.Errorf("init quickon data error: %v", err)
+	}
+	return qcexec.CommandRun(os.Args[0], "quickon", "app", "install", "--name", q.MetaData.App, "--api-useip", fmt.Sprintf("--debug=%v", q.MetaData.Log.GetLevel() == logrus.DebugLevel))
 }
 
 func (q *Quickon) Show() {
