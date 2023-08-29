@@ -23,9 +23,15 @@ type cloudAPIS struct {
 type QuickonType string
 
 var (
-	QuickonOSSType QuickonType = "oss" // 开源版
-	QuickonEEType  QuickonType = "ee"  // 企业版
+	ZenTaoOSSType QuickonType = "oss" // 开源版
+	ZenTaoMaxType QuickonType = "max" // 旗舰版
+	ZenTaoBizType QuickonType = "biz" // 企业版
+	ZenTaoIPDType QuickonType = "ipd" // IPD版
 )
+
+func (q QuickonType) String() string {
+	return string(q)
+}
 
 type InstallType string
 

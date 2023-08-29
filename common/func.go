@@ -81,29 +81,26 @@ func GetChannel(p string) string {
 	return p
 }
 
-// GetVersion 获取chartRepo channel地址
-func GetVersion(p string, qt QuickonType) string {
-	v := strings.Split(p, "-")
+// GetVersion 获取版本地址
+func GetVersion(version string) string {
+	v := strings.Split(version, "-")
 	if len(v) != 2 {
-		if qt == QuickonOSSType {
-			return GetVersion(DefaultQuickonOSSVersion, qt)
-		}
-		return GetVersion(DefaultQuickonEEVersion, qt)
+		return version
 	}
 	return v[1]
 }
 
 // GetZenTaoVersion 获取chartRepo channel地址
-func GetZenTaoVersion(p string, qt QuickonType) string {
-	v := strings.Split(p, "-")
-	if len(v) != 2 {
-		if qt == QuickonOSSType {
-			return GetVersion(DefaultZentaoDevOPSOSSVersion, qt)
-		}
-		return GetVersion(DefaultZentaoDevOPSOSSVersion, qt)
-	}
-	return v[1]
-}
+// func GetZenTaoVersion(p string, qt QuickonType) string {
+// 	v := strings.Split(p, "-")
+// 	if len(v) != 2 {
+// 		if qt == QuickonOSSType {
+// 			return GetVersion(DefaultZentaoDevOPSOSSVersion, qt)
+// 		}
+// 		return GetVersion(DefaultZentaoDevOPSOSSVersion, qt)
+// 	}
+// 	return v[1]
+// }
 
 func GetDefaultConfig() string {
 	home := zos.GetHomeDir()
@@ -179,13 +176,6 @@ func GetDefaultQuickONNamespace() []string {
 	var ns []string
 	ns = append(ns, DefaultAppNamespace, DefaultCINamespace, DefaultSystemNamespace, DefaultStorageNamespace)
 	return ns
-}
-
-func GetQuickONName(devops bool, t QuickonType) string {
-	if t == QuickonOSSType {
-		return GetReleaseName(devops)
-	}
-	return fmt.Sprintf("%s-biz", GetReleaseName(devops))
 }
 
 func GetCustomScripts(path string) string {

@@ -43,8 +43,7 @@ type Meta struct {
 	ConsolePassword string
 	DevopsMode      bool
 	OffLine         bool
-	QuickonOSS      bool
-	QuickonType     common.QuickonType
+	Type            string
 	App             string
 	kubeClient      *k8s.Client
 	Log             log.Logger
@@ -55,7 +54,7 @@ func New(f factory.Factory) *Meta {
 		Log: f.GetLog(),
 		// Version:         common.DefaultQuickonOSSVersion,
 		ConsolePassword: expass.PwGenAlphaNum(32),
-		QuickonType:     common.QuickonOSSType,
+		Type:            common.ZenTaoOSSType.String(),
 	}
 }
 
@@ -75,10 +74,11 @@ func (m *Meta) GetCustomFlags() []types.Flag {
 			Hidden: true,
 		},
 		{
-			Name:  "oss",
-			Usage: "type, oss or ee, default: oss",
-			P:     &m.QuickonOSS,
-			V:     m.QuickonType == common.QuickonOSSType,
+			Name:      "type",
+			Usage:     "type",
+			P:         &m.Type,
+			V:         common.ZenTaoOSSType.String(),
+			ShortHand: "t",
 		},
 		{
 			Name:  "offline",
@@ -215,17 +215,16 @@ func (m *Meta) Init() error {
 			return err
 		}
 	}
-	m.Log.Debugf("version: %v, type: %v", m.Version, m.QuickonType)
-	chartVersion := common.GetVersion(m.Version, m.QuickonType)
+	m.Log.Debugf("version: %v, type: %v", m.Version, m.Type)
+
 	if m.DevopsMode {
 		// TODO: 获取zentao devops chart version
-		chartVersion = common.GetZenTaoVersion(m.Version, m.QuickonType)
-		m.Log.Debugf("start init zentao devops, version: %s", chartVersion)
-		cfg.Quickon.Type = m.QuickonType
+		m.Log.Debugf("start init zentao devops")
+		cfg.Quickon.Type = common.QuickonType(m.Type)
 		cfg.Quickon.DevOps = true
 	} else {
-		m.Log.Debugf("start init quickon %v, version: %s", m.QuickonType, chartVersion)
-		cfg.Quickon.Type = m.QuickonType
+		m.Log.Debugf("start init quickon")
+		cfg.Quickon.Type = common.QuickonType(m.Type)
 	}
 	if m.Domain == "" {
 		err := retry.Retry(time.Second*1, 3, func() (bool, error) {
@@ -310,7 +309,7 @@ func (m *Meta) Init() error {
 	}
 
 	helmchan := common.GetChannel(m.Version)
-	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultQuchengName, "--repo", common.DefaultHelmRepoName, "--chart", common.GetQuickONName(m.DevopsMode, m.QuickonType), "--namespace", common.GetDefaultSystemNamespace(true), "--set", "env.APP_DOMAIN=" + m.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
+	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.GetReleaseName(m.DevopsMode), "--repo", common.DefaultHelmRepoName, "--chart", common.GetReleaseName(m.DevopsMode), "--namespace", common.GetDefaultSystemNamespace(true), "--set", "env.APP_DOMAIN=" + m.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
 	if helmchan != "stable" {
 		helmargs = append(helmargs, "--set", "env.PHP_DEBUG=2")
 		helmargs = append(helmargs, "--set", "cloud.switchChannel=true")
@@ -336,9 +335,23 @@ func (m *Meta) Init() error {
 	}
 
 	helmargs = append(helmargs, "--set", fmt.Sprintf("ingress.host=%s", hostdomain))
-
-	if len(chartVersion) > 0 {
-		helmargs = append(helmargs, "--version", chartVersion)
+	installVersion := common.GetVersion(m.Version)
+	if m.DevopsMode {
+		// 指定类型
+		helmargs = append(helmargs, "--set", fmt.Sprintf("deploy.product=%s", m.Type))
+		// 指定版本
+		deployVersion := fmt.Sprintf("deploy.versions.%s=%s.k8s", m.Type, installVersion)
+		if m.Type == common.ZenTaoOSSType.String() {
+			deployVersion = fmt.Sprintf("deploy.versions.%s=%s", m.Type, installVersion)
+		}
+		helmargs = append(helmargs, "--set", deployVersion)
+		if helmchan != "stable" {
+			helmargs = append(helmargs, "--set", "image.repository=test/zentao")
+		}
+	} else {
+		if len(installVersion) > 0 {
+			helmargs = append(helmargs, "--version", installVersion)
+		}
 	}
 
 	output, err := qcexec.Command(os.Args[0], helmargs...).CombinedOutput()
@@ -346,10 +359,10 @@ func (m *Meta) Init() error {
 		m.Log.Errorf("upgrade install web failed: %s", string(output))
 		return err
 	}
-	m.Log.Donef("install %s success", common.GetQuickONName(m.DevopsMode, m.QuickonType))
+	m.Log.Donef("install %s success", common.GetReleaseName(m.DevopsMode))
 	if m.OffLine {
 		// patch quickon
-		cmfileName := fmt.Sprintf("%s-%s-files", common.DefaultQuchengName, common.GetQuickONName(m.DevopsMode, m.QuickonType))
+		cmfileName := fmt.Sprintf("%s-%s-files", common.DefaultQuchengName, common.GetReleaseName(m.DevopsMode))
 		m.Log.Debugf("fetch quickon files from %s", cmfileName)
 		for i := 0; i < 20; i++ {
 			time.Sleep(5 * time.Second)
@@ -374,11 +387,11 @@ repositories:
 				}
 				// 重建pod
 				pods, _ := m.kubeClient.ListPods(ctx, common.GetDefaultSystemNamespace(true), metav1.ListOptions{})
-				podName := fmt.Sprintf("%s-%s", common.DefaultQuchengName, common.GetQuickONName(m.DevopsMode, m.QuickonType))
+				podName := fmt.Sprintf("%s-%s", common.DefaultQuchengName, common.GetReleaseName(m.DevopsMode))
 				for _, pod := range pods.Items {
 					if strings.HasPrefix(pod.Name, podName) {
 						if err := m.kubeClient.DeletePod(ctx, pod.Name, common.GetDefaultSystemNamespace(true), metav1.DeleteOptions{}); err != nil {
-							m.Log.Warnf("recreate %s pods", common.GetQuickONName(m.DevopsMode, m.QuickonType))
+							m.Log.Warnf("recreate %s pods", common.GetReleaseName(m.DevopsMode))
 						}
 					}
 				}

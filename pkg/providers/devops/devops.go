@@ -35,10 +35,10 @@ func init() {
 func newProvider() *Devops {
 	return &Devops{
 		MetaData: &quickon.Meta{
-			Log:         log.GetInstance(),
-			DevopsMode:  true,
-			QuickonType: common.QuickonOSSType,
-			Version:     common.GetZenTaoVersion("", common.QuickonOSSType),
+			Log:        log.GetInstance(),
+			DevopsMode: true,
+			Type:       common.ZenTaoOSSType.String(),
+			Version:    common.DefaultZentaoDevOPSOSSVersion,
 		},
 	}
 }

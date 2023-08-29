@@ -64,7 +64,10 @@ const (
 const (
 	DefaultQuickonOSSVersion      = "stable-2.6" // 开源版本
 	DefaultQuickonEEVersion       = "stable-1.0"
-	DefaultZentaoDevOPSOSSVersion = "stable-1.0"
+	DefaultZentaoDevOPSOSSVersion = "18.6"
+	DefaultZentaoDevOPSMaxVersion = "4.6"
+	DefaultZentaoDevOPSBizVersion = "8.6"
+	DefaultZentaoDevOPSIPDVersion = "1.0.1"
 	K3sBinName                    = "k3s"
 	K3sBinPath                    = "/usr/local/bin/k3s"
 	HelmBinName                   = "helm"
@@ -94,6 +97,7 @@ const (
 	DefaultCneOperatorName        = "cne-operator"
 	DefaultIngressName            = "nginx-ingress-controller"
 	DefaultDBName                 = "qucheng-mysql"
+	DefaultKubeAPIDomain          = "kubeapi.k7s.local"
 	InitFileName                  = ".initdone"
 	InitLockFileName              = ".qlock"
 	InitModeCluster               = ".incluster"

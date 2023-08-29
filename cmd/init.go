@@ -112,9 +112,6 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 			log.Errorf("init quickon failed, reason: %v", err)
 			return
 		}
-		if !meta.QuickonOSS {
-			meta.QuickonType = common.QuickonEEType
-		}
 		if len(meta.IP) == 0 {
 			// TODO fix ip, not allow PublicIP
 			cfg, _ := config.LoadConfig()

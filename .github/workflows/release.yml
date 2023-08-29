@@ -22,6 +22,7 @@ jobs:
       uses: actions/setup-go@v4
       with:
         go-version: ${{ env.GO_VERSION }}
+        check-latest: true
     - name: install task
       run: |
         echo "install task"
@@ -77,6 +78,7 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: ${{ env.GO_VERSION }}
+          check-latest: true
       - name: install task
         run: |
           echo "install task"

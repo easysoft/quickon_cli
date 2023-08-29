@@ -234,10 +234,10 @@ func (c *Cluster) preinit(mip, ip string, sshClient ssh.Interface) error {
 	c.log.StopWait()
 	c.log.Donef("%s run init script success", ip)
 	// add master0 ip
-	hostsArgs := fmt.Sprintf("/usr/bin/qcadmin exp tools hosts add --domain kubeapi.k7s.local --ip %s", mip)
+	hostsArgs := fmt.Sprintf("/usr/bin/qcadmin exp tools hosts add --domain %s --ip %s", common.DefaultKubeAPIDomain, mip)
 	if err := sshClient.CmdAsync(ip, hostsArgs); err != nil {
 		c.log.Debugf("cmd: %s", hostsArgs)
-		return errors.Errorf("%s add master0 (kubeapi.k7s.local --> %s) failed, reason: %v", ip, mip, err)
+		return errors.Errorf("%s add master0 (%s --> %s) failed, reason: %v", ip, common.DefaultKubeAPIDomain, mip, err)
 	}
 	if err := sshClient.CmdAsync(ip, common.GetCustomScripts("hack/manifests/scripts/node.sh")); err != nil {
 		return errors.Errorf("%s run init script failed, reason: %v", ip, err)
@@ -250,7 +250,7 @@ func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error
 	k3sargs := k3stpl.K3sArgs{
 		Master0:      true,
 		TypeMaster:   true,
-		KubeAPI:      "kubeapi.k7s.local",
+		KubeAPI:      common.DefaultKubeAPIDomain,
 		KubeToken:    expass.PwGenAlphaNum(16),
 		DataDir:      c.DataDir,
 		PodCIDR:      c.PodCIDR,
@@ -338,7 +338,7 @@ func (c *Cluster) joinNode(ip string, master bool, cfg *config.Config, sshClient
 		Master0:      false,
 		TypeMaster:   master,
 		CNI:          cfg.Cluster.CNI,
-		KubeAPI:      "kubeapi.k7s.local",
+		KubeAPI:      common.DefaultKubeAPIDomain,
 		KubeToken:    cfg.Cluster.Token,
 		DataDir:      cfg.DataDir,
 		PodCIDR:      cfg.Cluster.PodCIDR,

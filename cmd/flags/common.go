@@ -12,6 +12,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -66,6 +67,7 @@ func ConvertFlags(cmd *cobra.Command, fs []types.Flag) *pflag.FlagSet {
 				case int:
 					pf.IntVar(f.P.(*int), f.Name, t, f.Usage)
 				default:
+					spew.Dump(t)
 					continue
 				}
 				if f.Required {
