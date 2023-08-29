@@ -7,7 +7,7 @@ env:
 
 before:
   hooks:
-    - make generate
+    - task generate
     - ./hack/scripts/gencompletions.sh
     - ./hack/scripts/genmanpages.sh
 

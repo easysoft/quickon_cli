@@ -59,5 +59,4 @@ jobs:
       - name: test qcadmin
         run: |
           ./_output/qcadmin_linux_amd64 version
-          sudo ./_output/qcadmin_linux_amd64 cluster init --debug
-          sudo ./_output/qcadmin_linux_amd64 quickon init --domain local.demo --version test-2.6 --debug
+          sudo ./_output/qcadmin_linux_amd64 init --domain github.local --debug
