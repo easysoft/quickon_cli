@@ -1,5 +1,17 @@
 # Changelog
 
+## v3.0.0-beta.3 (2023-08-30)
+
+ * [224622a](https://github.com/easysoft/quickon_cli/commit/224622a6a1744d75c6c64ccc6128027eb94f2a1c) fix(quickon): disable devops reset password
+ * [2b9e3b2](https://github.com/easysoft/quickon_cli/commit/2b9e3b2207fd861b4a9653854556bf03c331ad65) fix(status): fix status show
+ * [55d87b8](https://github.com/easysoft/quickon_cli/commit/55d87b869f014e1581c6ef581b699917a1c154db) fix(status): imp node status show
+ * [29d0f58](https://github.com/easysoft/quickon_cli/commit/29d0f58f7d2913644a1d04213e1c470c96cd5b67) fix(scripts): update clean scripts
+ * [1d07910](https://github.com/easysoft/quickon_cli/commit/1d07910ba5e058c0f16553f98c226f08c08df6df) fix(scripts): update devops install scripts
+
+### Contributors
+
+ * ysicing
+
 ## v3.0.0-beta.2 (2023-08-30)
 
  * [720187f](https://github.com/easysoft/quickon_cli/commit/720187f8529735c40f0031f95cdba6492dfb453b) feat(test): fix test install
