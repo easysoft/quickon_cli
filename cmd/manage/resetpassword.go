@@ -46,6 +46,10 @@ func NewResetPassword(f factory.Factory) *cobra.Command {
 		Aliases: []string{"rp", "re-pass"},
 		Run: func(cmd *cobra.Command, args []string) {
 			cfg, _ := config.LoadConfig()
+			if cfg.Quickon.DevOps {
+				logrus.Info("devops mode, skip reset password")
+				return
+			}
 			if cfg.APIToken == "" {
 				k8sClient, err := k8s.NewSimpleClient()
 				if err != nil {

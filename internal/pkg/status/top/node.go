@@ -48,7 +48,7 @@ func (o *NodeOption) RunResourceNode() error {
 	if err != nil {
 		return err
 	}
-	data, err := k.GetNodeResources(o.SortBy, selector)
+	data, err := k.GetNodeResources(o.SortBy, o.Output, selector)
 	if err != nil {
 		return err
 	}

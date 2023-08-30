@@ -124,7 +124,7 @@ func (c *Client) GetNodes(resourceName string, selector labels.Selector) (map[st
 }
 
 // NodeResources
-func (c *Client) GetNodeResources(sortBy string, selector labels.Selector) ([]NodeResources, error) {
+func (c *Client) GetNodeResources(sortBy, output string, selector labels.Selector) ([]NodeResources, error) {
 	var resources []NodeResources
 	var nodenames []string
 
@@ -168,19 +168,19 @@ func (c *Client) GetNodeResources(sortBy string, selector labels.Selector) ([]No
 		resource.CPURequests = noderesource.CPURequests.String()
 		resource.CPULimits = noderesource.CPULimits.String()
 		resource.CPUCapacity = noderesource.CPUCapacity.String()
-		resource.CPURequestsFraction = ExceedsCompare(float64ToString(noderesource.CPURequestsFraction))
+		resource.CPURequestsFraction = ExceedsCompare(float64ToString(noderesource.CPURequestsFraction), output)
 		resource.CPULimitsFraction = float64ToString(noderesource.CPULimitsFraction)
 
 		resource.MemoryUsages = noderesource.MemoryUsages.String()
 		resource.MemoryRequests = noderesource.MemoryRequests.String()
 		resource.MemoryLimits = noderesource.MemoryLimits.String()
 		resource.MemoryCapacity = noderesource.MemoryCapacity.String()
-		resource.MemoryRequestsFraction = ExceedsCompare(float64ToString(noderesource.MemoryRequestsFraction))
+		resource.MemoryRequestsFraction = ExceedsCompare(float64ToString(noderesource.MemoryRequestsFraction), output)
 		resource.MemoryLimitsFraction = float64ToString(noderesource.MemoryLimitsFraction)
 
 		resource.AllocatedPods = noderesource.AllocatedPods
 		resource.PodCapacity = noderesource.PodCapacity
-		resource.PodFraction = ExceedsCompare(float64ToString(noderesource.PodFraction))
+		resource.PodFraction = ExceedsCompare(float64ToString(noderesource.PodFraction), output)
 		resources = append(resources, resource)
 	}
 	return resources, err

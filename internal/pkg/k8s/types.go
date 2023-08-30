@@ -118,8 +118,11 @@ func FieldString(str string) float64 {
 	}
 }
 
-// Compare
-func ExceedsCompare(a string) string {
+// ExceedsCompare table color
+func ExceedsCompare(a, output string) string {
+	if strings.ToLower(output) == "json" || strings.ToLower(output) == "yaml" {
+		return a
+	}
 	if FieldString(a) > float64(criticalThreshold) {
 		return redColor(a)
 	} else if FieldString(a) > float64(warningThreshold) {
