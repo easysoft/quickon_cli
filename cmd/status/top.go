@@ -7,30 +7,25 @@
 package status
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/easysoft/qcadmin/internal/pkg/status/top"
-	"github.com/ergoapi/util/color"
 	"github.com/spf13/cobra"
 	"k8s.io/kubectl/pkg/util/templates"
 )
 
 var (
 	KRNodeExample = templates.Examples(`
-	q status node
+	q cluster status node
 	`)
 )
 
 func TopNodeCmd() *cobra.Command {
 	o := top.NodeOption{}
 	nodeCmd := &cobra.Command{
-		Use:                   "node",
+		Use:                   "nodes",
 		DisableFlagsInUseLine: true,
 		Short:                 "node provides an overview of the node",
-		Aliases:               []string{"nodes", "no"},
+		Aliases:               []string{"node", "no"},
 		Example:               KRNodeExample,
-		Deprecated:            fmt.Sprintf("use %s instead", color.SGreen("%s cluster status nodes", os.Args[0])),
 		Run: func(cmd *cobra.Command, args []string) {
 			o.Validate()
 			o.RunResourceNode()
