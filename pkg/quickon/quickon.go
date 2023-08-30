@@ -340,7 +340,7 @@ func (m *Meta) Init() error {
 		// 指定类型
 		helmargs = append(helmargs, "--set", fmt.Sprintf("deploy.product=%s", m.Type))
 		// 指定版本
-		deployVersion := fmt.Sprintf("deploy.versions.%s=%s.k8s", m.Type, installVersion)
+		deployVersion := fmt.Sprintf("deploy.versions.%s=%s%s.k8s", m.Type, m.Type, installVersion)
 		if m.Type == common.ZenTaoOSSType.String() {
 			deployVersion = fmt.Sprintf("deploy.versions.%s=%s", m.Type, installVersion)
 		}
