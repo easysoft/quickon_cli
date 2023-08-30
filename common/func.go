@@ -82,10 +82,19 @@ func GetChannel(p string) string {
 }
 
 // GetVersion 获取版本地址
-func GetVersion(version string) string {
+func GetVersion(p, version string) string {
 	v := strings.Split(version, "-")
 	if len(v) != 2 {
-		return version
+		switch p {
+		case string(ZenTaoIPDType):
+			return DefaultZentaoDevOPSIPDVersion
+		case string(ZenTaoBizType):
+			return DefaultZentaoDevOPSBizVersion
+		case string(ZenTaoMaxType):
+			return DefaultZentaoDevOPSMaxVersion
+		default:
+			return DefaultZentaoDevOPSOSSVersion
+		}
 	}
 	return v[1]
 }

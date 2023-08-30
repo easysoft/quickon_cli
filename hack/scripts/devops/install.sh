@@ -181,11 +181,17 @@ download_and_verify() {
 
 # --- install zentao devops
 install_zentao_devops() {
-  if [ -z "${INSTALL_DOMAIN}" ]; then
-    ${BIN_DIR}/z init --provider devops
-  else
-    ${BIN_DIR}/z init --provider devops --domain ${INSTALL_DOMAIN}
+  INSTALL_COMMAND="${BIN_DIR}/z init --provider devops"
+  if [ -n "${INSTALL_DOMAIN}" ]; then
+    INSTALL_COMMAND="${BIN_DIR}/z init --provider devops --domain ${INSTALL_DOMAIN}"
   fi
+  if [ -n "${DEVOPS_TYPE}" ]; then
+    INSTALL_COMMAND="${INSTALL_COMMAND} --type ${DEVOPS_TYPE}"
+  fi
+  if [ -n "${DEVOPS_VERSION}" ]; then
+    INSTALL_COMMAND="${INSTALL_COMMAND} --version ${DEVOPS_VERSION}"
+  fi
+  eval "$INSTALL_COMMAND"
 }
 
 # --- run the install process --

@@ -335,7 +335,7 @@ func (m *Meta) Init() error {
 	}
 
 	helmargs = append(helmargs, "--set", fmt.Sprintf("ingress.host=%s", hostdomain))
-	installVersion := common.GetVersion(m.Version)
+	installVersion := common.GetVersion(m.Type, m.Version)
 	if m.DevopsMode {
 		// 指定类型
 		helmargs = append(helmargs, "--set", fmt.Sprintf("deploy.product=%s", m.Type))
