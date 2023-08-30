@@ -98,8 +98,10 @@ setup_quickon() {
 
 # --- use desired qcadmin version if defined or find version from channel ---
 get_release_version() {
+  if [ -z "$VERSION" ]; then
     VERSION="stable"
-    info "Using ${VERSION} as release"
+  fi
+  info "Using ${VERSION} as release"
 }
 
 # --- set arch and suffix, fatal if architecture not supported ---
