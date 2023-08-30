@@ -30,7 +30,7 @@ type PodStateMap map[string]PodStateCount
 type Status struct {
 	output     string     `json:"-" yaml:"-"`
 	KubeStatus KubeStatus `json:"k8s" yaml:"k8s"`
-	QStatus    QStatus    `json:"qucheng" yaml:"qucheng"`
+	QStatus    QStatus    `json:"platform" yaml:"platform"`
 }
 
 type KubeStatus struct {
@@ -109,8 +109,8 @@ func (s *Status) Format() error {
 			}
 		}
 		fmt.Fprintf(w, "\n")
-		fmt.Fprintf(w, "Qucheng Status: \n")
-		if s.QStatus.PodState["qucheng"].Disabled {
+		fmt.Fprintf(w, "Platform Status: \n")
+		if s.QStatus.PodState["platform"].Disabled {
 			fmt.Fprintf(w, "  %s\t%s\n", "status", color.SBlue("disabled"))
 			w.Flush()
 			return output.EncodeText(os.Stdout, buf.Bytes())
@@ -131,8 +131,12 @@ func (s *Status) Format() error {
 			consoleURL = fmt.Sprintf("http://%s:32379", loginIP)
 		}
 		fmt.Fprintf(w, "  namespace:\t%s\n", color.SBlue(common.GetDefaultSystemNamespace(true)))
-		fmt.Fprintf(w, "  console:      %s(%s/%s)\n", color.SGreen(consoleURL), color.SGreen(common.QuchengDefaultUser), color.SGreen(cfg.ConsolePassword))
-		quchengOK := true
+		if cfg.Quickon.DevOps {
+			fmt.Fprintf(w, "  console:      %s\n", color.SGreen(consoleURL))
+		} else {
+			fmt.Fprintf(w, "  console:      %s(%s/%s)\n", color.SGreen(consoleURL), color.SGreen(common.QuchengDefaultUser), color.SGreen(cfg.ConsolePassword))
+		}
+		ptOK := true
 		fmt.Fprintf(w, "  component status: \n")
 		for name, state := range s.QStatus.PodState {
 			if state.Disabled {
@@ -142,7 +146,7 @@ func (s *Status) Format() error {
 					fmt.Fprintf(w, "    %s\t%s\n", name, color.SGreen("ok"))
 				} else {
 					fmt.Fprintf(w, "    %s\t%s\n", name, color.SRed("warn"))
-					quchengOK = false
+					ptOK = false
 				}
 			}
 		}
@@ -154,7 +158,7 @@ func (s *Status) Format() error {
 				fmt.Fprintf(w, "    %s\t%s\n", name, color.SGreen("enabled"))
 			}
 		}
-		if quchengOK {
+		if ptOK {
 			fmt.Fprintf(w, "  %s\t%s\n", "status", color.SGreen("health"))
 		} else {
 			fmt.Fprintf(w, "  %s\t%s\n", "status", color.SRed("unhealth"))

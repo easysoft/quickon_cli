@@ -5,8 +5,9 @@
 # (2) Affero General Public License 3.0 (AGPL 3.0)
 # license that can be found in the LICENSE file.
 
-set -e
-set -o noglob
+# Source code is available at https://github.com/easysoft/quickon_cli
+
+# SCRIPT_COMMIT_SHA="un"
 
 # Usage:
 #   curl ... | ENV_VAR=... sh -
@@ -18,12 +19,15 @@ set -o noglob
 #     curl ... | DEVOPS_TYPE="" sh -
 #   - DEVOPS_TYPE
 #     Install Type when install Quickon.
-#     Defaults to 'zentao open'
+#     Defaults to '', support 'max', 'biz', 'ipd'
 #   - DEVOPS_VERSION
 #     Install Version when install Quickon.
 #     Defaults to ''
 #   - INSTALL_DOMAIN
 #     If not set default use gen default domain
+
+set -e
+set -o noglob
 
 # --- helper functions for logs ---
 info()

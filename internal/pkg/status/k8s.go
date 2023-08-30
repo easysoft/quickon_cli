@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/plugin"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
@@ -34,13 +35,16 @@ type K8sStatusOption struct {
 type K8sStatusCollector struct {
 	client *k8s.Client
 	option K8sStatusOption
+	cfg    *config.Config
 }
 
 func NewK8sStatusCollector(option K8sStatusOption) (*K8sStatusCollector, error) {
 	client, err := k8s.NewClient("", option.KubeConfig)
+	cfg, _ := config.LoadConfig()
 	return &K8sStatusCollector{
 		client: client,
 		option: option,
+		cfg:    cfg,
 	}, err
 }
 
@@ -85,8 +89,8 @@ func (k *K8sStatusCollector) status(ctx context.Context) *Status {
 	if err := k.nodesStatus(ctx, status); err != nil {
 		k.option.Log.Errorf("failed to get nodes status: %v", err)
 	}
-	if err := k.quchengStatus(ctx, status); err != nil {
-		k.option.Log.Errorf("failed to get qucheng status: %v", err)
+	if err := k.serviceStatus(ctx, status); err != nil {
+		k.option.Log.Errorf("failed to get service status: %v", err)
 	}
 	return status
 }
@@ -145,26 +149,30 @@ func (k *K8sStatusCollector) deploymentStatus(ctx context.Context, ns, name, ali
 	return false, nil
 }
 
-func (k *K8sStatusCollector) quchengStatus(ctx context.Context, status *Status) error {
+// serviceStatus 检查服务状态
+func (k *K8sStatusCollector) serviceStatus(ctx context.Context, status *Status) error {
 	// 集群
 	k.deploymentStatus(ctx, "kube-system", "coredns", "coredns", "k8s", status)
 	k.deploymentStatus(ctx, "kube-system", "metrics-server", "metrics-server", "k8s", status)
-	k.deploymentStatus(ctx, "kube-system", "local-path-provisioner", "local-path-provisioner", "k8s", status)
+	if k.cfg.Storage.Type == "local" {
+		k.deploymentStatus(ctx, "kube-system", "local-path-provisioner", "local-path-provisioner", "k8s", status)
+	}
 	// 业务层
-	k.deploymentStatus(ctx, common.GetDefaultSystemNamespace(true), common.DefaultQuchengName, common.DefaultQuchengName, "", status)
+	k.deploymentStatus(ctx, common.GetDefaultSystemNamespace(true), common.GetReleaseName(k.cfg.Quickon.DevOps), common.GetReleaseName(k.cfg.Quickon.DevOps), "", status)
 	// 数据库
-	k.deploymentStatus(ctx, common.GetDefaultSystemNamespace(true), common.DefaultDBName, common.DefaultDBName, "", status)
+	db := fmt.Sprintf("%s-mysql", common.GetReleaseName(k.cfg.Quickon.DevOps))
+	k.deploymentStatus(ctx, common.GetDefaultSystemNamespace(true), db, db, "", status)
 
 	// 插件状态
 	plugins, _ := plugin.GetMaps()
 	for _, p := range plugins {
-		k.quchengPluginStatus(ctx, p, status)
+		k.platformPluginStatus(ctx, p, status)
 	}
 	return nil
 }
 
-func (k *K8sStatusCollector) quchengPluginStatus(ctx context.Context, p plugin.Meta, status *Status) error {
-	k.option.Log.Debugf("check plugin %s status", p.Type)
+func (k *K8sStatusCollector) platformPluginStatus(ctx context.Context, p plugin.Meta, status *Status) error {
+	k.option.Log.Debugf("check platform plugin %s status", p.Type)
 	stateCount := PodStateCount{Type: "Plugin"}
 	_, err := k.client.GetSecret(ctx, common.GetDefaultSystemNamespace(true), "qc-plugin-"+p.Type, metav1.GetOptions{})
 	if err != nil {
