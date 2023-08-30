@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.0.0-rc.1 (2023-08-30)
+
+ * [56b1bd3](https://github.com/easysoft/quickon_cli/commit/56b1bd3e3fd6e589135620438942d7aaa1ba6ab6) fix(ipd): fix ipd
+
+### Contributors
+
+ * ysicing
+
 ## v3.0.0-beta.3 (2023-08-30)
 
  * [224622a](https://github.com/easysoft/quickon_cli/commit/224622a6a1744d75c6c64ccc6128027eb94f2a1c) fix(quickon): disable devops reset password
