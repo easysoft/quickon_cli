@@ -150,8 +150,8 @@ download() {
 
 # --- download binary from cos url ---
 download_binary() {
-    BIN_URL=${COS_URL}/${VERSION}/z_linux_${SUFFIX}
-    info "Downloading binary ${COS_URL}/${VERSION}/z"
+    BIN_URL=${COS_URL}/${VERSION}/qcadmin_linux_${SUFFIX}
+    info "Downloading binary from ${BIN_URL}"
     download ${TMP_BIN} ${BIN_URL}
 }
 

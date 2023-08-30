@@ -119,7 +119,7 @@ if (ls /etc/systemd/system/k3s*.service || ls /etc/init.d/k3s*) >/dev/null 2>&1;
     exit
 fi
 
-for cmd in kubectl crictl ctr q qcadmin; do
+for cmd in kubectl crictl ctr q z qcadmin; do
     if [ -L /usr/local/bin/$cmd ]; then
         rm -f /usr/local/bin/$cmd
     fi
