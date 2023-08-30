@@ -143,7 +143,6 @@ changelog:
     exclude:
       - '^docs:'
       - '^test:'
-      - '^feat(update):'
       - '^feat(ci):'
       - '^chore(ci):'
       - '^chore(action):'
