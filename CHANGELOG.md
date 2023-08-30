@@ -1,5 +1,14 @@
 # Changelog
 
+## v3.0.0-beta.2 (2023-08-30)
+
+ * [720187f](https://github.com/easysoft/quickon_cli/commit/720187f8529735c40f0031f95cdba6492dfb453b) feat(test): fix test install
+ * [a830104](https://github.com/easysoft/quickon_cli/commit/a830104f62a6b95395daea7079d032a0715635e3) fix(devops): fix devops install images tag
+
+### Contributors
+
+ * ysicing
+
 ## v3.0.0-beta.1 (2023-08-29)
 
  * [0044bad](https://github.com/easysoft/quickon_cli/commit/0044bad8cbc877408197a2943e52e3c104184228) fix(quickon): fix quickon install app
