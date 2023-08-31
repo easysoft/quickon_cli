@@ -66,7 +66,6 @@ func NewCmdAppMarket(f factory.Factory) *cobra.Command {
 				Size: 5,
 			}
 			it, _, _ := selectInstallApp.Run()
-			//  spew.Dump(charts[it])
 			log.Infof("select install app: %s, version: %s", color.SGreen(charts[it].Chart.Name), color.SGreen(charts[it].Chart.AppVersion))
 			subdomain := fmt.Sprintf("%s-%s", charts[it].Chart.Name, exhash.MD5(time.Now().String())[:8])
 			installArgs := []string{"quickon", "app", "install", charts[it].Chart.Name, "--domain", subdomain, "--api-useip"}

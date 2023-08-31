@@ -21,6 +21,8 @@ import (
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/expass"
 	"github.com/sirupsen/logrus"
+	"k8s.io/kubectl/pkg/util/i18n"
+	"k8s.io/kubectl/pkg/util/templates"
 
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 )
@@ -119,4 +121,11 @@ func (q *Quickon) Check() error {
 
 func (q *Quickon) GetMeta() *quickon.Meta {
 	return q.MetaData
+}
+
+// GetUsageExample returns quickon usage example prompt.
+func (q *Quickon) GetUsageExample() string {
+	return templates.Examples(i18n.T(`
+	# init quickon platform use example domain your.example.quickon.domain
+	q init --provider quickon --domain your.example.quickon.domain`))
 }

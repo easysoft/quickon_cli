@@ -114,9 +114,7 @@ func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 					host = fmt.Sprintf("http://%s", host)
 				}
 			}
-			// spew.Dump(releaseValue)
 			auth := getMap(releaseValue, "auth")
-			// spew.Dump(auth)
 			if auth != nil {
 				authUsername := getMapValue(auth, "username")
 				authPassword := getMapValue(auth, "password")

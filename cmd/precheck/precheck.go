@@ -16,6 +16,7 @@ import (
 type PreCheck struct {
 	IgnorePreflightErrors bool
 	OffLine               bool
+	Devops                bool
 }
 
 func (pc PreCheck) Run() error {
@@ -24,7 +25,7 @@ func (pc PreCheck) Run() error {
 	if err := preflight.RunInitNodeChecks(utilsexec.New(), &types.Metadata{
 		ServiceCidr: "10.42.0.0/16",
 		ClusterCidr: "10.43.0.0/16",
-	}, pc.IgnorePreflightErrors, pc.OffLine); err != nil {
+	}, pc.IgnorePreflightErrors, pc.OffLine, pc.Devops); err != nil {
 		return err
 	}
 	return nil

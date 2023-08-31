@@ -29,25 +29,25 @@ func newCmdApp(f factory.Factory) *cobra.Command {
 	return appCmd
 }
 
-func newCmdQuickon(f factory.Factory) *cobra.Command {
-	quickonCmd := &cobra.Command{
-		Use:     "quickon",
-		Short:   "Quickon commands",
-		Aliases: []string{"qc", "qucheng"},
+func newCmdPlatform(f factory.Factory) *cobra.Command {
+	platformCmd := &cobra.Command{
+		Use:     "platform",
+		Short:   "Platform commands",
+		Aliases: []string{"qc", "quickon", "pt"},
 		Version: "20230330",
 	}
-	quickonCmd.AddCommand(newCmdApp(f))
-	quickonCmd.AddCommand(quickon.CheckCommand(f))
-	quickonCmd.AddCommand(quickon.InitCommand(f))
-	quickonCmd.AddCommand(quickon.UninstallCommand(f))
-	quickonCmd.AddCommand(manage.NewCmdPlugin(f))
-	quickonCmd.AddCommand(manage.NewResetPassword(f))
-	quickonCmd.AddCommand(manage.NewRenewTLS(f))
+	platformCmd.AddCommand(newCmdApp(f))
+	platformCmd.AddCommand(quickon.CheckCommand(f))
+	platformCmd.AddCommand(quickon.InitCommand(f))
+	platformCmd.AddCommand(quickon.UninstallCommand(f))
+	platformCmd.AddCommand(manage.NewCmdPlugin(f))
+	platformCmd.AddCommand(manage.NewResetPassword(f))
+	platformCmd.AddCommand(manage.NewRenewTLS(f))
 	gdbCmd := &cobra.Command{
 		Use:   "gdb",
 		Short: "Manage Global Database",
 	}
 	gdbCmd.AddCommand(manage.NewCmdGdbList(f))
-	quickonCmd.AddCommand(gdbCmd)
-	return quickonCmd
+	platformCmd.AddCommand(gdbCmd)
+	return platformCmd
 }

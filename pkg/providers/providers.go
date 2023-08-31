@@ -31,6 +31,7 @@ type Provider interface {
 	GetFlags() []types.Flag
 	Install() error
 	Show()
+	GetUsageExample() string
 }
 
 // RegisterProvider registers a provider.Factory by name.

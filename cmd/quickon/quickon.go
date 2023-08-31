@@ -7,6 +7,8 @@
 package quickon
 
 import (
+	"fmt"
+
 	"github.com/easysoft/qcadmin/cmd/flags"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
@@ -27,7 +29,7 @@ var (
 )
 
 func init() {
-	initCmd.Flags().StringVarP(&cProvider, "provider", "p", cProvider, "Provider is a module which provides an interface for managing cloud resources")
+	initCmd.Flags().StringVarP(&cProvider, "provider", "p", cProvider, "install provider, support devops, quickon")
 }
 
 func InitCommand(f factory.Factory) *cobra.Command {
@@ -46,7 +48,8 @@ func InitCommand(f factory.Factory) *cobra.Command {
 	meta := cp.GetMeta()
 	// quickonClient := quickon.New(f)
 	// fs = append(fs, quickonClient.GetFlags()...)
-	initCmd.Short = "init quickon"
+	initCmd.Short = fmt.Sprintf("init %s platform", pStr)
+	initCmd.Example = cp.GetUsageExample()
 	initCmd.PreRunE = func(cmd *cobra.Command, args []string) error {
 		if err := cp.GetKubeClient(); err != nil {
 			return err

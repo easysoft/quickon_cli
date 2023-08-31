@@ -62,13 +62,13 @@ func (m *Meta) GetCustomFlags() []types.Flag {
 	return []types.Flag{
 		{
 			Name:  "domain",
-			Usage: "quickon domain",
+			Usage: "custom domain",
 			P:     &m.Domain,
 			V:     m.Domain,
 		},
 		{
 			Name:   "ip",
-			Usage:  "quickon ip",
+			Usage:  "custom ip",
 			P:      &m.IP,
 			V:      m.IP,
 			Hidden: true,
@@ -81,10 +81,11 @@ func (m *Meta) GetCustomFlags() []types.Flag {
 			ShortHand: "t",
 		},
 		{
-			Name:  "offline",
-			Usage: "offline install mode, default: false",
-			P:     &m.OffLine,
-			V:     false,
+			Name:   "offline",
+			Usage:  "offline install mode, default: false",
+			P:      &m.OffLine,
+			V:      false,
+			Hidden: true,
 		},
 	}
 }

@@ -668,6 +668,7 @@ func (swc SwapCheck) Check() error {
 // NumCPUCheck checks if current number of CPUs is not less than required
 type NumCPUCheck struct {
 	NumCPU int
+	Devops bool
 }
 
 // Name returns the label for NumCPUCheck
@@ -680,6 +681,13 @@ func (ncc NumCPUCheck) Check() error {
 	log := log.GetInstance()
 	log.Debug("validating number of CPUs")
 	numCPU := runtime.NumCPU()
+	if ncc.Devops {
+		if numCPU < ncc.NumCPU*2 {
+			return errors.Errorf("the number of available CPUs %d is less than the required %d", numCPU, ncc.NumCPU*2)
+		}
+		log.Donef("the number of available CPUs %d is greater than the required %d", numCPU, ncc.NumCPU*2)
+		return nil
+	}
 	if numCPU < ncc.NumCPU {
 		return errors.Errorf("the number of available CPUs %d is less than the required %d", numCPU, ncc.NumCPU)
 	}
@@ -720,7 +728,8 @@ func (ndc NumDiskCheck) Check() error {
 
 // MemCheck checks if the number of megabytes of memory is not less than required
 type MemCheck struct {
-	Mem uint64
+	Mem    uint64
+	Devops bool
 }
 
 // Name returns the label for memory
@@ -732,7 +741,7 @@ func (MemCheck) Name() string {
 // The boolean flag 'isSecondaryControlPlane' controls whether we are running checks in a --join-control-plane scenario.
 // The boolean flag 'downloadCerts' controls whether we should skip checks on certificates because we are downloading them.
 // If the flag is set to true we should skip checks already executed by RunJoinNodeChecks.
-func RunInitNodeChecks(execer utilsexec.Interface, cfg *types.Metadata, ignorePreflightErrors, offline bool) error {
+func RunInitNodeChecks(execer utilsexec.Interface, cfg *types.Metadata, ignorePreflightErrors, offline, devops bool) error {
 	log := log.GetInstance()
 	if err := RunRootCheckOnly(ignorePreflightErrors); err != nil {
 		return err
@@ -744,11 +753,11 @@ func RunInitNodeChecks(execer utilsexec.Interface, cfg *types.Metadata, ignorePr
 
 	// manifestsDir := filepath.Join(kubeadmconstants.KubernetesDir, kubeadmconstants.ManifestsSubDirName)
 	checks := []Checker{
-		NumCPUCheck{NumCPU: common.ControlPlaneNumCPU},
+		NumCPUCheck{NumCPU: common.ControlPlaneNumCPU, Devops: devops},
 		NumDiskCheck{NumDisk: common.ControlPlaneNumDisk, LowDisk: common.ControlPlaneLowDisk},
 		// Linux only
 		// TODO: support other OS, if control-plane is supported on it.
-		MemCheck{Mem: common.ControlPlaneMem},
+		MemCheck{Mem: common.ControlPlaneMem, Devops: devops},
 		FirewalldCheck{ports: []int{80, 443, 6443, 32379}},
 		PortOpenCheck{port: 80},
 		PortOpenCheck{port: 443},

@@ -32,7 +32,7 @@ import (
 var (
 	initCmd = &cobra.Command{
 		Use:   "init",
-		Short: "Initialize a Kubernetes & Quickon cluster",
+		Short: "Initialize Platform",
 	}
 	skip      bool
 	cProvider = "devops"
@@ -40,7 +40,7 @@ var (
 )
 
 func init() {
-	initCmd.Flags().StringVar(&cProvider, "provider", cProvider, "Provider is a module which provides an interface for managing cloud resources")
+	initCmd.Flags().StringVar(&cProvider, "provider", cProvider, "install provider, support devops, quickon")
 	initCmd.PersistentFlags().BoolVar(&skip, "skip-precheck", false, "skip precheck")
 }
 
@@ -73,6 +73,7 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 	}
 	meta := cp.GetMeta()
 	initCmd.Flags().AddFlagSet(flags.ConvertFlags(initCmd, fs))
+	initCmd.Example = cp.GetUsageExample()
 	initCmd.PreRun = func(cmd *cobra.Command, args []string) {
 		if file.CheckFileExists(common.GetCustomConfig(common.InitFileName)) {
 			log.Donef("quickon is already initialized, just run %s get cluster status", color.SGreen("%s status", globalToolPath))
@@ -87,6 +88,7 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 		} else {
 			preCheck.OffLine = nCluster.OffLine
 			preCheck.IgnorePreflightErrors = nCluster.IgnorePreflightErrors
+			preCheck.Devops = cProvider == "devops"
 			if err := preCheck.Run(); err != nil {
 				log.Errorf("precheck failed, reason: %v", err)
 				os.Exit(-1)

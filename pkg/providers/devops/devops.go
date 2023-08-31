@@ -18,6 +18,8 @@ import (
 	"github.com/easysoft/qcadmin/pkg/quickon"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/exnet"
+	"k8s.io/kubectl/pkg/util/i18n"
+	"k8s.io/kubectl/pkg/util/templates"
 )
 
 const providerName = "devops"
@@ -97,4 +99,11 @@ func (q *Devops) Check() error {
 
 func (q *Devops) GetMeta() *quickon.Meta {
 	return q.MetaData
+}
+
+// GetUsageExample returns devops usage example prompt.
+func (q *Devops) GetUsageExample() string {
+	return templates.Examples(i18n.T(`
+	# init devops platform with example domain your.example.devops.domain
+	q init --provider devops --domain your.example.devops.domain`))
 }
