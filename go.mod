@@ -7,7 +7,7 @@ require (
 	github.com/BeidouCloudPlatform/go-bindata/v4 v4.1.0
 	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/cheggaaa/pb/v3 v3.1.2
-	github.com/cockroachdb/errors v1.10.0
+	github.com/cockroachdb/errors v1.11.1
 	github.com/containerd/continuity v0.3.0
 	github.com/docker/docker v23.0.5+incompatible
 	github.com/easysoft/quickon-api v0.7.4
@@ -100,7 +100,7 @@ require (
 	github.com/fatih/color v1.15.0 // indirect
 	github.com/fvbommel/sortorder v1.1.0 // indirect
 	github.com/gaukas/godicttls v0.0.4 // indirect
-	github.com/getsentry/sentry-go v0.20.0 // indirect
+	github.com/getsentry/sentry-go v0.23.0 // indirect
 	github.com/go-errors/errors v1.4.2 // indirect
 	github.com/go-gorp/gorp/v3 v3.0.5 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
