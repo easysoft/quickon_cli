@@ -1,0 +1,11 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: quickon-cli-runner
+spec:
+  replicas: 1
+  template:
+    spec:
+      repository: easysoft/quickon_cli
+      labels:
+        - quickon-cli-runner

@@ -38,16 +38,17 @@ func (mc MemCheck) Check() error {
 
 	// Totalram holds the total usable memory. Unit holds the size of a memory unit in bytes. Multiply them and convert to MB
 	actual := uint64(info.Totalram) * uint64(info.Unit) / 1024 / 1024
-	if mc.Devops {
-		if actual < mc.Mem*2 {
-			return errors.Errorf("the system RAM (%d MB) is less than the minimum %d MB", actual, mc.Mem*2)
-		}
-		log.Donef("the system RAM (%d MB) is greater than the minimum %d MB", actual, mc.Mem*2)
-		return nil
-	}
 	if actual < mc.Mem {
 		return errors.Errorf("the system RAM (%d MB) is less than the minimum %d MB", actual, mc.Mem)
 	}
-	log.Donef("the system RAM (%d MB) is greater than the minimum %d MB", actual, mc.Mem)
+	if mc.Devops {
+		if actual < mc.Mem*2 {
+			log.Warnf("the system RAM (%d MB) is less than the minimum %d MB", actual, mc.Mem*2)
+			return nil
+		}
+		log.Donef("the system RAM (%d MB) is greater than the minimum %d MB", actual, mc.Mem*2)
+	} else {
+		log.Donef("the system RAM (%d MB) is greater than the minimum %d MB", actual, mc.Mem)
+	}
 	return nil
 }

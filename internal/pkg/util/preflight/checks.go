@@ -681,17 +681,18 @@ func (ncc NumCPUCheck) Check() error {
 	log := log.GetInstance()
 	log.Debug("validating number of CPUs")
 	numCPU := runtime.NumCPU()
-	if ncc.Devops {
-		if numCPU < ncc.NumCPU*2 {
-			return errors.Errorf("the number of available CPUs %d is less than the required %d", numCPU, ncc.NumCPU*2)
-		}
-		log.Donef("the number of available CPUs %d is greater than the required %d", numCPU, ncc.NumCPU*2)
-		return nil
-	}
 	if numCPU < ncc.NumCPU {
 		return errors.Errorf("the number of available CPUs %d is less than the required %d", numCPU, ncc.NumCPU)
 	}
-	log.Donef("the number of available CPUs %d is greater than the required %d", numCPU, ncc.NumCPU)
+	if ncc.Devops {
+		if numCPU < ncc.NumCPU*2 {
+			log.Warnf("the number of available CPUs %d is greater than the required %d", numCPU, ncc.NumCPU*2)
+			return nil
+		}
+		log.Donef("the number of available CPUs %d is greater than the required %d", numCPU, ncc.NumCPU*2)
+	} else {
+		log.Donef("the number of available CPUs %d is greater than the required %d", numCPU, ncc.NumCPU)
+	}
 	return nil
 }
 
