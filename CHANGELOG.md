@@ -1,5 +1,17 @@
 # Changelog
 
+## v3.0.0-rc.2 (2023-09-04)
+
+ * [52409c9](https://github.com/easysoft/quickon_cli/commit/52409c9ad99a89ced40c9633d7322e5a04c81763) fix(install): fix quickon install
+ * [aa71986](https://github.com/easysoft/quickon_cli/commit/aa71986f8fe55d35e7b63fc19e0e2678ebce0cc3) feat(precheck): change devops check
+ * [a395322](https://github.com/easysoft/quickon_cli/commit/a395322beaa53d582c5131ab9fb0d5e9fbdf916e) feat(action): update test action
+ * [7e5847c](https://github.com/easysoft/quickon_cli/commit/7e5847cdfe5e0dc9b2ed119d59666ae83619fa79) style(update): update subcmd notice
+ * [e0d3df6](https://github.com/easysoft/quickon_cli/commit/e0d3df63bf128e58b99375250d077d0470ce26e1) fix(actions): update actions
+
+### Contributors
+
+ * ysicing
+
 ## v3.0.0-rc.1 (2023-08-30)
 
  * [56b1bd3](https://github.com/easysoft/quickon_cli/commit/56b1bd3e3fd6e589135620438942d7aaa1ba6ab6) fix(ipd): fix ipd
