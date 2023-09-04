@@ -74,13 +74,6 @@ func (m *Meta) GetCustomFlags() []types.Flag {
 			Hidden: true,
 		},
 		{
-			Name:      "type",
-			Usage:     "type",
-			P:         &m.Type,
-			V:         common.ZenTaoOSSType.String(),
-			ShortHand: "t",
-		},
-		{
 			Name:   "offline",
 			Usage:  "offline install mode, default: false",
 			P:      &m.OffLine,
@@ -178,7 +171,7 @@ func (m *Meta) addHelmRepo() error {
 		}
 		m.Log.Debugf("quickon helm repo already exists")
 	} else {
-		m.Log.Done("add quickon helm repo success")
+		m.Log.Donef("add %s channel quickon helm repo success", common.GetChannel(m.Version))
 	}
 	output, err = qcexec.Command(os.Args[0], "experimental", "helm", "repo-update").CombinedOutput()
 	if err != nil {
@@ -216,8 +209,8 @@ func (m *Meta) Init() error {
 			return err
 		}
 	}
-	m.Log.Debugf("version: %v, type: %v", m.Version, m.Type)
-
+	installVersion := common.GetVersion(m.DevopsMode, m.Type, m.Version)
+	m.Log.Infof("devops: %v, type: %s, version: %s(%s), channel: %s", m.DevopsMode, m.Type, m.Version, installVersion, common.GetChannel(m.Version))
 	if m.DevopsMode {
 		// TODO: 获取zentao devops chart version
 		m.Log.Debugf("start init zentao devops")
@@ -336,7 +329,7 @@ func (m *Meta) Init() error {
 	}
 
 	helmargs = append(helmargs, "--set", fmt.Sprintf("ingress.host=%s", hostdomain))
-	installVersion := common.GetVersion(m.Type, m.Version)
+
 	if m.DevopsMode {
 		// 指定类型
 		helmargs = append(helmargs, "--set", fmt.Sprintf("deploy.product=%s", m.Type))

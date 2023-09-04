@@ -58,6 +58,12 @@ func (q *Devops) GetFlags() []types.Flag {
 		Usage: fmt.Sprintf("zentao devops version %s", common.DefaultZentaoDevOPSOSSVersion),
 		P:     &q.MetaData.Version,
 		V:     q.MetaData.Version,
+	}, types.Flag{
+		Name:      "type",
+		Usage:     "devops type, support oss, max, biz, ipd",
+		P:         &q.MetaData.Type,
+		V:         common.ZenTaoOSSType.String(),
+		ShortHand: "t",
 	})
 	return fs
 }

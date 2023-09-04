@@ -62,8 +62,8 @@ const (
 )
 
 const (
-	DefaultQuickonOSSVersion      = "stable-2.6" // 开源版本
-	DefaultQuickonEEVersion       = "stable-1.0"
+	DefaultQuickonOSSVersion      = "3.0.2" // 开源版本
+	DefaultQuickonEEVersion       = "1.0"
 	DefaultZentaoDevOPSOSSVersion = "18.7"
 	DefaultZentaoDevOPSMaxVersion = "4.7"
 	DefaultZentaoDevOPSBizVersion = "8.7"

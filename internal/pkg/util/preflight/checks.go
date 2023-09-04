@@ -686,7 +686,7 @@ func (ncc NumCPUCheck) Check() error {
 	}
 	if ncc.Devops {
 		if numCPU < ncc.NumCPU*2 {
-			log.Warnf("the number of available CPUs %d is greater than the required %d", numCPU, ncc.NumCPU*2)
+			log.Warnf("the number of available CPUs %d is greater than the minimum %d, less than the recommended %d", numCPU, ncc.NumCPU, ncc.NumCPU*2)
 			return nil
 		}
 		log.Donef("the number of available CPUs %d is greater than the required %d", numCPU, ncc.NumCPU*2)

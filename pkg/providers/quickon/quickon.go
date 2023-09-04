@@ -73,6 +73,12 @@ func (q *Quickon) GetFlags() []types.Flag {
 		Usage: "default quickon install app",
 		P:     &q.MetaData.App,
 		V:     q.MetaData.App,
+	}, types.Flag{
+		Name:      "type",
+		Usage:     "quickon type",
+		P:         &q.MetaData.Type,
+		V:         common.ZenTaoOSSType.String(),
+		ShortHand: "t",
 	})
 	return fs
 }

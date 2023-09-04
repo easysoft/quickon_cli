@@ -40,7 +40,7 @@ var (
 )
 
 func init() {
-	initCmd.Flags().StringVar(&cProvider, "provider", cProvider, "install provider, support devops, quickon")
+	initCmd.Flags().StringVarP(&cProvider, "provider", "p", cProvider, "install provider, support devops, quickon")
 	initCmd.PersistentFlags().BoolVar(&skip, "skip-precheck", false, "skip precheck")
 }
 

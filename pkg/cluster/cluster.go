@@ -133,11 +133,10 @@ func (c *Cluster) GetSSHFlags() []types.Flag {
 			Usage:     "ssh user",
 		},
 		{
-			Name:      "password",
-			ShortHand: "p",
-			P:         &c.SSH.Passwd,
-			V:         c.SSH.Passwd,
-			Usage:     "ssh password",
+			Name:  "password",
+			P:     &c.SSH.Passwd,
+			V:     c.SSH.Passwd,
+			Usage: "ssh password",
 		},
 		{
 			Name:  "pkfile",

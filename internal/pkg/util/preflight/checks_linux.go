@@ -43,7 +43,7 @@ func (mc MemCheck) Check() error {
 	}
 	if mc.Devops {
 		if actual < mc.Mem*2 {
-			log.Warnf("the system RAM (%d MB) is less than the minimum %d MB", actual, mc.Mem*2)
+			log.Warnf("the system RAM (%d MB) is greater than the minimum %d MB, less than the recommended %d MB", actual, mc.Mem, mc.Mem*2)
 			return nil
 		}
 		log.Donef("the system RAM (%d MB) is greater than the minimum %d MB", actual, mc.Mem*2)

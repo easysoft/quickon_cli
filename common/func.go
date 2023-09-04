@@ -82,7 +82,7 @@ func GetChannel(p string) string {
 }
 
 // GetVersion 获取版本地址
-func GetVersion(p, version string) string {
+func GetVersion(devops bool, p, version string) string {
 	v := strings.Split(version, "-")
 	if len(v) != 2 {
 		switch p {
@@ -93,7 +93,10 @@ func GetVersion(p, version string) string {
 		case string(ZenTaoMaxType):
 			return DefaultZentaoDevOPSMaxVersion
 		default:
-			return DefaultZentaoDevOPSOSSVersion
+			if devops {
+				return DefaultZentaoDevOPSOSSVersion
+			}
+			return DefaultQuickonOSSVersion
 		}
 	}
 	return v[1]
