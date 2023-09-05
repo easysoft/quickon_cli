@@ -501,6 +501,15 @@ func (c *Client) DeleteNamespace(ctx context.Context, namespace string, opts met
 	return c.Clientset.CoreV1().Namespaces().Delete(ctx, namespace, opts)
 }
 
+func (c *Client) CheckNamespace(ctx context.Context, namespace string) error {
+	_, err := c.GetNamespace(ctx, namespace, metav1.GetOptions{})
+	if kubeerr.IsNotFound(err) {
+		_, err = c.CreateNamespace(ctx, namespace, metav1.CreateOptions{})
+		return err
+	}
+	return err
+}
+
 func (c *Client) ListNamespaces(ctx context.Context, o metav1.ListOptions) (*corev1.NamespaceList, error) {
 	return c.Clientset.CoreV1().Namespaces().List(ctx, o)
 }

@@ -7,8 +7,12 @@
 package helm
 
 import (
+	"context"
 	"fmt"
 
+	"github.com/cockroachdb/errors"
+	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
 	"github.com/spf13/cobra"
@@ -167,6 +171,15 @@ func chartUpgrade(f factory.Factory) *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(name) == 0 || len(repoName) == 0 || len(chartName) == 0 {
 				return fmt.Errorf("name or repoName or chartName is empty")
+			}
+			if len(ns) > 0 {
+				kubeClient, err := k8s.NewSimpleClient(common.GetKubeConfig())
+				if err != nil {
+					return fmt.Errorf("load k8s client failed, reason: %v", err)
+				}
+				if err := kubeClient.CheckNamespace(context.Background(), ns); err != nil {
+					return errors.Errorf("check namespace %s failed, reason: %v", ns, err)
+				}
 			}
 			return nil
 		},
