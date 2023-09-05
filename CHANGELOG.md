@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.0.0-rc.3 (2023-09-05)
+
+ * [a9a82a6](https://github.com/easysoft/quickon_cli/commit/a9a82a6bbc88969aa96f41d6e6036115df1396f1) feat(storage): change default storage nfs
+ * [c8893e1](https://github.com/easysoft/quickon_cli/commit/c8893e1d7437d7e6dcb8d64e013d19169fb79d09) style(errors): update errors
+ * [6bcbc5e](https://github.com/easysoft/quickon_cli/commit/6bcbc5ec463a0c22028b06d200956ac73e0f9d4d) fix(helm): upgrade & install chart precheck ns
+ * [7c319a5](https://github.com/easysoft/quickon_cli/commit/7c319a5a43c8554186f97894e32a72416bd01bf7) build(deps): bump actions/checkout from 3 to 4
+ * [2cae80f](https://github.com/easysoft/quickon_cli/commit/2cae80f798a3b1b5dd660e69b68307fa7e018e2c) chore(action): update ci action
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.0.0-rc.2 (2023-09-04)
 
  * [52409c9](https://github.com/easysoft/quickon_cli/commit/52409c9ad99a89ced40c9633d7322e5a04c81763) fix(install): fix quickon install
