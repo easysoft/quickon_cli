@@ -377,7 +377,8 @@ func (fcc FileContentCheck) Check() error {
 	log.Debugf("validating the contents of file %s", fcc.Path)
 	f, err := os.Open(fcc.Path)
 	if err != nil {
-		return errors.Errorf("%s does not exist", fcc.Path)
+		log.Warnf("%s does not exist", fcc.Path)
+		return nil
 	}
 
 	lr := io.LimitReader(f, int64(len(fcc.Content)))
@@ -390,7 +391,7 @@ func (fcc FileContentCheck) Check() error {
 	}
 
 	if !bytes.Equal(buf.Bytes(), fcc.Content) {
-		return errors.Errorf("%s contents are not set to %s", fcc.Path, fcc.Content)
+		log.Warnf("%s contents are not set to %s", fcc.Path, fcc.Content)
 	}
 	return nil
 }

@@ -16,11 +16,11 @@ fi
 
 [ -f "/etc/exports" ] && cp -a /etc/exports /etc/exports.bak
 
-SPATH=${1:-/opt/quickon/storage/nfs}
+SPATH=${1:-/opt/quickon/storage/nfs/}
 
 [ -d "$SPATH" ] || mkdir -p $SPATH
 
-chmod 777 $SPATH
+chmod 777 -R $SPATH
 
 echo "$SPATH *(insecure,rw,sync,no_root_squash,no_subtree_check)" > /etc/exports
 
