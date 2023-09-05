@@ -35,12 +35,6 @@ var (
 	`)
 )
 
-// k3s server --tls-san --data-dir --cluster-cidr --service-cidr \
-// --token --server --cluster-init --datastore-endpoint --disable  servicelb, traefik, local-storage
-// --disable-network-policy --disable-helm-controller \
-// --docker  \
-// --pause-image \
-
 func InitCommand(f factory.Factory) *cobra.Command {
 	var preCheck precheck.PreCheck
 	myCluster := cluster.NewCluster(f)

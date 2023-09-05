@@ -201,3 +201,11 @@ func GetReleaseName(devops bool) string {
 	}
 	return DefaultQuchengName
 }
+
+// GetDefaultQuickonDir get quickon default nfs dir
+func GetDefaultNFSStoragePath(dir string) string {
+	if len(dir) == 0 {
+		dir = DefaultQuickonDataDir
+	}
+	return fmt.Sprintf("%s/storage/nfs", dir)
+}

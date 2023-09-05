@@ -97,6 +97,7 @@ const (
 	DefaultCneOperatorName        = "cne-operator"
 	DefaultIngressName            = "nginx-ingress-controller"
 	DefaultKubeAPIDomain          = "kubeapi.quickon.local"
+	DefaultStorageType            = "nfs"
 	InitFileName                  = ".initdone"
 	InitLockFileName              = ".qlock"
 	InitModeCluster               = ".incluster"

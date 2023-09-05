@@ -12,5 +12,5 @@ helm upgrade -i q-nfs install/nfs-subdir-external-provisioner \
   -n quickon-storage \
   --set nfs.server=${ip} \
   --set nfs.path=/opt/quickon/storage/nfs \
-  --set storageClass.defaultClass=false \
+  --set storageClass.defaultClass=true \
   --set storageClass.name=q-nfs

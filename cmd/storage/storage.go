@@ -86,10 +86,10 @@ func nfs(f factory.Factory) *cobra.Command {
 				}
 				if an == "yes" {
 					if err := qcexec.CommandRun("bash", "-c", common.GetCustomScripts("hack/manifests/storage/nfs-server.sh")); err != nil {
-						return errors.Errorf("%s run init script failed, reason: %v", ip, err)
+						return errors.Errorf("%s run install nfs script failed, reason: %v", ip, err)
 					}
 					ip = exnet.LocalIPs()[0]
-					path = "/opt/quickon/storage/nfs"
+					path = common.GetDefaultNFSStoragePath("")
 					logpkg.Infof("install nfs server %s success", ip)
 					return nil
 				} else {

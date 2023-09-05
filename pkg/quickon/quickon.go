@@ -115,17 +115,18 @@ func (m *Meta) checkStorage() {
 	defaultClass, _ := m.kubeClient.GetDefaultSC(context.Background())
 	m.Log.StopWait()
 	if defaultClass == nil {
-		// TODO default storage
-		m.Log.Infof("not found default storage class, will install default storage")
-		m.Log.Debug("start install default storage: longhorn")
-		if err := qcexec.CommandRun(os.Args[0], "cluster", "storage", "longhorn"); err != nil {
-			m.Log.Errorf("install storage failed, reason: %v", err)
+		// default storage
+		cfg, _ := config.LoadConfig()
+		m.Log.Infof("not found default storage class, will install %s as default storage", cfg.Storage.Type)
+		m.Log.Debugf("start install default storage: nfs")
+		if err := qcexec.CommandRun(os.Args[0], "cluster", "storage", "nfs", "--ip", cfg.Cluster.InitNode, "--path", common.GetDefaultNFSStoragePath(cfg.DataDir)); err != nil {
+			m.Log.Errorf("install storage %s failed, reason: %v", cfg.Storage.Type, err)
 		} else {
-			m.Log.Done("install storage: longhorn success")
+			m.Log.Donef("install storage %s success", cfg.Storage.Type)
 		}
-		if err := qcexec.CommandRun(os.Args[0], "cluster", "storage", "set-default"); err != nil {
-			m.Log.Errorf("set default storageclass failed, reason: %v", err)
-		}
+		// if err := qcexec.CommandRun(os.Args[0], "cluster", "storage", "set-default"); err != nil {
+		// 	m.Log.Errorf("set default storageclass failed, reason: %v", err)
+		// }
 	} else {
 		m.Log.Infof("found exist default storage class: %s", defaultClass.Name)
 	}

@@ -71,7 +71,7 @@ func NewCluster(f factory.Factory) *Cluster {
 			User: "root",
 		},
 		DataStore:             "",
-		Storage:               "local",
+		Storage:               "nfs",
 		Registry:              "hub.qucheng.com",
 		OffLine:               false,
 		IgnorePreflightErrors: false,
@@ -97,8 +97,8 @@ func (c *Cluster) getInitFlags() []types.Flag {
 			Name:   "storage",
 			P:      &c.Storage,
 			V:      c.Storage,
-			EnvVar: "local",
-			Usage:  `storage, support local,nfs,longhorn`,
+			EnvVar: common.DefaultStorageType,
+			Usage:  `storage, e.g: nfs,local`,
 		},
 		{
 			Name:  "datastore",
@@ -274,6 +274,12 @@ func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error
 	if err := c.waitk3sReady(cfg.Cluster.InitNode, sshClient); err != nil {
 		return err
 	}
+	if c.Storage == "nfs" {
+		c.log.Infof("install %s as default storage", c.Storage)
+		if err := qcexec.CommandRun("bash", "-c", common.GetCustomScripts("hack/manifests/storage/nfs-server.sh")); err != nil {
+			return errors.Errorf("%s run install nfs script failed, reason: %v", cfg.Cluster.InitNode, err)
+		}
+	}
 	kclient, _ := k8s.NewSimpleClient()
 	if ns, _ := kclient.GetNamespace(context.TODO(), common.DefaultKubeSystem, metav1.GetOptions{}); ns != nil {
 		cfg.Cluster.ID = string(ns.GetUID())
@@ -405,11 +411,6 @@ func (c *Cluster) InitNode() error {
 		if err := c.joinNode(host, false, cfg, sshClient); err != nil {
 			c.log.Warnf("skip join worker: %s, reason: %v", host, err)
 		}
-	}
-	if c.Storage == "longhorn" || c.Storage == "nfs" {
-		c.log.Infof("install %s as storageclass", c.Storage)
-		scArgs := []string{"cluster", "storage", c.Storage}
-		return qcexec.CommandRun(os.Args[0], scArgs...)
 	}
 	return nil
 }
