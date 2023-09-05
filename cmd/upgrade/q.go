@@ -31,9 +31,9 @@ func NewUpgradeQ(f factory.Factory) *cobra.Command {
 		log: f.GetLog(),
 	}
 	upq := &cobra.Command{
-		Use:     "q",
-		Aliases: []string{"qcadmin"},
-		Short:   "upgrade qcadmin(q) to the newest version",
+		Use:     "cli",
+		Aliases: []string{"qcadmin", "z", "q"},
+		Short:   "upgrade cli to the newest version",
 		Args:    cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			up.DoQcadmin()

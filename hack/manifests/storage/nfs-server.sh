@@ -27,3 +27,5 @@ echo "$SPATH *(insecure,rw,sync,no_root_squash,no_subtree_check)" > /etc/exports
 exportfs -r
 
 showmount -e 127.0.0.1
+
+touch $SPATH/.quickon

@@ -447,7 +447,7 @@ func (m *Meta) readyQuickON(ctx context.Context) error {
 	for {
 		t2 := ztime.NowUnix() - t1
 		if t2 > 180 {
-			m.Log.Warnf("waiting for ready 3min timeout: check your network or storage. after install you can run: q status")
+			m.Log.Warnf("waiting for ready 3min timeout: check your network or storage. after install you can run: %s status", os.Args[0])
 			break
 		}
 		_, err := client.R().Get(fmt.Sprintf("http://%s:32379", exnet.LocalIPs()[0]))
