@@ -11,6 +11,7 @@ import (
 	"os/exec"
 	"runtime"
 
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/common"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/ergoapi/util/file"
@@ -49,7 +50,7 @@ func (p *Meta) LoadLocalBin(binName string) (string, error) {
 	}
 	output, err := qcexec.Command(filebin, "--help").CombinedOutput()
 	if err != nil {
-		return "", fmt.Errorf("seems like there are issues with your %s client: \n\n%s", binName, output)
+		return "", errors.Errorf("seems like there are issues with your %s client: \n\n%s", binName, output)
 	}
 	return filebin, nil
 }

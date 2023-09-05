@@ -10,12 +10,12 @@ import (
 	"bufio"
 	"bytes"
 	"context"
-	"errors"
 	"fmt"
 	"io"
 	"os"
 	"time"
 
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/common"
 	quchengclientset "github.com/easysoft/quickon-api/client/clientset/versioned"
 	quchengv1beta1 "github.com/easysoft/quickon-api/qucheng/v1beta1"
@@ -167,7 +167,7 @@ func (c *Client) ContextName() (name string) {
 func (c *Client) GetVersion(_ context.Context) (string, error) {
 	v, err := c.Clientset.Discovery().ServerVersion()
 	if err != nil {
-		return "", fmt.Errorf("failed to get Kubernetes version: %w", err)
+		return "", errors.Errorf("failed to get Kubernetes version: %w", err)
 	}
 	return fmt.Sprintf("%#v", *v), nil
 }
@@ -175,7 +175,7 @@ func (c *Client) GetVersion(_ context.Context) (string, error) {
 func (c *Client) GetGitVersion(_ context.Context) (string, error) {
 	v, err := c.Clientset.Discovery().ServerVersion()
 	if err != nil {
-		return "", fmt.Errorf("failed to get Kubernetes version: %w", err)
+		return "", errors.Errorf("failed to get Kubernetes version: %w", err)
 	}
 	return v.GitVersion, nil
 }
@@ -227,7 +227,7 @@ func (c *Client) GetDefaultSC(ctx context.Context) (*storagev1.StorageClass, err
 			return &sc, nil
 		}
 	}
-	return nil, fmt.Errorf("no default storage class found")
+	return nil, errors.Errorf("no default storage class found")
 }
 
 func (c *Client) PatchDefaultSC(ctx context.Context, sc *storagev1.StorageClass, isDefaultSC bool) error {
@@ -442,28 +442,28 @@ func (c *Client) CheckDeploymentStatus(ctx context.Context, namespace, deploymen
 	}
 
 	if d == nil {
-		return fmt.Errorf("deployment is not available")
+		return errors.Errorf("deployment is not available")
 	}
 
 	if d.Status.ObservedGeneration != d.Generation {
-		return fmt.Errorf("observed generation (%d) is older than generation of the desired state (%d)",
+		return errors.Errorf("observed generation (%d) is older than generation of the desired state (%d)",
 			d.Status.ObservedGeneration, d.Generation)
 	}
 
 	if d.Status.Replicas == 0 {
-		return fmt.Errorf("replicas count is zero")
+		return errors.Errorf("replicas count is zero")
 	}
 
 	if d.Status.AvailableReplicas != d.Status.Replicas {
-		return fmt.Errorf("only %d of %d replicas are available", d.Status.AvailableReplicas, d.Status.Replicas)
+		return errors.Errorf("only %d of %d replicas are available", d.Status.AvailableReplicas, d.Status.Replicas)
 	}
 
 	if d.Status.ReadyReplicas != d.Status.Replicas {
-		return fmt.Errorf("only %d of %d replicas are ready", d.Status.ReadyReplicas, d.Status.Replicas)
+		return errors.Errorf("only %d of %d replicas are ready", d.Status.ReadyReplicas, d.Status.Replicas)
 	}
 
 	if d.Status.UpdatedReplicas != d.Status.Replicas {
-		return fmt.Errorf("only %d of %d replicas are up-to-date", d.Status.UpdatedReplicas, d.Status.Replicas)
+		return errors.Errorf("only %d of %d replicas are up-to-date", d.Status.UpdatedReplicas, d.Status.Replicas)
 	}
 
 	return nil
@@ -620,7 +620,7 @@ func (c *Client) ExecInPod(ctx context.Context, namespace, pod, container string
 	}
 
 	if errString := result.Stderr.String(); errString != "" {
-		return bytes.Buffer{}, fmt.Errorf("command failed: %s", errString)
+		return bytes.Buffer{}, errors.Errorf("command failed: %s", errString)
 	}
 
 	return result.Stdout, nil
@@ -644,7 +644,7 @@ func (c *Client) ExecPodWithTTY(ctx context.Context, namespace, podName, contain
 		return err
 	}
 	if !term.IsTerminal(0) || !term.IsTerminal(1) {
-		return fmt.Errorf("stdin/stdout must be a terminal")
+		return errors.Errorf("stdin/stdout must be a terminal")
 	}
 	oldstate, _ := term.MakeRaw(0)
 	defer term.Restore(0, oldstate)
@@ -699,5 +699,5 @@ func (c *Client) GetSecretKeyBySelector(ctx context.Context, namespace string, s
 	if data, ok := secret.Data[secretSelector.Key]; ok {
 		return string(data), nil
 	}
-	return "", fmt.Errorf("key %s not found in secret %s", secretSelector.Key, secretSelector.Name)
+	return "", errors.Errorf("key %s not found in secret %s", secretSelector.Key, secretSelector.Name)
 }

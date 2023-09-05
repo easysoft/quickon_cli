@@ -17,6 +17,7 @@ import (
 	"time"
 
 	"github.com/cheggaaa/pb/v3"
+	"github.com/cockroachdb/errors"
 
 	"github.com/containerd/continuity/fs"
 	"github.com/easysoft/qcadmin/common"
@@ -108,15 +109,15 @@ func CopyLocal(dst, src string) error {
 
 func canonicalLocalPath(s string) (string, error) {
 	if s == "" {
-		return "", fmt.Errorf("got empty path")
+		return "", errors.Errorf("got empty path")
 	}
 	if !validation.IsLocal(s) {
-		return "", fmt.Errorf("got non-local path: %q", s)
+		return "", errors.Errorf("got non-local path: %q", s)
 	}
 	if strings.HasPrefix(s, "file://") {
 		res := strings.TrimPrefix(s, "file://")
 		if !filepath.IsAbs(res) {
-			return "", fmt.Errorf("got non-absolute path %q", res)
+			return "", errors.Errorf("got non-absolute path %q", res)
 		}
 		return res, nil
 	}
@@ -126,7 +127,7 @@ func canonicalLocalPath(s string) (string, error) {
 // downloadByWget used wget
 func downloadBySystem(localPath, url string, dlog log.Logger) error {
 	if localPath == "" {
-		return fmt.Errorf("downloadHTTP: got empty localPath")
+		return errors.Errorf("downloadHTTP: got empty localPath")
 	}
 	if err := os.RemoveAll(localPath); err != nil {
 		return err
@@ -137,7 +138,7 @@ func downloadBySystem(localPath, url string, dlog log.Logger) error {
 	if err != nil {
 		curlbin, err := exec.LookPath("curl")
 		if err != nil {
-			return fmt.Errorf("not found curl/wget")
+			return errors.Errorf("not found curl/wget")
 		}
 		curlargs := []string{url, "-s", "-L", "--user-agent", common.GetUG(), "-o", localPath}
 		dlog.Debugf("curl %v", curlargs)
@@ -157,7 +158,7 @@ func downloadBySystem(localPath, url string, dlog log.Logger) error {
 
 func downloadHTTP(localPath, url string, dlog log.Logger) (int, error) {
 	if localPath == "" {
-		return 0, fmt.Errorf("downloadHTTP: got empty localPath")
+		return 0, errors.Errorf("downloadHTTP: got empty localPath")
 	}
 	localPathTmp := localPath + ".tmp"
 	if err := os.RemoveAll(localPathTmp); err != nil {
@@ -184,7 +185,7 @@ func downloadHTTP(localPath, url string, dlog log.Logger) (int, error) {
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		return resp.StatusCode, fmt.Errorf("expected HTTP status %d, got %s", http.StatusOK, resp.Status)
+		return resp.StatusCode, errors.Errorf("expected HTTP status %d, got %s", http.StatusOK, resp.Status)
 	}
 	bar, err := createBar(resp.ContentLength)
 	if err != nil {

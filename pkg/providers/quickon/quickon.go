@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
@@ -85,7 +86,7 @@ func (q *Quickon) GetFlags() []types.Flag {
 
 func (q *Quickon) Install() error {
 	if err := q.MetaData.Init(); err != nil {
-		return fmt.Errorf("init quickon data error: %v", err)
+		return errors.Errorf("init quickon data error: %v", err)
 	}
 	return qcexec.CommandRun(os.Args[0], "quickon", "app", "install", "--name", q.MetaData.App, "--api-useip", fmt.Sprintf("--debug=%v", q.MetaData.Log.GetLevel() == logrus.DebugLevel))
 }

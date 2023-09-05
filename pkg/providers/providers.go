@@ -7,9 +7,9 @@
 package providers
 
 import (
-	"fmt"
 	"sync"
 
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/quickon"
@@ -52,7 +52,7 @@ func GetProvider(name string) (Provider, error) {
 	defer providersMutex.Unlock()
 	f, found := providers[name]
 	if !found {
-		return nil, fmt.Errorf("provider %s is not registered", name)
+		return nil, errors.Errorf("provider %s is not registered", name)
 	}
 	return f()
 }

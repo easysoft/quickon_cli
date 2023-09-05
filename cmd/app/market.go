@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/cockroachdb/errors"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
@@ -38,7 +39,7 @@ func NewCmdAppMarket(f factory.Factory) *cobra.Command {
 				return err
 			}
 			if len(repos) == 0 {
-				return fmt.Errorf("not found qucheng market, you should: %s exp helm repo-add --name qucheng --url https://hub.qucheng.com/chartrepo/stable", os.Args[0])
+				return errors.Errorf("not found qucheng market, you should: %s exp helm repo-add --name qucheng --url https://hub.qucheng.com/chartrepo/stable", os.Args[0])
 			}
 			quchengRepoName := ""
 			for _, repo := range repos {
@@ -48,11 +49,11 @@ func NewCmdAppMarket(f factory.Factory) *cobra.Command {
 				}
 			}
 			if len(quchengRepoName) == 0 {
-				return fmt.Errorf("not found qucheng market, you should: %s exp helm repo-add --name qucheng --url https://hub.qucheng.com/chartrepo/stable", os.Args[0])
+				return errors.Errorf("not found qucheng market, you should: %s exp helm repo-add --name qucheng --url https://hub.qucheng.com/chartrepo/stable", os.Args[0])
 			}
 			charts, err := hc.ListCharts(quchengRepoName, "", false)
 			if err != nil {
-				return fmt.Errorf("fetch remote market failed, reason: %v", err)
+				return errors.Errorf("fetch remote market failed, reason: %v", err)
 			}
 			selectInstallApp := promptui.Select{
 				Label: "select install app",

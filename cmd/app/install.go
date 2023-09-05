@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
@@ -74,15 +75,15 @@ func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 				Post(fmt.Sprintf("%s/instance-apiInstall.html", apiHost))
 			if err != nil {
 				log.Errorf("install app %s failed, reason: %v", name, err)
-				return fmt.Errorf("install app %s failed, reason: %v", name, err)
+				return errors.Errorf("install app %s failed, reason: %v", name, err)
 			}
 			if !resp.IsSuccessState() {
 				log.Errorf("install app %s failed, reason: bad response status %v", name, resp.Status)
-				return fmt.Errorf("install app %s failed, reason: bad response status %v", name, resp.Status)
+				return errors.Errorf("install app %s failed, reason: bad response status %v", name, resp.Status)
 			}
 			if result.Code != 200 {
 				log.Errorf("install app %s failed, reason: %s", name, result.Message)
-				return fmt.Errorf("install app %s failed, reason: %s", name, result.Message)
+				return errors.Errorf("install app %s failed, reason: %s", name, result.Message)
 			}
 			log.Donef("app %s install success.", name)
 			log.Infof("please wait, the app is starting.")

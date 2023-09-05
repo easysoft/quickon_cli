@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
@@ -18,7 +19,7 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/ergoapi/util/file"
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/errors"
+	kubeerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -64,7 +65,7 @@ func (k *K8sStatusCollector) Status(ctx context.Context) (*Status, error) {
 retry:
 	select {
 	case <-ctx.Done():
-		return mostRecentStatus, fmt.Errorf("timeout while waiting for status to become successful: %w", ctx.Err())
+		return mostRecentStatus, errors.Errorf("timeout while waiting for status to become successful: %w", ctx.Err())
 	default:
 	}
 	s := k.status(ctx)
@@ -99,7 +100,7 @@ func (k *K8sStatusCollector) deploymentStatus(ctx context.Context, ns, name, ali
 	k.option.Log.Debugf("check cm %s status", aliasname)
 	stateCount := PodStateCount{Type: "Deployment"}
 	d, err := k.client.GetDeployment(ctx, ns, name, metav1.GetOptions{})
-	if errors.IsNotFound(err) {
+	if kubeerr.IsNotFound(err) {
 		stateCount.Disabled = true
 		if t == "k8s" {
 			status.KubeStatus.PodState[aliasname] = stateCount
@@ -126,7 +127,7 @@ func (k *K8sStatusCollector) deploymentStatus(ctx context.Context, ns, name, ali
 		} else {
 			status.QStatus.PodState[aliasname] = stateCount
 		}
-		return false, fmt.Errorf("component %s is not available", aliasname)
+		return false, errors.Errorf("component %s is not available", aliasname)
 	}
 
 	stateCount.Desired = int(d.Status.Replicas)

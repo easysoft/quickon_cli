@@ -8,7 +8,6 @@ package helm
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/common"
@@ -45,14 +44,14 @@ func repoInit(f factory.Factory) *cobra.Command {
 			logpkg.Debug("update helm repo")
 			hc, err := helm.NewClient(&helm.Config{Namespace: ""})
 			if err != nil {
-				return fmt.Errorf("helm create go client err: %v", err)
+				return errors.Errorf("helm create go client err: %v", err)
 			}
 			return hc.UpdateRepo()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			hc, err := helm.NewClient(&helm.Config{Namespace: ""})
 			if err != nil {
-				return fmt.Errorf("helm create go client err: %v", err)
+				return errors.Errorf("helm create go client err: %v", err)
 			}
 			repos, _ := hc.ListRepo()
 			if len(repos) == 0 {
@@ -87,11 +86,11 @@ func repoList(f factory.Factory) *cobra.Command {
 			logpkg := f.GetLog()
 			hc, err := helm.NewClient(&helm.Config{Namespace: ""})
 			if err != nil {
-				return fmt.Errorf("helm create go client err: %v", err)
+				return errors.Errorf("helm create go client err: %v", err)
 			}
 			repos, err := hc.ListRepo()
 			if err != nil {
-				return fmt.Errorf("helm list repo err: %v", err)
+				return errors.Errorf("helm list repo err: %v", err)
 			}
 			for _, r := range repos {
 				logpkg.Infof("name: %s, url: %s", r.Name, r.URL)
@@ -109,7 +108,7 @@ func repoUpdate(f factory.Factory) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			hc, err := helm.NewClient(&helm.Config{Namespace: ""})
 			if err != nil {
-				return fmt.Errorf("helm create go client err: %v", err)
+				return errors.Errorf("helm create go client err: %v", err)
 			}
 			hc.UpdateRepo()
 			return nil
@@ -125,11 +124,11 @@ func repoAdd(f factory.Factory) *cobra.Command {
 		Short: "add a chart repository",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(name) == 0 || len(url) == 0 {
-				return fmt.Errorf("name or url is empty")
+				return errors.Errorf("name or url is empty")
 			}
 			hc, err := helm.NewClient(&helm.Config{Namespace: ""})
 			if err != nil {
-				return fmt.Errorf("helm create go client err: %v", err)
+				return errors.Errorf("helm create go client err: %v", err)
 			}
 			return hc.AddRepo(name, url, username, password)
 		},
@@ -150,7 +149,7 @@ func repoDel(f factory.Factory) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			hc, err := helm.NewClient(&helm.Config{Namespace: ""})
 			if err != nil {
-				return fmt.Errorf("helm create go client err: %v", err)
+				return errors.Errorf("helm create go client err: %v", err)
 			}
 			if err := hc.RemoveRepo(name); err != nil {
 				return err
@@ -170,12 +169,12 @@ func chartUpgrade(f factory.Factory) *cobra.Command {
 		Short: "upgrade a release",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(name) == 0 || len(repoName) == 0 || len(chartName) == 0 {
-				return fmt.Errorf("name or repoName or chartName is empty")
+				return errors.Errorf("name or repoName or chartName is empty")
 			}
 			if len(ns) > 0 {
 				kubeClient, err := k8s.NewSimpleClient(common.GetKubeConfig())
 				if err != nil {
-					return fmt.Errorf("load k8s client failed, reason: %v", err)
+					return errors.Errorf("load k8s client failed, reason: %v", err)
 				}
 				if err := kubeClient.CheckNamespace(context.Background(), ns); err != nil {
 					return errors.Errorf("check namespace %s failed, reason: %v", ns, err)
@@ -189,7 +188,7 @@ func chartUpgrade(f factory.Factory) *cobra.Command {
 			}
 			hc, err := helm.NewClient(&helm.Config{Namespace: ns})
 			if err != nil {
-				return fmt.Errorf("helm create go client err: %v", err)
+				return errors.Errorf("helm create go client err: %v", err)
 			}
 			values, _ := helm.MergeValues(p)
 			_, err = hc.Upgrade(name, repoName, chartName, chartVersion, values)
@@ -213,7 +212,7 @@ func chartUninstall(f factory.Factory) *cobra.Command {
 		Short:   "uninstall a chart",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(name) == 0 {
-				return fmt.Errorf("name is empty")
+				return errors.Errorf("name is empty")
 			}
 			return nil
 		},
@@ -223,7 +222,7 @@ func chartUninstall(f factory.Factory) *cobra.Command {
 			}
 			hc, err := helm.NewClient(&helm.Config{Namespace: ns})
 			if err != nil {
-				return fmt.Errorf("helm create go client err: %v", err)
+				return errors.Errorf("helm create go client err: %v", err)
 			}
 			release, _ := hc.GetDetail(name)
 			if release != nil {
@@ -250,7 +249,7 @@ func chartClean(f factory.Factory) *cobra.Command {
 			}
 			hc, err := helm.NewClient(&helm.Config{Namespace: ns})
 			if err != nil {
-				return fmt.Errorf("helm create go client err: %v", err)
+				return errors.Errorf("helm create go client err: %v", err)
 			}
 			release, _ := hc.GetDetail(name)
 			if release != nil {
@@ -276,7 +275,7 @@ func chartList(f factory.Factory) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			hc, err := helm.NewClient(&helm.Config{Namespace: ns})
 			if err != nil {
-				return fmt.Errorf("helm create go client err: %v", err)
+				return errors.Errorf("helm create go client err: %v", err)
 			}
 			releases, _, err := hc.List(page, limit, "")
 			if err != nil {

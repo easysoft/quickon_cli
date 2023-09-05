@@ -10,6 +10,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
@@ -93,7 +94,7 @@ func NewCmdAppList(f factory.Factory) *cobra.Command {
 				}).String(),
 			})
 			if len(podlist.Items) < 1 {
-				return fmt.Errorf("podnum %d,  app maybe not running", len(podlist.Items))
+				return errors.Errorf("podnum %d, app maybe not running", len(podlist.Items))
 			}
 
 			selectPod := promptui.Select{

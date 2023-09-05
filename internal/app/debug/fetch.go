@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
@@ -50,7 +51,7 @@ func GetNameByURL(url string, debug, useip bool) (*AppData, error) {
 	// 获取ID
 	k := strings.Split(url, "-")
 	if len(k) < 3 {
-		return nil, fmt.Errorf("url err")
+		return nil, errors.Errorf("url %s err", url)
 	}
 	key := k[2]
 
@@ -92,10 +93,10 @@ func GetNameByURL(url string, debug, useip bool) (*AppData, error) {
 		SetHeader("TOKEN", cfg.APIToken).
 		Get(fmt.Sprintf("%s/instance-apidetail-%s.html", apiHost, key))
 	if err != nil {
-		return nil, fmt.Errorf("fetch api failed, reason: %v", err)
+		return nil, errors.Errorf("fetch api failed, reason: %v", err)
 	}
 	if !resp.IsSuccessState() {
-		return nil, fmt.Errorf("fetch api failed, reason: bad response status %v", resp.Status)
+		return nil, errors.Errorf("fetch api failed, reason: bad response status %v", resp.Status)
 	}
 	json.Unmarshal([]byte(resp.String()), &result)
 	return &result.Data, nil

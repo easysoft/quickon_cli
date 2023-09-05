@@ -4,9 +4,9 @@
 package k8s
 
 import (
-	"errors"
-	"fmt"
 	"io"
+
+	"github.com/cockroachdb/errors"
 )
 
 // CopyOptions have the data required to perform the copy operation
@@ -65,7 +65,7 @@ func (t *CopyPipe) Read(p []byte) (int, error) {
 
 		// Check if the number of retries is already exhausted
 		if t.Options.MaxTries >= 0 && t.retries >= t.Options.MaxTries {
-			return n, fmt.Errorf("dropping out copy after %d retries: %w", t.retries, err)
+			return n, errors.Errorf("dropping out copy after %d retries: %w", t.retries, err)
 		}
 
 		// Perform retry

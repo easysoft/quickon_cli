@@ -24,6 +24,7 @@ import (
 	"golang.org/x/crypto/ssh"
 	"k8s.io/apimachinery/pkg/util/wait"
 
+	"github.com/cockroachdb/errors"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
 )
@@ -87,7 +88,7 @@ func (s *SSH) Connect(host string) (sshClient *ssh.Client, session *ssh.Session,
 		}
 		return true, nil
 	}); err != nil {
-		return nil, nil, fmt.Errorf("ssh init dialer failed, %s %w", host, err)
+		return nil, nil, errors.Errorf("ssh init dialer failed, %s %w", host, err)
 	}
 	return
 }
@@ -138,7 +139,7 @@ func parsePrivateKey(pemBytes []byte, password []byte) (ssh.Signer, error) {
 func parsePrivateKeyFile(filename string, password string) (ssh.Signer, error) {
 	pemBytes, err := os.ReadFile(filename)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read private key file %v", err)
+		return nil, errors.Errorf("failed to read private key file %v", err)
 	}
 	return parsePrivateKey(pemBytes, []byte(password))
 }

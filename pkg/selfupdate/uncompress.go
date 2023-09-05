@@ -17,6 +17,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/ulikunitz/xz"
 )
@@ -51,7 +52,7 @@ func unarchiveTar(log log.Logger, src io.Reader, url, cmd string) (io.Reader, er
 			break
 		}
 		if err != nil {
-			return nil, fmt.Errorf("failed to unarchive .tar file: %s", err)
+			return nil, errors.Errorf("failed to unarchive .tar file: %s", err)
 		}
 		_, name := filepath.Split(h.Name)
 		if matchExecutableName(cmd, name) {
@@ -60,7 +61,7 @@ func unarchiveTar(log log.Logger, src io.Reader, url, cmd string) (io.Reader, er
 		}
 	}
 
-	return nil, fmt.Errorf("file '%s' for the command is not found in %s", cmd, url)
+	return nil, errors.Errorf("file '%s' for the command is not found in %s", cmd, url)
 }
 
 // UncompressCommand uncompresses the given source. Archive and compression format is
@@ -75,13 +76,13 @@ func UncompressCommand(log log.Logger, src io.Reader, url, cmd string) (io.Reade
 		// So we need to read the HTTP response into a buffer at first.
 		buf, err := io.ReadAll(src)
 		if err != nil {
-			return nil, fmt.Errorf("failed to create buffer for zip file: %s", err)
+			return nil, errors.Errorf("failed to create buffer for zip file: %s", err)
 		}
 
 		r := bytes.NewReader(buf)
 		z, err := zip.NewReader(r, r.Size())
 		if err != nil {
-			return nil, fmt.Errorf("Failed to uncompress zip file: %s", err)
+			return nil, errors.Errorf("Failed to uncompress zip file: %s", err)
 		}
 
 		for _, file := range z.File {
@@ -92,13 +93,13 @@ func UncompressCommand(log log.Logger, src io.Reader, url, cmd string) (io.Reade
 			}
 		}
 
-		return nil, fmt.Errorf("File '%s' for the command is not found in %s", cmd, url)
+		return nil, errors.Errorf("File '%s' for the command is not found in %s", cmd, url)
 	} else if strings.HasSuffix(url, ".tar.gz") || strings.HasSuffix(url, ".tgz") {
 		log.Debug("uncompressing tar.gz file", url)
 
 		gz, err := gzip.NewReader(src)
 		if err != nil {
-			return nil, fmt.Errorf("Failed to uncompress .tar.gz file: %s", err)
+			return nil, errors.Errorf("Failed to uncompress .tar.gz file: %s", err)
 		}
 
 		return unarchiveTar(log, gz, url, cmd)
@@ -107,12 +108,12 @@ func UncompressCommand(log log.Logger, src io.Reader, url, cmd string) (io.Reade
 
 		r, err := gzip.NewReader(src)
 		if err != nil {
-			return nil, fmt.Errorf("Failed to uncompress gzip file downloaded from %s: %s", url, err)
+			return nil, errors.Errorf("Failed to uncompress gzip file downloaded from %s: %s", url, err)
 		}
 
 		name := r.Header.Name
 		if !matchExecutableName(cmd, name) {
-			return nil, fmt.Errorf("File name '%s' does not match to command '%s' found in %s", name, cmd, url)
+			return nil, errors.Errorf("File name '%s' does not match to command '%s' found in %s", name, cmd, url)
 		}
 
 		log.Debug("executable file", name, "was found in gzip file")
@@ -122,7 +123,7 @@ func UncompressCommand(log log.Logger, src io.Reader, url, cmd string) (io.Reade
 
 		xzip, err := xz.NewReader(src)
 		if err != nil {
-			return nil, fmt.Errorf("failed to uncompress .tar.xz file: %s", err)
+			return nil, errors.Errorf("failed to uncompress .tar.xz file: %s", err)
 		}
 
 		return unarchiveTar(log, xzip, url, cmd)
@@ -131,7 +132,7 @@ func UncompressCommand(log log.Logger, src io.Reader, url, cmd string) (io.Reade
 
 		xzip, err := xz.NewReader(src)
 		if err != nil {
-			return nil, fmt.Errorf("failed to uncompress xzip file downloaded from %s: %s", url, err)
+			return nil, errors.Errorf("failed to uncompress xzip file downloaded from %s: %s", url, err)
 		}
 
 		log.Debug("uncompressed file from xzip is assumed to be an executable", cmd)

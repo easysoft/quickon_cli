@@ -22,6 +22,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/internal/pkg/util/exec"
 )
 
@@ -53,21 +54,21 @@ func (s *SSH) CmdAsync(host, cmd string) error {
 		}
 		client, session, err := s.Connect(host)
 		if err != nil {
-			return fmt.Errorf("failed to create ssh session for %s: %v", host, err)
+			return errors.Errorf("failed to create ssh session for %s: %v", host, err)
 		}
 		defer client.Close()
 		defer session.Close()
 		stdout, err := session.StdoutPipe()
 		if err != nil {
-			return fmt.Errorf("failed to create stdout pipe for %s: %v", host, err)
+			return errors.Errorf("failed to create stdout pipe for %s: %v", host, err)
 		}
 		stderr, err := session.StderrPipe()
 		if err != nil {
-			return fmt.Errorf("failed to create stderr pipe for %s: %v", host, err)
+			return errors.Errorf("failed to create stderr pipe for %s: %v", host, err)
 		}
 
 		if err := session.Start(cmd); err != nil {
-			return fmt.Errorf("failed to start command %s on %s: %v", cmd, host, err)
+			return errors.Errorf("failed to start command %s on %s: %v", cmd, host, err)
 		}
 
 		var combineSlice []string
@@ -115,13 +116,13 @@ func (s *SSH) Cmd(host, cmd string) ([]byte, error) {
 	}
 	client, session, err := s.Connect(host)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create ssh session for %s: %v", host, err)
+		return nil, errors.Errorf("failed to create ssh session for %s: %v", host, err)
 	}
 	defer client.Close()
 	defer session.Close()
 	output, err := session.CombinedOutput(cmd)
 	if err != nil {
-		err = fmt.Errorf("failed to run command: %v", err)
+		err = errors.Errorf("failed to run command: %v", err)
 	}
 	return output, err
 }
@@ -144,5 +145,5 @@ func readPipe(host string, pipe io.Reader, combineSlice *[]string, combineLock *
 }
 
 func wrapExecResult(host, command string, output []byte, err error) error {
-	return fmt.Errorf("failed to execute command(%s) on host(%s): output(%s), error(%v)", command, host, output, err)
+	return errors.Errorf("failed to execute command(%s) on host(%s): output(%s), error(%v)", command, host, output, err)
 }

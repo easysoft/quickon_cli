@@ -321,7 +321,7 @@ func (c *Cluster) waitk3sReady(host string, sshClient ssh.Interface) error {
 	})
 	c.log.StopWait()
 	if err != nil {
-		return fmt.Errorf("check k8s ready failed, reason: %w", err)
+		return errors.Errorf("check k8s ready failed, reason: %w", err)
 	}
 	c.log.Done("check k8s ready.")
 	return nil

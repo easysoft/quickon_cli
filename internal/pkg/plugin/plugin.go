@@ -14,11 +14,12 @@ import (
 	"strings"
 
 	gv "github.com/Masterminds/semver/v3"
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/common"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/errors"
+	kubeerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -90,7 +91,7 @@ func GetMeta(args ...string) (Item, error) {
 		plugin.log = log
 		return plugin, nil
 	}
-	return Item{}, fmt.Errorf("plugin %s not found", t)
+	return Item{}, errors.Errorf("plugin %s not found", t)
 }
 
 func (p *Item) UnInstall() error {
@@ -101,7 +102,7 @@ func (p *Item) UnInstall() error {
 	pluginName := fmt.Sprintf("qc-plugin-%s", p.Type)
 	_, err := p.Client.GetSecret(context.TODO(), common.GetDefaultSystemNamespace(true), pluginName, metav1.GetOptions{})
 	if err != nil {
-		if errors.IsNotFound(err) {
+		if kubeerr.IsNotFound(err) {
 			p.log.Warnf("plugin %s is already uninstalled", p.Type)
 			return nil
 		}
@@ -143,9 +144,9 @@ func (p *Item) Install() error {
 		}
 		updatestatus = true
 	} else {
-		if !errors.IsNotFound(err) {
+		if !kubeerr.IsNotFound(err) {
 			p.log.Debugf("get plugin secret failed: %v", err)
-			return fmt.Errorf("plugin %s install failed", p.Name)
+			return errors.Errorf("plugin %s install failed", p.Name)
 		}
 	}
 	if p.Tool == "helm" {

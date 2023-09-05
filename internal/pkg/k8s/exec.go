@@ -6,11 +6,11 @@ package k8s
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"io"
 
 	corev1 "k8s.io/api/core/v1"
 
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/internal/pkg/util"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/tools/remotecommand"
@@ -34,7 +34,7 @@ func (c *Client) execInPodWithWriters(ctx context.Context, p ExecParameters, std
 
 	scheme := runtime.NewScheme()
 	if err := corev1.AddToScheme(scheme); err != nil {
-		return fmt.Errorf("error adding to scheme: %w", err)
+		return errors.Errorf("error adding to scheme: %w", err)
 	}
 
 	parameterCodec := runtime.NewParameterCodec(scheme)
@@ -50,7 +50,7 @@ func (c *Client) execInPodWithWriters(ctx context.Context, p ExecParameters, std
 
 	exec, err := remotecommand.NewSPDYExecutor(c.Config, "POST", req.URL())
 	if err != nil {
-		return fmt.Errorf("error while creating executor: %w", err)
+		return errors.Errorf("error while creating executor: %w", err)
 	}
 
 	var stdin io.ReadCloser

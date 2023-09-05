@@ -15,7 +15,6 @@ package output
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 
 	"github.com/cockroachdb/errors"
@@ -48,7 +47,7 @@ func FormatsWithDesc() map[string]string {
 }
 
 // ErrInvalidFormatType is returned when an unsupported format type is used
-var ErrInvalidFormatType = fmt.Errorf("invalid format type")
+var ErrInvalidFormatType = errors.Errorf("invalid format type")
 
 // String returns the string representation of the Format
 func (o Format) String() string {

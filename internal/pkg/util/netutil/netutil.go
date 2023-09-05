@@ -7,8 +7,6 @@
 package netutil
 
 import (
-	"errors"
-	"fmt"
 	"io"
 	"io/fs"
 	"net"
@@ -18,6 +16,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/go-ping/ping"
@@ -31,14 +30,14 @@ func CheckDefaultRoute() (net.IP, error) {
 	gw, err := gateway.DiscoverGateway()
 
 	if err != nil {
-		return nil, fmt.Errorf("error reading default route: %s", err)
+		return nil, errors.Errorf("error reading default route: %s", err)
 	}
 
 	if CheckReachabilityWithICMP(gw.String()) {
 		return gw, nil
 	}
 
-	return gw, fmt.Errorf("default route is unreachable")
+	return gw, errors.Errorf("default route is unreachable")
 }
 
 // CheckReachabilityWithICMP checks if a host is reachable using ICMP
@@ -122,7 +121,7 @@ func GetCloudflareEdgeTrace() (string, error) {
 	re := regexp.MustCompile(`colo=(.*?)\n`)
 	match := re.FindStringSubmatch(body)
 	if len(match) < 2 {
-		return "", fmt.Errorf("could not determine edge pop")
+		return "", errors.Errorf("could not determine edge pop")
 	}
 	return match[1], nil
 }

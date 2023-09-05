@@ -16,13 +16,13 @@ package hosts
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"io"
 	"net"
 	"os"
 	"strings"
 
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/emirpasic/gods/maps/linkedhashmap"
 	"github.com/ergoapi/util/exstr"
@@ -73,7 +73,7 @@ func (h *HostFile) ParseHostFile(path string) (*linkedhashmap.Map, error) {
 	fp, fpErr := os.Open(path)
 	if fpErr != nil {
 		hlog.Warnf("open file '%s' failed", path)
-		return nil, fmt.Errorf("open file '%s' failed ", path)
+		return nil, errors.Errorf("open file '%s' failed ", path)
 	}
 	defer fp.Close()
 

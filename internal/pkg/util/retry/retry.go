@@ -17,6 +17,8 @@ package retry
 import (
 	"fmt"
 	"time"
+
+	"github.com/cockroachdb/errors"
 )
 
 // nolint
@@ -44,7 +46,7 @@ type ConditionFunc func() (bool, error)
 // However, if f takes longer than interval, it will be delayed.
 func Retry(interval time.Duration, maxRetries int, f ConditionFunc) error {
 	if maxRetries <= 0 {
-		return fmt.Errorf("maxRetries (%d) should be > 0", maxRetries)
+		return errors.Errorf("maxRetries (%d) should be > 0", maxRetries)
 	}
 	tick := time.NewTicker(interval)
 	defer tick.Stop()

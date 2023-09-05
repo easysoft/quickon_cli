@@ -7,8 +7,7 @@
 package backup
 
 import (
-	"fmt"
-
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/util/exec"
@@ -26,10 +25,10 @@ func NewCmdBackupCluster(f factory.Factory) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cfg, err := config.LoadConfig()
 			if err != nil {
-				return fmt.Errorf("found config err, reason: %v", err)
+				return errors.Errorf("found config err, reason: %v", err)
 			}
 			if cfg.DB != "" && cfg.DB != "etcd" {
-				return fmt.Errorf("not support datastore %s", cfg.DB)
+				return errors.Errorf("not support datastore %s", cfg.DB)
 			}
 			log.Info("start backup cluster datastore etcd")
 			return exec.CommandRun("bash", "-c", common.GetCustomScripts("hack/manifests/scripts/etcd-snapshot.sh"), cfg.DataDir, common.GetDefaultLogDir())

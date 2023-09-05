@@ -39,7 +39,7 @@ func InstallCommand(f factory.Factory) *cobra.Command {
 			tool := args[0]
 			if tool != "helm" && tool != "kubectl" && tool != "etcdctl" && tool != "mc" {
 				// TODO add more tools
-				return fmt.Errorf("not support tool: %s, only suppor helm, kubectl, etcdctl", tool)
+				return errors.Errorf("not support tool: %s, only suppor helm, kubectl, etcdctl", tool)
 			}
 			return nil
 		},

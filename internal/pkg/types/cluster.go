@@ -8,8 +8,9 @@ package types
 
 import (
 	"database/sql/driver"
-	"fmt"
 	"strings"
+
+	"github.com/cockroachdb/errors"
 )
 
 type SSH struct {
@@ -77,7 +78,7 @@ func (a *StringArray) Scan(value interface{}) (err error) {
 			*a = strings.Split(v, ",")
 		}
 	default:
-		return fmt.Errorf("failed to scan array value %v", value)
+		return errors.Errorf("failed to scan array value %v", value)
 	}
 	return nil
 }

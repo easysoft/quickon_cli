@@ -8,10 +8,10 @@ package autodetect
 
 import (
 	"encoding/json"
-	"fmt"
 	"os/exec"
 	"strings"
 
+	"github.com/cockroachdb/errors"
 	"github.com/docker/docker/pkg/parsers"
 	"github.com/ergoapi/util/file"
 )
@@ -46,7 +46,7 @@ func verifyCgroupDriver(config *Config) error {
 	// 	return nil
 	// }
 	if cd != cgroupFsDriver {
-		return fmt.Errorf("native.cgroupdriver option %s is internally used and cannot be specified manually\n you can run ~/.qc/data/hack/manifests/scripts/docker-daemon-patch.sh", cd)
+		return errors.Errorf("native.cgroupdriver option %s is internally used and cannot be specified manually\n you can run ~/.qc/data/hack/manifests/scripts/docker-daemon-patch.sh", cd)
 	}
 	return nil
 }

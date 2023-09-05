@@ -182,11 +182,11 @@ func (c Client) Install(name, repoName, chartName, chartVersion string, values m
 	}
 	p, err := client.ChartPathOptions.LocateChart(chartName, c.settings)
 	if err != nil {
-		return nil, fmt.Errorf("locate chart %s failed: %v", chartName, err)
+		return nil, errors.Errorf("locate chart %s failed: %v", chartName, err)
 	}
 	ct, err := loader.Load(p)
 	if err != nil {
-		return nil, fmt.Errorf("load chart %s failed: %v", chartName, err)
+		return nil, errors.Errorf("load chart %s failed: %v", chartName, err)
 	}
 	re, err := client.Run(ct, values)
 	if err != nil {
@@ -203,7 +203,7 @@ func (c Client) UpdateRepo() error {
 	repoCache := c.settings.RepositoryCache
 	f, err := repo.LoadFile(repoFile)
 	if err != nil {
-		return fmt.Errorf("load file of repo %s failed: %v", repoFile, err)
+		return errors.Errorf("load file of repo %s failed: %v", repoFile, err)
 	}
 	var rps []*repo.ChartRepository
 	for _, cfg := range f.Repositories {
@@ -250,7 +250,7 @@ func (c Client) ListRepo() ([]*repo.Entry, error) {
 func (c Client) ListCharts(repoName, pattern string, all bool) ([]*search.Result, error) {
 	repos, err := c.ListRepo()
 	if err != nil {
-		return nil, fmt.Errorf("list chart failed: %v", err)
+		return nil, errors.Errorf("list chart failed: %v", err)
 	}
 	i := search.NewIndex()
 	for _, re := range repos {
@@ -262,7 +262,7 @@ func (c Client) ListCharts(repoName, pattern string, all bool) ([]*search.Result
 		path := filepath.Join(c.settings.RepositoryCache, helmpath.CacheIndexFile(re.Name))
 		indexFile, err := repo.LoadIndexFile(path)
 		if err != nil {
-			return nil, fmt.Errorf("list chart failed: %v", err)
+			return nil, errors.Errorf("list chart failed: %v", err)
 		}
 		i.AddRepo(re.Name, indexFile, all)
 	}

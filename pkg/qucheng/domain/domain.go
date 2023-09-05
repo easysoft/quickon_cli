@@ -9,6 +9,7 @@ package domain
 import (
 	"fmt"
 
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
@@ -66,7 +67,7 @@ func SearchCustomDomain(iip, secretKey, domain string) string {
 func UpgradeTLSDDomain(iip, secretKey, domain string) error {
 	var respbody RespBody
 	if !kutil.IsLegalDomain(domain) {
-		return fmt.Errorf("domain not allow")
+		return errors.Errorf("domain not allow")
 	}
 	subDomain, mainDomain := kutil.SplitDomain(domain)
 	reqbody := ReqBody{
@@ -149,10 +150,10 @@ func GenCustomDomain(domain string) string {
 				input = fmt.Sprintf("%s.%s", input, mainDomain)
 			}
 			if len(input) < 12 {
-				return fmt.Errorf("subdomain must be at least 4 characters, like %s", subDomain)
+				return errors.Errorf("subdomain must be at least 4 characters, like %s", subDomain)
 			}
 			if msgs := validation.NameIsDNSSubdomain(input, false); len(msgs) != 0 {
-				return fmt.Errorf("%s", msgs[0])
+				return errors.Errorf("%s", msgs[0])
 			}
 			return nil
 		},

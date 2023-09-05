@@ -23,6 +23,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/cockroachdb/errors"
 	"github.com/pkg/sftp"
 	"github.com/schollz/progressbar/v3"
 	"golang.org/x/crypto/ssh"
@@ -52,7 +53,7 @@ func (s *SSH) CmdToString(host, cmd, sep string) (string, error) {
 		return data, err
 	}
 	if len(data) == 0 {
-		return "", fmt.Errorf("command %s on %s return nil", cmd, host)
+		return "", errors.Errorf("command %s on %s return nil", cmd, host)
 	}
 	return getOnelineResult(data, sep), nil
 }
@@ -78,7 +79,7 @@ func (s *SSH) sftpConnect(host string) (sshClient *ssh.Client, sftpClient *sftp.
 		}
 		return true, nil
 	}); err != nil {
-		return nil, nil, fmt.Errorf("ssh init dialer [%s] error: %w", host, err)
+		return nil, nil, errors.Errorf("ssh init dialer [%s] error: %w", host, err)
 	}
 	return
 }
@@ -92,7 +93,7 @@ func (s *SSH) Copy(host, localPath, remotePath string) error {
 	s.log.Debugf("remote copy files src %s to dst %s", localPath, remotePath)
 	sshClient, sftpClient, err := s.sftpConnect(host)
 	if err != nil {
-		return fmt.Errorf("failed to connect: %s", err)
+		return errors.Errorf("failed to connect: %s", err)
 	}
 	defer func() {
 		_ = sftpClient.Close()
@@ -101,7 +102,7 @@ func (s *SSH) Copy(host, localPath, remotePath string) error {
 
 	f, err := os.Stat(localPath)
 	if err != nil {
-		return fmt.Errorf("get file stat failed %s", err)
+		return errors.Errorf("get file stat failed %s", err)
 	}
 
 	remoteDir := filepath.Dir(remotePath)
@@ -111,10 +112,10 @@ func (s *SSH) Copy(host, localPath, remotePath string) error {
 			return err
 		}
 		if err = sftpClient.MkdirAll(remoteDir); err != nil {
-			return fmt.Errorf("failed to Mkdir remote: %v", err)
+			return errors.Errorf("failed to Mkdir remote: %v", err)
 		}
 	} else if !rfp.IsDir() {
-		return fmt.Errorf("dir of remote file %s is not a directory", remotePath)
+		return errors.Errorf("dir of remote file %s is not a directory", remotePath)
 	}
 	number := 1
 	if f.IsDir() {
@@ -136,15 +137,15 @@ func (s *SSH) Copy(host, localPath, remotePath string) error {
 func (s *SSH) doCopy(client *sftp.Client, host, src, dest string, epu *progressbar.ProgressBar) error {
 	lfp, err := os.Stat(src)
 	if err != nil {
-		return fmt.Errorf("failed to Stat local: %v", err)
+		return errors.Errorf("failed to Stat local: %v", err)
 	}
 	if lfp.IsDir() {
 		entries, err := os.ReadDir(src)
 		if err != nil {
-			return fmt.Errorf("failed to ReadDir: %v", err)
+			return errors.Errorf("failed to ReadDir: %v", err)
 		}
 		if err = client.MkdirAll(dest); err != nil {
-			return fmt.Errorf("failed to Mkdir remote: %v", err)
+			return errors.Errorf("failed to Mkdir remote: %v", err)
 		}
 		for _, entry := range entries {
 			if err = s.doCopy(client, host, path.Join(src, entry.Name()), path.Join(dest, entry.Name()), epu); err != nil {
@@ -154,20 +155,20 @@ func (s *SSH) doCopy(client *sftp.Client, host, src, dest string, epu *progressb
 	} else {
 		lf, err := os.Open(filepath.Clean(src))
 		if err != nil {
-			return fmt.Errorf("failed to open: %v", err)
+			return errors.Errorf("failed to open: %v", err)
 		}
 		defer lf.Close()
 
 		dstfp, err := client.Create(dest)
 		if err != nil {
-			return fmt.Errorf("failed to create: %v", err)
+			return errors.Errorf("failed to create: %v", err)
 		}
 		if err = dstfp.Chmod(lfp.Mode()); err != nil {
-			return fmt.Errorf("failed to Chmod dst: %v", err)
+			return errors.Errorf("failed to Chmod dst: %v", err)
 		}
 		defer dstfp.Close()
 		if _, err = io.Copy(dstfp, lf); err != nil {
-			return fmt.Errorf("failed to Copy: %v", err)
+			return errors.Errorf("failed to Copy: %v", err)
 		}
 		_ = epu.Add(1)
 	}

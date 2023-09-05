@@ -10,6 +10,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
@@ -80,7 +81,7 @@ func NewCmdGdbList(f factory.Factory) *cobra.Command {
 			if actions[iac].Name == "manage" {
 				// https://console.example.corp.cc/adminer/?server=10.10.16.15%3A3306&username=root&db=ysicing&password=password123
 				if err := fakeUserInfo(qclient, &gdbServices[it]); err != nil {
-					return fmt.Errorf("call k8s api err: %v", err)
+					return errors.Errorf("call k8s api err: %v", err)
 				}
 				url := fmt.Sprintf("http://%s/adminer/?server=%s&username=%s&db=%s&password=%s", cfg.Domain, gdbServices[it].Status.Address, gdbServices[it].Spec.Account.User.Value, "", gdbServices[it].Spec.Account.Password.Value)
 				if err := browser.OpenURL(url); err != nil {

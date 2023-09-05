@@ -7,8 +7,7 @@
 package upgrade
 
 import (
-	"fmt"
-
+	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/qucheng/upgrade"
@@ -44,7 +43,7 @@ func (cmd *Option) Run() error {
 	cmd.log.Debugf("gen new version manifest")
 	err := upgrade.Upgrade(cmd.Version, cmd.log)
 	if err != nil {
-		return fmt.Errorf("couldn't upgrade: %v", err)
+		return errors.Errorf("couldn't upgrade: %v", err)
 	}
 	return nil
 }
