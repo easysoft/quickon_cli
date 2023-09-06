@@ -106,6 +106,53 @@
 
 ## v3.0.0-alpha.1 (2023-08-15)
 
+
+### Contributors
+
+
+## v3.0.0 (2023-09-06)
+
+ * [dd5e6ac](https://github.com/easysoft/quickon_cli/commit/dd5e6ac1b1d8cebf36280ec9dc1062b177117534) feat(update): update
+ * [a572637](https://github.com/easysoft/quickon_cli/commit/a57263784498199be583255b9075c181f27b43df) style(update): update valid domain
+ * [e2150f5](https://github.com/easysoft/quickon_cli/commit/e2150f54e4ce5b1f75143fa22c2db1b502e1b8dd) feat(update): disable subcmd in different provider
+ * [8ecfb30](https://github.com/easysoft/quickon_cli/commit/8ecfb303e83bb1e8a4aa014722a34bd6ca9421fa) fix(kube): fix kube exec
+ * [98edbcb](https://github.com/easysoft/quickon_cli/commit/98edbcbffd0b7e21e5e7401fd66e1626e73a7d45) feat(k3s): update to v1.24.17+k3s1
+ * [91e5065](https://github.com/easysoft/quickon_cli/commit/91e506513354a2bff6e57fc790884ca324122b8d) fix(script): update script
+ * [a77fcba](https://github.com/easysoft/quickon_cli/commit/a77fcbaf862d7b2d1eb8b08c5920adde14edc4ca) feat(script): update quickon script
+ * [df0d545](https://github.com/easysoft/quickon_cli/commit/df0d54557241aa87f0a9f96ffa5d9d72e4d45bce) feat(update): update quickon script
+ * [c2c952c](https://github.com/easysoft/quickon_cli/commit/c2c952ca52b415e95fd06462dac790e7f68ac3b7) fix(precheck): fix precheck
+ * [66fe987](https://github.com/easysoft/quickon_cli/commit/66fe9874d639d63ba10ec7563e581cbae02503dc) fix(show): fix show message
+ * [a9a82a6](https://github.com/easysoft/quickon_cli/commit/a9a82a6bbc88969aa96f41d6e6036115df1396f1) feat(storage): change default storage nfs
+ * [c8893e1](https://github.com/easysoft/quickon_cli/commit/c8893e1d7437d7e6dcb8d64e013d19169fb79d09) style(errors): update errors
+ * [6bcbc5e](https://github.com/easysoft/quickon_cli/commit/6bcbc5ec463a0c22028b06d200956ac73e0f9d4d) fix(helm): upgrade & install chart precheck ns
+ * [7c319a5](https://github.com/easysoft/quickon_cli/commit/7c319a5a43c8554186f97894e32a72416bd01bf7) build(deps): bump actions/checkout from 3 to 4
+ * [2cae80f](https://github.com/easysoft/quickon_cli/commit/2cae80f798a3b1b5dd660e69b68307fa7e018e2c) chore(action): update ci action
+ * [52409c9](https://github.com/easysoft/quickon_cli/commit/52409c9ad99a89ced40c9633d7322e5a04c81763) fix(install): fix quickon install
+ * [aa71986](https://github.com/easysoft/quickon_cli/commit/aa71986f8fe55d35e7b63fc19e0e2678ebce0cc3) feat(precheck): change devops check
+ * [a395322](https://github.com/easysoft/quickon_cli/commit/a395322beaa53d582c5131ab9fb0d5e9fbdf916e) feat(action): update test action
+ * [7e5847c](https://github.com/easysoft/quickon_cli/commit/7e5847cdfe5e0dc9b2ed119d59666ae83619fa79) style(update): update subcmd notice
+ * [e0d3df6](https://github.com/easysoft/quickon_cli/commit/e0d3df63bf128e58b99375250d077d0470ce26e1) fix(actions): update actions
+ * [56b1bd3](https://github.com/easysoft/quickon_cli/commit/56b1bd3e3fd6e589135620438942d7aaa1ba6ab6) fix(ipd): fix ipd
+ * [224622a](https://github.com/easysoft/quickon_cli/commit/224622a6a1744d75c6c64ccc6128027eb94f2a1c) fix(quickon): disable devops reset password
+ * [2b9e3b2](https://github.com/easysoft/quickon_cli/commit/2b9e3b2207fd861b4a9653854556bf03c331ad65) fix(status): fix status show
+ * [55d87b8](https://github.com/easysoft/quickon_cli/commit/55d87b869f014e1581c6ef581b699917a1c154db) fix(status): imp node status show
+ * [29d0f58](https://github.com/easysoft/quickon_cli/commit/29d0f58f7d2913644a1d04213e1c470c96cd5b67) fix(scripts): update clean scripts
+ * [1d07910](https://github.com/easysoft/quickon_cli/commit/1d07910ba5e058c0f16553f98c226f08c08df6df) fix(scripts): update devops install scripts
+ * [720187f](https://github.com/easysoft/quickon_cli/commit/720187f8529735c40f0031f95cdba6492dfb453b) feat(test): fix test install
+ * [a830104](https://github.com/easysoft/quickon_cli/commit/a830104f62a6b95395daea7079d032a0715635e3) fix(devops): fix devops install images tag
+ * [0044bad](https://github.com/easysoft/quickon_cli/commit/0044bad8cbc877408197a2943e52e3c104184228) fix(quickon): fix quickon install app
+ * [2d27cda](https://github.com/easysoft/quickon_cli/commit/2d27cdafed6876a2de97b6e80eade2bf554eadfa) feat(cluster): support stop cluster
+ * [1c5c901](https://github.com/easysoft/quickon_cli/commit/1c5c901a1ac7f76b74a1734bc36feefc7cf90354) feat(quickon): add uninstall confirm
+ * [592ff27](https://github.com/easysoft/quickon_cli/commit/592ff2733c1e4af2cecd4cdd6afea6af19fce2fc) fix(action): fix action
+ * [0745cd9](https://github.com/easysoft/quickon_cli/commit/0745cd92c2c09599c370660e43019a13fb6d0a49) feat(devops): update devops init
+ * [94fcad6](https://github.com/easysoft/quickon_cli/commit/94fcad6c2e40c4be64d6b2d305df28db355a9944) fix(install): imp installed show
+ * [59cb272](https://github.com/easysoft/quickon_cli/commit/59cb272a6b8048f23234a1a7f5060dff17a7b611) style(install): update install script
+ * [d39be07](https://github.com/easysoft/quickon_cli/commit/d39be07a4a170f03e5ef047375c789604d62bd82) style(mod): update go mod
+ * [9e165dd](https://github.com/easysoft/quickon_cli/commit/9e165ddfcb9017308b93b2002b788edabda18c1d) build(deps): bump helm.sh/helm/v3 from 3.12.0 to 3.12.3
+ * [636be61](https://github.com/easysoft/quickon_cli/commit/636be6130060e38a97a2423995c1236788e339ff) style(code): update
+ * [87d77a2](https://github.com/easysoft/quickon_cli/commit/87d77a273d512505a93f01cc7c684515b2bab0b1) fix(exec): fix exec
+ * [71f9ee3](https://github.com/easysoft/quickon_cli/commit/71f9ee31d3bd5b81d64363ad3b07bf4b94d9e605) fix(precheck): imp disk check
+ * [f44061e](https://github.com/easysoft/quickon_cli/commit/f44061e8dfe1328a5837724d192e0faab87dcb4d) fix(tap & mod): update gentap & gomod
  * [aa4d130](https://github.com/easysoft/quickon_cli/commit/aa4d130a648b9f7433f4a92537b3961da5ab21bf) fix(init): imp init & uninstall
  * [bd51c8f](https://github.com/easysoft/quickon_cli/commit/bd51c8fd325ad69c439075044030220d1b5088f4) fix(init): fix build init
  * [f7968de](https://github.com/easysoft/quickon_cli/commit/f7968de476f4742974ba72ef08ee9313f58f2280) fix(init): fix devops init
