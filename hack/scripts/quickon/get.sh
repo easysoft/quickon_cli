@@ -5,6 +5,27 @@
 # (2) Affero General Public License 3.0 (AGPL 3.0)
 # license that can be found in the LICENSE file.
 
+# Source code is available at https://github.com/easysoft/quickon_cli
+
+# SCRIPT_COMMIT_SHA="un"
+
+# Usage:
+#   curl ... | ENV_VAR=... sh -
+#       or
+#   ENV_VAR=... ./install.sh
+#
+# Example:
+#   Installing Quickon with ZenTao:
+#     curl ... | INSTALL_APP="zentao" sh -
+#   - INSTALL_APP
+#     Install Market App when install Quickon.
+#     Defaults to 'zentao'
+#   - INSTALL_VERSION
+#     Install Version when install Quickon.
+#     Defaults to ''
+#   - INSTALL_DOMAIN
+#     If not set default use gen default domain
+
 set -e
 set -o noglob
 
@@ -32,7 +53,7 @@ setup_env() {
     if [ $(id -u) -eq 0 ]; then
         SUDO=
     fi
-		BIN_DIR=/usr/local/bin
+    BIN_DIR=/usr/local/bin
     if ! $SUDO sh -c "touch ${BIN_DIR}/q-ro-test && rm -rf ${BIN_DIR}/q-ro-test"; then
       if [ -d /opt/bin ]; then
         BIN_DIR=/opt/bin
@@ -81,8 +102,10 @@ setup_quickon() {
 
 # --- use desired qcadmin version if defined or find version from channel ---
 get_release_version() {
-		VERSION="stable"
-    info "Using ${VERSION} as release"
+  if [ -z "$VERSION" ]; then
+    VERSION="stable"
+  fi
+  info "Using ${VERSION} as release"
 }
 
 # --- set arch and suffix, fatal if architecture not supported ---
@@ -131,8 +154,8 @@ download() {
 
 # --- download binary from cos url ---
 download_binary() {
-    BIN_URL=${COS_URL}/${VERSION}/v2/qcadmin_linux_${SUFFIX} # qcadmin_linux_amd64
-    info "Downloading binary ${COS_URL}/${VERSION}/v2/q"
+    BIN_URL=${COS_URL}/${VERSION}/qcadmin_linux_${SUFFIX}
+    info "Downloading binary from ${BIN_URL}"
     download ${TMP_BIN} ${BIN_URL}
 }
 
@@ -142,12 +165,12 @@ setup_binary() {
     info "Installing qcadmin to ${BIN_DIR}/qcadmin"
     $SUDO chown root:root ${TMP_BIN}
     $SUDO mv -f ${TMP_BIN} ${BIN_DIR}/qcadmin
-		[ -f "${BIN_DIR}/q" ] && (
-			$SUDO rm -f ${BIN_DIR}/q
-		)
-		info "Create qcadmin soft link ${BIN_DIR}/q"
-		$SUDO ln -s ${BIN_DIR}/qcadmin ${BIN_DIR}/q
-		info "Installation is complete. Use q --help"
+    [ -f "${BIN_DIR}/q" ] && (
+        $SUDO rm -f ${BIN_DIR}/q
+    )
+    info "Create qcadmin soft link ${BIN_DIR}/q"
+    $SUDO ln -s ${BIN_DIR}/qcadmin ${BIN_DIR}/q
+    info "Installation is complete. Use q --help"
 }
 
 # --- download and verify qcadmin ---
@@ -157,13 +180,13 @@ download_and_verify() {
     setup_tmp
     setup_quickon
     get_release_version
-		# Skip download if qcadmin binary exists, support upgrade
+    # Skip download if qcadmin binary exists, support upgrade
     download_binary
     setup_binary
 }
 
 # --- run the install process --
 {
-	setup_env "$@"
-	download_and_verify
+  setup_env
+  download_and_verify
 }

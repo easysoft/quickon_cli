@@ -5,8 +5,9 @@
 # (2) Affero General Public License 3.0 (AGPL 3.0)
 # license that can be found in the LICENSE file.
 
-set -e
-set -o noglob
+# Source code is available at https://github.com/easysoft/quickon_cli
+
+# SCRIPT_COMMIT_SHA="un"
 
 # Usage:
 #   curl ... | ENV_VAR=... sh -
@@ -19,8 +20,14 @@ set -o noglob
 #   - INSTALL_APP
 #     Install Market App when install Quickon.
 #     Defaults to 'zentao'
+#   - INSTALL_VERSION
+#     Install Version when install Quickon.
+#     Defaults to ''
 #   - INSTALL_DOMAIN
 #     If not set default use gen default domain
+
+set -e
+set -o noglob
 
 # --- helper functions for logs ---
 info()
@@ -95,8 +102,10 @@ setup_quickon() {
 
 # --- use desired qcadmin version if defined or find version from channel ---
 get_release_version() {
+  if [ -z "$VERSION" ]; then
     VERSION="stable"
-    info "Using ${VERSION} as release"
+  fi
+  info "Using ${VERSION} as release"
 }
 
 # --- set arch and suffix, fatal if architecture not supported ---
@@ -145,8 +154,8 @@ download() {
 
 # --- download binary from cos url ---
 download_binary() {
-    BIN_URL=${COS_URL}/${VERSION}/v2/qcadmin_linux_${SUFFIX} # qcadmin_linux_amd64
-    info "Downloading binary ${COS_URL}/${VERSION}/v2/q"
+    BIN_URL=${COS_URL}/${VERSION}/qcadmin_linux_${SUFFIX}
+    info "Downloading binary from ${BIN_URL}"
     download ${TMP_BIN} ${BIN_URL}
 }
 
@@ -178,11 +187,14 @@ download_and_verify() {
 
 # --- install quickon
 install_quickon() {
-  if [ -z "${INSTALL_DOMAIN}" ]; then
-    ${BIN_DIR}/q init --app ${INSTALL_APP:-zentao}
-  else
-    ${BIN_DIR}/q init --app ${INSTALL_APP:-zentao} --domain ${INSTALL_DOMAIN}
+  INSTALL_COMMAND="${BIN_DIR}/q init --provider quickon"
+  if [ -n "${INSTALL_DOMAIN}" ]; then
+    INSTALL_COMMAND="${BIN_DIR}/z init --provider quickon --domain ${INSTALL_DOMAIN}"
   fi
+  if [ -n "${INSTALL_VERSION}" ]; then
+    INSTALL_COMMAND="${INSTALL_COMMAND} --version ${INSTALL_VERSION}"
+  fi
+  eval "$INSTALL_COMMAND"
 }
 
 # --- run the install process --

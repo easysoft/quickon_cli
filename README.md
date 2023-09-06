@@ -10,15 +10,15 @@
 [![docs](https://img.shields.io/badge/docs-done-green)](https://www.qucheng.com/)
 [![Chat on QQ](https://img.shields.io/badge/chat-768721743-blueviolet?logo=TencentQQ)](https://img.qucheng.com/group/qq.jpg)
 
-> 中文 | [English](README-EN.md)
+> 中文
 
-使用 `qcadmin`(`q`)，您可以轻松、高效、灵活地单独或整体安装渠成平台。
+使用 `qcadmin`(`q`, `z`)，您可以轻松、高效、灵活地单独或整体安装渠成平台或者禅道DevOPS解决方案。
 
 ## 支持的环境
 
 ### Linux 发行版
 
-* **Debian**  *12, 11(推荐), 10*
+* **Debian**  *12(推荐), 11, 10*
 * **Ubuntu**  *20.04, 18.04*
 * **CentOS**  *7*
 * **Rocky**  *9, 8*
@@ -75,8 +75,11 @@ task
 
 ```bash
 # 稳定版本 / stable / tag (Recommended)
-curl https://pkg.qucheng.com/qucheng/cli/stable/v2/get.sh | sh -
-q init
+curl https://pkg.qucheng.com/quickon/cli/get.sh | sh -
+# 安装渠成平台
+q init --provider quickon
+# 安装禅道DevOPS
+q init --provider devops
 ```
 
 #### 3. 包安装
@@ -107,7 +110,10 @@ yum install qcadmin
 > 快速入门使用 `all-in-one` 安装，这是熟悉 渠成平台 的良好开始。
 
 ```bash
-# create qucheng cluster
+# create quickon cluster
+q init --provider quickon
+# create zentao devops cluster(default)
+q init --provider zentao
 q init
 ```
 
@@ -116,14 +122,14 @@ q init
 ```bash
 # step 1. 创建k3s集群
 q cluster init
-# step 2. 初始化渠成平台
-q quickon init 
+# step 2. 初始化渠成平台或devops
+q quickon init --provider quickon
+q quickon init --provider devops / q quickon init
 ```
 
 ## 相关文档
 
 [文档](./docs/index.md)
-[版本升级](https://github.com/easysoft/quickon_cli/wiki/%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7)
 
 ## 问题反馈
 
