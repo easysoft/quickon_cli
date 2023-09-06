@@ -7,7 +7,8 @@
 
 # Source code is available at https://github.com/easysoft/quickon_cli
 
-# SCRIPT_COMMIT_SHA="un"
+# SCRIPT_COMMIT_SHA="a77fcbaf862d7b2d1eb8b08c5920adde14edc4ca"
+# SCRIPT_DATA="Wed Sep 6 10:18:50 2023 +0800"
 
 # Usage:
 #   curl ... | ENV_VAR=... sh -

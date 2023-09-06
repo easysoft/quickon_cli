@@ -10,8 +10,6 @@
 [![docs](https://img.shields.io/badge/docs-done-green)](https://www.qucheng.com/)
 [![Chat on QQ](https://img.shields.io/badge/chat-768721743-blueviolet?logo=TencentQQ)](https://img.qucheng.com/group/qq.jpg)
 
-> 中文
-
 使用 `qcadmin`(`q`, `z`)，您可以轻松、高效、灵活地单独或整体安装渠成平台或者禅道DevOPS解决方案。
 
 ## 支持的环境
@@ -75,7 +73,7 @@ task
 
 ```bash
 # 稳定版本 / stable / tag (Recommended)
-curl https://pkg.qucheng.com/quickon/cli/get.sh | sh -
+curl https://pkg.qucheng.com/quickon/get.sh | sh -
 # 安装渠成平台
 q init --provider quickon
 # 安装禅道DevOPS
