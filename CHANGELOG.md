@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.0.0-rc.5 (2023-09-06)
+
+ * [e2150f5](https://github.com/easysoft/quickon_cli/commit/e2150f54e4ce5b1f75143fa22c2db1b502e1b8dd) feat(update): disable subcmd in different provider
+ * [8ecfb30](https://github.com/easysoft/quickon_cli/commit/8ecfb303e83bb1e8a4aa014722a34bd6ca9421fa) fix(kube): fix kube exec
+ * [98edbcb](https://github.com/easysoft/quickon_cli/commit/98edbcbffd0b7e21e5e7401fd66e1626e73a7d45) feat(k3s): update to v1.24.17+k3s1
+ * [91e5065](https://github.com/easysoft/quickon_cli/commit/91e506513354a2bff6e57fc790884ca324122b8d) fix(script): update script
+ * [a77fcba](https://github.com/easysoft/quickon_cli/commit/a77fcbaf862d7b2d1eb8b08c5920adde14edc4ca) feat(script): update quickon script
+ * [df0d545](https://github.com/easysoft/quickon_cli/commit/df0d54557241aa87f0a9f96ffa5d9d72e4d45bce) feat(update): update quickon script
+
+### Contributors
+
+ * ysicing
+
 ## v3.0.0-rc.4 (2023-09-05)
 
  * [c2c952c](https://github.com/easysoft/quickon_cli/commit/c2c952ca52b415e95fd06462dac790e7f68ac3b7) fix(precheck): fix precheck

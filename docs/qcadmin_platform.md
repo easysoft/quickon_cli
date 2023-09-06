@@ -19,12 +19,11 @@ Platform commands
 ### SEE ALSO
 
 * [qcadmin](qcadmin.md)	 - Easily bootstrap a secure control plane for QuCheng
-* [qcadmin platform app](qcadmin_platform_app.md)	 - Manage Quickon applications
+* [qcadmin platform app](qcadmin_platform_app.md)	 - Manage applications
 * [qcadmin platform check](qcadmin_platform_check.md)	 - check cluster ready
 * [qcadmin platform gdb](qcadmin_platform_gdb.md)	 - Manage Global Database
 * [qcadmin platform init](qcadmin_platform_init.md)	 - init devops platform
 * [qcadmin platform plugins](qcadmin_platform_plugins.md)	 - manage plugin
-* [qcadmin platform renewtls](qcadmin_platform_renewtls.md)	 - renew qucheng tls domain
 * [qcadmin platform reset-password](qcadmin_platform_reset-password.md)	 - reset quickon admin password
 * [qcadmin platform uninstall](qcadmin_platform_uninstall.md)	 - uninstall quickon(devops)
 
