@@ -42,7 +42,8 @@ var (
 
 var (
 	ValidPrefixes     = []string{"qcadmin", "qc"}
-	ValidDomainSuffix = []string{"corp.cc"}
+	// ValidDomainSuffix valid domain suffix, haogs.cn is deprecated
+	ValidDomainSuffix = []string{"corp.cc", "haogs.cn"}
 )
 
 var CloudAPI = []cloudAPIS{

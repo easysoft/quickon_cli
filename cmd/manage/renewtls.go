@@ -16,7 +16,7 @@ func NewRenewTLS(f factory.Factory) *cobra.Command {
 	var force bool
 	rtls := &cobra.Command{
 		Use:     "renewtls",
-		Short:   "renew qucheng tls domain",
+		Short:   "renew tls domain",
 		Aliases: []string{"rtls", "rt"},
 		Version: "1.2.11",
 		RunE: func(cmd *cobra.Command, args []string) error {

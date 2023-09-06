@@ -10,22 +10,27 @@ import (
 	"github.com/easysoft/qcadmin/cmd/app"
 	"github.com/easysoft/qcadmin/cmd/manage"
 	"github.com/easysoft/qcadmin/cmd/quickon"
+	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/spf13/cobra"
 )
 
 func newCmdApp(f factory.Factory) *cobra.Command {
 	appCmd := &cobra.Command{
 		Use:     "app",
-		Short:   "Manage Quickon applications",
-		Version: "20230330",
+		Short:   "Manage applications",
+		Version: "20230906",
 	}
-	appCmd.AddCommand(app.NewCmdAppExec(f))
-	appCmd.AddCommand(app.NewCmdAppGet(f))
-	appCmd.AddCommand(app.NewCmdAppLogs(f))
+	cfg, _ := config.LoadConfig()
+	if cfg == nil || !cfg.Quickon.DevOps {
+		appCmd.AddCommand(app.NewCmdAppExec(f))
+		appCmd.AddCommand(app.NewCmdAppGet(f))
+		appCmd.AddCommand(app.NewCmdAppLogs(f))
+		appCmd.AddCommand(app.NewCmdAppInstall(f))
+		appCmd.AddCommand(app.NewCmdAppMarket(f))
+	}
 	appCmd.AddCommand(app.NewCmdAppList(f))
-	appCmd.AddCommand(app.NewCmdAppInstall(f))
-	appCmd.AddCommand(app.NewCmdAppMarket(f))
 	return appCmd
 }
 
@@ -41,13 +46,18 @@ func newCmdPlatform(f factory.Factory) *cobra.Command {
 	platformCmd.AddCommand(quickon.InitCommand(f))
 	platformCmd.AddCommand(quickon.UninstallCommand(f))
 	platformCmd.AddCommand(manage.NewCmdPlugin(f))
-	platformCmd.AddCommand(manage.NewResetPassword(f))
-	platformCmd.AddCommand(manage.NewRenewTLS(f))
 	gdbCmd := &cobra.Command{
 		Use:   "gdb",
 		Short: "Manage Global Database",
 	}
 	gdbCmd.AddCommand(manage.NewCmdGdbList(f))
 	platformCmd.AddCommand(gdbCmd)
+	cfg, _ := config.LoadConfig()
+	if cfg == nil || !cfg.Quickon.DevOps {
+		platformCmd.AddCommand(manage.NewResetPassword(f))
+	}
+	if cfg == nil || kutil.IsLegalDomain(cfg.Domain) {
+		platformCmd.AddCommand(manage.NewRenewTLS(f))
+	}
 	return platformCmd
 }

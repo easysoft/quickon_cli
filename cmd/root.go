@@ -15,6 +15,7 @@ import (
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/excmd"
 	mcobra "github.com/muesli/mango-cobra"
 	"github.com/muesli/roff"
@@ -74,7 +75,9 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 	rootCmd.AddCommand(newCmdDebug(f))
 
 	// Deprecated commands, will be removed in the future
-	rootCmd.AddCommand(newCmdApp(f))
+	deprecatedAppCommand := newCmdApp(f)
+	deprecatedAppCommand.Deprecated = fmt.Sprintf("use %s instead", color.SGreen("%s platform app", os.Args[0]))
+	rootCmd.AddCommand(deprecatedAppCommand)
 
 	args := os.Args
 	if len(args) > 1 {
@@ -106,8 +109,8 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 func NewRootCmd(f factory.Factory) *cobra.Command {
 	return &cobra.Command{
 		Use:           "qcadmin",
-		SilenceUsage:  true,
-		SilenceErrors: true,
+		// SilenceUsage:  true,
+		// SilenceErrors: true,
 		Short:         "Easily bootstrap a secure control plane for QuCheng",
 		Aliases:       []string{"q"},
 		Example:       common.RootTPl,

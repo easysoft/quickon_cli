@@ -514,7 +514,7 @@ func (m *Meta) UnInstall() error {
 	repoCleanArgs := []string{"experimental", "helm", "repo-del"}
 	_ = qcexec.Command(os.Args[0], repoCleanArgs...).Run()
 	m.Log.Done("uninstall helm repo success")
-	if strings.HasSuffix(cfg.Domain, "haogs.cn") || strings.HasSuffix(cfg.Domain, "corp.cc") {
+	if kutil.IsLegalDomain(cfg.Domain) {
 		m.Log.Infof("clean domain %s", cfg.Domain)
 		if err := qcexec.Command(os.Args[0], "exp", "tools", "domain", "clean", cfg.Domain).Run(); err != nil {
 			m.Log.Warnf("clean domain %s failed, reason: %v", cfg.Domain, err)

@@ -17,6 +17,7 @@ import (
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
+	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 )
 
@@ -25,7 +26,7 @@ func CheckReNewCertificate(force bool) (err error) {
 	log := log.GetInstance()
 	cfg, _ := config.LoadConfig()
 	domain := cfg.Domain
-	if strings.HasSuffix(domain, "haogs.cn") || strings.HasSuffix(domain, "corp.cc") {
+	if kutil.IsLegalDomain(domain) {
 		needRenew := false
 		if force {
 			needRenew = true
