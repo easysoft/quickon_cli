@@ -195,6 +195,9 @@ install_quickon() {
   if [ -n "${INSTALL_VERSION}" ]; then
     INSTALL_COMMAND="${INSTALL_COMMAND} --version ${INSTALL_VERSION}"
   fi
+  if [ -n "${INSTALL_APP}" ]; then
+    INSTALL_COMMAND="${INSTALL_COMMAND} --app ${INSTALL_APP}"
+  fi
   eval "$INSTALL_COMMAND"
 }
 

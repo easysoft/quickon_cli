@@ -103,7 +103,7 @@ check_ps_hang() {
       echo "ps -ef command is hung" | tee -a ${diagnose_dir}/system/ps_command_status
       is_ps_hang=true
       echo "start to check which process lead to ps -ef command hang" | tee -a ${diagnose_dir}/system/ps_command_status
-      for f in `find /proc/*/task -name status`
+      for f in $(find /proc/*/task -name status)
       do
           checkD=$(cat $f|grep "State.*D")
           if [ "$?" == "0" ]; then
@@ -205,7 +205,7 @@ docker_check() {
     #docker info
     run docker info | tee -a ${diagnose_dir}/docker/docker_info
     run docker version | tee -a ${diagnose_dir}/docker/docker_version
-    sudo kill -SIGUSR1 $(cat /var/run/docker.pid)
+    kill -SIGUSR1 $(cat /var/run/docker.pid)
     [ -f "/var/run/docker/libcontainerd/containerd/events.log" ] && (
       cp /var/run/docker/libcontainerd/containerd/events.log ${diagnose_dir}/docker/containerd_events.log
     )
@@ -251,7 +251,7 @@ cluster_events(){
 component() {
     local ns="$1"
     mkdir -p $diagnose_dir/k8s/$ns/
-    local pods=`kubectl get -n $ns po  | awk '{print $1}'|grep -v NAME`
+    local pods=$(kubectl get -n $ns po  | awk '{print $1}'|grep -v NAME)
     for po in ${pods}
     do
         kubectl logs -n ${ns} ${po} &> $diagnose_dir/k8s/${ns}/${po}.log
