@@ -1,5 +1,14 @@
 # Changelog
 
+## v3.0.0-rc.4 (2023-09-05)
+
+ * [c2c952c](https://github.com/easysoft/quickon_cli/commit/c2c952ca52b415e95fd06462dac790e7f68ac3b7) fix(precheck): fix precheck
+ * [66fe987](https://github.com/easysoft/quickon_cli/commit/66fe9874d639d63ba10ec7563e581cbae02503dc) fix(show): fix show message
+
+### Contributors
+
+ * ysicing
+
 ## v3.0.0-rc.3 (2023-09-05)
 
  * [a9a82a6](https://github.com/easysoft/quickon_cli/commit/a9a82a6bbc88969aa96f41d6e6036115df1396f1) feat(storage): change default storage nfs
