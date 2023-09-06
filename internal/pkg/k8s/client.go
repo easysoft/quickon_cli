@@ -633,11 +633,12 @@ func (c *Client) ExecPodWithTTY(ctx context.Context, namespace, podName, contain
 		Namespace(namespace).
 		SubResource("exec").
 		VersionedParams(&corev1.PodExecOptions{
-			Command: command,
-			Stdin:   true,
-			Stdout:  true,
-			Stderr:  true,
-			TTY:     true,
+			Command:   command,
+			Container: container,
+			Stdin:     true,
+			Stdout:    true,
+			Stderr:    true,
+			TTY:       true,
 		}, scheme.ParameterCodec)
 	exec, err := remotecommand.NewSPDYExecutor(c.Config, "POST", req.URL())
 	if err != nil {

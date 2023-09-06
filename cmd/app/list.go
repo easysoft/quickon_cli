@@ -109,16 +109,32 @@ func NewCmdAppList(f factory.Factory) *cobra.Command {
 				Size: 5,
 			}
 			podit, _, _ := selectPod.Run()
-			log.Infof("select app %s pod %s", release[it].Name, podlist.Items[podit].Name)
+			podName := podlist.Items[podit].Name
+			log.Infof("select app %s pod %s", release[it].Name, podName)
 			selectAction := promptui.Select{
 				Label: "select action",
 				Items: []string{"logs", "exec"},
 			}
 			_, action, _ := selectAction.Run()
-			if action == "logs" {
-				return k8sClient.GetFollowLogs(ctx, podlist.Items[podit].Namespace, podlist.Items[podit].Name, podlist.Items[podit].Spec.Containers[0].Name, false)
+			podNamespace := podlist.Items[podit].Namespace
+			selectPodContainer := promptui.Select{
+				Label: fmt.Sprintf("select %s's container", podName),
+				Items: podlist.Items[podit].Spec.Containers,
+				Templates: &promptui.SelectTemplates{
+					Label:    "{{ . }}?",
+					Active:   "\U0001F449 {{ .Name | cyan }}",
+					Inactive: "  {{ .Name | cyan }}",
+					Selected: "\U0001F389 {{ .Name | red | cyan }}",
+				},
+				Size: 5,
 			}
-			return k8sClient.ExecPodWithTTY(ctx, podlist.Items[podit].Namespace, podlist.Items[podit].Name, podlist.Items[podit].Spec.Containers[0].Name, []string{"/bin/sh", "-c", "sh"})
+			podContainerit, _, _ := selectPodContainer.Run()
+			containerName := podlist.Items[podit].Spec.Containers[podContainerit].Name
+			log.Infof("select app %s pod %s's container %s", release[it].Name, podName, containerName)
+			if action == "logs" {
+				return k8sClient.GetFollowLogs(ctx, podNamespace, podName, containerName, false)
+			}
+			return k8sClient.ExecPodWithTTY(ctx, podNamespace, podName, containerName, []string{"/bin/sh", "-c", "sh"})
 		},
 	}
 	return app
