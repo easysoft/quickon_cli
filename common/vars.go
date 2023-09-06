@@ -41,7 +41,7 @@ var (
 )
 
 var (
-	ValidPrefixes     = []string{"qcadmin", "qc"}
+	ValidPrefixes = []string{"qcadmin", "qc"}
 	// ValidDomainSuffix valid domain suffix, haogs.cn is deprecated
 	ValidDomainSuffix = []string{"corp.cc", "haogs.cn"}
 )

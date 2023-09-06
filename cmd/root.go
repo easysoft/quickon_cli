@@ -109,8 +109,8 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 func NewRootCmd(f factory.Factory) *cobra.Command {
 	return &cobra.Command{
 		Use:           "qcadmin",
-		// SilenceUsage:  true,
-		// SilenceErrors: true,
+		SilenceUsage:  true,
+		SilenceErrors: true,
 		Short:         "Easily bootstrap a secure control plane for QuCheng",
 		Aliases:       []string{"q"},
 		Example:       common.RootTPl,
