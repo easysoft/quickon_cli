@@ -8,20 +8,6 @@
 set -e
 set -o noglob
 
-# Usage:
-#   curl ... | ENV_VAR=... sh -
-#       or
-#   ENV_VAR=... ./install.sh
-#
-# Example:
-#   Installing Quickon with ZenTao:
-#     curl ... | INSTALL_APP="zentao" sh -
-#   - INSTALL_APP
-#     Install Market App when install Quickon.
-#     Defaults to 'zentao'
-#   - INSTALL_DOMAIN
-#     If not set default use gen default domain
-
 # --- helper functions for logs ---
 info()
 {
@@ -37,7 +23,7 @@ fatal()
     exit 1
 }
 
-COS_URL=https://pkg.qucheng.com/qucheng/cli
+COS_URL=https://pkg.qucheng.com/devops/cli
 
 # --- define needed environment variables ---
 setup_env() {
@@ -46,7 +32,7 @@ setup_env() {
     if [ $(id -u) -eq 0 ]; then
         SUDO=
     fi
-    BIN_DIR=/usr/local/bin
+		BIN_DIR=/usr/local/bin
     if ! $SUDO sh -c "touch ${BIN_DIR}/q-ro-test && rm -rf ${BIN_DIR}/q-ro-test"; then
       if [ -d /opt/bin ]; then
         BIN_DIR=/opt/bin
@@ -95,7 +81,7 @@ setup_quickon() {
 
 # --- use desired qcadmin version if defined or find version from channel ---
 get_release_version() {
-    VERSION="stable"
+		VERSION="stable"
     info "Using ${VERSION} as release"
 }
 
@@ -156,12 +142,12 @@ setup_binary() {
     info "Installing qcadmin to ${BIN_DIR}/qcadmin"
     $SUDO chown root:root ${TMP_BIN}
     $SUDO mv -f ${TMP_BIN} ${BIN_DIR}/qcadmin
-    [ -f "${BIN_DIR}/q" ] && (
-        $SUDO rm -f ${BIN_DIR}/q
-    )
-    info "Create qcadmin soft link ${BIN_DIR}/q"
-    $SUDO ln -s ${BIN_DIR}/qcadmin ${BIN_DIR}/q
-    info "Installation is complete. Use q --help"
+		[ -f "${BIN_DIR}/q" ] && (
+			$SUDO rm -f ${BIN_DIR}/q
+		)
+		info "Create qcadmin soft link ${BIN_DIR}/q"
+		$SUDO ln -s ${BIN_DIR}/qcadmin ${BIN_DIR}/q
+		info "Installation is complete. Use q --help"
 }
 
 # --- download and verify qcadmin ---
@@ -171,23 +157,13 @@ download_and_verify() {
     setup_tmp
     setup_quickon
     get_release_version
-    # Skip download if qcadmin binary exists, support upgrade
+		# Skip download if qcadmin binary exists, support upgrade
     download_binary
     setup_binary
 }
 
-# --- install quickon
-install_quickon() {
-  if [ -z "${INSTALL_DOMAIN}" ]; then
-    ${BIN_DIR}/q init --app ${INSTALL_APP:-zentao}
-  else
-    ${BIN_DIR}/q init --app ${INSTALL_APP:-zentao} --domain ${INSTALL_DOMAIN}
-  fi
-}
-
 # --- run the install process --
 {
-  setup_env
-  download_and_verify
-  install_quickon
+	setup_env "$@"
+	download_and_verify
 }
