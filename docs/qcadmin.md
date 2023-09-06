@@ -19,7 +19,6 @@ Easily bootstrap a secure control plane for QuCheng
 
 ### SEE ALSO
 
-* [qcadmin app](qcadmin_app.md)	 - Manage Quickon applications
 * [qcadmin bugreport](qcadmin_bugreport.md)	 - Display system information for bug report
 * [qcadmin cluster](qcadmin_cluster.md)	 - Cluster commands
 * [qcadmin experimental](qcadmin_experimental.md)	 - Experimental commands that may be modified or deprecated

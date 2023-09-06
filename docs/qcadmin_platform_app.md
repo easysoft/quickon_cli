@@ -1,6 +1,6 @@
 ## qcadmin platform app
 
-Manage Quickon applications
+Manage applications
 
 ### Options
 
