@@ -47,6 +47,7 @@ type Meta struct {
 	App             string
 	kubeClient      *k8s.Client
 	Log             log.Logger
+	DomainType      string
 }
 
 func New(f factory.Factory) *Meta {
@@ -55,6 +56,7 @@ func New(f factory.Factory) *Meta {
 		// Version:         common.DefaultQuickonOSSVersion,
 		ConsolePassword: expass.PwGenAlphaNum(32),
 		Type:            common.ZenTaoOSSType.String(),
+		DomainType:      "custom",
 	}
 }
 
@@ -228,6 +230,7 @@ func (m *Meta) Init() error {
 				return false, err
 			}
 			m.Domain = domain
+			m.DomainType = "api"
 			m.Log.Infof("generate suffix domain: %s, ip: %v", color.SGreen(m.Domain), color.SGreen(m.IP))
 			return true, nil
 		})
@@ -274,6 +277,8 @@ func (m *Meta) Init() error {
 
 	cfg.Domain = m.Domain
 	cfg.APIToken = token
+	cfg.Quickon.Domain.Name = m.Domain
+	cfg.Quickon.Domain.Type = m.DomainType
 	cfg.S3.Username = expass.PwGenAlphaNum(8)
 	cfg.S3.Password = expass.PwGenAlphaNum(16)
 	cfg.SaveConfig()
@@ -311,7 +316,7 @@ func (m *Meta) Init() error {
 		helmargs = append(helmargs, "--set", "cloud.selectVersion=true")
 	}
 	hostdomain := m.Domain
-	if kutil.IsLegalDomain(hostdomain) {
+	if kutil.IsLegalDomain(hostdomain) && m.DomainType == "api" {
 		helmargs = append(helmargs, "--set", "ingress.tls.enabled=true")
 		helmargs = append(helmargs, "--set", "ingress.tls.secretName=tls-haogs-cn")
 	} else {

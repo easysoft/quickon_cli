@@ -124,9 +124,14 @@ func (s *Status) Format() error {
 		consoleURL := ""
 		if len(domain) > 0 {
 			if !kutil.IsLegalDomain(domain) {
-				domain = fmt.Sprintf("http://console.%s", domain)
+				if cfg.Quickon.DevOps {
+					consoleURL = fmt.Sprintf("http://zentao.%s", domain)
+				} else {
+					consoleURL = fmt.Sprintf("http://console.%s", domain)
+				}
+			} else {
+				consoleURL = fmt.Sprintf("https://%s", domain)
 			}
-			consoleURL = domain
 		} else {
 			consoleURL = fmt.Sprintf("http://%s:32379", loginIP)
 		}

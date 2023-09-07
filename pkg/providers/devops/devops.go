@@ -82,7 +82,7 @@ func (q *Devops) Show() {
 
 	q.MetaData.Log.Info("----------------------------\t")
 	if len(domain) > 0 {
-		if !kutil.IsLegalDomain(cfg.Domain) {
+		if !kutil.IsLegalDomain(cfg.Domain) || cfg.Quickon.Domain.Type != "api" {
 			domain = fmt.Sprintf("http://zentao.%s", cfg.Domain)
 		} else {
 			domain = fmt.Sprintf("https://%s", cfg.Domain)

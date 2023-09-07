@@ -54,6 +54,12 @@ type Install struct {
 type Quickon struct {
 	Type   common.QuickonType `yaml:"type" json:"type"`
 	DevOps bool               `yaml:"devops" json:"devops"`
+	Domain Domain             `yaml:"domain" json:"domain"`
+}
+
+type Domain struct {
+	Type string `yaml:"type" json:"type"`
+	Name string `yaml:"name" json:"name"`
 }
 
 type Cluster struct {
