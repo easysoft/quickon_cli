@@ -1,5 +1,15 @@
 # Changelog
 
+## v3.0.1 (2023-09-07)
+
+ * [124dd60](https://github.com/easysoft/quickon_cli/commit/124dd601e3fc957bca8b20dbf96c627c64a00855) fix(domain): fix domain show
+ * [dd5e6ac](https://github.com/easysoft/quickon_cli/commit/dd5e6ac1b1d8cebf36280ec9dc1062b177117534) feat(update): update
+ * [a572637](https://github.com/easysoft/quickon_cli/commit/a57263784498199be583255b9075c181f27b43df) style(update): update valid domain
+
+### Contributors
+
+ * ysicing
+
 ## v3.0.0-rc.5 (2023-09-06)
 
  * [e2150f5](https://github.com/easysoft/quickon_cli/commit/e2150f54e4ce5b1f75143fa22c2db1b502e1b8dd) feat(update): disable subcmd in different provider
