@@ -11,7 +11,7 @@ echo '# Changelog'
 echo
 
 tag=
-git tag -l 'v*' | sort -rV | while read last; do
+git tag -l 'v*' | grep -vE '(rc|beta|alpha)' | sort -rV | while read last; do
   if [ "$tag" != "" ]; then
     echo "## $(git for-each-ref --format='%(refname:strip=2) (%(creatordate:short))' refs/tags/${tag})"
     echo
