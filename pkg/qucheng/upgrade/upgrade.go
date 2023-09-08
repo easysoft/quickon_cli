@@ -172,7 +172,7 @@ func QuchengVersion(devops bool) (Version, error) {
 	}
 	name := common.DefaultQuchengName
 	if devops {
-		name = common.DefaultZentaoPassName
+		name = common.DefaultZentaoPaasName
 	}
 	if apiVersion, err := opt.Fetch(common.GetDefaultSystemNamespace(true), name); err == nil {
 		v.Components = append(v.Components, apiVersion)

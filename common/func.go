@@ -197,7 +197,7 @@ func GetCustomScripts(path string) string {
 // GetReleaseName get chart release name
 func GetReleaseName(devops bool) string {
 	if devops == true {
-		return DefaultZentaoPassName
+		return DefaultZentaoPaasName
 	}
 	return DefaultQuchengName
 }

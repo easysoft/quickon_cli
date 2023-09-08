@@ -93,7 +93,7 @@ const (
 	DefaultAppNamespace           = "quickon-app"
 	DefaultCINamespace            = "quickon-ci"
 	DefaultQuchengName            = "qucheng"
-	DefaultZentaoPassName         = "zentaopass"
+	DefaultZentaoPaasName         = "zentaopaas"
 	DefaultCneOperatorName        = "cne-operator"
 	DefaultIngressName            = "nginx-ingress-controller"
 	DefaultKubeAPIDomain          = "kubeapi.quickon.local"
