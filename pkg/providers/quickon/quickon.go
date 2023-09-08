@@ -49,6 +49,7 @@ func newProvider() *Quickon {
 			Type:            common.ZenTaoOSSType.String(),
 			Version:         common.DefaultQuickonOSSVersion,
 			App:             "zentao",
+			DomainType:      "custom",
 		},
 	}
 }

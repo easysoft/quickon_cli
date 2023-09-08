@@ -34,7 +34,7 @@ const (
 	ControlPlaneNumCPU = 2
 	// ControlPlaneMem is the number of megabytes of memory required on the control-plane
 	// Below that amount of RAM running a stable control plane would be difficult.
-	ControlPlaneMem = 1700
+	ControlPlaneMem = 3800
 	// ControlPlaneNumDisk is the number of Disk required on control-plane
 	ControlPlaneNumDisk = 40
 	// ControlPlaneLowDisk is the number of Disk required on node

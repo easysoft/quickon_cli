@@ -120,7 +120,6 @@ func domainAdd(f factory.Factory) *cobra.Command {
 			}
 			// save config
 			cfg.SaveConfig()
-			// upgrade qucheng
 			helmClient, _ := helm.NewClient(&helm.Config{Namespace: common.GetDefaultSystemNamespace(true)})
 			if err := helmClient.UpdateRepo(); err != nil {
 				log.Warnf("update repo failed, reason: %v", err)

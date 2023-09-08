@@ -41,6 +41,7 @@ func newProvider() *Devops {
 			DevopsMode: true,
 			Type:       common.ZenTaoOSSType.String(),
 			Version:    common.DefaultZentaoDevOPSOSSVersion,
+			DomainType: "custom",
 		},
 	}
 }

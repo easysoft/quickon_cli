@@ -124,18 +124,14 @@ func (s *Status) Format() error {
 		consoleURL := ""
 		if len(domain) > 0 {
 			// TODO 优化域名显示结果
-			if !kutil.IsLegalDomain(domain) {
+			if cfg.Quickon.Domain.Type != "api" || !kutil.IsLegalDomain(domain) {
 				if cfg.Quickon.DevOps {
 					consoleURL = fmt.Sprintf("http://zentao.%s", domain)
 				} else {
 					consoleURL = fmt.Sprintf("http://console.%s", domain)
 				}
 			} else {
-				if cfg.Quickon.Domain.Type == "custom" {
-					consoleURL = fmt.Sprintf("http://%s", domain)
-				} else {
-					consoleURL = fmt.Sprintf("https://%s", domain)
-				}
+				consoleURL = fmt.Sprintf("http://%s", domain)
 			}
 		} else {
 			consoleURL = fmt.Sprintf("http://%s:32379", loginIP)
