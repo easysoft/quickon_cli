@@ -8,6 +8,7 @@ package cmd
 
 import (
 	"github.com/easysoft/qcadmin/cmd/upgrade"
+	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/spf13/cobra"
 )
@@ -15,10 +16,13 @@ import (
 func newCmdUpgrade(f factory.Factory) *cobra.Command {
 	up := &cobra.Command{
 		Use:     "upgrade",
-		Short:   "Upgrades the Qucheng cli or plugin to the newest version",
+		Short:   "Upgrades the cli or plugin to the newest version",
 		Aliases: []string{"ug", "ugc"},
 	}
 	up.AddCommand(upgrade.NewUpgradeQ(f))
-	up.AddCommand(upgrade.NewUpgradeQucheng(f))
+	cfg, _ := config.LoadConfig()
+	if cfg == nil || !cfg.Quickon.DevOps {
+		up.AddCommand(upgrade.NewUpgradeQucheng(f))
+	}
 	return up
 }

@@ -182,7 +182,7 @@ func (k *K8sStatusCollector) platformPluginStatus(ctx context.Context, p plugin.
 		stateCount.Disabled = false
 		if p.Type == "ingress" {
 			k.deploymentStatus(ctx, common.GetDefaultSystemNamespace(true), fmt.Sprintf("ingress-%s", common.DefaultIngressName), common.DefaultIngressName, "", status)
-		} else if p.Type == "cne-operator" {
+		} else if p.Type == common.DefaultCneOperatorName {
 			k.deploymentStatus(ctx, common.GetDefaultSystemNamespace(true), common.DefaultCneOperatorName, common.DefaultCneOperatorName, "", status)
 		}
 	}

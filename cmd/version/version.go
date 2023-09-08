@@ -24,7 +24,6 @@ import (
 	logpkg "github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/qucheng/upgrade"
 	"github.com/ergoapi/util/color"
-	"github.com/ergoapi/util/file"
 	"github.com/imroc/req/v3"
 )
 
@@ -193,15 +192,18 @@ func ShowVersion(log logpkg.Logger) {
 			vd.Client.CanUpgrade = true
 			vd.Client.LastVersion = lastVersion
 			vd.Client.Version = color.SGreen(vd.Client.Version)
-			vd.Client.UpgradeMessage = fmt.Sprintf("Now you can use %s to upgrade cli to the latest version %s by %s mode", color.SGreen("%s upgrade q", os.Args[0]), color.SGreen(lastVersion), color.SGreen(lastType))
+			vd.Client.UpgradeMessage = fmt.Sprintf("Now you can use %s to upgrade cli to the latest version %s by %s mode", color.SGreen("%s upgrade cli", os.Args[0]), color.SGreen(lastVersion), color.SGreen(lastType))
 		}
 	}
-	if file.CheckFileExists(common.GetCustomConfig(common.InitFileName)) {
-		cfg, _ := config.LoadConfig()
-		if cfg != nil && cfg.Quickon.Type != "" {
-			vd.Server.ServerType = cfg.Quickon.Type
+
+	cfg, _ := config.LoadConfig()
+	if cfg != nil {
+		vd.Server.ServerType = cfg.Quickon.Type
+		if cfg.Quickon.DevOps {
+			vd.Server.ServerType = common.QuickonType(fmt.Sprintf("devops.%s", vd.Server.ServerType))
 		}
-		qv, err := upgrade.QuchengVersion()
+
+		qv, err := upgrade.QuchengVersion(cfg.Quickon.DevOps)
 		if err == nil {
 			vd.Server.Components = &qv
 		}

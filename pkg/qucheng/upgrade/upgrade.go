@@ -98,8 +98,12 @@ func Upgrade(flagVersion string, log log.Logger) error {
 		log.Errorf("update repo failed, reason: %v", err)
 		return err
 	}
-
-	qv, err := QuchengVersion()
+	cfg, _ := config.LoadConfig()
+	devops := false
+	if cfg != nil && cfg.Quickon.DevOps {
+		devops = true
+	}
+	qv, err := QuchengVersion(devops)
 	if err != nil {
 		return err
 	}
@@ -161,15 +165,19 @@ func Upgrade(flagVersion string, log log.Logger) error {
 	return nil
 }
 
-func QuchengVersion() (Version, error) {
+func QuchengVersion(devops bool) (Version, error) {
 	v := Version{}
 	opt := Option{
 		log: log.GetInstance(),
 	}
-	if apiVersion, err := opt.Fetch(common.GetDefaultSystemNamespace(true), "qucheng"); err == nil {
+	name := common.DefaultQuchengName
+	if devops {
+		name = common.DefaultZentaoPassName
+	}
+	if apiVersion, err := opt.Fetch(common.GetDefaultSystemNamespace(true), name); err == nil {
 		v.Components = append(v.Components, apiVersion)
 	}
-	if apiVersion, err := opt.Fetch(common.GetDefaultSystemNamespace(true), "cne-operator"); err == nil {
+	if apiVersion, err := opt.Fetch(common.GetDefaultSystemNamespace(true), common.DefaultCneOperatorName); err == nil {
 		v.Components = append(v.Components, apiVersion)
 	}
 	return v, nil
