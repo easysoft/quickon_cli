@@ -73,11 +73,13 @@ task
 
 ```bash
 # 稳定版本 / stable / tag (Recommended)
-curl https://pkg.qucheng.com/quickon/get.sh | sh -
+curl -sfL https://pkg.qucheng.com/quickon/get.sh | sh -
 # 安装渠成平台
 q init --provider quickon
 # 安装禅道DevOPS
 q init --provider devops
+# 一键安装
+curl -sfL https://pkg.qucheng.com/quickon/install.sh | INSTALL_DOMAIN=example.com sh -
 ```
 
 #### 3. 包安装

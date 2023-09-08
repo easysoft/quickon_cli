@@ -8,7 +8,7 @@
 # Source code is available at https://github.com/easysoft/quickon_cli
 
 # SCRIPT_COMMIT_SHA="a77fcbaf862d7b2d1eb8b08c5920adde14edc4ca"
-# SCRIPT_DATA="Wed Sep 6 10:18:50 2023 +0800"
+# SCRIPT_DATA="Fri Sep  8 09:46:36 AM CST 2023"
 
 # Usage:
 #   curl ... | ENV_VAR=... sh -
@@ -156,7 +156,7 @@ download() {
 # --- download binary from cos url ---
 download_binary() {
     BIN_URL=${COS_URL}/${VERSION}/qcadmin_linux_${SUFFIX}
-    info "Downloading binary from ${BIN_URL}"
+    info "Downloading binary"
     download ${TMP_BIN} ${BIN_URL}
 }
 
@@ -190,7 +190,7 @@ download_and_verify() {
 install_quickon() {
   INSTALL_COMMAND="${BIN_DIR}/q init --provider quickon"
   if [ -n "${INSTALL_DOMAIN}" ]; then
-    INSTALL_COMMAND="${BIN_DIR}/z init --provider quickon --domain ${INSTALL_DOMAIN}"
+    INSTALL_COMMAND="${BIN_DIR}/q init --provider quickon --domain ${INSTALL_DOMAIN}"
   fi
   if [ -n "${INSTALL_VERSION}" ]; then
     INSTALL_COMMAND="${INSTALL_COMMAND} --version ${INSTALL_VERSION}"
