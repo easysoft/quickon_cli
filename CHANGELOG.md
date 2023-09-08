@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.0.3 (2023-09-08)
+
+ * [b3b29b0](https://github.com/easysoft/quickon_cli/commit/b3b29b04a7ea2f4a1f0ad694300546f5400b49d8) fix(typo): fix paas typo
+
+### Contributors
+
+ * ysicing
+
 ## v3.0.2 (2023-09-08)
 
  * [2c24da9](https://github.com/easysoft/quickon_cli/commit/2c24da97299e2f8cec492c54442d19c9a0d99026) fix(upgrade): fix version & upgrade
