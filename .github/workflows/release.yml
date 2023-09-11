@@ -28,7 +28,7 @@ jobs:
         echo "install task"
         go install github.com/go-task/task/v3/cmd/task@latest
     - name: install upx
-      uses: crazy-max/ghaction-upx@v2
+      uses: crazy-max/ghaction-upx@v3
       with:
         install-only: true
     - name: Run GoReleaser
