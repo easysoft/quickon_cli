@@ -4,16 +4,18 @@
 // (2) Affero General Public License 3.0 (AGPL 3.0)
 // license that can be found in the LICENSE file.
 
-package manage
+package db
 
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	quchengv1beta1 "github.com/easysoft/quickon-api/qucheng/v1beta1"
 	"github.com/ergoapi/util/exmap"
 	"github.com/manifoldco/promptui"
@@ -27,35 +29,44 @@ type action struct {
 	Name string
 }
 
-func NewCmdGdbList(f factory.Factory) *cobra.Command {
+// cmdDbSvcList list dbservice
+func cmdDbSvcList(f factory.Factory) *cobra.Command {
 	log := f.GetLog()
-	var name string
+	var onlygdb bool
 	app := &cobra.Command{
-		Use:     "list",
-		Short:   "list gdb",
-		Example: `g gdb list`,
+		Use:     "dbservice",
+		Aliases: []string{"gdb"},
+		Short:   "list dbservice(gdb)",
+		Example: fmt.Sprintf(`%s platform db list gdb`, os.Args[0]),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cfg, _ := config.LoadConfig()
 			qclient, err := k8s.NewSimpleQClient()
 			if err != nil {
 				return err
 			}
-			dbsvcs, err := qclient.ListQuchengDBSvc(context.TODO(), name, metav1.ListOptions{})
+			dbsvcs, err := qclient.ListQuchengDBSvc(context.TODO(), corev1.NamespaceAll, metav1.ListOptions{})
 			if err != nil {
 				return err
 			}
 			if len(dbsvcs.Items) == 0 {
-				log.Warn("no found global database service")
+				log.Warn("no found database service")
 				return nil
 			}
 			var gdbServices []quchengv1beta1.DbService
 			for _, dbsvc := range dbsvcs.Items {
-				if vaildGlobalDatabase(dbsvc.Labels) {
+				if !*dbsvc.Status.Ready {
+					continue
+				}
+				if onlygdb {
+					if vaildGlobalDatabase(dbsvc.Labels) {
+						gdbServices = append(gdbServices, dbsvc)
+					}
+				} else {
 					gdbServices = append(gdbServices, dbsvc)
 				}
 			}
 			selectGDB := promptui.Select{
-				Label: "select global db service",
+				Label: "select dbservice",
 				Items: gdbServices,
 				Templates: &promptui.SelectTemplates{
 					Label:    "{{ . }}?",
@@ -66,7 +77,7 @@ func NewCmdGdbList(f factory.Factory) *cobra.Command {
 				Size: 5,
 			}
 			it, _, _ := selectGDB.Run()
-			actions := []action{{"manage"}, {"backup"}}
+			actions := []action{{"manage"}}
 			selectDBAction := promptui.Select{
 				Label: "select action",
 				Items: actions,
@@ -80,23 +91,22 @@ func NewCmdGdbList(f factory.Factory) *cobra.Command {
 			iac, _, _ := selectDBAction.Run()
 			if actions[iac].Name == "manage" {
 				// https://console.example.corp.cc/adminer/?server=10.10.16.15%3A3306&username=root&db=ysicing&password=password123
-				if err := fakeUserInfo(qclient, &gdbServices[it]); err != nil {
+				if err := fakeDbSvcUserInfo(qclient, &gdbServices[it]); err != nil {
 					return errors.Errorf("call k8s api err: %v", err)
 				}
-				url := fmt.Sprintf("http://%s/adminer/?server=%s&username=%s&db=%s&password=%s", cfg.Domain, gdbServices[it].Status.Address, gdbServices[it].Spec.Account.User.Value, "", gdbServices[it].Spec.Account.Password.Value)
+				url := fmt.Sprintf("%s/adminer/?server=%s&username=%s&db=%s&password=%s", kutil.GetConsoleURL(cfg), gdbServices[it].Status.Address, gdbServices[it].Spec.Account.User.Value, "", gdbServices[it].Spec.Account.Password.Value)
+				log.Infof("open browser access url: %s", url)
 				if err := browser.OpenURL(url); err != nil {
-					log.Warnf("try open browser err: %v", err)
-					log.Infof("open browser access url: %s", url)
+					log.Warnf("try open browser failed: %v", err)
 					return nil
 				}
-				log.Done("open browser")
+				log.Done("open browser success")
 				return nil
-			} else if actions[iac].Name == "backup" {
-				log.Warn("not implement")
 			}
 			return nil
 		},
 	}
+	app.Flags().BoolVar(&onlygdb, "onlygdb", false, "only show db service")
 	return app
 }
 
@@ -107,7 +117,7 @@ func vaildGlobalDatabase(l map[string]string) bool {
 	return false
 }
 
-func fakeUserInfo(qclient *k8s.Client, dbsvc *quchengv1beta1.DbService) error {
+func fakeDbSvcUserInfo(qclient *k8s.Client, dbsvc *quchengv1beta1.DbService) error {
 	if dbsvc.Spec.Account.User.Value == "" {
 		user, err := qclient.GetSecretKeyBySelector(context.TODO(), dbsvc.Namespace, &corev1.SecretKeySelector{
 			LocalObjectReference: corev1.LocalObjectReference{

@@ -9,6 +9,7 @@ package cmd
 import (
 	"github.com/easysoft/qcadmin/cmd/app"
 	"github.com/easysoft/qcadmin/cmd/manage"
+	"github.com/easysoft/qcadmin/cmd/manage/db"
 	"github.com/easysoft/qcadmin/cmd/quickon"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
@@ -46,12 +47,7 @@ func newCmdPlatform(f factory.Factory) *cobra.Command {
 	platformCmd.AddCommand(quickon.InitCommand(f))
 	platformCmd.AddCommand(quickon.UninstallCommand(f))
 	platformCmd.AddCommand(manage.NewCmdPlugin(f))
-	gdbCmd := &cobra.Command{
-		Use:   "gdb",
-		Short: "Manage Global Database",
-	}
-	gdbCmd.AddCommand(manage.NewCmdGdbList(f))
-	platformCmd.AddCommand(gdbCmd)
+	platformCmd.AddCommand(db.NewCmdDB(f))
 	cfg, _ := config.LoadConfig()
 	if cfg == nil || !cfg.Quickon.DevOps {
 		platformCmd.AddCommand(manage.NewResetPassword(f))

@@ -47,7 +47,7 @@ func domainClean(f factory.Factory) *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			cfg, _ := config.LoadConfig()
 			if cfg != nil {
-				if !kutil.IsLegalDomain(cfg.Domain) {
+				if !kutil.IsLegalDomain(cfg.Domain) || cfg.Quickon.Domain.Type != "api" {
 					return
 				}
 			}

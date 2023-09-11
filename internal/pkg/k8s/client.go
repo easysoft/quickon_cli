@@ -692,6 +692,10 @@ func (c *Client) ListQuchengDBSvc(ctx context.Context, namespace string, opts me
 	return c.QClient.QuchengV1beta1().DbServices(namespace).List(ctx, opts)
 }
 
+func (c *Client) ListQuchengDB(ctx context.Context, namespace string, opts metav1.ListOptions) (*quchengv1beta1.DbList, error) {
+	return c.QClient.QuchengV1beta1().Dbs(namespace).List(ctx, opts)
+}
+
 func (c *Client) GetSecretKeyBySelector(ctx context.Context, namespace string, secretSelector *corev1.SecretKeySelector) (string, error) {
 	secret, err := c.GetSecret(ctx, namespace, secretSelector.Name, metav1.GetOptions{})
 	if err != nil {

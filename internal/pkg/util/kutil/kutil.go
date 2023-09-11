@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/ergoapi/util/exstr"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/ztime"
@@ -65,4 +66,22 @@ func SplitDomain(domain string) (string, string) {
 		}
 	}
 	return domain, common.ValidDomainSuffix[0]
+}
+
+func GetConsoleURL(cfg *config.Config) string {
+	domain := cfg.Domain
+	if len(domain) > 0 {
+		prekey := "console"
+		if cfg.Quickon.DevOps {
+			prekey = "zentao"
+		}
+		if !IsLegalDomain(cfg.Domain) || cfg.Quickon.Domain.Type != "api" {
+			domain = fmt.Sprintf("http://%s.%s", prekey, cfg.Domain)
+		} else {
+			domain = fmt.Sprintf("https://%s", cfg.Domain)
+		}
+	} else {
+		domain = fmt.Sprintf("http://%s:32379", cfg.Cluster.InitNode)
+	}
+	return domain
 }

@@ -18,7 +18,6 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/easysoft/qcadmin/internal/pkg/util/output"
 	"github.com/ergoapi/util/color"
-	"github.com/ergoapi/util/exnet"
 )
 
 type MapCount map[string]int
@@ -116,26 +115,7 @@ func (s *Status) Format() error {
 			return output.EncodeText(os.Stdout, buf.Bytes())
 		}
 		cfg, _ := config.LoadConfig()
-		domain := ""
-		loginIP := exnet.LocalIPs()[0]
-		if cfg != nil {
-			domain = cfg.Domain
-		}
-		consoleURL := ""
-		if len(domain) > 0 {
-			// TODO 优化域名显示结果
-			if cfg.Quickon.Domain.Type != "api" || !kutil.IsLegalDomain(domain) {
-				if cfg.Quickon.DevOps {
-					consoleURL = fmt.Sprintf("http://zentao.%s", domain)
-				} else {
-					consoleURL = fmt.Sprintf("http://console.%s", domain)
-				}
-			} else {
-				consoleURL = fmt.Sprintf("http://%s", domain)
-			}
-		} else {
-			consoleURL = fmt.Sprintf("http://%s:32379", loginIP)
-		}
+		consoleURL := kutil.GetConsoleURL(cfg)
 		fmt.Fprintf(w, "  namespace:\t%s\n", color.SBlue(common.GetDefaultSystemNamespace(true)))
 		if cfg.Quickon.DevOps {
 			fmt.Fprintf(w, "  console:      %s\n", color.SGreen(consoleURL))
