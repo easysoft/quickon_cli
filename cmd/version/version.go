@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"github.com/easysoft/qcadmin/internal/app/config"
+	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/github"
 
 	gv "github.com/Masterminds/semver/v3"
@@ -196,16 +197,18 @@ func ShowVersion(log logpkg.Logger) {
 		}
 	}
 
-	cfg, _ := config.LoadConfig()
-	if cfg != nil {
-		vd.Server.ServerType = cfg.Quickon.Type
-		if cfg.Quickon.DevOps {
-			vd.Server.ServerType = common.QuickonType(fmt.Sprintf("devops.%s", vd.Server.ServerType))
-		}
+	if file.CheckFileExists(common.GetCustomConfig(common.InitFileName)) {
+		cfg, _ := config.LoadConfig()
+		if cfg != nil {
+			vd.Server.ServerType = cfg.Quickon.Type
+			if cfg.Quickon.DevOps {
+				vd.Server.ServerType = common.QuickonType(fmt.Sprintf("devops.%s", vd.Server.ServerType))
+			}
 
-		qv, err := upgrade.QuchengVersion(cfg.Quickon.DevOps)
-		if err == nil {
-			vd.Server.Components = &qv
+			qv, err := upgrade.QuchengVersion(cfg.Quickon.DevOps)
+			if err == nil {
+				vd.Server.Components = &qv
+			}
 		}
 	}
 	if err := prettyPrintVersion(vd, tmpl); err != nil {
