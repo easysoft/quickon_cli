@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.0.4 (2023-09-12)
+
+ * [0dc1d1e](https://github.com/easysoft/quickon_cli/commit/0dc1d1e7f1d59eda579cb474bf9066be5c5f2b0f) refactor(clean): update clean message
+ * [d00d95a](https://github.com/easysoft/quickon_cli/commit/d00d95a37b5c853166187733f4c9672484bbbdd7) build(deps): bump goreleaser/goreleaser-action from 4 to 5
+ * [528716f](https://github.com/easysoft/quickon_cli/commit/528716f1bf2cf34d378539ebc14ee9fd977870d6) fix(docs): fix devops docs url
+ * [1a4a888](https://github.com/easysoft/quickon_cli/commit/1a4a88814e04520c513478b26c0dad3d13d25317) fix(db): fix db list
+ * [7a3b86d](https://github.com/easysoft/quickon_cli/commit/7a3b86d640352708c44683d74ed36ac587156f09) build(deps): bump crazy-max/ghaction-upx from 2 to 3
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.0.3 (2023-09-08)
 
  * [b3b29b0](https://github.com/easysoft/quickon_cli/commit/b3b29b04a7ea2f4a1f0ad694300546f5400b49d8) fix(typo): fix paas typo
