@@ -10,7 +10,7 @@ vars:
   BUILD_DIR: $(pwd)/_output
   BIN_DIR: $(pwd)/bin
   BUILD_RELEASE: v$(cat VERSION || echo "0.0.1")
-  BUILD_DATE: $(date +%Y%m%d)
+  BUILD_DATE: $(date +%Y%m%d%H)
   GIT_BRANCH: $(git branch -r --contains | head -1 | sed -E -e "s%(HEAD ->|origin|upstream)/?%%g" | xargs)
   GIT_COMMIT: $(git rev-parse --short HEAD || echo "abcdefgh")
   LOCAL_OS: $(go version | awk '{print $NF}')

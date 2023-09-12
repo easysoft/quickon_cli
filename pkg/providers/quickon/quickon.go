@@ -89,14 +89,14 @@ func (q *Quickon) Install() error {
 	if err := q.MetaData.Init(); err != nil {
 		return errors.Errorf("init quickon data error: %v", err)
 	}
-	return qcexec.CommandRun(os.Args[0], "quickon", "app", "install", "--name", q.MetaData.App, "--api-useip", fmt.Sprintf("--debug=%v", q.MetaData.Log.GetLevel() == logrus.DebugLevel))
+	return qcexec.CommandRun(os.Args[0], "platform", "app", "install", "--name", q.MetaData.App, "--api-useip", fmt.Sprintf("--debug=%v", q.MetaData.Log.GetLevel() == logrus.DebugLevel))
 }
 
 func (q *Quickon) Show() {
 	if len(q.MetaData.IP) <= 0 {
 		q.MetaData.IP = exnet.LocalIPs()[0]
 	}
-	resetPassArgs := []string{"quickon", "reset-password", "--password", q.MetaData.ConsolePassword}
+	resetPassArgs := []string{"platform", "reset-password", "--password", q.MetaData.ConsolePassword}
 	qcexec.CommandRun(os.Args[0], resetPassArgs...)
 	cfg, _ := config.LoadConfig()
 	cfg.ConsolePassword = q.MetaData.ConsolePassword

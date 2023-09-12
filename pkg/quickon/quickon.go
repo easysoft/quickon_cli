@@ -101,7 +101,7 @@ func (m *Meta) checkIngress() {
 	if defaultClass == nil {
 		m.Log.Infof("not found default ingress class, will install nginx ingress")
 		m.Log.Debug("start install default ingress: nginx-ingress-controller")
-		if err := qcexec.CommandRun(os.Args[0], "quickon", "plugins", "enable", "ingress"); err != nil {
+		if err := qcexec.CommandRun(os.Args[0], "platform", "plugins", "enable", "ingress"); err != nil {
 			m.Log.Errorf("install ingress failed, reason: %v", err)
 		} else {
 			m.Log.Done("install ingress: cne-ingress success")
@@ -160,7 +160,7 @@ func (m *Meta) initNS() error {
 			}
 		}
 	}
-	m.Log.Donef("init quickon default namespace success.")
+	m.Log.Donef("init quickon default namespace success")
 	return nil
 }
 
@@ -214,15 +214,10 @@ func (m *Meta) Init() error {
 	}
 	installVersion := common.GetVersion(m.DevopsMode, m.Type, m.Version)
 	m.Log.Infof("devops: %v, type: %s, version: %s(%s), channel: %s", m.DevopsMode, m.Type, m.Version, installVersion, common.GetChannel(m.Version))
-	if m.DevopsMode {
-		// TODO: 获取zentao devops chart version
-		m.Log.Debugf("start init zentao devops")
-		cfg.Quickon.Type = common.QuickonType(m.Type)
-		cfg.Quickon.DevOps = true
-	} else {
-		m.Log.Debugf("start init quickon")
-		cfg.Quickon.Type = common.QuickonType(m.Type)
-	}
+	m.Log.Debugf("start init %s", common.GetInstallType(m.DevopsMode))
+	cfg.Quickon.Type = common.QuickonType(m.Type)
+	cfg.Quickon.DevOps = m.DevopsMode
+
 	if m.Domain == "" {
 		err := retry.Retry(time.Second*1, 3, func() (bool, error) {
 			domain, _, err := m.genSuffixHTTPHost(m.IP)
@@ -464,7 +459,7 @@ func (m *Meta) readyQuickON(ctx context.Context) error {
 	}
 	m.Log.StopWait()
 	if status {
-		m.Log.Donef("quickon ready, cost: %v", time.Since(time.Unix(t1, 0)))
+		m.Log.Donef("%s ready, cost: %v", common.GetInstallType(m.DevopsMode), time.Since(time.Unix(t1, 0)))
 	}
 	return nil
 }
@@ -491,7 +486,7 @@ func (m *Meta) genSuffixHTTPHost(ip string) (domain, tls string, err error) {
 }
 
 func (m *Meta) UnInstall() error {
-	m.Log.Warnf("start clean quickon.")
+	m.Log.Warnf("start clean platform")
 	cfg, _ := config.LoadConfig()
 	// 清理helm安装应用
 	m.Log.Info("start uninstall cne custom tools")
@@ -508,12 +503,12 @@ func (m *Meta) UnInstall() error {
 	} else {
 		m.Log.Done("uninstall cne-operator success")
 	}
-	m.Log.Info("start uninstall cne quickon")
+	m.Log.Info("start uninstall platform")
 	quickonCleanArgs := []string{"experimental", "helm", "uninstall", "--name", common.DefaultQuchengName, "--namespace", common.GetDefaultSystemNamespace(true)}
 	if cleanStd, err := qcexec.Command(os.Args[0], quickonCleanArgs...).CombinedOutput(); err != nil {
-		m.Log.Warnf("uninstall quickon err: %v, std: %s", err, string(cleanStd))
+		m.Log.Warnf("uninstall platform err: %v, std: %s", err, string(cleanStd))
 	} else {
-		m.Log.Done("uninstall quickon success")
+		m.Log.Done("uninstall platform success")
 	}
 	m.Log.Info("start uninstall helm repo")
 	repoCleanArgs := []string{"experimental", "helm", "repo-del"}

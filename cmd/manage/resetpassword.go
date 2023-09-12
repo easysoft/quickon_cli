@@ -110,7 +110,7 @@ func NewResetPassword(f factory.Factory) *cobra.Command {
 			}
 			cfg.ConsolePassword = password
 			cfg.SaveConfig()
-			log.Donef("gen admin %s password %s success.", color.SGreen(result.Data.Account), color.SGreen(password))
+			log.Donef("gen admin %s password %s success", color.SGreen(result.Data.Account), color.SGreen(password))
 		},
 	}
 	rp.Flags().StringVarP(&password, "password", "p", "", "admin password")

@@ -209,3 +209,11 @@ func GetDefaultNFSStoragePath(dir string) string {
 	}
 	return fmt.Sprintf("%s/storage/nfs", dir)
 }
+
+// GetInstallType get install type
+func GetInstallType(devops bool) string {
+	if devops == true {
+		return "devops"
+	}
+	return "quickon"
+}

@@ -85,7 +85,7 @@ func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 				log.Errorf("install app %s failed, reason: %s", name, result.Message)
 				return errors.Errorf("install app %s failed, reason: %s", name, result.Message)
 			}
-			log.Donef("app %s install success.", name)
+			log.Donef("app %s install success", name)
 			log.Infof("please wait, the app is starting.")
 			hc, err := helm.NewClient(&helm.Config{Namespace: common.DefaultAppNamespace})
 			if err != nil {
