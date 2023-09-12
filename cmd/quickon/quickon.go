@@ -84,17 +84,21 @@ func UninstallCommand(f factory.Factory) *cobra.Command {
 	quickonClient := quickon.New(f)
 	uninstall := &cobra.Command{
 		Use:     "uninstall",
-		Short:   "uninstall quickon(devops)",
+		Short:   "uninstall platform",
 		Aliases: []string{"clean"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := quickonClient.GetKubeClient(); err != nil {
 				return err
 			}
-			status, _ := confirm.Confirm("Are you sure to uninstall quickon(devops)")
+			status, _ := confirm.Confirm("Are you sure to uninstall platform")
 			if status {
-				return quickonClient.UnInstall()
+				if err := quickonClient.UnInstall(); err != nil {
+					return err
+				}
+				log.Done("uninstall platform success")
+				return nil
 			}
-			log.Donef("cancel uninstall quickon(devops)")
+			log.Donef("cancel uninstall platform")
 			return nil
 		},
 	}

@@ -29,12 +29,11 @@ func newCmdUninstall(f factory.Factory) *cobra.Command {
 		Aliases: []string{"un", "clean"},
 	}
 	uninstallCmd.Run = func(cmd *cobra.Command, args []string) {
-		log.Debugf("start uninstall quickon")
-		if err := qcexec.CommandRun(globalToolPath, "quickon", "uninstall", fmt.Sprintf("--debug=%v", globalFlags.Debug)); err != nil {
-			log.Errorf("uninstall quickon failed, reason: %v", err)
+		log.Debugf("start uninstall platform")
+		if err := qcexec.CommandRun(globalToolPath, "platform", "uninstall", fmt.Sprintf("--debug=%v", globalFlags.Debug)); err != nil {
+			log.Errorf("uninstall platform failed, reason: %v", err)
 			return
 		}
-		log.Done("uninstall quickon success")
 		if cleanCluster {
 			// TODO 检查集群是否是quickon安装的
 			log.Debugf("start uninstall cluster")
@@ -42,7 +41,6 @@ func newCmdUninstall(f factory.Factory) *cobra.Command {
 				log.Errorf("uninstall cluster failed, reason: %v", err)
 				return
 			}
-			log.Donef("uninstall cluster success")
 		}
 		log.Donef("uninstall success")
 	}

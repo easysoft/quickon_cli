@@ -116,7 +116,11 @@ func CleanCommand(f factory.Factory) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			status, _ := confirm.Confirm("Are you sure to clean cluster")
 			if status {
-				return myCluster.Clean()
+				if err := myCluster.Clean(); err != nil {
+					return err
+				}
+				log.Donef("uninstall cluster success")
+				return nil
 			}
 			log.Donef("cancel clean cluster")
 			return nil
