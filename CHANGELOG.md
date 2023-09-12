@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.0.5 (2023-09-12)
+
+ * [b1cf326](https://github.com/easysoft/quickon_cli/commit/b1cf3261251df81945eae1c20c5d77e076a9412f) fix(version): fix version show
+
+### Contributors
+
+ * ysicing
+
 ## v3.0.4 (2023-09-12)
 
  * [0dc1d1e](https://github.com/easysoft/quickon_cli/commit/0dc1d1e7f1d59eda579cb474bf9066be5c5f2b0f) refactor(clean): update clean message

@@ -6,7 +6,7 @@ class Qcadmin < Formula
     on_macos do
       if Hardware::CPU.arm?
         url "https://github.com/easysoft/quickon_cli/releases/download/v#{version}/qcadmin_darwin_arm64"
-        sha256 "82c4857a19defb6b74bebb9f52df782aa64563c348af2762a413472e288763db"
+        sha256 "c85fcd65ccbf00f7cddbd6d9d69af635329de28b059af6d44ecc4c034a65fab5"
 
         def install
             bin.install "qcadmin_darwin_arm64" => "qcadmin"
@@ -15,7 +15,7 @@ class Qcadmin < Formula
 
       if Hardware::CPU.intel?
         url "https://github.com/easysoft/quickon_cli/releases/download/v#{version}/qcadmin_darwin_amd64"
-        sha256 "0351a741601825fbff7b9f25027c0c88049baa2e4510383a0054624b3052ff0e"
+        sha256 "6a4750458f0a09ba7e029af7fd70df62738a7614a7dea3596ff42c72919521f3"
 
         def install
             bin.install "qcadmin_darwin_amd64" => "qcadmin"
@@ -26,7 +26,7 @@ class Qcadmin < Formula
     on_linux do
       if Hardware::CPU.intel?
         url "https://github.com/easysoft/quickon_cli/releases/download/v#{version}/qcadmin_linux_amd64"
-        sha256 "e98a1a649bcb80342f2b88be7a71a5604c8f6a503fe4b3d875f9594cc3662046"
+        sha256 "1a88145365c1a30958908000c86403d4b889643190746c7bf4cb6a444d027db7"
 
         def install
             bin.install "qcadmin_linux_amd64" => "qcadmin"
@@ -35,7 +35,7 @@ class Qcadmin < Formula
 
       if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
         url "https://github.com/easysoft/quickon_cli/releases/download/v#{version}/qcadmin_linux_arm64"
-        sha256 "7ee337b4d3d7bbdd8a5082de234d7491f0bcabc7b95e5bf635475711687921c0"
+        sha256 "b98086fb4e03d22555c2b894f392c277147a096cf3733ed6725346f12788105f"
 
         def install
             bin.install "qcadmin_linux_arm64" => "qcadmin"
