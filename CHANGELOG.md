@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.0.6 (2023-09-14)
+
+ * [7c836bc](https://github.com/easysoft/quickon_cli/commit/7c836bcbba76979ad32eb0ecaa9b706d59684687) fix(nfs): fix nfs install
+
+### Contributors
+
+ * ysicing
+
 ## v3.0.5 (2023-09-12)
 
  * [1737fcd](https://github.com/easysoft/quickon_cli/commit/1737fcd4ba9c42b044458ed4c4fbd8e8ea558767) style(quickon): fmt quickon sub
