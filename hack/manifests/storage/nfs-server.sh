@@ -3,16 +3,16 @@
 if type apt >/dev/null 2>&1; then
   apt update
   apt install -y nfs-common nfs-kernel-server
-  systemctl enable rpcbind --now
-  systemctl enable nfs-server --now
 elif type yum >/dev/null 2>&1; then
+  yum makecache
   yum install -y nfs-utils
-  systemctl enable rpcbind --now
-  systemctl enable nfs --now
 else
   echo "Neither apt-get nor yum found" >&2
   exit 1
 fi
+
+systemctl enable rpcbind --now
+systemctl enable nfs-server --now
 
 [ -f "/etc/exports" ] && cp -a /etc/exports /etc/exports.bak
 
