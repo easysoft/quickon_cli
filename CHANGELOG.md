@@ -1,5 +1,15 @@
 # Changelog
 
+## v3.0.7 (2023-09-21)
+
+ * [f43c01e](https://github.com/easysoft/quickon_cli/commit/f43c01eabbb1dd157851358e9bd714a1e791ff4b) feat(upgrade): fix upgrade
+ * [3a34189](https://github.com/easysoft/quickon_cli/commit/3a34189b2eca830e9aeba30a7cba026981ca09c3) build(deps): bump codecov/codecov-action from 3 to 4
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.0.6 (2023-09-14)
 
  * [7c836bc](https://github.com/easysoft/quickon_cli/commit/7c836bcbba76979ad32eb0ecaa9b706d59684687) fix(nfs): fix nfs install
