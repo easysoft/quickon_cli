@@ -20,15 +20,20 @@ type Option struct {
 	log     log.Logger
 }
 
-func NewUpgradeQucheng(f factory.Factory) *cobra.Command {
+func NewUpgradePlatform(f factory.Factory) *cobra.Command {
 	upcmd := &Option{
 		log: f.GetLog(),
 	}
 	up := &cobra.Command{
-		Use:     "quickon",
-		Aliases: []string{"qc", "qucheng"},
-		Short:   "Upgrades the QuCheng to the newest version",
+		Use:     "platform",
+		Aliases: []string{"pt"},
+		Short:   "upgrade platform to the newest version",
 		Args:    cobra.NoArgs,
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			// 检查升级前的环境
+			upcmd.log.Donef("check upgrade environment...")
+			return nil
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return upcmd.Run()
 		},

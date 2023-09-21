@@ -9,6 +9,7 @@ package upgrade
 import (
 	"os"
 
+	"github.com/easysoft/qcadmin/common"
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/sirupsen/logrus"
@@ -20,10 +21,9 @@ func NewUpgradeOperator(f factory.Factory) *cobra.Command {
 		log: f.GetLog(),
 	}
 	upq := &cobra.Command{
-		Use:     "operator",
-		Aliases: []string{"cne-operator"},
-		Short:   "upgrade operator to the newest version",
-		Args:    cobra.NoArgs,
+		Use:   "operator",
+		Short: "upgrade operator to the newest version",
+		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			up.DoOperator()
 		},
@@ -32,12 +32,13 @@ func NewUpgradeOperator(f factory.Factory) *cobra.Command {
 }
 
 func (up option) DoOperator() {
-	args := []string{"platform", "plugins", "upgrade", "cne-operator"}
+	args := []string{"exp", "helm", "upgrade", "--name", common.DefaultCneOperatorName, "--chart", common.DefaultCneOperatorName, "--repo", common.DefaultHelmRepoName, "-n", common.GetDefaultSystemNamespace(true)}
 	if up.log.GetLevel() == logrus.DebugLevel {
 		args = append(args, "--debug")
 	}
 	if err := qcexec.CommandRun(os.Args[0], args...); err != nil {
-		up.log.Errorf("upgrade plugin cne-operator err: %v", err)
+		up.log.Errorf("upgrade cne-operator failed, reason: %v", err)
 		return
 	}
+	up.log.Done("upgrade cne-operator success")
 }

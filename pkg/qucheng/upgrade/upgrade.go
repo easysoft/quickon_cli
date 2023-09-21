@@ -9,20 +9,14 @@ package upgrade
 import (
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
-	suffixdomain "github.com/easysoft/qcadmin/pkg/qucheng/domain"
 	"github.com/ergoapi/util/color"
 
 	"github.com/cockroachdb/errors"
-	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
-	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
-	"github.com/ergoapi/util/exid"
-	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/version"
 )
 
@@ -111,52 +105,14 @@ func Upgrade(flagVersion string, log log.Logger) error {
 	for _, cv := range qv.Components {
 		if cv.CanUpgrade {
 			defaultValue, _ := helmClient.GetValues(cv.Name)
-			if cv.Name == "qucheng" || cv.Name == "quickon" {
-				cfg, _ := config.LoadConfig()
-				domain := cfg.Domain
-				if kutil.IsLegalDomain(domain) {
-					log.Infof("load %s tls cert", domain)
-					defaultTLS := fmt.Sprintf("%s/tls-haogs-cn.yaml", common.GetDefaultCacheDir())
-					if !file.CheckFileExists(defaultTLS) {
-						suffixdomain.UpgradeTLSDDomain("127.0.0.1", exid.GenUUID(), domain)
-						log.StartWait(fmt.Sprintf("start issuing domain %s certificate, may take 3-5min", domain))
-						waittls := time.Now()
-						for {
-							if _, err := os.Stat(defaultTLS); err == nil {
-								log.StopWait()
-								log.Done("download tls cert success")
-								if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.GetDefaultSystemNamespace(true), "--kubeconfig", common.GetKubeConfig()).Run(); err != nil {
-									log.Warnf("load default tls cert failed, reason: %v", err)
-								} else {
-									log.Done("load default tls cert success")
-								}
-								qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", "default", "--kubeconfig", common.GetKubeConfig()).Run()
-								args := []string{"ingress.tls.enabled=true", "ingress.tls.secretName=tls-haogs-cn"}
-								values, _ := helm.MergeValues(args)
-								defaultValue = helm.MergeMaps(defaultValue, values)
-								break
-							}
-							_, mainDomain := kutil.SplitDomain(domain)
-							qcexec.Command(os.Args[0], "experimental", "tools", "wget", "-t", fmt.Sprintf("https://pkg.qucheng.com/ssl/%s/%s/tls.yaml", mainDomain, domain), "-d", defaultTLS).Run()
-							log.Debug("wait for tls cert ready...")
-							time.Sleep(time.Second * 5)
-							trywaitsc := time.Now()
-							if trywaitsc.Sub(waittls) > time.Minute*3 {
-								// TODO  timeout
-								log.Debugf("wait tls cert ready, timeout: %v", trywaitsc.Sub(waittls).Seconds())
-								break
-							}
-						}
-					}
-				}
-			}
-
 			if _, err := helmClient.Upgrade(cv.Name, common.DefaultHelmRepoName, cv.Name, "", defaultValue); err != nil {
 				log.Warnf("upgrade %s failed, reason: %v", cv.Name, err)
 			} else {
 				log.Donef("upgrade %s success", cv.Name)
 				count++
 			}
+		} else {
+			log.Infof("%s current version is the latest", cv.Name)
 		}
 	}
 	if count == 0 {
