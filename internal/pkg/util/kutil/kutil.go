@@ -38,7 +38,7 @@ func NeedCacheHelmFile() bool {
 		data, _ := file.ReadAll(cachefile)
 		old := time.Unix(exstr.Str2Int64(string(data)), 0)
 		now := time.Now()
-		if now.Sub(old) > 10*time.Minute {
+		if now.Sub(old) > 2*time.Minute {
 			os.Remove(cachefile)
 			file.WriteFile(cachefile, ztime.NowUnixString(), true)
 			return true

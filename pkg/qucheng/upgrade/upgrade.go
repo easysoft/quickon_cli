@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/ergoapi/util/color"
@@ -105,6 +106,12 @@ func Upgrade(flagVersion string, log log.Logger) error {
 	for _, cv := range qv.Components {
 		if cv.CanUpgrade {
 			defaultValue, _ := helmClient.GetValues(cv.Name)
+			if devops && cv.Name == common.DefaultZentaoPaasName {
+				spew.Dump(defaultValue)
+				deploy := defaultValue["deploy"]
+				product := deploy.(map[string]interface{})["product"]
+				log.Infof("devops mode, deploy: %v, product: %v", deploy, product)
+			}
 			if _, err := helmClient.Upgrade(cv.Name, common.DefaultHelmRepoName, cv.Name, "", defaultValue); err != nil {
 				log.Warnf("upgrade %s failed, reason: %v", cv.Name, err)
 			} else {
