@@ -8,7 +8,8 @@ require (
 	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/cheggaaa/pb/v3 v3.1.2
 	github.com/cockroachdb/errors v1.11.1
-	github.com/containerd/continuity v0.3.0
+	github.com/containerd/continuity v0.4.2
+	github.com/davecgh/go-spew v1.1.1
 	github.com/docker/docker v23.0.5+incompatible
 	github.com/easysoft/quickon-api v0.7.4
 	github.com/emirpasic/gods v1.18.1
@@ -85,7 +86,6 @@ require (
 	github.com/containerd/containerd v1.7.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.4 // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/daviddengcn/go-colortext v1.0.0 // indirect
 	github.com/docker/cli v23.0.5+incompatible // indirect
 	github.com/docker/distribution v2.8.2+incompatible // indirect
