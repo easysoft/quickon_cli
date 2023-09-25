@@ -105,6 +105,13 @@ func Upgrade(flagVersion string, log log.Logger) error {
 	for _, cv := range qv.Components {
 		if cv.CanUpgrade {
 			defaultValue, _ := helmClient.GetValues(cv.Name)
+			if devops && cv.Name == common.DefaultZentaoPaasName {
+				deploy := defaultValue["deploy"]
+				product := deploy.(map[string]interface{})["product"]
+				versions := deploy.(map[string]interface{})["versions"]
+				appVersion := versions.(map[string]interface{})[product.(string)]
+				log.Infof("devops mode, product: %v, version: %v", product, appVersion)
+			}
 			if _, err := helmClient.Upgrade(cv.Name, common.DefaultHelmRepoName, cv.Name, "", defaultValue); err != nil {
 				log.Warnf("upgrade %s failed, reason: %v", cv.Name, err)
 			} else {

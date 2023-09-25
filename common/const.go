@@ -109,6 +109,7 @@ const (
 	MiuiGenerate204URL            = "https://connect.rom.miui.com/generate_204"
 	V2exGenerate204URL            = "https://captive.v2ex.co/generate_204"
 	CloudflareEdgeTraceURL        = "https://www.cloudflare.com/cdn-cgi/trace"
+	CneAPITokenHeader             = "X-Auth-Token"
 )
 
 const (

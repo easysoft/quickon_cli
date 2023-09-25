@@ -18,7 +18,7 @@ import (
 func NewCmdBackupCluster(f factory.Factory) *cobra.Command {
 	log := f.GetLog()
 	bc := &cobra.Command{
-		Use:     "backup",
+		Use:     "cluster",
 		Short:   "backup cluster",
 		Long:    "backup cluster",
 		Aliases: []string{"snapshot"},
