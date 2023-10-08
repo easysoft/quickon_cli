@@ -217,3 +217,11 @@ func GetInstallType(devops bool) string {
 	}
 	return "quickon"
 }
+
+// GetCustomLogFile 获取logfile完整路径
+func GetCustomLogFile(name string) string {
+	if name == "" {
+		name = Version
+	}
+	return GetDefaultLogDir() + "/" + name
+}
