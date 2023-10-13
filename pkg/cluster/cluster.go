@@ -529,21 +529,41 @@ func (c *Cluster) Stop() error {
 	for _, ip := range ips {
 		c.log.Debugf("stop node %s", ip)
 		wg.Add(1)
-		go c.stopNode(ip, sshClient, &wg)
+		go c.actionNode(ip, "stop", common.GetCustomScripts("hack/manifests/scripts/stopnode.sh"), sshClient, &wg)
 	}
 	wg.Wait()
 	c.log.Done("stop cluster success")
 	return nil
 }
 
-func (c *Cluster) stopNode(ip string, sshClient ssh.Interface, wg *sync.WaitGroup) {
+// StartUP 启动集群
+func (c *Cluster) StartUP() error {
+	c.log.Info("startup cluster")
+	cfg, _ := config.LoadConfig()
+	ips := cfg.GetIPs()
+	if len(ips) == 0 {
+		ips = append(ips, exnet.LocalIPs()[0])
+	}
+	sshClient := ssh.NewSSHClient(&cfg.Global.SSH, true)
+	var wg sync.WaitGroup
+	for _, ip := range ips {
+		c.log.Debugf("startup node %s", ip)
+		wg.Add(1)
+		go c.actionNode(ip, "startup", common.GetCustomScripts("hack/manifests/scripts/startupnode.sh"), sshClient, &wg)
+	}
+	wg.Wait()
+	c.log.Done("startup cluster success")
+	return nil
+}
+
+func (c *Cluster) actionNode(ip, action, script string, sshClient ssh.Interface, wg *sync.WaitGroup) {
 	defer wg.Done()
-	c.log.StartWait(fmt.Sprintf("start stop node: %s", ip))
-	err := sshClient.CmdAsync(ip, common.GetCustomScripts("hack/manifests/scripts/stopnode.sh"))
+	c.log.StartWait(fmt.Sprintf("start %s node: %s", action, ip))
+	err := sshClient.CmdAsync(ip, script)
 	c.log.StopWait()
 	if err != nil {
-		c.log.Warnf("stop node %s failed, reason: %v", ip, err)
+		c.log.Warnf("%s node %s failed, reason: %v", action, ip, err)
 		return
 	}
-	c.log.Donef("stop node %s success", ip)
+	c.log.Donef("%s node %s success", action, ip)
 }

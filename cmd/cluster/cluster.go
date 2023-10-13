@@ -159,3 +159,22 @@ func StopCommand(f factory.Factory) *cobra.Command {
 	}
 	return stop
 }
+
+func StartUPCommand(f factory.Factory) *cobra.Command {
+	myCluster := cluster.NewCluster(f)
+	log := f.GetLog()
+	stop := &cobra.Command{
+		Use:     "startup",
+		Short:   "startup cluster",
+		Version: "3.0.9",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			status, _ := confirm.Confirm("Are you sure to start cluster")
+			if status {
+				return myCluster.StartUP()
+			}
+			log.Donef("cancel start cluster")
+			return nil
+		},
+	}
+	return stop
+}
