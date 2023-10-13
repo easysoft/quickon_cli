@@ -1,5 +1,20 @@
 # Changelog
 
+## v3.0.8 (2023-10-13)
+
+ * [28a6cf0](https://github.com/easysoft/quickon_cli/commit/28a6cf0c4f193233dcefca2f573586faad0eeab7) fix(upgrade): fix upgrade
+ * [ab3aac7](https://github.com/easysoft/quickon_cli/commit/ab3aac7f47231664b3c4890320443399fb8b87e8) build(deps): bump golang.org/x/net from 0.16.0 to 0.17.0
+ * [8ff3cf4](https://github.com/easysoft/quickon_cli/commit/8ff3cf4186bb9c989ae62781bd053158ec6bfc0d) build(deps): bump github.com/miekg/dns from 1.1.55 to 1.1.56
+ * [c80a24d](https://github.com/easysoft/quickon_cli/commit/c80a24d7f86a7de7e23864b771ea9caeefcdbff2) fix(mod): update mod
+ * [ffc97be](https://github.com/easysoft/quickon_cli/commit/ffc97beb4c181021e0608a71a185bd6425fec0f6) build(deps): bump github.com/pkg/sftp from 1.13.5 to 1.13.6
+ * [9c5d30e](https://github.com/easysoft/quickon_cli/commit/9c5d30e4360baef1a88807b99a93cac03de826af) chore(action): disable coverage
+ * [c2dc8db](https://github.com/easysoft/quickon_cli/commit/c2dc8db3286dfe115c5dad8951c95583bf6725ca) feat(backup): add backup subcmd
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.0.7 (2023-09-21)
 
  * [f43c01e](https://github.com/easysoft/quickon_cli/commit/f43c01eabbb1dd157851358e9bd714a1e791ff4b) feat(upgrade): fix upgrade
