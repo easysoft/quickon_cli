@@ -109,8 +109,10 @@ func Upgrade(flagVersion string, log log.Logger) error {
 				deploy := defaultValue["deploy"]
 				product := deploy.(map[string]interface{})["product"]
 				versions := deploy.(map[string]interface{})["versions"]
-				appVersion := versions.(map[string]interface{})[product.(string)]
-				log.Infof("devops mode, product: %v, version: %v", product, appVersion)
+				appoldVersion := versions.(map[string]interface{})[product.(string)]
+				appnewVersion := fmt.Sprintf("%s%s.k8s", product, common.GetVersion(true, product.(string), ""))
+				log.Infof("devops mode, product: %v, oldversion: %v, newversion: %v", product, appoldVersion, appnewVersion)
+				defaultValue["deploy"].(map[string]interface{})["versions"].(map[string]interface{})[product.(string)] = appnewVersion
 			}
 			if _, err := helmClient.Upgrade(cv.Name, common.DefaultHelmRepoName, cv.Name, "", defaultValue); err != nil {
 				log.Warnf("upgrade %s failed, reason: %v", cv.Name, err)
