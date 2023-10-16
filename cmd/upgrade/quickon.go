@@ -17,6 +17,7 @@ import (
 // Option is a struct that defines a command call for "upgrade"
 type Option struct {
 	Version string
+	Test    bool
 	log     log.Logger
 }
 
@@ -38,6 +39,7 @@ func NewUpgradePlatform(f factory.Factory) *cobra.Command {
 			return upcmd.Run()
 		},
 	}
+	up.Flags().BoolVar(&upcmd.Test, "t", false, "upgrade test mode, only for test")
 	return up
 }
 
@@ -46,7 +48,7 @@ func (cmd *Option) Run() error {
 	// Run the upgrade command
 	cmd.log.Info("check update...")
 	cmd.log.Debugf("gen new version manifest")
-	err := upgrade.Upgrade(cmd.Version, cmd.log)
+	err := upgrade.Upgrade(cmd.Version, cmd.Test, cmd.log)
 	if err != nil {
 		return errors.Errorf("couldn't upgrade: %v", err)
 	}

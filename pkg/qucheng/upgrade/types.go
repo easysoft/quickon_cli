@@ -6,6 +6,8 @@
 
 package upgrade
 
+import "github.com/easysoft/qcadmin/common"
+
 type Version struct {
 	Components []ComponentVersion `json:",omitempty"`
 }
@@ -21,4 +23,33 @@ type ComponentVersion struct {
 type CVersion struct {
 	AppVersion   string
 	ChartVersion string
+}
+
+type ZtUpgrade struct {
+	Name    string
+	Key     common.QuickonType
+	Version string
+}
+
+var selectItems = []ZtUpgrade{
+	{
+		Name:    "开源版",
+		Key:     common.ZenTaoOSSType,
+		Version: common.DefaultZentaoDevOPSOSSVersion,
+	},
+	{
+		Name:    "企业版",
+		Key:     common.ZenTaoBizType,
+		Version: common.DefaultZentaoDevOPSBizVersion,
+	},
+	{
+		Name:    "旗舰版",
+		Key:     common.ZenTaoMaxType,
+		Version: common.DefaultZentaoDevOPSMaxVersion,
+	},
+	{
+		Name:    "IPD",
+		Key:     common.ZenTaoIPDType,
+		Version: common.DefaultZentaoDevOPSIPDVersion,
+	},
 }

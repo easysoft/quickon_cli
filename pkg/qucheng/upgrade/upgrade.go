@@ -13,6 +13,8 @@ import (
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/ergoapi/util/color"
+	"github.com/ergoapi/util/confirm"
+	"github.com/manifoldco/promptui"
 
 	"github.com/cockroachdb/errors"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
@@ -56,7 +58,7 @@ func (opt *Option) Fetch(ns, name string) (ComponentVersion, error) {
 	if cmv.CanUpgrade {
 		cmv.UpgradeMessage = fmt.Sprintf("Now you can use %s to upgrade component %s to the latest version", color.SGreen("%s upgrade %s", os.Args[0], name), name)
 	}
-	opt.log.Debugf("local: %s(%s), remote : %s(%s), upgrade: %v", localcv, localav, remotecv, remoteav, cmv.CanUpgrade)
+	opt.log.Debugf("local: %s(%s), remote: %s(%s), upgrade: %v", localcv, localav, remotecv, remoteav, cmv.CanUpgrade)
 	return cmv, err
 }
 
@@ -86,7 +88,7 @@ func (opt *Option) fetchCR(ns, name string) (string, string, error) {
 	return last.Chart.Version, last.Chart.AppVersion, nil
 }
 
-func Upgrade(flagVersion string, log log.Logger) error {
+func Upgrade(flagVersion string, testmode bool, log log.Logger) error {
 	helmClient, _ := helm.NewClient(&helm.Config{Namespace: common.GetDefaultSystemNamespace(true)})
 	if err := helmClient.UpdateRepo(); err != nil {
 		log.Errorf("update repo failed, reason: %v", err)
@@ -110,9 +112,45 @@ func Upgrade(flagVersion string, log log.Logger) error {
 				product := deploy.(map[string]interface{})["product"]
 				versions := deploy.(map[string]interface{})["versions"]
 				appoldVersion := versions.(map[string]interface{})[product.(string)]
-				appnewVersion := fmt.Sprintf("%s%s.k8s", product, common.GetVersion(true, product.(string), ""))
-				log.Infof("devops mode, product: %v, oldversion: %v, newversion: %v", product, appoldVersion, appnewVersion)
+				switch product {
+				case common.ZenTaoBizType.String():
+					selectItems = selectItems[1:]
+				case common.ZenTaoMaxType.String():
+					selectItems = selectItems[2:]
+				case common.ZenTaoIPDType.String():
+					selectItems = selectItems[3:]
+				}
+				log.Infof("current version: %v(%v)", product, appoldVersion)
+				selectApp := promptui.Select{
+					Label: "select upgrade version",
+					Items: selectItems,
+					Templates: &promptui.SelectTemplates{
+						Label:    "{{ . }}?",
+						Active:   "\U0001F449 {{ .Name | cyan }} {{ .Version }}",
+						Inactive: "  {{ .Name | red| cyan }} {{ .Version  }}",
+						Selected: "\U0001F389 {{ .Name | green | cyan }} {{ .Version }}",
+					},
+					Size: 5,
+				}
+				it, _, _ := selectApp.Run()
+				appnewVersion := fmt.Sprintf("%s%s.k8s", selectItems[it].Key.String(), common.GetVersion(true, selectItems[it].Key.String(), ""))
+				log.Debugf("devops mode, product: %v, oldversion: %v, newversion: %v", product, appoldVersion, appnewVersion)
 				defaultValue["deploy"].(map[string]interface{})["versions"].(map[string]interface{})[product.(string)] = appnewVersion
+				defaultValue["deploy"].(map[string]interface{})["product"] = selectItems[it].Key.String()
+				if selectItems[it].Key != common.ZenTaoOSSType && selectItems[it].Key.String() != product.(string) {
+					log.Warnf("切换版本升级(如开源版升级到企业版), 可能导致因版本授权问题无法正常使用, 如有问题请联系技术支持!")
+				}
+				msg := fmt.Sprintf("Are you sure to upgrade from %v(%v) to %v(%v)", product, appoldVersion, selectItems[it].Key.String(), appnewVersion)
+				status, _ := confirm.Confirm(msg)
+				if !status {
+					log.Warnf("upgrade %s canceled", cv.Name)
+					return nil
+				}
+				if testmode {
+					defaultValue["image"] = map[string]interface{}{
+						"repository": "test/zentao",
+					}
+				}
 			}
 			if _, err := helmClient.Upgrade(cv.Name, common.DefaultHelmRepoName, cv.Name, "", defaultValue); err != nil {
 				log.Warnf("upgrade %s failed, reason: %v", cv.Name, err)
