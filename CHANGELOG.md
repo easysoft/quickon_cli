@@ -1,5 +1,16 @@
 # Changelog
 
+## v3.0.9 (2023-10-16)
+
+ * [85437ba](https://github.com/easysoft/quickon_cli/commit/85437baccc5aae90f2856a67f6d1ebac6ec970ef) fix(upgrade): fix custom upgrade
+ * [fe2d57e](https://github.com/easysoft/quickon_cli/commit/fe2d57ef4149ace96d24577465f7fbde9b13fb57) build(deps): bump github.com/containerd/continuity from 0.3.0 to 0.4.2
+ * [d1ea04b](https://github.com/easysoft/quickon_cli/commit/d1ea04b269ca4930cc867b35dc762ffc695e526e) feat(cluster): support startup cluster
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.0.8 (2023-10-13)
 
  * [28a6cf0](https://github.com/easysoft/quickon_cli/commit/28a6cf0c4f193233dcefca2f573586faad0eeab7) fix(upgrade): fix upgrade
