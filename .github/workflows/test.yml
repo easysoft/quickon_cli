@@ -35,6 +35,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
@@ -60,3 +64,19 @@ jobs:
         run: |
           ./_output/qcadmin_linux_amd64 version
           sudo ./_output/qcadmin_linux_amd64 init --domain github.local --debug
+      - name: test qcadmin
+        run: |
+          task docker-build
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ttl.sh/easysoft/qcadmin
+          format: 'sarif'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH,MEDIUM'
+          output: 'trivy-results.sarif'
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'

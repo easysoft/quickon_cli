@@ -94,9 +94,7 @@ func (c *Client) GetPodsByNodes(nodeName string) (pods []corev1.Pod, err error) 
 	if err != nil {
 		return pods, err
 	}
-	for _, pod := range podList.Items {
-		pods = append(pods, pod)
-	}
+	pods = append(pods, podList.Items...)
 	return pods, nil
 }
 

@@ -1,6 +1,6 @@
 run:
   timeout: 5m
-  skip-dirs-use-default: false
+  skip-dirs-use-default: true
   skip-dirs:
     - hack/bin
     - testdata$
@@ -11,7 +11,6 @@ run:
   - ".*test.go"
   modules-download-mode: readonly
   allow-parallel-runners: true
-  go: '1.21'
 
 issues:
   exclude:
@@ -53,6 +52,7 @@ linters:
     - gofmt
     - goimports
     - gosec
+    # - goconst
     # - gosimple
     - govet
     - ineffassign
@@ -64,6 +64,10 @@ linters:
     - goheader
     # - lll
     - whitespace
+    - vet
+    # - errcheck
+    # - nilerr
+    # - unconvert
 
 linters-settings:
   gosimple:
@@ -110,3 +114,17 @@ linters-settings:
     rules:
       - name: unused-parameter
         disabled: true
+
+  errcheck:
+    check-type-assertions: false
+    check-blank: true
+    ignore: fmt:.*
+    exclude-functions:
+      - io.Copy(*bytes.Buffer)
+      - io.Copy(os.Stdout)
+
+# golangci.com configuration
+# https://github.com/golangci/golangci/wiki/Configuration
+service:
+  # use the fixed version to not introduce new linters unexpectedly
+  golangci-lint-version: latest

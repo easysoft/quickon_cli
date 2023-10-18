@@ -196,7 +196,7 @@ func GetCustomScripts(path string) string {
 
 // GetReleaseName get chart release name
 func GetReleaseName(devops bool) string {
-	if devops == true {
+	if devops {
 		return DefaultZentaoPaasName
 	}
 	return DefaultQuchengName
@@ -212,7 +212,7 @@ func GetDefaultNFSStoragePath(dir string) string {
 
 // GetInstallType get install type
 func GetInstallType(devops bool) string {
-	if devops == true {
+	if devops {
 		return "devops"
 	}
 	return "quickon"

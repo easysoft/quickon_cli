@@ -323,10 +323,10 @@ func (m *Meta) Init() error {
 	}
 
 	if m.OffLine {
-		helmargs = append(helmargs, "--set", fmt.Sprintf("cloud.host=http://market-cne-market-api.quickon-system.svc:8088"))
-		helmargs = append(helmargs, "--set", fmt.Sprintf("env.CNE_MARKET_API_SCHEMA=http"))
-		helmargs = append(helmargs, "--set", fmt.Sprintf("env.CNE_MARKET_API_HOST=market-cne-market-api.quickon-system.svc"))
-		helmargs = append(helmargs, "--set", fmt.Sprintf("env.CNE_MARKET_API_PORT=8088"))
+		helmargs = append(helmargs, "--set", "cloud.host=http://market-cne-market-api.quickon-system.svc:8088")
+		helmargs = append(helmargs, "--set", "env.CNE_MARKET_API_SCHEMA=http")
+		helmargs = append(helmargs, "--set", "env.CNE_MARKET_API_HOST=market-cne-market-api.quickon-system.svc")
+		helmargs = append(helmargs, "--set", "env.CNE_MARKET_API_PORT=8088")
 	}
 
 	helmargs = append(helmargs, "--set", fmt.Sprintf("ingress.host=%s", hostdomain))

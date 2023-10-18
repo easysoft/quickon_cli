@@ -122,6 +122,16 @@ tasks:
     cmds:
       - cat examples/sonar-project.properties.example | sed "s#2.0.0#${APP_VERSION}#g" | sed "s#quickon#pangu#g" > sonar-project.properties
 
+  docker-build:
+    desc: build docker image
+    cmds:
+      - docker buildx build --pull --push --platform linux/amd64 -t ttl.sh/easysoft/qcadmin .
+
+  trivy-docker:
+    desc: trivy docker image
+    cmds:
+      - trivy image --severity MEDIUM,HIGH,CRITICAL ttl.sh/easysoft/qcadmin --scanners vuln
+
   default:
     desc: default linux
     cmds:
