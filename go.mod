@@ -62,7 +62,7 @@ require (
 
 require (
 	github.com/6tail/lunar-go v1.3.5 // indirect
-	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230106234847-43070de90fa1 // indirect
+	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230811130428-ced1acdcaa24 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20210617225240-d185dfc1b5a1 // indirect
 	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/MakeNowJust/heredoc v1.0.0 // indirect
@@ -70,6 +70,7 @@ require (
 	github.com/Masterminds/sprig/v3 v3.2.3 // indirect
 	github.com/Masterminds/squirrel v1.5.4 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
+	github.com/Microsoft/hcsshim v0.11.0 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20230626094100-7e9e0395ebec // indirect
 	github.com/VividCortex/ewma v1.2.0 // indirect
 	github.com/andybalholm/brotli v1.0.5 // indirect
@@ -82,13 +83,13 @@ require (
 	github.com/cloudflare/circl v1.3.3 // indirect
 	github.com/cockroachdb/logtags v0.0.0-20230118201751-21c54148d20b // indirect
 	github.com/cockroachdb/redact v1.1.5 // indirect
-	github.com/containerd/containerd v1.7.0 // indirect
+	github.com/containerd/containerd v1.7.6 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.4 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/daviddengcn/go-colortext v1.0.0 // indirect
 	github.com/dblohm7/wingoes v0.0.0-20230821191801-fc76608aecf0 // indirect
-	github.com/docker/cli v23.0.5+incompatible // indirect
+	github.com/docker/cli v24.0.6+incompatible // indirect
 	github.com/docker/distribution v2.8.2+incompatible // indirect
 	github.com/docker/docker-credential-helpers v0.7.0 // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
@@ -169,7 +170,7 @@ require (
 	github.com/mxk/go-flowrate v0.0.0-20140419014527-cca7078d478f // indirect
 	github.com/onsi/ginkgo/v2 v2.12.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
-	github.com/opencontainers/image-spec v1.1.0-rc3 // indirect
+	github.com/opencontainers/image-spec v1.1.0-rc5 // indirect
 	github.com/otiai10/copy v1.14.0 // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
 	github.com/pkg/errors v0.9.1 // indirect
@@ -220,7 +221,7 @@ require (
 	k8s.io/component-helpers v0.28.2 // indirect
 	k8s.io/klog/v2 v2.100.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20230717233707-2695361300d9 // indirect
-	oras.land/oras-go v1.2.3 // indirect
+	oras.land/oras-go v1.2.4 // indirect
 	rsc.io/goversion v1.2.0 // indirect
 	sigs.k8s.io/controller-runtime v0.15.1 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect

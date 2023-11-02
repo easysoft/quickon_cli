@@ -356,9 +356,16 @@ func (m *Meta) Init() error {
 	}
 	m.Log.Donef("install %s success", common.GetReleaseName(m.DevopsMode))
 	if m.OffLine {
+		// install cne-market
+		m.Log.Infof("start deploy cloudapp market")
+		marketargs := []string{"experimental", "helm", "upgrade", "--name", "market", "--repo", common.DefaultHelmRepoName, "--chart", "cne-market-api", "--namespace", common.GetDefaultSystemNamespace(true)}
+		output, err := qcexec.Command(os.Args[0], marketargs...).CombinedOutput()
+		if err != nil {
+			m.Log.Warnf("upgrade install cloudapp market failed: %s", string(output))
+		}
 		// patch quickon
-		cmfileName := fmt.Sprintf("%s-%s-files", common.DefaultQuchengName, common.GetReleaseName(m.DevopsMode))
-		m.Log.Debugf("fetch quickon files from %s", cmfileName)
+		cmfileName := fmt.Sprintf("%s-files", common.GetReleaseName(m.DevopsMode))
+		m.Log.Debugf("fetch helm cm %s", cmfileName)
 		for i := 0; i < 20; i++ {
 			time.Sleep(5 * time.Second)
 			foundRepofiles, _ := m.kubeClient.GetConfigMap(ctx, common.GetDefaultSystemNamespace(true), cmfileName, metav1.GetOptions{})
@@ -382,9 +389,8 @@ repositories:
 				}
 				// 重建pod
 				pods, _ := m.kubeClient.ListPods(ctx, common.GetDefaultSystemNamespace(true), metav1.ListOptions{})
-				podName := fmt.Sprintf("%s-%s", common.DefaultQuchengName, common.GetReleaseName(m.DevopsMode))
 				for _, pod := range pods.Items {
-					if strings.HasPrefix(pod.Name, podName) {
+					if strings.HasPrefix(pod.Name, common.GetReleaseName(m.DevopsMode)) {
 						if err := m.kubeClient.DeletePod(ctx, pod.Name, common.GetDefaultSystemNamespace(true), metav1.DeleteOptions{}); err != nil {
 							m.Log.Warnf("recreate %s pods", common.GetReleaseName(m.DevopsMode))
 						}
@@ -394,13 +400,6 @@ repositories:
 			}
 		}
 
-		// install cne-market
-		m.Log.Infof("start deploy cloudapp market")
-		marketargs := []string{"experimental", "helm", "upgrade", "--name", "market", "--repo", common.DefaultHelmRepoName, "--chart", "cne-market-api", "--namespace", common.GetDefaultSystemNamespace(true)}
-		output, err := qcexec.Command(os.Args[0], marketargs...).CombinedOutput()
-		if err != nil {
-			m.Log.Warnf("upgrade install cloudapp market failed: %s", string(output))
-		}
 	}
 	m.QuickONReady()
 	initFile := common.GetCustomConfig(common.InitFileName)
