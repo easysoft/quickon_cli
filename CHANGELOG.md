@@ -1,5 +1,21 @@
 # Changelog
 
+## v3.0.10 (2023-11-06)
+
+ * [1bf5b9b](https://github.com/easysoft/quickon_cli/commit/1bf5b9b8b6a490c0bb53a324a8892a409991e808) fix(fmt): imp code fmt
+ * [f6724c2](https://github.com/easysoft/quickon_cli/commit/f6724c201864f84de347ecfd7713bf33f8ce7bed) build(deps): bump golang.org/x/sync from 0.3.0 to 0.5.0
+ * [240ab07](https://github.com/easysoft/quickon_cli/commit/240ab07b4b9bb8a1e7128f68e1cdfde135c08f82) fix(typo): fix cm typo
+ * [5c4b94e](https://github.com/easysoft/quickon_cli/commit/5c4b94ec62dbb30d11ed831c5643df1acc6b3bf9) feat(update): update
+ * [f560b4f](https://github.com/easysoft/quickon_cli/commit/f560b4f130979d5ebc8aeb7ed36c625c46e66ec7) build(deps): bump github.com/AlecAivazis/survey/v2 from 2.3.6 to 2.3.7
+ * [919f831](https://github.com/easysoft/quickon_cli/commit/919f831626211219d62d33c4a3b871e5807d61a7) build(deps): bump google.golang.org/grpc from 1.54.0 to 1.56.3
+ * [0eeaf68](https://github.com/easysoft/quickon_cli/commit/0eeaf68bf43d859384178a3bb741f3dc920143eb) build(deps): bump github.com/shirou/gopsutil/v3 from 3.23.8 to 3.23.9
+ * [452a1b1](https://github.com/easysoft/quickon_cli/commit/452a1b18465f6073bbc98897c1cd5ae0db6a04ce) feat(scan): add ci scan
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.0.9 (2023-10-16)
 
  * [85437ba](https://github.com/easysoft/quickon_cli/commit/85437baccc5aae90f2856a67f6d1ebac6ec970ef) fix(upgrade): fix custom upgrade
