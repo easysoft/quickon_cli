@@ -399,7 +399,6 @@ repositories:
 				break
 			}
 		}
-
 	}
 	m.QuickONReady()
 	initFile := common.GetCustomConfig(common.InitFileName)
