@@ -68,8 +68,7 @@ tasks:
     desc: format code
     cmds:
       - task: gencopyright
-      - task: gofmt
-      - task: golint
+      - task: lint
 
   generate:
     desc: generate code

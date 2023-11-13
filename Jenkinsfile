@@ -1,7 +1,7 @@
 pipeline {
   agent {
     kubernetes {
-      inheritFrom "code-scan xuanim"
+      inheritFrom "code-scan build-go xuanim"
     }
   }
 
@@ -9,6 +9,23 @@ pipeline {
     stage("checkout code") {
       steps {
         echo "checkout code success"
+      }
+    }
+
+    stage("build") {
+      environment {
+        GOPROXY = "https://goproxy.cn,direct"
+      }
+
+      steps {
+        container('golang') {
+          sh "sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories"
+          sh "apk --no-cache add make"
+          sh 'go mod download'
+          sh 'go install github.com/go-task/task/v3/cmd/task@latest'
+          sh 'task fmt'
+          sh 'task linux'
+        }
       }
     }
 
