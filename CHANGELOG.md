@@ -1,5 +1,14 @@
 # Changelog
 
+## v3.0.11 (2023-11-16)
+
+ * [ec87ef8](https://github.com/easysoft/quickon_cli/commit/ec87ef8aaf6f1808675119ac9b240ebc7c7fc8e3) feat(update): release new version
+ * [f3f2fd0](https://github.com/easysoft/quickon_cli/commit/f3f2fd0951aa99326ead3b54648b1d912570e82c) feat(update): update
+
+### Contributors
+
+ * ysicing
+
 ## v3.0.10 (2023-11-06)
 
  * [1bf5b9b](https://github.com/easysoft/quickon_cli/commit/1bf5b9b8b6a490c0bb53a324a8892a409991e808) fix(fmt): imp code fmt
