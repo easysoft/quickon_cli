@@ -56,7 +56,7 @@ require (
 	k8s.io/metrics v0.28.3
 	k8s.io/system-validators v1.7.0
 	k8s.io/utils v0.0.0-20230726121419-3b25d923346b
-	sigs.k8s.io/yaml v1.3.0
+	sigs.k8s.io/yaml v1.4.0
 	tailscale.com v1.52.1
 )
 
