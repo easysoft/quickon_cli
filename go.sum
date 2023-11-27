@@ -293,8 +293,8 @@ github.com/inconshreveable/go-update v0.0.0-20160112193335-8152e7eb6ccf h1:WfD7V
 github.com/inconshreveable/go-update v0.0.0-20160112193335-8152e7eb6ccf/go.mod h1:hyb9oH7vZsitZCiBt0ZvifOrB+qc8PS5IiilCIb87rg=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
-github.com/jackpal/gateway v1.0.10 h1:7g3fDo4Cd3RnTu6PzAfw6poO4Y81uNxrxFQFsBFSzJM=
-github.com/jackpal/gateway v1.0.10/go.mod h1:+uPBgIllrbkwYCAoDkGSZbjvpre/bGYAFCYIcrH+LHs=
+github.com/jackpal/gateway v1.0.13 h1:fJccMvawxx0k7S1q7Fy/SXFE0R3hMXkMuw8y9SofWAk=
+github.com/jackpal/gateway v1.0.13/go.mod h1:6c8LjW+FVESFmwxaXySkt7fU98Yv806ADS3OY6Cvh2U=
 github.com/jmoiron/sqlx v1.3.5 h1:vFFPA71p1o5gAeqtEAwLU4dnX2napprKtHr7PYIcN3g=
 github.com/jmoiron/sqlx v1.3.5/go.mod h1:nRVWtLre0KfCLJvgxzCsLVMogSvQ1zNJtpYr2Ccp0mQ=
 github.com/jonboulle/clockwork v0.2.2 h1:UOGuzwb1PwsrDAObMuhUnj0p5ULPj8V/xJ7Kx9qUBdQ=
