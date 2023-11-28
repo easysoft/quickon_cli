@@ -23,3 +23,13 @@ _output/
 bin/
 .task
 .history
+
+node_modules
+
+package-lock.json
+
+# docs site cache
+docs/.vitepress/cache
+
+# docs site build files
+docs/.vitepress/dist

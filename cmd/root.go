@@ -97,7 +97,7 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 				// Don't search for a plugin
 			default:
 				if err := excmd.HandlePluginCommand(pluginHandler, cmdPathPieces); err != nil {
-					fmt.Fprintf(os.Stdout, "Error: %v\n", err)
+					f.GetLog().Fatalf("executing plugin command: %s, failed: %v", cmdName, err)
 					os.Exit(1)
 				}
 			}
