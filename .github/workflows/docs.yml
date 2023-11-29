@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - master
+
+env:
+  TZ: Asia/Shanghai
+  GO_VERSION: '1.21'
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
