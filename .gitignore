@@ -33,3 +33,15 @@ docs/.vitepress/cache
 
 # docs site build files
 docs/.vitepress/dist
+
+# docs gen
+docs/backup
+docs/bugreport
+docs/experimental
+docs/init
+docs/status
+docs/upgrade
+docs/platform
+docs/uninstall
+docs/version
+docs/cluster

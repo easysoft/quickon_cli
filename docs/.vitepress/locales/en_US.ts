@@ -5,7 +5,17 @@ import { generateSidebarChapter } from './side_bar.js'
 const require = createRequire(import.meta.url)
 
 const chapters = generateSidebarChapter('en_US', new Map([
-  ['introduction', 'Introduction'],
+  ['install', 'Install'],
+  ['init', 'Init'],
+  ['backup', 'BackUP'],
+  ['cluster', 'Cluster'],
+  ['platform', 'Platform'],
+  ['status', 'Status'],
+  ['upgrade', 'Upgrade'],
+  ['bugreport', 'Bug Report'],
+  ['version', 'Version'],
+  ['uninstall', 'Uninstall'],
+  ['experimental', 'Experimental'],
 ]))
 
 export default defineConfig({
@@ -40,12 +50,7 @@ export default defineConfig({
 function nav() {
   return [
     { text: 'Home', link: '/' },
-    { text: 'Configuration', link: '/configuration/configuration-reference' },
-    {
-      text: 'Download',
-      items: [
-        { text: 'Open-source Edition', link: 'https://github.com/easysoft/quickon_cli/releases/' },
-      ]
-    }
+    { text: 'Init', link: '/init/init' },
+    { text: 'Download',link: 'https://github.com/easysoft/quickon_cli/releases/' },
   ]
 }

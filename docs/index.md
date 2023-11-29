@@ -4,22 +4,22 @@ layout: home
 
 hero:
   name: "Quickon Cli"
-  text: "命令行"
-  tagline: My great project tagline
+  text: "命令行工具"
+  tagline: 你值得信赖的禅道DevOPS命令行工具
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: 安装
+      link: /install/install
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: 更多
+      link: /init/
 
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: 简单
+    details: 单一文件，简单易用
+  - title: 高效
+    details: 一键解决问题
+  - title: 开源
+    details: 源码开放，可自行定制
 ---
 

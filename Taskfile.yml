@@ -43,9 +43,7 @@ tasks:
   godoc:
     desc: update docs
     cmds:
-      - rm -rf ./docs/*.md
       - go run ./docs/docs.go
-      - cp -a README.md docs/index.md
 
   gofmt:
     cmds:

@@ -1,6 +1,6 @@
 module github.com/easysoft/qcadmin
 
-go 1.21
+go 1.21.4
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
@@ -40,6 +40,7 @@ require (
 	github.com/ulikunitz/xz v0.5.11
 	github.com/vishvananda/netlink v1.2.1-beta.2
 	github.com/xlab/treeprint v1.2.0
+	github.com/ysicing/cobra2vitepress v0.0.0-20231129091107-690364f0dca7
 	golang.org/x/crypto v0.15.0
 	golang.org/x/sync v0.5.0
 	golang.org/x/sys v0.15.0
@@ -83,7 +84,6 @@ require (
 	github.com/cockroachdb/logtags v0.0.0-20230118201751-21c54148d20b // indirect
 	github.com/cockroachdb/redact v1.1.5 // indirect
 	github.com/containerd/containerd v1.7.6 // indirect
-	github.com/cpuguy83/go-md2man/v2 v2.0.3 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.4 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/daviddengcn/go-colortext v1.0.0 // indirect
