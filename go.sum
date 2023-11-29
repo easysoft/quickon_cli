@@ -545,8 +545,6 @@ github.com/xeipuuv/gojsonschema v1.2.0 h1:LhYJRs+L4fBtjZUfuSZIKGeVu0QRy8e5Xi7D17
 github.com/xeipuuv/gojsonschema v1.2.0/go.mod h1:anYRn/JVcOK2ZgGU+IjEV4nwlhoK5sQluxsYJ78Id3Y=
 github.com/xlab/treeprint v1.2.0 h1:HzHnuAF1plUN2zGlAFHbSQP2qJ0ZAD3XF5XD7OesXRQ=
 github.com/xlab/treeprint v1.2.0/go.mod h1:gj5Gd3gPdKtR1ikdDK6fnFLdmIS0X30kTTuNd/WEJu0=
-github.com/ysicing/cobra2vitepress v0.0.0-20231129070602-16a52f3e8aab h1:mg0it3rzThzDD0WgXG4dL8UKruyDQHcog6bWqOEm9NU=
-github.com/ysicing/cobra2vitepress v0.0.0-20231129070602-16a52f3e8aab/go.mod h1:GCJZJoCV87dE4ibcBnrXe0LWwkaFKirjYKdy0lycuuo=
 github.com/ysicing/cobra2vitepress v0.0.0-20231129091107-690364f0dca7 h1:Rp7pBAtNjbuP1eeeFVLsw5uDd1WdZzHXCbAZmaaTXe0=
 github.com/ysicing/cobra2vitepress v0.0.0-20231129091107-690364f0dca7/go.mod h1:GCJZJoCV87dE4ibcBnrXe0LWwkaFKirjYKdy0lycuuo=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=

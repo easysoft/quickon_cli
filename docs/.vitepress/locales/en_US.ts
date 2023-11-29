@@ -13,7 +13,6 @@ const chapters = generateSidebarChapter('en_US', new Map([
   ['status', 'Status'],
   ['upgrade', 'Upgrade'],
   ['bugreport', 'Bug Report'],
-  ['version', 'Version'],
   ['uninstall', 'Uninstall'],
   ['experimental', 'Experimental'],
 ]))
