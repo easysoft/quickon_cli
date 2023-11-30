@@ -73,7 +73,6 @@ func BuildRoot(f factory.Factory) *cobra.Command {
 	rootCmd.AddCommand(newCmdExperimental(f))
 	rootCmd.AddCommand(newManCmd())
 	rootCmd.AddCommand(newCmdBugReport(f))
-	rootCmd.AddCommand(newCmdDebug(f))
 
 	// Deprecated commands, will be removed in the future
 	deprecatedAppCommand := newCmdApp(f)

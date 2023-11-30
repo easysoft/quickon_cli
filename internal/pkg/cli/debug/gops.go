@@ -15,7 +15,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func GOpsCommand(f factory.Factory) *cobra.Command {
+func GOPSCommand(f factory.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "gops",
 		Short: "gops is a tool to list and diagnose Go processes.",
