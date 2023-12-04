@@ -12,7 +12,7 @@ command_exists() {
 
 if ! command_exists k3s ; then
   echo "download k3s"
-  wget https://ghproxy.com/https://github.com/k3s-io/k3s/releases/download/v1.24.15%2Bk3s1/k3s
+  wget https://github.com/k3s-io/k3s/releases/download/v1.26.10%2Bk3s2/k3s
   chmod +x k3s
   mv k3s /usr/local/bin/k3s
 fi
