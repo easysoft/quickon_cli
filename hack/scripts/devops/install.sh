@@ -45,7 +45,7 @@ fatal()
     exit 1
 }
 
-COS_URL=https://pkg.qucheng.com/devops/cli
+COS_URL=https://pkg.zentao.net/cli/devops
 
 # --- define needed environment variables ---
 setup_env() {
