@@ -110,6 +110,7 @@ const (
 	V2exGenerate204URL            = "https://captive.v2ex.co/generate_204"
 	CloudflareEdgeTraceURL        = "https://www.cloudflare.com/cdn-cgi/trace"
 	CneAPITokenHeader             = "X-Auth-Token"
+	CDNVersionURL                 = "https://pkg.zentao.net/cli/devops/version.json"
 )
 
 const (

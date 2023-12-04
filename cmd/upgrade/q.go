@@ -19,11 +19,13 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/selfupdate"
 	"github.com/ergoapi/util/file"
+	uv "github.com/ergoapi/util/version"
 	"github.com/spf13/cobra"
 )
 
 type option struct {
 	log log.Logger
+	dev bool
 }
 
 func NewUpgradeQ(f factory.Factory) *cobra.Command {
@@ -39,18 +41,19 @@ func NewUpgradeQ(f factory.Factory) *cobra.Command {
 			up.DoQcadmin()
 		},
 	}
+	upq.Flags().BoolVarP(&up.dev, "dev", "", false, "upgrade to dev version")
 	return upq
 }
 
 func (up option) DoQcadmin() {
 	up.log.StartWait("fetch latest version from remote...")
-	lastVersion, lastType, err := version.PreCheckLatestVersion(up.log)
+	lastVersion, lastType, err := version.PreCheckLatestVersion(up.log, up.dev, "")
 	up.log.StopWait()
 	if err != nil {
 		up.log.Errorf("fetch latest version err, reason: %v", err)
 		return
 	}
-	if lastVersion == "" || lastVersion == common.Version || strings.Contains(common.Version, lastVersion) {
+	if lastVersion == "" || lastVersion == common.Version || strings.Contains(common.Version, lastVersion) || uv.LT(lastVersion, common.Version) {
 		up.log.Infof("The current version %s is the latest version", common.Version)
 		return
 	}
@@ -60,7 +63,7 @@ func (up option) DoQcadmin() {
 		return
 	}
 	up.log.StartWait(fmt.Sprintf("downloading version %s...", lastVersion))
-	assetURL := fmt.Sprintf("https://pkg.qucheng.com/qucheng/cli/stable/qcadmin_%s_%s", runtime.GOOS, runtime.GOARCH)
+	assetURL := fmt.Sprintf("https://pkg.zentao.net/cli/devops/v%s/qcadmin_%s_%s", lastVersion, runtime.GOOS, runtime.GOARCH)
 	if lastType == "github" {
 		assetURL = fmt.Sprintf("https://github.com/easysoft/quickon_cli/releases/download/%s/qcadmin_%s_%s", lastVersion, runtime.GOOS, runtime.GOARCH)
 	}

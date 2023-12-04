@@ -76,14 +76,9 @@ const (
 )
 
 type versionGet struct {
-	Code int `json:"code"`
-	Data struct {
-		Name    string    `json:"name"`
-		Version string    `json:"version"`
-		Sync    time.Time `json:"sync"`
-	} `json:"data"`
-	Message   string `json:"message"`
-	Timestamp int    `json:"timestamp"`
+	Latest string `json:"latest"`
+	Stable string `json:"stable,omitempty"`
+	Dev    string `json:"dev,omitempty"`
 }
 
 type versionInfo struct {
@@ -115,13 +110,15 @@ func (v versionInfo) ServerDeployed() bool {
 }
 
 // PreCheckLatestVersion 检查最新版本
-func PreCheckLatestVersion(log logpkg.Logger) (version, t string, err error) {
-	version, _ = checkLastVersionFromGithub()
-	if version != "" {
-		log.Debugf("fetch version from github: %s", version)
-		return version, "github", nil
+func PreCheckLatestVersion(log logpkg.Logger, dev bool, st string) (version, t string, err error) {
+	if st == "github" {
+		version, _ = checkLastVersionFromGithub()
+		if version != "" {
+			log.Debugf("fetch version from github: %s", version)
+			return version, "github", nil
+		}
 	}
-	version, err = checkLatestVersionFromAPI()
+	version, err = checkLatestVersionFromAPI(dev)
 	if err != nil {
 		return version, "api", err
 	}
@@ -141,14 +138,17 @@ func checkLastVersionFromGithub() (string, error) {
 	return tag.Name, nil
 }
 
-func checkLatestVersionFromAPI() (string, error) {
+func checkLatestVersionFromAPI(dev bool) (string, error) {
 	lastVersion := &versionGet{}
 	client := req.C().SetLogger(nil).SetUserAgent(common.GetUG()).SetTimeout(time.Second * 5)
-	_, err := client.R().SetSuccessResult(lastVersion).Get(common.GetAPI("/api/release/last/qcadmin"))
+	_, err := client.R().SetSuccessResult(lastVersion).Get(common.CDNVersionURL)
 	if err != nil {
 		return "", err
 	}
-	return lastVersion.Data.Version, nil
+	if dev {
+		return lastVersion.Dev, nil
+	}
+	return lastVersion.Latest, nil
 }
 
 func ShowVersion(log logpkg.Logger) {
@@ -180,7 +180,7 @@ func ShowVersion(log logpkg.Logger) {
 	}
 
 	log.StartWait("check update...")
-	lastVersion, lastType, err := PreCheckLatestVersion(log)
+	lastVersion, lastType, err := PreCheckLatestVersion(log, false, "")
 	log.StopWait()
 	if err != nil {
 		log.Debugf("get update message err: %v", err)
