@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 if type apt >/dev/null 2>&1; then
   apt update
   apt install -y nfs-common nfs-kernel-server
@@ -11,9 +13,6 @@ else
   exit 1
 fi
 
-systemctl enable rpcbind --now
-systemctl enable nfs-server --now
-
 [ -f "/etc/exports" ] && cp -a /etc/exports /etc/exports.bak
 
 SPATH=${1:-/opt/quickon/storage/nfs/}
@@ -21,6 +20,10 @@ SPATH=${1:-/opt/quickon/storage/nfs/}
 [ -d "$SPATH" ] || mkdir -p $SPATH
 
 chmod 777 -R $SPATH
+
+systemctl enable rpcbind --now
+systemctl enable nfs-server --now
+systemctl restart nfs-server
 
 echo "$SPATH *(insecure,rw,sync,no_root_squash,no_subtree_check)" > /etc/exports
 
