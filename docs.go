@@ -14,7 +14,7 @@ import (
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/github"
 	"github.com/ergoapi/util/version"
-	"github.com/spf13/cobra/doc"
+	doc "github.com/ysicing/cobra2vitepress"
 )
 
 func main() {
