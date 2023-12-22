@@ -9,5 +9,5 @@ package common
 import "k8s.io/kubectl/pkg/util/templates"
 
 var (
-	RootTPl = templates.Examples(`q --help`)
+	RootTPl = templates.Examples(`z --help`)
 )

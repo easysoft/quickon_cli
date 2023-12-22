@@ -22,16 +22,16 @@ import (
 var (
 	initExample = templates.Examples(`
 		# init default cluster
-		q cluster init
+		z cluster init
 
 		# init cluster with custom cidr
-		q cluster init --pod-cidr 10.100.0.0/16 --service-cidr 10.200.0.0/16
+		z cluster init --pod-cidr 10.100.0.0/16 --service-cidr 10.200.0.0/16
 
 		# init cluster use mysql as datastore
-		q cluster init --datastore mysql://root:123456@localhost:3306/k3s
+		z cluster init --datastore mysql://root:123456@localhost:3306/k3s
 
 		# more args
-		q cluster init --help
+		z cluster init --help
 	`)
 )
 

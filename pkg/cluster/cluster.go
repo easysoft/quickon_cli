@@ -219,12 +219,12 @@ func (c *Cluster) preinit(mip, ip string, sshClient ssh.Interface) error {
 	qbin, _ := os.Executable()
 	if qbin != common.QcAdminBinPath {
 		if err := sshClient.Copy(ip, qbin, common.QcAdminBinPath); err != nil {
-			return errors.Errorf("copy q bin (%s:%s -> %s:%s) failed, reason: %v", ip, mip, qbin, common.QcAdminBinPath, ip, err)
+			return errors.Errorf("copy cli bin (%s:%s -> %s:%s) failed, reason: %v", ip, mip, qbin, common.QcAdminBinPath, ip, err)
 		}
 	}
 
 	if err := sshClient.CmdAsync(ip, "/usr/bin/qcadmin version"); err != nil {
-		return errors.Errorf("load q version failed, reason: %v", err)
+		return errors.Errorf("load cli version failed, reason: %v", err)
 	}
 	c.log.StartWait(ip + " start run init script")
 	if err := sshClient.CmdAsync(ip, common.GetCustomScripts("hack/manifests/scripts/init.sh")); err != nil {

@@ -21,7 +21,7 @@ import (
 var (
 	installExample = templates.Examples(`
 		# install tools
-		q experimental install helm`)
+		z experimental install helm`)
 )
 
 // InstallCommand install some tools

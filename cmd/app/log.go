@@ -28,7 +28,8 @@ func NewCmdAppLogs(f factory.Factory) *cobra.Command {
 		Aliases: []string{"log"},
 		Short:   "logs app",
 		Args:    cobra.ExactArgs(1),
-		Example: `q app logs http://console.example.corp.cc/instance-view-39.html`,
+		Hidden:  true,
+		Example: `z app logs http://console.example.corp.cc/instance-view-39.html`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			url := args[0]
 			apidebug := log.GetLevel() == logrus.DebugLevel

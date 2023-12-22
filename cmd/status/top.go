@@ -14,7 +14,7 @@ import (
 
 var (
 	KRNodeExample = templates.Examples(`
-	q cluster status node
+	z cluster status node
 	`)
 )
 

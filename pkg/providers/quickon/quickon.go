@@ -135,5 +135,5 @@ func (q *Quickon) GetMeta() *quickon.Meta {
 func (q *Quickon) GetUsageExample() string {
 	return templates.Examples(i18n.T(`
 	# init quickon platform use example domain your.example.quickon.domain
-	q init --provider quickon --domain your.example.quickon.domain`))
+	z init --provider quickon --domain your.example.quickon.domain`))
 }

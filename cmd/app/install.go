@@ -43,7 +43,8 @@ func NewCmdAppInstall(f factory.Factory) *cobra.Command {
 	app := &cobra.Command{
 		Use:     "install",
 		Short:   "install app",
-		Example: `q app install -n zentao or q app install zentao`,
+		Hidden:  true,
+		Example: `z app install -n zentao or z app install zentao`,
 		Args:    cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 1 {

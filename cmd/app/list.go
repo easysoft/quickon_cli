@@ -27,7 +27,7 @@ func NewCmdAppList(f factory.Factory) *cobra.Command {
 	app := &cobra.Command{
 		Use:     "list",
 		Short:   "list app",
-		Example: `q app list`,
+		Example: `z app list`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			hc, err := helm.NewClient(&helm.Config{Namespace: ""})
 			if err != nil {

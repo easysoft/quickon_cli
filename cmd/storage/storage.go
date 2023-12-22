@@ -26,9 +26,9 @@ import (
 var (
 	nfsExample = templates.Examples(`
 		# deploy local nfs storage
-		q cluster storage nfs
+		z cluster storage nfs
 		# deploy qcloud cfs v3
-		q cluster storage nfs --ip cfsip --path cfspath
+		z cluster storage nfs --ip cfsip --path cfspath
 `)
 )
 

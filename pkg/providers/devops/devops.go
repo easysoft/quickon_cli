@@ -112,5 +112,5 @@ func (q *Devops) GetMeta() *quickon.Meta {
 func (q *Devops) GetUsageExample() string {
 	return templates.Examples(i18n.T(`
 	# init devops platform with example domain your.example.devops.domain
-	q init --provider devops --domain your.example.devops.domain`))
+	z init --provider devops --domain your.example.devops.domain`))
 }

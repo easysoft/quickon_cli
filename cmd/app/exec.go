@@ -24,10 +24,12 @@ func NewCmdAppExec(f factory.Factory) *cobra.Command {
 	log := f.GetLog()
 	var useip bool
 	app := &cobra.Command{
-		Use:     "exec",
-		Short:   "exec app",
-		Args:    cobra.ExactArgs(1),
-		Example: `q app exec http://console.example.corp.cc/instance-view-39.html`,
+		Use:        "exec",
+		Short:      "exec app",
+		Args:       cobra.ExactArgs(1),
+		Hidden:     true,
+		Deprecated: "zentao not support query by url",
+		Example:    `z app exec http://console.example.corp.cc/instance-view-39.html`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			url := args[0]
 			apidebug := log.GetLevel() == logrus.DebugLevel

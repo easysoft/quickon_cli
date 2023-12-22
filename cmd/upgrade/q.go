@@ -59,7 +59,7 @@ func (up option) DoQcadmin() {
 	}
 	cmdPath, err := os.Executable()
 	if err != nil {
-		up.log.Errorf("q executable err:%v", err)
+		up.log.Errorf("load executable err:%v", err)
 		return
 	}
 	up.log.StartWait(fmt.Sprintf("downloading version %s...", lastVersion))
@@ -78,7 +78,7 @@ func (up option) DoQcadmin() {
 		os.Symlink(common.K3sDefaultDir, common.GetDefaultQuickonPlatformDir(""))
 	}
 	os.Chmod(common.GetDefaultQuickonBackupDir(cfg.DataDir), common.FileMode0777)
-	up.log.Donef("Successfully updated q to version %s", lastVersion)
+	up.log.Donef("Successfully updated cli to version %s", lastVersion)
 	up.log.Debugf("gen new version manifest")
 	up.log.Infof("Release note: \n\t release %s ", lastVersion)
 	up.log.Infof("Upgrade docs: \n\t https://github.com/easysoft/quickon_cli/releases")

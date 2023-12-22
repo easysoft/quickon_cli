@@ -66,9 +66,9 @@ task
 # 稳定版本 / stable / tag (Recommended)
 curl -sfL https://pkg.qucheng.com/quickon/get.sh | sh -
 # 安装渠成平台
-q init --provider quickon
+z init --provider quickon
 # 安装禅道DevOPS
-q init --provider devops
+z init --provider devops
 # 一键安装
 curl -sfL https://pkg.qucheng.com/quickon/install.sh | INSTALL_DOMAIN=example.com sh -
 ```
