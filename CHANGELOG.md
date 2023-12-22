@@ -1,5 +1,35 @@
 # Changelog
 
+## v3.0.12 (2023-12-22)
+
+ * [75dd1ee](https://github.com/easysoft/quickon_cli/commit/75dd1ee9f53d4b79b3a1e99b2521ba4e50287656) feat(release):  bump zentao version
+ * [daca7f5](https://github.com/easysoft/quickon_cli/commit/daca7f5433b84bcf915a1c6497505c7f2f177621) build(deps): bump github.com/containerd/containerd from 1.7.6 to 1.7.11
+ * [174ab3f](https://github.com/easysoft/quickon_cli/commit/174ab3fe445177364a86b98ab43a7acd4776c959) build(deps): bump golang.org/x/crypto from 0.16.0 to 0.17.0
+ * [cc384ee](https://github.com/easysoft/quickon_cli/commit/cc384eeb4057977a356328565bb80db7025040df) build(deps): bump actions/download-artifact from 3 to 4
+ * [1d8599d](https://github.com/easysoft/quickon_cli/commit/1d8599d9744125fc96d0032a5961e9b5b0221caa) build(deps): bump tailscale.com from 1.54.0 to 1.56.1
+ * [65b588f](https://github.com/easysoft/quickon_cli/commit/65b588fa3ed561b017498d0938f66fc408134eac) build(deps): bump actions/upload-artifact from 3 to 4
+ * [fcaeff6](https://github.com/easysoft/quickon_cli/commit/fcaeff6362bbb9f3b7b6a51687f97e131d0a1b40) build(deps): bump github/codeql-action from 2 to 3
+ * [a0e146e](https://github.com/easysoft/quickon_cli/commit/a0e146eb0f340b30ce859004e1ab808792b3a774) build(deps): bump golang.org/x/crypto from 0.15.0 to 0.16.0
+ * [e0448c7](https://github.com/easysoft/quickon_cli/commit/e0448c76b8a030316629f0627e8b405342661c22) build(deps): bump actions/setup-go from 4 to 5
+ * [72b8ee0](https://github.com/easysoft/quickon_cli/commit/72b8ee0fb81c6b68692c273f1f13e83aef55d0fc) build(deps): bump vite from 5.0.4 to 5.0.5 in /docs
+ * [213dbf0](https://github.com/easysoft/quickon_cli/commit/213dbf02e8f4f3acda038fa548e9bb678cb5c730) 新功能：更新nfs-server.sh脚本以进行NFS安装和服务管理
+ * [0e2ce57](https://github.com/easysoft/quickon_cli/commit/0e2ce5798de167c403afede7e10c6d0ad578c4b2) feat: add --dev flag for upgrade command and update version handling
+ * [f70deef](https://github.com/easysoft/quickon_cli/commit/f70deefe2565b0f3912ad5fa6c189fd679b072bf) fix(download): change default cos url
+ * [df115c4](https://github.com/easysoft/quickon_cli/commit/df115c468bfb04a4209295aa4dc62d7eea0dcf9e) build(deps): bump github.com/containerd/continuity from 0.4.2 to 0.4.3
+ * [9fc8e35](https://github.com/easysoft/quickon_cli/commit/9fc8e3555a00e4bbe7f0882cf10ba28daac8988e) fix(script): fix cloud-init
+ * [5b36a67](https://github.com/easysoft/quickon_cli/commit/5b36a6704775329e3ef7ab5a3009a6c495e49bb5) feat(debug): drop debug subcmd
+ * [62ae471](https://github.com/easysoft/quickon_cli/commit/62ae471b0feaf894e582a00a8b5dc16da677d406) chore(docs): fix auto build
+ * [9dec35d](https://github.com/easysoft/quickon_cli/commit/9dec35d33496239eb1c39f1cce18fa46c0c78959) chore(docs): fix ci
+ * [dbb109c](https://github.com/easysoft/quickon_cli/commit/dbb109c57a03f0f09b9317e87262ca35362de7da) feat(docs): update docs gen
+ * [3394243](https://github.com/easysoft/quickon_cli/commit/3394243a09ee56361658007d5d27e51bfa7e0585) feat(docs): add docs support
+ * [8714bfc](https://github.com/easysoft/quickon_cli/commit/8714bfcbb449f933cd7fe3e34b9cc207f2b93020) build(deps): bump github.com/jackpal/gateway from 1.0.10 to 1.0.13
+ * [814d749](https://github.com/easysoft/quickon_cli/commit/814d74993ef0b4c363325bdefd3affb9e470f57f) build(deps): bump sigs.k8s.io/yaml from 1.3.0 to 1.4.0
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.0.11 (2023-11-16)
 
  * [ec87ef8](https://github.com/easysoft/quickon_cli/commit/ec87ef8aaf6f1808675119ac9b240ebc7c7fc8e3) feat(update): release new version
