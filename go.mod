@@ -6,7 +6,7 @@ require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
 	github.com/BeidouCloudPlatform/go-bindata/v4 v4.1.0
 	github.com/Masterminds/semver/v3 v3.2.1
-	github.com/cheggaaa/pb/v3 v3.1.2
+	github.com/cheggaaa/pb/v3 v3.1.4
 	github.com/cockroachdb/errors v1.11.1
 	github.com/containerd/continuity v0.4.3
 	github.com/docker/docker v24.0.7+incompatible
