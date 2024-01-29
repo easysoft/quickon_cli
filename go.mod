@@ -41,7 +41,7 @@ require (
 	github.com/vishvananda/netlink v1.2.1-beta.2
 	github.com/xlab/treeprint v1.2.0
 	github.com/ysicing/cobra2vitepress v0.0.0-20231129091107-690364f0dca7
-	golang.org/x/crypto v0.17.0
+	golang.org/x/crypto v0.17.1-0.20240102205709-08396bb92b82
 	golang.org/x/sync v0.5.0
 	golang.org/x/sys v0.16.0
 	golang.org/x/term v0.16.0
@@ -58,7 +58,7 @@ require (
 	k8s.io/system-validators v1.7.0
 	k8s.io/utils v0.0.0-20230726121419-3b25d923346b
 	sigs.k8s.io/yaml v1.4.0
-	tailscale.com v1.56.1
+	tailscale.com v1.58.2
 )
 
 require (
@@ -89,8 +89,9 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/daviddengcn/go-colortext v1.0.0 // indirect
 	github.com/dblohm7/wingoes v0.0.0-20230929194252-e994401fc077 // indirect
-	github.com/docker/cli v24.0.6+incompatible // indirect
-	github.com/docker/distribution v2.8.2+incompatible // indirect
+	github.com/distribution/reference v0.5.0 // indirect
+	github.com/docker/cli v24.0.7+incompatible // indirect
+	github.com/docker/distribution v2.8.3+incompatible // indirect
 	github.com/docker/docker-credential-helpers v0.8.0 // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-metrics v0.0.1 // indirect
