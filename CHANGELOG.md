@@ -1,5 +1,23 @@
 # Changelog
 
+## v3.0.13 (2024-02-07)
+
+ * [581982a](https://github.com/easysoft/quickon_cli/commit/581982ad2339ab374c3bfbcd98113996ed0f3c8a) build(deps): bump golang.org/x/crypto
+ * [fb389bb](https://github.com/easysoft/quickon_cli/commit/fb389bb4a9a32238652a52f265f7f184ea60864f) build(deps): bump peter-evans/create-pull-request from 5 to 6
+ * [f53a512](https://github.com/easysoft/quickon_cli/commit/f53a512e53a6fe08cf626f65eff9a96c9f7c6828) build(deps): bump tailscale.com from 1.56.1 to 1.58.2
+ * [2e0fcc4](https://github.com/easysoft/quickon_cli/commit/2e0fcc4e313e65f1f8a54779b2b9a9d4f506decb) build(deps): bump golang.org/x/term from 0.15.0 to 0.16.0
+ * [8ad543a](https://github.com/easysoft/quickon_cli/commit/8ad543a65d30255d46f11d51885d5f062eb4fdb6) build(deps): bump vite from 5.0.5 to 5.0.12 in /docs
+ * [1ebe7ae](https://github.com/easysoft/quickon_cli/commit/1ebe7ae6d455b1eb19ec577bc907f6de1dbfb6b4) build(deps): bump github.com/imroc/req/v3 from 3.42.2 to 3.42.3
+ * [f68b839](https://github.com/easysoft/quickon_cli/commit/f68b8391ca7137bee621c47237a800361fc813c2) build(deps): bump github.com/quic-go/quic-go from 0.38.1 to 0.38.2
+ * [470cc85](https://github.com/easysoft/quickon_cli/commit/470cc8513ee3282a013cfdb1fb8b9ed1f41eee70) build(deps): bump github.com/cloudflare/circl from 1.3.3 to 1.3.7
+ * [6b50224](https://github.com/easysoft/quickon_cli/commit/6b502242c9cd43db3825071166991687d4772d5e) build(deps): bump github.com/cheggaaa/pb/v3 from 3.1.2 to 3.1.4
+ * [d03d688](https://github.com/easysoft/quickon_cli/commit/d03d6887d5a5e8bd8ed51dc045d7ade799586f61) build(deps): bump github.com/shirou/gopsutil/v3 from 3.23.11 to 3.23.12
+ * [04b320b](https://github.com/easysoft/quickon_cli/commit/04b320bc3a57060df7f795d27bffe111112b42c5) build(deps): bump github.com/shirou/gopsutil/v3 from 3.23.10 to 3.23.11
+
+### Contributors
+
+ * dependabot[bot]
+
 ## v3.0.12 (2023-12-22)
 
  * [75dd1ee](https://github.com/easysoft/quickon_cli/commit/75dd1ee9f53d4b79b3a1e99b2521ba4e50287656) feat(release):  bump zentao version
