@@ -1,5 +1,20 @@
 # Changelog
 
+## v3.0.14 (2024-02-26)
+
+ * [6985fcb](https://github.com/easysoft/quickon_cli/commit/6985fcb7bf95584ae591a9d2dd5f0a5dd3faa48d) fix(typo): miss nfpms
+ * [92d8f42](https://github.com/easysoft/quickon_cli/commit/92d8f42b452dcb05ca928443102c036f68d46e41) build(deps): bump github.com/shirou/gopsutil/v3 from 3.23.12 to 3.24.1
+ * [f5024b1](https://github.com/easysoft/quickon_cli/commit/f5024b10397a76136f65a6c5f940e99313d2a1cc) feat: update version values to 3.0.14 and DefaultZentaoDevOPSIPDVersion to 1.2
+ * [36da318](https://github.com/easysoft/quickon_cli/commit/36da3187ff6c7b5128e513c3c56b789d71503d8d) build(deps): bump helm.sh/helm/v3 from 3.14.1 to 3.14.2
+ * [23a7180](https://github.com/easysoft/quickon_cli/commit/23a7180f85d029a4533f7f87234bbf0226e272ad) build(deps): bump golang.org/x/sys from 0.16.0 to 0.17.0
+ * [b2b516f](https://github.com/easysoft/quickon_cli/commit/b2b516fa2c474b26b9b5f51ed3d5311c0a6f338f) build(deps): bump helm.sh/helm/v3 from 3.13.2 to 3.14.1
+ * [440e998](https://github.com/easysoft/quickon_cli/commit/440e9984fe83a80e11a3ce685467ac1bbbb18e80) build(deps): bump github.com/cheggaaa/pb/v3 from 3.1.4 to 3.1.5
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.0.13 (2024-02-07)
 
  * [581982a](https://github.com/easysoft/quickon_cli/commit/581982ad2339ab374c3bfbcd98113996ed0f3c8a) build(deps): bump golang.org/x/crypto
