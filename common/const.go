@@ -67,7 +67,7 @@ const (
 	DefaultZentaoDevOPSOSSVersion = "18.10"
 	DefaultZentaoDevOPSMaxVersion = "4.10"
 	DefaultZentaoDevOPSBizVersion = "8.10"
-	DefaultZentaoDevOPSIPDVersion = "1.1.2"
+	DefaultZentaoDevOPSIPDVersion = "1.2"
 	K3sBinName                    = "k3s"
 	K3sBinPath                    = "/usr/local/bin/k3s"
 	HelmBinName                   = "helm"
