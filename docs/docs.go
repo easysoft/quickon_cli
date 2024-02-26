@@ -7,6 +7,7 @@
 package main
 
 import (
+	"encoding/json"
 	"strings"
 
 	"github.com/easysoft/qcadmin/cmd"
@@ -16,6 +17,12 @@ import (
 	"github.com/ergoapi/util/version"
 	doc "github.com/ysicing/cobra2vitepress"
 )
+
+type versionInfo struct {
+	Latest string `json:"latest"`
+	Stable string `json:"stable"`
+	Dev    string `json:"dev"`
+}
 
 func main() {
 	f := factory.DefaultFactory()
@@ -32,5 +39,13 @@ func main() {
 	if err != nil {
 		return
 	}
-	file.WriteFile("VERSION", strings.TrimPrefix(version.Next(tag.Name, false, false, true), "v"), true)
+	nextVersion := strings.TrimPrefix(version.Next(tag.Name, false, false, true), "v")
+	file.WriteFile("VERSION", nextVersion, true)
+	v := versionInfo{
+		Latest: nextVersion,
+		Stable: nextVersion,
+		Dev:    nextVersion,
+	}
+	jsonData, _ := json.MarshalIndent(v, "", "    ")
+	file.WriteFile("version.json", string(jsonData), true)
 }
