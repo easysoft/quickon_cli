@@ -53,7 +53,7 @@ func (up option) DoQcadmin() {
 		up.log.Errorf("fetch latest version err, reason: %v", err)
 		return
 	}
-	if lastVersion == "" || lastVersion == common.Version || strings.Contains(common.Version, lastVersion) || uv.LT(lastVersion, common.Version) {
+	if lastVersion == "" || lastVersion == common.Version || strings.Contains(common.Version, lastVersion) || uv.LTv2(lastVersion, common.Version) {
 		up.log.Infof("The current version %s is the latest version", common.Version)
 		return
 	}

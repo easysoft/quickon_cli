@@ -54,9 +54,9 @@ func (opt *Option) Fetch(ns, name string) (ComponentVersion, error) {
 	cmv.Remote.AppVersion = remoteav
 	cmv.Remote.ChartVersion = remotecv
 	// can upgrade
-	cmv.CanUpgrade = version.LT(cmv.Remote.ChartVersion, cmv.Deploy.ChartVersion)
+	cmv.CanUpgrade = version.LTv2(cmv.Deploy.ChartVersion, cmv.Remote.ChartVersion)
 	if cmv.CanUpgrade {
-		cmv.UpgradeMessage = fmt.Sprintf("Now you can use %s to upgrade component %s to the latest version", color.SGreen("%s upgrade %s", os.Args[0], name), name)
+		cmv.UpgradeMessage = fmt.Sprintf("Now you can use %s to upgrade component %s to the latest version", color.SGreen("%s upgrade platform", os.Args[0]), name)
 	}
 	opt.log.Debugf("local: %s(%s), remote: %s(%s), upgrade: %v", localcv, localav, remotecv, remoteav, cmv.CanUpgrade)
 	return cmv, err
