@@ -133,13 +133,17 @@ func Upgrade(flagVersion string, testmode bool, log log.Logger) error {
 					Size: 5,
 				}
 				it, _, _ := selectApp.Run()
-				appnewVersion := fmt.Sprintf("%s%s.k8s", selectItems[it].Key.String(), common.GetVersion(true, selectItems[it].Key.String(), ""))
-				log.Debugf("devops mode, product: %v, oldversion: %v, newversion: %v", product, appoldVersion, appnewVersion)
-				defaultValue["deploy"].(map[string]interface{})["versions"].(map[string]interface{})[product.(string)] = appnewVersion
-				defaultValue["deploy"].(map[string]interface{})["product"] = selectItems[it].Key.String()
-				if selectItems[it].Key != common.ZenTaoOSSType && selectItems[it].Key.String() != product.(string) {
-					log.Warnf("切换版本升级(如开源版升级到企业版), 可能导致因版本授权问题无法正常使用, 如有问题请联系技术支持!")
+				newProduct := selectItems[it].Key.String()
+				defaultValue["deploy"].(map[string]interface{})["product"] = newProduct
+				appnewVersion := common.GetVersion(true, newProduct, "")
+				if selectItems[it].Key != common.ZenTaoOSSType {
+					appnewVersion = fmt.Sprintf("%s%s.k8s", newProduct, common.GetVersion(true, newProduct, ""))
+					if newProduct != product.(string) {
+						log.Warnf("切换版本升级(如开源版升级到企业版), 可能导致因版本授权问题无法正常使用, 如有问题请联系技术支持!")
+					}
 				}
+				defaultValue["deploy"].(map[string]interface{})["versions"].(map[string]interface{})[product.(string)] = appnewVersion
+				log.Infof("devops mode, product: %v, oldversion: %v, newversion: %v", product, appoldVersion, appnewVersion)
 				msg := fmt.Sprintf("Are you sure to upgrade from %v(%v) to %v(%v)", product, appoldVersion, selectItems[it].Key.String(), appnewVersion)
 				status, _ := confirm.Confirm(msg)
 				if !status {

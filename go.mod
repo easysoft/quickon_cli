@@ -9,7 +9,7 @@ require (
 	github.com/cheggaaa/pb/v3 v3.1.5
 	github.com/cockroachdb/errors v1.11.1
 	github.com/containerd/continuity v0.4.3
-	github.com/docker/docker v25.0.0+incompatible
+	github.com/docker/docker v25.0.1+incompatible
 	github.com/easysoft/quickon-api v0.7.4
 	github.com/emirpasic/gods v1.18.1
 	github.com/ergoapi/util v0.6.4
@@ -90,12 +90,11 @@ require (
 	github.com/daviddengcn/go-colortext v1.0.0 // indirect
 	github.com/dblohm7/wingoes v0.0.0-20240119213807-a09d6be7affa // indirect
 	github.com/distribution/reference v0.5.0 // indirect
-	github.com/docker/cli v25.0.0+incompatible // indirect
+	github.com/docker/cli v25.0.1+incompatible // indirect
 	github.com/docker/distribution v2.8.3+incompatible // indirect
 	github.com/docker/docker-credential-helpers v0.8.1 // indirect
 	github.com/docker/go-connections v0.5.0 // indirect
 	github.com/docker/go-metrics v0.0.1 // indirect
-	github.com/docker/go-units v0.5.0 // indirect
 	github.com/emicklei/go-restful/v3 v3.11.2 // indirect
 	github.com/evanphx/json-patch v5.7.0+incompatible // indirect
 	github.com/exponent-io/jsonpath v0.0.0-20151013193312-d6023ce2651d // indirect
@@ -226,7 +225,7 @@ require (
 	k8s.io/component-helpers v0.29.0 // indirect
 	k8s.io/klog/v2 v2.120.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20240117194847-208609032b15 // indirect
-	oras.land/oras-go v1.2.4 // indirect
+	oras.land/oras-go v1.2.5 // indirect
 	rsc.io/goversion v1.2.0 // indirect
 	sigs.k8s.io/controller-runtime v0.16.2 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
