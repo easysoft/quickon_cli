@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.0.15 (2024-02-29)
+
+ * [543f2bd](https://github.com/easysoft/quickon_cli/commit/543f2bd86e994c5fb654d806543007b38c2a4a87) fix(typo): fix cli upgrade typo
+
+### Contributors
+
+ * ysicing
+
 ## v3.0.14 (2024-02-26)
 
  * [6985fcb](https://github.com/easysoft/quickon_cli/commit/6985fcb7bf95584ae591a9d2dd5f0a5dd3faa48d) fix(typo): miss nfpms
