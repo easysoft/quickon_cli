@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.0.16 (2024-03-05)
+
+ * [3dcb8c4](https://github.com/easysoft/quickon_cli/commit/3dcb8c4889b93409f33512cd38e10deb27734019) build(deps): bump github.com/shirou/gopsutil/v3 from 3.24.1 to 3.24.2
+
+### Contributors
+
+ * dependabot[bot]
+
 ## v3.0.15 (2024-02-29)
 
  * [543f2bd](https://github.com/easysoft/quickon_cli/commit/543f2bd86e994c5fb654d806543007b38c2a4a87) fix(typo): fix cli upgrade typo
