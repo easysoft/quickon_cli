@@ -10,7 +10,7 @@ require (
 	github.com/cockroachdb/errors v1.11.1
 	github.com/containerd/continuity v0.4.3
 	github.com/docker/docker v25.0.1+incompatible
-	github.com/easysoft/quickon-api v0.7.4
+	github.com/easysoft/quickon-api v0.7.5
 	github.com/emirpasic/gods v1.18.1
 	github.com/ergoapi/util v0.6.4
 	github.com/go-ping/ping v1.1.0
