@@ -10,7 +10,7 @@ require (
 	github.com/cockroachdb/errors v1.11.1
 	github.com/containerd/continuity v0.4.3
 	github.com/docker/docker v25.0.1+incompatible
-	github.com/easysoft/quickon-api v0.7.4
+	github.com/easysoft/quickon-api v0.7.5
 	github.com/emirpasic/gods v1.18.1
 	github.com/ergoapi/util v0.6.4
 	github.com/go-ping/ping v1.1.0
@@ -216,7 +216,7 @@ require (
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230822172742-b8732ec3820d // indirect
 	google.golang.org/grpc v1.58.3 // indirect
-	google.golang.org/protobuf v1.32.0 // indirect
+	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
