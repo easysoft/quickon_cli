@@ -39,7 +39,7 @@ info() {
     else
      log_title=''
     fi
-    echo -e "${CYAN}[INFO]  ${log_title} ${NO_COLOR}$1"
+    echo -e "${CYAN}[INFO] ${log_title} ${NO_COLOR}$1"
   fi
 }
 
@@ -53,7 +53,7 @@ warn() {
     else
      log_title=''
     fi
-    echo -e "${YELLOW}[WARN]  ${log_title} ${NO_COLOR}$1"
+    echo -e "${YELLOW}[WARN] ${log_title} ${NO_COLOR}$1"
   fi
 }
 
@@ -109,16 +109,16 @@ set_packages_and_check_cmd() {
 detect_node_kernel_release() {
   local pod="$1"
 
-  KERNEL_RELEASE=$(qcadmin exp kubectl exec -i $pod -- nsenter --mount=/proc/1/ns/mnt -- bash -c 'uname -r')
+  KERNEL_RELEASE=$(kubectl exec $pod -- nsenter --mount=/proc/1/ns/mnt -- bash -c 'uname -r')
   echo "$KERNEL_RELEASE"
 }
 
 detect_node_os() {
   local pod="$1"
 
-  OS=$(qcadmin exp kubectl exec -i $pod -- nsenter --mount=/proc/1/ns/mnt -- bash -c 'grep -E "^ID_LIKE=" /etc/os-release | cut -d= -f2')
+  OS=$(kubectl exec $pod -- nsenter --mount=/proc/1/ns/mnt -- bash -c 'grep -E "^ID_LIKE=" /etc/os-release | cut -d= -f2')
   if [[ -z "${OS}" ]]; then
-    OS=$(qcadmin exp kubectl exec -i $pod -- nsenter --mount=/proc/1/ns/mnt -- bash -c 'grep -E "^ID=" /etc/os-release | cut -d= -f2')
+    OS=$(kubectl exec $pod -- nsenter --mount=/proc/1/ns/mnt -- bash -c 'grep -E "^ID=" /etc/os-release | cut -d= -f2')
   fi
   echo "$OS"
 }
@@ -165,7 +165,7 @@ spec:
       hostPID: true
       containers:
       - name: longhorn-environment-check
-        image: ccr.ccs.tencentyun.com/easysoft/alpine:3.12
+        image: hub.qucheng.com/library/alpine:3.12
         args: ["/bin/sh", "-c", "sleep 1000000000"]
         volumeMounts:
         - name: mountpoint
@@ -178,19 +178,19 @@ spec:
         hostPath:
             path: /tmp/longhorn-environment-check
 EOF
-  qcadmin exp kubectl create -f $TEMP_DIR/environment_check.yaml > /dev/null
+  kubectl create -f $TEMP_DIR/environment_check.yaml > /dev/null
 }
 
 cleanup() {
   info "Cleaning up longhorn-environment-check pods..."
-  qcadmin exp kubectl delete -f $TEMP_DIR/environment_check.yaml > /dev/null
+  kubectl delete -f $TEMP_DIR/environment_check.yaml > /dev/null
   rm -rf $TEMP_DIR
   info "Cleanup completed."
 }
 
 wait_ds_ready() {
   while true; do
-    local ds=$(qcadmin exp kubectl get ds/longhorn-environment-check -o json)
+    local ds=$(kubectl get ds/longhorn-environment-check -o json)
     local numberReady=$(echo $ds | jq .status.numberReady)
     local desiredNumberScheduled=$(echo $ds | jq .status.desiredNumberScheduled)
 
@@ -206,9 +206,9 @@ wait_ds_ready() {
 
 check_mount_propagation() {
   local allSupported=true
-  local pods=$(qcadmin exp kubectl -l app=longhorn-environment-check get po -o json)
+  local pods=$(kubectl -l app=longhorn-environment-check get po -o json)
 
-  local ds=$(qcadmin exp kubectl get ds/longhorn-environment-check -o json)
+  local ds=$(kubectl get ds/longhorn-environment-check -o json)
   local desiredNumberScheduled=$(echo $ds | jq .status.desiredNumberScheduled)
 
   for ((i=0; i<desiredNumberScheduled; i++)); do
@@ -231,7 +231,17 @@ check_mount_propagation() {
 }
 
 check_hostname_uniqueness() {
-  hostnames=$(qcadmin exp kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type=="Hostname")].address}')
+  hostnames=$(kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type=="Hostname")].address}')
+
+  if [ $? -ne 0 ]; then
+    error "kubectl get nodes failed - check KUBECONFIG setup"
+    exit 1
+  fi
+
+  if [[ ! ${hostnames[@]} ]]; then
+    error "kubectl get nodes returned empty list - check KUBECONFIG setup"
+    exit 1
+  fi
 
   deduplicate_hostnames=()
   num_nodes=0
@@ -260,7 +270,7 @@ check_nodes() {
 
   local all_passed=true
 
-  local pods=$(qcadmin exp kubectl get pods -o name -l app=longhorn-environment-check)
+  local pods=$(kubectl get pods -o name -l app=longhorn-environment-check)
   for pod in ${pods}; do
     eval "${callback} ${pod} $@"
     if [ $? -ne 0 ]; then
@@ -273,15 +283,52 @@ check_nodes() {
   fi
 }
 
+verlte() {
+    printf '%s\n' "$1" "$2" | sort -C -V
+}
+
+verlt() {
+    ! verlte "$2" "$1"
+}
+
+kernel_in_range() {
+    verlte "$2" "$1" && verlt "$1" "$3"
+}
+
+check_kernel_release() {
+  local pod=$1
+  local node=$(kubectl get ${pod} --no-headers -o=custom-columns=:.spec.nodeName)
+
+  recommended_kernel_release="5.8"
+
+  local kernel=$(detect_node_kernel_release ${pod})
+
+  if verlt "$kernel" "$recommended_kernel_release"  ; then
+    warn "Node $node has outdated kernel release: $kernel. Recommending kernel release >= $recommended_kernel_release"
+    return 1
+  fi
+
+  local broken_kernel=("5.15.0-94" "6.5.6")
+  local fixed_kernel=("5.15.0-100" "6.5.7")
+
+  for i in ${!broken_kernel[@]}; do
+      if kernel_in_range "$kernel" "${broken_kernel[$i]}" "${fixed_kernel[$i]}" ; then
+        warn "Node $node has a kernel version $kernel known to have a breakage that affects Longhorn.  See description and solution at https://longhorn.io/kb/troubleshooting-rwx-volume-fails-to-attached-caused-by-protocol-not-supported"
+        return 1
+      fi
+  done
+
+}
+
 check_iscsid() {
   local pod=$1
 
-  qcadmin exp kubectl exec -t ${pod} -- nsenter --mount=/proc/1/ns/mnt -- bash -c "systemctl status --no-pager iscsid.service" > /dev/null 2>&1
+  kubectl exec ${pod} -- nsenter --mount=/proc/1/ns/mnt -- bash -c "systemctl status --no-pager iscsid.service" > /dev/null 2>&1
   if [ $? -ne 0 ]; then
-    qcadmin exp kubectl exec -t ${pod} -- nsenter --mount=/proc/1/ns/mnt -- bash -c "systemctl status --no-pager iscsid.socket" > /dev/null 2>&1
+    kubectl exec ${pod} -- nsenter --mount=/proc/1/ns/mnt -- bash -c "systemctl status --no-pager iscsid.socket" > /dev/null 2>&1
       if [ $? -ne 0 ]; then
-      node=$(qcadmin exp kubectl get ${pod} --no-headers -o=custom-columns=:.spec.nodeName)
-      error "Neither iscsid.service nor iscsid.socket is not running on ${node}"
+      node=$(kubectl get ${pod} --no-headers -o=custom-columns=:.spec.nodeName)
+      error "Neither iscsid.service nor iscsid.socket is running on ${node}"
       return 1
     fi
   fi
@@ -290,10 +337,10 @@ check_iscsid() {
 check_multipathd() {
   local pod=$1
 
-  qcadmin exp kubectl exec -t $pod -- nsenter --mount=/proc/1/ns/mnt -- bash -c "systemctl status --no-pager multipathd.service" > /dev/null 2>&1
+  kubectl exec $pod -- nsenter --mount=/proc/1/ns/mnt -- bash -c "systemctl status --no-pager multipathd.service" > /dev/null 2>&1
   if [ $? = 0 ]; then
-    node=$(qcadmin exp kubectl get ${pod} --no-headers -o=custom-columns=:.spec.nodeName)
-    warn "multipathd is running on ${node}"
+    node=$(kubectl get ${pod} --no-headers -o=custom-columns=:.spec.nodeName)
+    warn "multipathd is running on ${node} known to have a breakage that affects Longhorn.  See description and solution at https://longhorn.io/kb/troubleshooting-volume-with-multipath"
     return 1
   fi
 }
@@ -320,9 +367,9 @@ check_packages() {
 check_package() {
   local package=$1
 
-  qcadmin exp kubectl exec -i $pod -- nsenter --mount=/proc/1/ns/mnt -- timeout 30 bash -c "$CHECK_CMD $package" > /dev/null 2>&1
+  kubectl exec $pod -- nsenter --mount=/proc/1/ns/mnt -- timeout 30 bash -c "$CHECK_CMD $package" > /dev/null 2>&1
   if [ $? -ne 0 ]; then
-    node=$(qcadmin exp kubectl get ${pod} --no-headers -o=custom-columns=:.spec.nodeName)
+    node=$(kubectl get ${pod} --no-headers -o=custom-columns=:.spec.nodeName)
     error "$package is not found in $node."
     return 1
   fi
@@ -330,7 +377,7 @@ check_package() {
 
 check_nfs_client() {
   local pod=$1
-  local node=$(qcadmin exp kubectl get ${pod} --no-headers -o=custom-columns=:.spec.nodeName)
+  local node=$(kubectl get ${pod} --no-headers -o=custom-columns=:.spec.nodeName)
 
   local options=("CONFIG_NFS_V4_2"  "CONFIG_NFS_V4_1" "CONFIG_NFS_V4")
 
@@ -341,7 +388,7 @@ check_nfs_client() {
   fi
 
   for option in "${options[@]}"; do
-    qcadmin exp kubectl exec -t ${pod} -- nsenter --mount=/proc/1/ns/mnt -- bash -c "[ -f /boot/config-${kernel} ]" > /dev/null 2>&1
+    kubectl exec ${pod} -- nsenter --mount=/proc/1/ns/mnt -- bash -c "[ -f /boot/config-${kernel} ]" > /dev/null 2>&1
     if [ $? -ne 0 ]; then
       warn "Failed to check $option on node ${node}, because /boot/config-${kernel} does not exist on node ${node}"
       continue
@@ -353,7 +400,7 @@ check_nfs_client() {
     fi
   done
 
-  error "NFS clients ${options[*]} should be enabled at least one."
+  error "NFS clients ${options[*]} not found. At least one should be enabled"
   return 1
 }
 
@@ -368,20 +415,20 @@ check_kernel_module() {
     return 1
   fi
 
-  qcadmin exp kubectl exec -t ${pod} -- nsenter --mount=/proc/1/ns/mnt -- bash -c "[ -e /boot/config-${kernel} ]" > /dev/null 2>&1
+  kubectl exec ${pod} -- nsenter --mount=/proc/1/ns/mnt -- bash -c "[ -e /boot/config-${kernel} ]" > /dev/null 2>&1
   if [ $? -ne 0 ]; then
     warn "Failed to check kernel config option ${option}, because /boot/config-${kernel} does not exist on node ${node}"
     return 1
   fi
 
-  value=$(qcadmin exp kubectl exec -t ${pod} -- nsenter --mount=/proc/1/ns/mnt -- bash -c "grep "^$option=" /boot/config-${kernel} | cut -d= -f2")
+  value=$(kubectl exec ${pod} -- nsenter --mount=/proc/1/ns/mnt -- bash -c "grep "^$option=" /boot/config-${kernel} | cut -d= -f2")
   if [ -z "${value}" ]; then
     error "Failed to find kernel config $option on node ${node}"
     return 1
   elif [ "${value}" = "m" ]; then
-    qcadmin exp kubectl exec -t ${pod} -- nsenter --mount=/proc/1/ns/mnt -- bash -c "lsmod | grep ${module}" > /dev/null 2>&1
+    kubectl exec ${pod} -- nsenter --mount=/proc/1/ns/mnt -- bash -c "lsmod | grep ${module}" > /dev/null 2>&1
     if [ $? -ne 0 ]; then
-      node=$(qcadmin exp kubectl get ${pod} --no-headers -o=custom-columns=:.spec.nodeName)
+      node=$(kubectl get ${pod} --no-headers -o=custom-columns=:.spec.nodeName)
       error "kernel module ${module} is not enabled on ${node}"
       return 1
     fi
@@ -397,7 +444,7 @@ check_hugepage() {
   local pod=$1
   local expected_nr_hugepages=$2
 
-  nr_hugepages=$(qcadmin exp kubectl exec -i ${pod} -- nsenter --mount=/proc/1/ns/mnt -- bash -c 'cat /proc/sys/vm/nr_hugepages')
+  nr_hugepages=$(kubectl exec ${pod} -- nsenter --mount=/proc/1/ns/mnt -- bash -c 'cat /proc/sys/vm/nr_hugepages')
   if [ $? -ne 0 ]; then
     error "Failed to check hugepage size on node ${node}"
     return 1
@@ -409,37 +456,19 @@ check_hugepage() {
   fi
 }
 
-function check_nvme_cli() {
-  local pod=$1
-
-  value=$(qcadmin exp kubectl exec -i $pod -- nsenter --mount=/proc/1/ns/mnt -- bash -c 'nvme version' 2>/dev/null)
-  if [ $? -ne 0 ]; then
-    node=$(qcadmin exp kubectl get ${pod} --no-headers -o=custom-columns=:.spec.nodeName)
-    error "Failed to check nvme-cli version on node ${node}"
-    return 1
-  fi
-
-  local actual_version=$(echo "$value" | grep -o "[0-9]\+\.[0-9]\+")
-  if [[ "$(printf '%s\n' "${NVME_CLI_VERSION}" "$actual_version" | sort -V | tail -n1)" == "$actual_version" ]]; then
-    return 0
-  fi
-  error "nvme-cli version should be at least ${NVME_CLI_VERSION} on node ${node}. Actual: ${actual_version}"
-  return 1
-}
-
 function check_sse42_support() {
   local pod=$1
 
-  node=$(qcadmin exp kubectl get ${pod} --no-headers -o=custom-columns=:.spec.nodeName)
+  node=$(kubectl get ${pod} --no-headers -o=custom-columns=:.spec.nodeName)
 
-  machine=$(qcadmin exp kubectl exec -i $pod -- nsenter --mount=/proc/1/ns/mnt -- bash -c 'uname -m' 2>/dev/null)
+  machine=$(kubectl exec $pod -- nsenter --mount=/proc/1/ns/mnt -- bash -c 'uname -m' 2>/dev/null)
   if [ $? -ne 0 ]; then
     error "Failed to check machine on node ${node}"
     return 1
   fi
 
   if [ "$machine" = "x86_64" ]; then
-    sse42_support=$(qcadmin exp kubectl exec -i $pod -- nsenter --mount=/proc/1/ns/mnt -- bash -c 'grep -o sse4_2 /proc/cpuinfo | wc -l' 2>/dev/null)
+    sse42_support=$(kubectl exec $pod -- nsenter --mount=/proc/1/ns/mnt -- bash -c 'grep -o sse4_2 /proc/cpuinfo | wc -l' 2>/dev/null)
     if [ $? -ne 0 ]; then
       error "Failed to check SSE4.2 instruction set on node ${node}"
       return 1
@@ -462,14 +491,14 @@ Usage: $0 [OPTIONS]
 
 Options:
     -s, --enable-spdk           Enable checking SPDK prerequisites
-    -p, --expected-nr-hugepages Expected number of 2 MiB hugepages for SPDK. Default: 512
+    -p, --expected-nr-hugepages Expected number of 2 MiB hugepages for SPDK. Default: 1024
     -h, --help                  Show this help message and exit
 EOF
     exit 0
 }
 
 enable_spdk=false
-expected_nr_hugepages=512
+expected_nr_hugepages=1024
 while [[ $# -gt 0 ]]; do
     opt="$1"
     case $opt in
@@ -493,7 +522,7 @@ done
 ######################################################
 # Main logics
 ######################################################
-DEPENDENCIES=("qcadmin" "jq" "mktemp")
+DEPENDENCIES=("kubectl" "jq" "mktemp" "sort" "printf")
 check_local_dependencies "${DEPENDENCIES[@]}"
 
 # Check the each host has a unique hostname (for RWX volume)
@@ -507,6 +536,7 @@ create_ds
 wait_ds_ready
 
 check_mount_propagation
+check_nodes "kernel release" check_kernel_release
 check_nodes "iscsid" check_iscsid
 check_nodes "multipathd" check_multipathd
 check_nodes "packages" check_packages
@@ -514,7 +544,6 @@ check_nodes "nfs client" check_nfs_client
 
 if [ "$enable_spdk" = "true" ]; then
   check_nodes "x86-64 SSE4.2 instruction set" check_sse42_support
-  check_nodes "nvme-cli" check_nvme_cli
   check_nodes "kernel module nvme_tcp" check_kernel_module CONFIG_NVME_TCP nvme_tcp
   check_nodes "kernel module uio_pci_generic" check_kernel_module CONFIG_UIO_PCI_GENERIC uio_pci_generic
   check_nodes "hugepage" check_hugepage ${expected_nr_hugepages}
