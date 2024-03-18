@@ -58,7 +58,7 @@ require (
 	k8s.io/system-validators v1.7.0
 	k8s.io/utils v0.0.0-20240102154912-e7106e64919e
 	sigs.k8s.io/yaml v1.4.0
-	tailscale.com v1.60.0
+	tailscale.com v1.62.0
 )
 
 require (
