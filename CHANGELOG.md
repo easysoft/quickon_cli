@@ -1,5 +1,24 @@
 # Changelog
 
+## v3.0.17 (2024-04-15)
+
+ * [eeb3918](https://github.com/easysoft/quickon_cli/commit/eeb3918cb0714d5d07a15e483492f4bf586650c5) build(deps): bump peaceiris/actions-gh-pages from 3 to 4
+ * [e78fe14](https://github.com/easysoft/quickon_cli/commit/e78fe14bebbe0ed2507b5cd4e37a94e090bfcb78) build(deps): bump github.com/shirou/gopsutil/v3 from 3.24.2 to 3.24.3
+ * [1a4eb58](https://github.com/easysoft/quickon_cli/commit/1a4eb5894a2ae9cff0f2dc12391c80509e38d7b4) build(deps): bump vite from 5.0.12 to 5.2.8 in /docs
+ * [9b8093d](https://github.com/easysoft/quickon_cli/commit/9b8093de04ba69dd3174fe12bbc6e12bd83adc82) build(deps): bump github.com/quic-go/quic-go from 0.40.1 to 0.42.0
+ * [8899844](https://github.com/easysoft/quickon_cli/commit/8899844ec4288448ddbce307a3be789bd0342c6d) build(deps): bump helm.sh/helm/v3 from 3.14.2 to 3.14.3
+ * [05e78cc](https://github.com/easysoft/quickon_cli/commit/05e78ccb91d91c7f709329b13f64b14bf2db64c5) build(deps): bump golang.org/x/crypto from 0.20.0 to 0.21.0
+ * [ba6d792](https://github.com/easysoft/quickon_cli/commit/ba6d7926994b90a2395294dd7ac85a4c2d155776) build(deps): bump tailscale.com from 1.60.0 to 1.62.0
+ * [b28bec1](https://github.com/easysoft/quickon_cli/commit/b28bec1fdc6a8b9594075dc061e32ff1eca39145) refactor: refactor kernel version checks and remove unnecessary dependencies
+ * [76ac564](https://github.com/easysoft/quickon_cli/commit/76ac56416cdaaf93d29b6ec6e73406300ed56a2a) build(deps): bump google.golang.org/protobuf from 1.32.0 to 1.33.0
+ * [c8f4ac7](https://github.com/easysoft/quickon_cli/commit/c8f4ac78ca5442315338141cad45fd25aaf8b412) build(deps): bump github.com/easysoft/quickon-api from 0.7.4 to 0.7.5
+ * [9dcc24e](https://github.com/easysoft/quickon_cli/commit/9dcc24e21a1a7de52065f738de7462ed24c8e94a) build(deps): bump magnetikonline/action-golang-cache from 4 to 5
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.0.16 (2024-03-05)
 
  * [3dcb8c4](https://github.com/easysoft/quickon_cli/commit/3dcb8c4889b93409f33512cd38e10deb27734019) build(deps): bump github.com/shirou/gopsutil/v3 from 3.24.1 to 3.24.2
