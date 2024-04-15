@@ -26,6 +26,8 @@
 #     Defaults to ''
 #   - INSTALL_DOMAIN
 #     If not set default use gen default domain
+#   - DEBUG
+#     If set, print debug information
 
 set -e
 set -o noglob

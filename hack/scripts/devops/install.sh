@@ -26,6 +26,10 @@
 #     Defaults to ''
 #   - INSTALL_DOMAIN
 #     If not set default use gen default domain
+#   - DEBUG
+#     If set, print debug information
+#   - SKIP_DEVOPS_INIT
+#     If set, skip devops init
 
 set -e
 set -o noglob
@@ -199,6 +203,9 @@ install_zentao_devops() {
   fi
   if [ -n "${DEVOPS_VERSION}" ]; then
     INSTALL_COMMAND="${INSTALL_COMMAND} --version ${DEVOPS_VERSION}"
+  fi
+  if [ -n "${SKIP_DEVOPS_INIT}" ]; then
+    INSTALL_COMMAND="${INSTALL_COMMAND} --skip-devops-init"
   fi
   eval "$INSTALL_COMMAND"
 }
