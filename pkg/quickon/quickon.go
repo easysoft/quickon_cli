@@ -43,6 +43,7 @@ type Meta struct {
 	ConsolePassword string
 	DevopsMode      bool
 	OffLine         bool
+	SkipDevOPSInit  bool
 	Type            string
 	App             string
 	kubeClient      *k8s.Client
@@ -81,6 +82,12 @@ func (m *Meta) GetCustomFlags() []types.Flag {
 			P:      &m.OffLine,
 			V:      false,
 			Hidden: true,
+		},
+		{
+			Name:   "skip-devops-init",
+			Usage:  "allow user skip devops init, default: false",
+			P:      &m.SkipDevOPSInit,
+			V:      false,
 		},
 	}
 }
@@ -327,6 +334,10 @@ func (m *Meta) Init() error {
 		helmargs = append(helmargs, "--set", "env.CNE_MARKET_API_SCHEMA=http")
 		helmargs = append(helmargs, "--set", "env.CNE_MARKET_API_HOST=market-cne-market-api.quickon-system.svc")
 		helmargs = append(helmargs, "--set", "env.CNE_MARKET_API_PORT=8088")
+	}
+
+	if m.SkipDevOPSInit {
+		helmargs = append(helmargs, "--set", "env.ZT_SKIP_DEVOPS_INIT=true")
 	}
 
 	helmargs = append(helmargs, "--set", fmt.Sprintf("ingress.host=%s", hostdomain))
