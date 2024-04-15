@@ -30,6 +30,8 @@
 set -e
 set -o noglob
 
+[ -n "${DEBUG:+1}" ] && set -x
+
 # --- helper functions for logs ---
 info()
 {
