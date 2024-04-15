@@ -1,5 +1,16 @@
 # Changelog
 
+## v3.0.18 (2024-04-15)
+
+ * [a844420](https://github.com/easysoft/quickon_cli/commit/a844420ba101a10bb9ed57bcede78415b1c4c22d) feat: add flag to skip DevOps initialization
+ * [6dd3a15](https://github.com/easysoft/quickon_cli/commit/6dd3a15a8b1679e48a5d32db3b78e28fa2d7cee9) build(deps): bump golang.org/x/sys from 0.18.0 to 0.19.0
+ * [47e59c8](https://github.com/easysoft/quickon_cli/commit/47e59c8a29d20f6db47cb75bc4f1190f284ec727) refactor: refactor logging and add debug mode support
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.0.17 (2024-04-15)
 
  * [eeb3918](https://github.com/easysoft/quickon_cli/commit/eeb3918cb0714d5d07a15e483492f4bf586650c5) build(deps): bump peaceiris/actions-gh-pages from 3 to 4
