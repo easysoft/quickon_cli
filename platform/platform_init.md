@@ -21,11 +21,12 @@ qcadmin platform init [flags]
 ### Options
 
 ```
-      --domain string     custom domain
-  -h, --help              help for init
-  -p, --provider string   install provider, support devops, quickon (default "devops")
-  -t, --type string       devops type, support oss, max, biz, ipd (default "oss")
-      --version string    zentao devops version 18.12 (default "18.12")
+      --domain string      custom domain
+  -h, --help               help for init
+  -p, --provider string    install provider, support devops, quickon (default "devops")
+      --skip-devops-init   allow user skip devops init, default: false
+  -t, --type string        devops type, support oss, max, biz, ipd (default "oss")
+      --version string     zentao devops version 18.12 (default "18.12")
 ```
 
 ### Options inherited from parent commands

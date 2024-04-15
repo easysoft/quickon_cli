@@ -39,6 +39,7 @@ qcadmin init [flags]
       --pod-cidr string           k8s cluster pod cidr (default "10.42.0.0/16")
   -p, --provider string           install provider, support devops, quickon (default "devops")
       --service-cidr string       k8s cluster service cidr (default "10.43.0.0/16")
+      --skip-devops-init          allow user skip devops init, default: false
       --skip-precheck             skip precheck
       --storage string            storage, e.g: nfs,local (default "nfs")
   -t, --type string               devops type, support oss, max, biz, ipd (default "oss")
