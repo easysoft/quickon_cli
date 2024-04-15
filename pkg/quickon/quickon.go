@@ -84,10 +84,10 @@ func (m *Meta) GetCustomFlags() []types.Flag {
 			Hidden: true,
 		},
 		{
-			Name:   "skip-devops-init",
-			Usage:  "allow user skip devops init, default: false",
-			P:      &m.SkipDevOPSInit,
-			V:      false,
+			Name:  "skip-devops-init",
+			Usage: "allow user skip devops init, default: false",
+			P:     &m.SkipDevOPSInit,
+			V:     false,
 		},
 	}
 }
