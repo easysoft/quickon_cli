@@ -106,12 +106,22 @@ ip6tables-save | grep -v KUBE- | grep -v CNI- | grep -v flannel | ip6tables-rest
 
 if command -v systemctl; then
 		if [ -f "/etc/systemd/system/k3s.service" ]; then
-				systemctl disable k3s.service
-    		systemctl reset-failed k3s
+				systemctl disable k3s
+				systemctl reset-failed k3s
 				rm -f /etc/systemd/system/k3s.service
 		fi
+		if [ -f "/etc/systemd/system/chartrepo.service" ]; then
+				systemctl disable chartrepo
+				systemctl reset-failed chartrepo
+				rm -f /etc/systemd/system/chartrepo.service
+		fi
+		if [ -f "/etc/systemd/system/docker-registry.service" ]; then
+				systemctl disable docker-registry
+				systemctl reset-failed docker-registry
+				rm -f /etc/systemd/system/docker-registry.service
+		fi
 		[ -f "/etc/systemd/system/k3s.service.env" ] && rm -f /etc/systemd/system/k3s.service.env
-    systemctl daemon-reload
+		systemctl daemon-reload
 fi
 
 if (ls /etc/systemd/system/k3s*.service || ls /etc/init.d/k3s*) >/dev/null 2>&1; then

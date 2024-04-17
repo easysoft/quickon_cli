@@ -44,6 +44,7 @@ type Meta struct {
 	DevopsMode      bool
 	OffLine         bool
 	SkipDevOPSInit  bool
+	DBReplication   bool
 	Type            string
 	App             string
 	kubeClient      *k8s.Client
@@ -87,6 +88,12 @@ func (m *Meta) GetCustomFlags() []types.Flag {
 			Name:  "skip-devops-init",
 			Usage: "allow user skip devops init, default: false",
 			P:     &m.SkipDevOPSInit,
+			V:     false,
+		},
+		{
+			Name:  "db-replication",
+			Usage: "db use replication mode, default standalone: false",
+			P:     &m.DBReplication,
 			V:     false,
 		},
 	}
@@ -338,6 +345,11 @@ func (m *Meta) Init() error {
 
 	if m.SkipDevOPSInit {
 		helmargs = append(helmargs, "--set", "env.ZT_SKIP_DEVOPS_INIT=true")
+	}
+
+	if m.DBReplication {
+		helmargs = append(helmargs, "--set", "mysql.replication.enabled=true")
+		helmargs = append(helmargs, "--set", "env.ENABLE_DB_SLAVE=true")
 	}
 
 	helmargs = append(helmargs, "--set", fmt.Sprintf("ingress.host=%s", hostdomain))
