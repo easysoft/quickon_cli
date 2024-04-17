@@ -1,5 +1,15 @@
 # Changelog
 
+## v3.0.19 (2024-04-17)
+
+ * [d805643](https://github.com/easysoft/quickon_cli/commit/d8056434948a6650dff7a61fb3ea631c242e631c) fix(issue): #15 #16 #17
+ * [13d1441](https://github.com/easysoft/quickon_cli/commit/13d1441371f539828bfd1e065e74ff74f083c1b0) feat: refactor installation scripts and debug mode
+ * [e0c743b](https://github.com/easysoft/quickon_cli/commit/e0c743b313baa2966b54993a30bf8098d74f0dee) refactor: refactor codebase for improved clarity and consistency
+
+### Contributors
+
+ * ysicing
+
 ## v3.0.18 (2024-04-15)
 
  * [a844420](https://github.com/easysoft/quickon_cli/commit/a844420ba101a10bb9ed57bcede78415b1c4c22d) feat: add flag to skip DevOps initialization
