@@ -9,7 +9,7 @@ require (
 	github.com/cheggaaa/pb/v3 v3.1.5
 	github.com/cockroachdb/errors v1.11.1
 	github.com/containerd/continuity v0.4.3
-	github.com/docker/docker v25.0.1+incompatible
+	github.com/docker/docker v25.0.5+incompatible
 	github.com/easysoft/quickon-api v0.7.5
 	github.com/emirpasic/gods v1.18.1
 	github.com/ergoapi/util v0.6.4
@@ -58,7 +58,7 @@ require (
 	k8s.io/system-validators v1.7.0
 	k8s.io/utils v0.0.0-20240102154912-e7106e64919e
 	sigs.k8s.io/yaml v1.4.0
-	tailscale.com v1.62.0
+	tailscale.com v1.64.2
 )
 
 require (
