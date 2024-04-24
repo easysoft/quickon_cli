@@ -1,5 +1,14 @@
 # Changelog
 
+## v3.0.20 (2024-04-24)
+
+ * [58d2efb](https://github.com/easysoft/quickon_cli/commit/58d2efb9a7c9c3f01821bf804cc4b9b5ea12a0e5) build(deps): bump tailscale.com from 1.62.0 to 1.64.2
+ * [f05b103](https://github.com/easysoft/quickon_cli/commit/f05b103f71c2cc81c4306c97af8e7be08f9d0c12) build(deps): bump golang.org/x/net from 0.21.0 to 0.23.0
+
+### Contributors
+
+ * dependabot[bot]
+
 ## v3.0.19 (2024-04-17)
 
  * [d805643](https://github.com/easysoft/quickon_cli/commit/d8056434948a6650dff7a61fb3ea631c242e631c) fix(issue): #15 #16 #17
