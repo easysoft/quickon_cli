@@ -37,7 +37,7 @@ require (
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/pflag v1.0.5
-	github.com/ulikunitz/xz v0.5.11
+	github.com/ulikunitz/xz v0.5.12
 	github.com/vishvananda/netlink v1.2.1-beta.2
 	github.com/xlab/treeprint v1.2.0
 	github.com/ysicing/cobra2vitepress v0.0.0-20231129091107-690364f0dca7
