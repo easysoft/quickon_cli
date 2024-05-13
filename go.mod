@@ -19,7 +19,7 @@ require (
 	github.com/gosuri/uitable v0.0.4
 	github.com/imroc/req/v3 v3.42.3
 	github.com/inconshreveable/go-update v0.0.0-20160112193335-8152e7eb6ccf
-	github.com/jackpal/gateway v1.0.14
+	github.com/jackpal/gateway v1.0.15
 	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213
 	github.com/kardianos/service v1.2.2
 	github.com/logrusorgru/aurora/v3 v3.0.0
@@ -41,10 +41,10 @@ require (
 	github.com/vishvananda/netlink v1.2.1-beta.2
 	github.com/xlab/treeprint v1.2.0
 	github.com/ysicing/cobra2vitepress v0.0.0-20231129091107-690364f0dca7
-	golang.org/x/crypto v0.21.0
+	golang.org/x/crypto v0.23.0
 	golang.org/x/sync v0.6.0
-	golang.org/x/sys v0.19.0
-	golang.org/x/term v0.18.0
+	golang.org/x/sys v0.20.0
+	golang.org/x/term v0.20.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gotest.tools v2.2.0+incompatible
 	helm.sh/helm/v3 v3.14.3
@@ -207,9 +207,9 @@ require (
 	golang.org/x/exp v0.0.0-20240119083558-1b970713d09a // indirect
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/mod v0.14.0 // indirect
-	golang.org/x/net v0.23.0 // indirect
+	golang.org/x/net v0.25.0 // indirect
 	golang.org/x/oauth2 v0.16.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/text v0.15.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.17.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
