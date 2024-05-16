@@ -20,11 +20,11 @@ import (
 	"syscall"
 
 	"github.com/cockroachdb/errors"
+	"github.com/ergoapi/util/exnet"
+	"github.com/vishvananda/netlink"
+
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 
-	"github.com/ergoapi/util/exnet"
-
-	"github.com/vishvananda/netlink"
 	k8snet "k8s.io/apimachinery/pkg/util/net"
 )
 

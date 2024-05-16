@@ -10,11 +10,12 @@ import (
 	"context"
 
 	"github.com/cockroachdb/errors"
+	"github.com/spf13/cobra"
+
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
-	"github.com/spf13/cobra"
 )
 
 func EmbedCommand(f factory.Factory) *cobra.Command {

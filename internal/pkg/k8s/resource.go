@@ -7,8 +7,9 @@
 package k8s
 
 import (
-	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
+
+	v1 "k8s.io/api/core/v1"
 	metricsapi "k8s.io/metrics/pkg/apis/metrics"
 )
 

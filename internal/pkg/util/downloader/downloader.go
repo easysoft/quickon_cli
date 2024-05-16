@@ -18,14 +18,15 @@ import (
 
 	"github.com/cheggaaa/pb/v3"
 	"github.com/cockroachdb/errors"
-
 	"github.com/containerd/continuity/fs"
-	"github.com/easysoft/qcadmin/common"
-	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/ergoapi/util/validation"
 	"github.com/ergoapi/util/zos"
 	"github.com/mattn/go-isatty"
+
+	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 )
 
 type Status = string

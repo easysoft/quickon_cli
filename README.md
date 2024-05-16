@@ -17,9 +17,9 @@
 ### Linux 发行版
 
 * **Debian**  *12(推荐), 11, 10*
-* **Ubuntu**  *20.04, 18.04*
-* **CentOS**  *7*
-* **Rocky**  *9, 8*
+* **Ubuntu**  *24.04,22.04*
+* **CentOS**  *7(不推荐)*
+* **Rocky**  *9(不推荐), 8*
 
 > 建议内核版本`5.14及之后版本`
 
@@ -33,7 +33,7 @@
 ### k8s/k3s版本
 
 * 对接已有k8s集群, 推荐1.21+版本
-* 默认k3s版本为`1.24`
+* 默认k3s版本为`1.28`
 
 ## 要求和建议
 
@@ -56,7 +56,7 @@
 
 #### 1. 从源码安装
 
-> 需要go环境，推荐使用`1.21`
+> 需要go环境，推荐使用`1.22`
 
 ```bash
 # Clone the repo
@@ -73,13 +73,13 @@ task
 
 ```bash
 # 稳定版本 / stable / tag (Recommended)
-curl -sfL https://pkg.qucheng.com/quickon/get.sh | sh -
+curl -sfL https://pkg.zentao.net/get.sh | sh -
 # 安装渠成平台
-q init --provider quickon
+z init --provider quickon
 # 安装禅道DevOPS
-q init --provider devops
+z init --provider devops
 # 一键安装
-curl -sfL https://pkg.qucheng.com/quickon/install.sh | INSTALL_DOMAIN=example.com sh -
+curl -sfL https://pkg.zentao.net/devops.sh | INSTALL_DOMAIN=example.com sh -
 ```
 
 #### 3. 包安装
@@ -111,20 +111,20 @@ yum install qcadmin
 
 ```bash
 # create quickon cluster
-q init --provider quickon
+z init --provider quickon
 # create zentao devops cluster(default)
-q init --provider zentao
-q init
+z init --provider zentao
+z init
 ```
 
 ### 高级使用
 
 ```bash
 # step 1. 创建k3s集群
-q cluster init
+z cluster init
 # step 2. 初始化渠成平台或devops
-q quickon init --provider quickon
-q quickon init --provider devops / q quickon init
+z quickon init --provider quickon
+z quickon init
 ```
 
 ## 相关文档

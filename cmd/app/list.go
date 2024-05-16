@@ -11,15 +11,17 @@ import (
 	"fmt"
 
 	"github.com/cockroachdb/errors"
+	"github.com/ergoapi/util/color"
+	"github.com/manifoldco/promptui"
+	"github.com/spf13/cobra"
+	"k8s.io/apimachinery/pkg/labels"
+
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
 	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
-	"github.com/ergoapi/util/color"
-	"github.com/manifoldco/promptui"
-	"github.com/spf13/cobra"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/labels"
 )
 
 func NewCmdAppList(f factory.Factory) *cobra.Command {

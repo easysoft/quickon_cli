@@ -12,11 +12,11 @@ import (
 	"os"
 
 	"github.com/ergoapi/util/exnet"
+	"github.com/ergoapi/util/file"
+	"github.com/spf13/cobra"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
-	"github.com/ergoapi/util/file"
-	"github.com/spf13/cobra"
 )
 
 type K3sArgs struct {

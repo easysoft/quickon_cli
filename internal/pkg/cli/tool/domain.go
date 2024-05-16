@@ -11,20 +11,22 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/easysoft/qcadmin/common"
-	"github.com/easysoft/qcadmin/internal/app/config"
-	"github.com/easysoft/qcadmin/internal/pkg/k8s"
-	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
-	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
-	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
-	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
-	"github.com/easysoft/qcadmin/pkg/qucheng/domain"
-	suffixdomain "github.com/easysoft/qcadmin/pkg/qucheng/domain"
 	"github.com/ergoapi/util/exmap"
 	"github.com/ergoapi/util/exnet"
 	"github.com/imroc/req/v3"
 	"github.com/spf13/cobra"
 	"helm.sh/helm/v3/pkg/strvals"
+
+	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/app/config"
+	"github.com/easysoft/qcadmin/internal/pkg/k8s"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
+	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
+	"github.com/easysoft/qcadmin/pkg/qucheng/domain"
+
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
+	suffixdomain "github.com/easysoft/qcadmin/pkg/qucheng/domain"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 

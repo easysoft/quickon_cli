@@ -12,15 +12,17 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/ergoapi/util/file"
+	"github.com/spf13/cobra"
+
 	"github.com/easysoft/qcadmin/cmd/version"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/selfupdate"
-	"github.com/ergoapi/util/file"
+
 	uv "github.com/ergoapi/util/version"
-	"github.com/spf13/cobra"
 )
 
 type option struct {

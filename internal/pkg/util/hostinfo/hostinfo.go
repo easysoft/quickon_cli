@@ -9,9 +9,11 @@ package hostinfo
 import (
 	"fmt"
 
-	"github.com/easysoft/qcadmin/common"
-	hinfo "tailscale.com/hostinfo"
 	"tailscale.com/tailcfg"
+
+	"github.com/easysoft/qcadmin/common"
+
+	hinfo "tailscale.com/hostinfo"
 )
 
 // New returns a partially populated Hostinfo for the current host.

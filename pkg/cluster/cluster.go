@@ -11,30 +11,27 @@ import (
 	"fmt"
 	"os"
 	"runtime"
-	"strings"
 	"sync"
 	"time"
 
-	"github.com/ergoapi/util/exnet"
-
-	"k8s.io/apimachinery/pkg/util/wait"
-
 	"github.com/cockroachdb/errors"
+	"github.com/ergoapi/util/exnet"
+	"github.com/ergoapi/util/expass"
+	"github.com/ergoapi/util/exstr"
+	"github.com/ergoapi/util/file"
+	"k8s.io/apimachinery/pkg/util/wait"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/cli/k3stpl"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
-	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/internal/pkg/util/ssh"
-	"github.com/ergoapi/util/expass"
-	"github.com/ergoapi/util/exstr"
-	"github.com/ergoapi/util/file"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 var defaultBackoff = wait.Backoff{
@@ -256,10 +253,11 @@ func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error
 		ServiceCIDR:  c.ServiceCIDR,
 		CNI:          c.CNI,
 		DataStore:    c.DataStore,
-		LocalStorage: strings.ToLower(c.Storage) == "local",
-		Registry:     c.Registry,
-		OffLine:      c.OffLine,
-		Master0IP:    cfg.Cluster.InitNode,
+		LocalStorage: false,
+		// LocalStorage: strings.ToLower(c.Storage) == "local",
+		Registry:  c.Registry,
+		OffLine:   c.OffLine,
+		Master0IP: cfg.Cluster.InitNode,
 	}
 	master0tplSrc := fmt.Sprintf("%s/master0.%s", common.GetDefaultCacheDir(), cfg.Cluster.InitNode)
 	master0tplDst := fmt.Sprintf("/%s/.k3s.service", c.SSH.User)
@@ -274,10 +272,15 @@ func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error
 	if err := c.waitk3sReady(cfg.Cluster.InitNode, sshClient); err != nil {
 		return err
 	}
+	c.log.Infof("install %s as default storage", c.Storage)
 	if c.Storage == "nfs" {
-		c.log.Infof("install %s as default storage", c.Storage)
 		if err := qcexec.CommandRun("bash", "-c", common.GetCustomScripts("hack/manifests/storage/nfs-server.sh")); err != nil {
 			return errors.Errorf("%s run install nfs script failed, reason: %v", cfg.Cluster.InitNode, err)
+		}
+	} else if c.Storage == "local" {
+		kubeargs := []string{"experimental", "kubectl", "apply", "-f", common.GetCustomScripts("hack/manifests/storage/local-storage.yaml")}
+		if err := qcexec.CommandRun(os.Args[0], kubeargs...); err != nil {
+			return errors.Errorf("%s run install local storage failed, reason: %v", cfg.Cluster.InitNode, err)
 		}
 	}
 	kclient, _ := k8s.NewSimpleClient()

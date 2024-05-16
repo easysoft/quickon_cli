@@ -7,9 +7,10 @@
 package status
 
 import (
-	"github.com/easysoft/qcadmin/internal/pkg/status/top"
 	"github.com/spf13/cobra"
 	"k8s.io/kubectl/pkg/util/templates"
+
+	"github.com/easysoft/qcadmin/internal/pkg/status/top"
 )
 
 var (

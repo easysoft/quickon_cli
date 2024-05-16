@@ -10,11 +10,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/easysoft/qcadmin/common"
-	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/ergoapi/util/exstr"
 	"github.com/ergoapi/util/file"
 	"sigs.k8s.io/yaml"
+
+	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/pkg/types"
 )
 
 var Cfg *Config

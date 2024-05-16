@@ -16,9 +16,10 @@ import (
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
-	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 )
 
 // CheckReNewCertificate 检查证书是否过期

@@ -7,12 +7,12 @@
 package cmd
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/easysoft/qcadmin/cmd/cluster"
 	"github.com/easysoft/qcadmin/cmd/precheck"
 	"github.com/easysoft/qcadmin/cmd/storage"
-
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
-	"github.com/spf13/cobra"
 )
 
 func newCmdPreCheck(f factory.Factory) *cobra.Command {

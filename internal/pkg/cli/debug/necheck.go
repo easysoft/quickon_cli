@@ -7,9 +7,10 @@
 package debug
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/preflight"
-	"github.com/spf13/cobra"
 )
 
 func NetcheckCommand(f factory.Factory) *cobra.Command {

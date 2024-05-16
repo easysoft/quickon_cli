@@ -10,11 +10,13 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/spf13/cobra"
+
 	"github.com/easysoft/qcadmin/common"
-	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
-	"github.com/spf13/cobra"
+
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 )
 
 type bugReportCmd struct {

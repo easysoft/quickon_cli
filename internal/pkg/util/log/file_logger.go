@@ -12,12 +12,12 @@ import (
 	"sync"
 
 	"github.com/cockroachdb/errors"
-
-	"github.com/easysoft/qcadmin/common"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log/survey"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"k8s.io/apimachinery/pkg/util/runtime"
+
+	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/pkg/util/log/survey"
 )
 
 var logs = map[string]Logger{}

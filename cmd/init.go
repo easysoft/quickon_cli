@@ -9,24 +9,24 @@ package cmd
 import (
 	"os"
 
-	"github.com/easysoft/qcadmin/internal/app/config"
-	"github.com/easysoft/qcadmin/pkg/providers"
-
-	"github.com/easysoft/qcadmin/cmd/flags"
-	"github.com/easysoft/qcadmin/cmd/precheck"
-	nativeCluster "github.com/easysoft/qcadmin/pkg/cluster"
-	"github.com/ergoapi/util/exnet"
-
-	"github.com/easysoft/qcadmin/common"
-	"github.com/easysoft/qcadmin/internal/pkg/k8s"
-	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/ergoapi/util/color"
+	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/file"
 	"github.com/spf13/cobra"
 
+	"github.com/easysoft/qcadmin/cmd/flags"
+	"github.com/easysoft/qcadmin/cmd/precheck"
+	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/app/config"
+	"github.com/easysoft/qcadmin/internal/pkg/k8s"
+	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+	"github.com/easysoft/qcadmin/pkg/providers"
+
 	_ "github.com/easysoft/qcadmin/pkg/providers/devops"
 	_ "github.com/easysoft/qcadmin/pkg/providers/quickon"
+
+	nativeCluster "github.com/easysoft/qcadmin/pkg/cluster"
 )
 
 var (

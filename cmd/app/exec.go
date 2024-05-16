@@ -10,14 +10,16 @@ import (
 	"context"
 
 	"github.com/cockroachdb/errors"
-	"github.com/easysoft/qcadmin/internal/app/debug"
-	"github.com/easysoft/qcadmin/internal/pkg/k8s"
-	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/manifoldco/promptui"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
+
+	"github.com/easysoft/qcadmin/internal/app/debug"
+	"github.com/easysoft/qcadmin/internal/pkg/k8s"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func NewCmdAppExec(f factory.Factory) *cobra.Command {

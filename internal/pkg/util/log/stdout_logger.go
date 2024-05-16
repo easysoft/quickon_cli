@@ -15,10 +15,12 @@ import (
 	"time"
 
 	"github.com/cockroachdb/errors"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log/survey"
-	goansi "github.com/k0kubun/go-ansi"
 	"github.com/mgutz/ansi"
 	"github.com/sirupsen/logrus"
+
+	"github.com/easysoft/qcadmin/internal/pkg/util/log/survey"
+
+	goansi "github.com/k0kubun/go-ansi"
 )
 
 var stdout = goansi.NewAnsiStdout()

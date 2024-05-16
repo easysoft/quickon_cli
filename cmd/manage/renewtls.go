@@ -7,9 +7,10 @@
 package manage
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/httptls"
-	"github.com/spf13/cobra"
 )
 
 func NewRenewTLS(f factory.Factory) *cobra.Command {

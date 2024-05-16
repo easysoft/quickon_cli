@@ -13,8 +13,9 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/easysoft/qcadmin/internal/pkg/util/log/terminal"
 	"github.com/mgutz/ansi"
+
+	"github.com/easysoft/qcadmin/internal/pkg/util/log/terminal"
 )
 
 const waitInterval = time.Millisecond * 150

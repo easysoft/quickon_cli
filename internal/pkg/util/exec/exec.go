@@ -9,13 +9,15 @@ package exec
 import (
 	"fmt"
 	"os"
-	sysexec "os/exec"
 	"strings"
+
+	"github.com/ergoapi/util/environ"
+	"github.com/sirupsen/logrus"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
-	"github.com/ergoapi/util/environ"
-	"github.com/sirupsen/logrus"
+
+	sysexec "os/exec"
 )
 
 func trace(cmd *sysexec.Cmd) {

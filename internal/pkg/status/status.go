@@ -13,11 +13,12 @@ import (
 	"strings"
 	"text/tabwriter"
 
+	"github.com/ergoapi/util/color"
+
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/easysoft/qcadmin/internal/pkg/util/output"
-	"github.com/ergoapi/util/color"
 )
 
 type MapCount map[string]int

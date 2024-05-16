@@ -10,8 +10,9 @@ import (
 	"io"
 	"os"
 
-	dockerterm "github.com/moby/term"
 	"k8s.io/kubectl/pkg/util/term"
+
+	dockerterm "github.com/moby/term"
 )
 
 // SetupTTY creates a term.TTY (docker)

@@ -8,15 +8,17 @@ package cluster
 
 import (
 	"github.com/cockroachdb/errors"
-	"github.com/easysoft/qcadmin/cmd/flags"
-	"github.com/easysoft/qcadmin/cmd/precheck"
-	statussubcmd "github.com/easysoft/qcadmin/cmd/status"
-	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
-	"github.com/easysoft/qcadmin/pkg/cluster"
 	"github.com/ergoapi/util/confirm"
 	"github.com/ergoapi/util/exnet"
 	"github.com/spf13/cobra"
 	"k8s.io/kubectl/pkg/util/templates"
+
+	"github.com/easysoft/qcadmin/cmd/flags"
+	"github.com/easysoft/qcadmin/cmd/precheck"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+	"github.com/easysoft/qcadmin/pkg/cluster"
+
+	statussubcmd "github.com/easysoft/qcadmin/cmd/status"
 )
 
 var (

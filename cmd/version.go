@@ -7,9 +7,10 @@
 package cmd
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/easysoft/qcadmin/cmd/version"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
-	"github.com/spf13/cobra"
 )
 
 // newCmdVersion show version

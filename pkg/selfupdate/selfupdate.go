@@ -13,8 +13,9 @@ import (
 	"path/filepath"
 
 	"github.com/cockroachdb/errors"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/inconshreveable/go-update"
+
+	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 )
 
 type Updater struct{}

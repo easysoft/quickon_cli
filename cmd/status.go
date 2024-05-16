@@ -11,13 +11,15 @@ import (
 	"fmt"
 	"os"
 
-	statussubcmd "github.com/easysoft/qcadmin/cmd/status"
-	"github.com/easysoft/qcadmin/common"
-	"github.com/easysoft/qcadmin/internal/pkg/status"
-	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/file"
 	"github.com/spf13/cobra"
+
+	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/pkg/status"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+
+	statussubcmd "github.com/easysoft/qcadmin/cmd/status"
 )
 
 func newCmdStatus(f factory.Factory) *cobra.Command {

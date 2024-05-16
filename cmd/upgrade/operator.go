@@ -9,11 +9,13 @@ package upgrade
 import (
 	"os"
 
-	"github.com/easysoft/qcadmin/common"
-	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
-	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+
+	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 )
 
 func NewUpgradeOperator(f factory.Factory) *cobra.Command {

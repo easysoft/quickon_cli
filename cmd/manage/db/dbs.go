@@ -12,14 +12,16 @@ import (
 	"os"
 
 	"github.com/cockroachdb/errors"
+	"github.com/manifoldco/promptui"
+	"github.com/pkg/browser"
+	"github.com/spf13/cobra"
+
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
+
 	quchengv1beta1 "github.com/easysoft/quickon-api/qucheng/v1beta1"
-	"github.com/manifoldco/promptui"
-	"github.com/pkg/browser"
-	"github.com/spf13/cobra"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

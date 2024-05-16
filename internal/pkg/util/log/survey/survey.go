@@ -11,8 +11,9 @@ import (
 	"regexp"
 	"sort"
 
-	surveypkg "github.com/AlecAivazis/survey/v2"
 	"github.com/cockroachdb/errors"
+
+	surveypkg "github.com/AlecAivazis/survey/v2"
 )
 
 // QuestionOptions defines a question and its options

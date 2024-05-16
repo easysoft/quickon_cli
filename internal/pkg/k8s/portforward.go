@@ -13,13 +13,14 @@ import (
 	"os"
 	"time"
 
-	"github.com/easysoft/qcadmin/common"
-	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/zos"
-
 	"github.com/pkg/browser"
+
+	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 )
 
 func PortForwardCommand(ctx context.Context, ns, svc string, sport int) error {

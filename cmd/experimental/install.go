@@ -8,14 +8,14 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/ergoapi/util/color"
-
 	"github.com/cockroachdb/errors"
+	"github.com/ergoapi/util/color"
+	"github.com/spf13/cobra"
+	"k8s.io/kubectl/pkg/util/templates"
+
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/downloader"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
-	"github.com/spf13/cobra"
-	"k8s.io/kubectl/pkg/util/templates"
 )
 
 var (

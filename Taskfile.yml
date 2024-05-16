@@ -56,10 +56,21 @@ tasks:
       - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
       - golangci-lint run -v ./...
 
+  gci:
+    cmds:
+      - go install github.com/daixiang0/gci@v0.13.1
+      - gci write --skip-generated --custom-order -s standard -s default -s "prefix(github.com/easysoft/qcadmin)" -s blank -s dot -s alias .
+
+  gomod:
+    cmds:
+      - go mod tidy
+
   lint:
     desc: lint code
     cmds:
+      - task: gomod
       - task: gofmt
+      - task: gci
       - task: golint
 
   fmt:

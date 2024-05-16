@@ -8,10 +8,11 @@ package upgrade
 
 import (
 	"github.com/cockroachdb/errors"
+	"github.com/spf13/cobra"
+
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/pkg/qucheng/upgrade"
-	"github.com/spf13/cobra"
 )
 
 // Option is a struct that defines a command call for "upgrade"

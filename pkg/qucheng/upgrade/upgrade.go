@@ -10,16 +10,16 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/easysoft/qcadmin/common"
-	"github.com/easysoft/qcadmin/internal/app/config"
+	"github.com/cockroachdb/errors"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/confirm"
+	"github.com/ergoapi/util/version"
 	"github.com/manifoldco/promptui"
 
-	"github.com/cockroachdb/errors"
+	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
-	"github.com/ergoapi/util/version"
 )
 
 type Option struct {
@@ -139,7 +139,7 @@ func Upgrade(flagVersion string, testmode bool, log log.Logger) error {
 				if selectItems[it].Key != common.ZenTaoOSSType {
 					appnewVersion = fmt.Sprintf("%s%s.k8s", newProduct, common.GetVersion(true, newProduct, ""))
 					if newProduct != product.(string) {
-						log.Warnf("切换版本升级(如开源版升级到企业版), 可能导致因版本授权问题无法正常使用, 如有问题请联系技术支持!")
+						log.Warn("切换版本升级(如开源版升级到企业版), 可能导致因版本授权问题无法正常使用, 如有问题请联系技术支持!")
 					}
 				}
 				defaultValue["deploy"].(map[string]interface{})["versions"].(map[string]interface{})[product.(string)] = appnewVersion

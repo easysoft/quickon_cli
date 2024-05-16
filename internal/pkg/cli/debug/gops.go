@@ -10,9 +10,11 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
-	egops "github.com/easysoft/qcadmin/internal/pkg/util/gops"
 	"github.com/spf13/cobra"
+
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+
+	egops "github.com/easysoft/qcadmin/internal/pkg/util/gops"
 )
 
 func GOPSCommand(f factory.Factory) *cobra.Command {

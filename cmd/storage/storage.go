@@ -11,16 +11,18 @@ import (
 	"os"
 
 	"github.com/cockroachdb/errors"
-	"github.com/easysoft/qcadmin/common"
-	"github.com/easysoft/qcadmin/internal/pkg/k8s"
-	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
-	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log/survey"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/exnet"
 	"github.com/spf13/cobra"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/kubectl/pkg/util/templates"
+
+	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/pkg/k8s"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+	"github.com/easysoft/qcadmin/internal/pkg/util/log/survey"
+
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 var (
@@ -41,6 +43,7 @@ func NewCmdStorage(f factory.Factory) *cobra.Command {
 	}
 	s.AddCommand(longhorn(f))
 	s.AddCommand(nfs(f))
+	s.AddCommand(local(f))
 	s.AddCommand(defaultStorage(f))
 	return s
 }
@@ -61,6 +64,25 @@ func longhorn(f factory.Factory) *cobra.Command {
 				return errors.Errorf("longhorn install failed, reason: %v", err)
 			}
 			logpkg.Infof("install longhorn storage success")
+			return nil
+		},
+	}
+	return cmd
+}
+
+func local(f factory.Factory) *cobra.Command {
+	logpkg := f.GetLog()
+	cmd := &cobra.Command{
+		Use:   "local",
+		Short: "deploy local storage",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			kubeargs := []string{"experimental", "kubectl", "apply", "-f", common.GetCustomScripts("hack/manifests/storage/local-storage.yaml")}
+			output, err := qcexec.Command(os.Args[0], kubeargs...).CombinedOutput()
+			if err != nil {
+				logpkg.Errorf("upgrade install local storage failed: %s", string(output))
+				return err
+			}
+			logpkg.Infof("install local storage class %s (%s) success", color.SGreen("q-local"), color.SGreen("/opt/quickon/storage/local"))
 			return nil
 		},
 	}

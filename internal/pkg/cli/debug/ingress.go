@@ -7,8 +7,9 @@
 package debug
 
 import (
-	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/spf13/cobra"
+
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 )
 
 func IngressNoHostCommand(f factory.Factory) *cobra.Command {

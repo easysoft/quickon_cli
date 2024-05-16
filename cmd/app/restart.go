@@ -1,4 +1,4 @@
-// Copyright (c) 2021-2023 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
+// Copyright (c) 2021-2024 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
 // Use of this source code is covered by the following dual licenses:
 // (1) Z PUBLIC LICENSE 1.2 (ZPL 1.2)
 // (2) Affero General Public License 3.0 (AGPL 3.0)
@@ -22,20 +22,20 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func NewCmdAppLogs(f factory.Factory) *cobra.Command {
-	var previous, useip bool
+func NewCmdAppRestart(f factory.Factory) *cobra.Command {
 	log := f.GetLog()
+	var useip bool
 	app := &cobra.Command{
-		Use:     "logs",
-		Aliases: []string{"log"},
-		Short:   "logs app",
-		Args:    cobra.ExactArgs(1),
-		Hidden:  true,
-		Example: `z app logs http://console.example.corp.cc/instance-view-39.html`,
+		Use:        "restart",
+		Short:      "restart app",
+		Args:       cobra.ExactArgs(1),
+		Hidden:     true,
+		Deprecated: "zentao not support query by url",
+		Example:    `z app exec http://console.example.corp.cc/instance-view-39.html`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			url := args[0]
 			apidebug := log.GetLevel() == logrus.DebugLevel
-			log.Infof("start logs app: %s", url)
+			log.Infof("start exec app: %s", url)
 			appdata, err := debug.GetNameByURL(url, apidebug, useip)
 			if err != nil {
 				return err
@@ -68,10 +68,10 @@ func NewCmdAppLogs(f factory.Factory) *cobra.Command {
 				Size:      5,
 			}
 			it, _, _ := prompt.Run()
-			return k8sClient.GetFollowLogs(ctx, "default", podlist.Items[it].Name, podlist.Items[it].Spec.Containers[0].Name, previous)
+
+			return k8sClient.ExecPodWithTTY(ctx, "default", podlist.Items[it].Name, podlist.Items[it].Spec.Containers[0].Name, []string{"/bin/sh", "-c", "sh"})
 		},
 	}
-	app.Flags().BoolVarP(&previous, "previous", "p", false, " If true, print the logs for the previous instance of the container in a pod if it exists.")
 	app.Flags().BoolVar(&useip, "api-useip", false, "api use ip")
 	return app
 }

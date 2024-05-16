@@ -21,8 +21,8 @@ import (
 	"strings"
 
 	"github.com/cockroachdb/errors"
-
 	"k8s.io/apimachinery/pkg/util/version"
+
 	utilsexec "k8s.io/utils/exec"
 )
 

@@ -13,18 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/easysoft/qcadmin/internal/pkg/types"
-
 	"github.com/cockroachdb/errors"
-	"github.com/easysoft/qcadmin/common"
-	"github.com/easysoft/qcadmin/internal/app/config"
-	"github.com/easysoft/qcadmin/internal/pkg/k8s"
-	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
-	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
-	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
-	"github.com/easysoft/qcadmin/internal/pkg/util/retry"
-	suffixdomain "github.com/easysoft/qcadmin/pkg/qucheng/domain"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/expass"
@@ -32,6 +21,18 @@ import (
 	"github.com/ergoapi/util/ztime"
 	"github.com/imroc/req/v3"
 	"golang.org/x/sync/errgroup"
+
+	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/app/config"
+	"github.com/easysoft/qcadmin/internal/pkg/k8s"
+	"github.com/easysoft/qcadmin/internal/pkg/types"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
+	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+	"github.com/easysoft/qcadmin/internal/pkg/util/retry"
+
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
+	suffixdomain "github.com/easysoft/qcadmin/pkg/qucheng/domain"
 	kubeerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

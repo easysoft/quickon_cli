@@ -10,11 +10,12 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/ergoapi/util/file"
+
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/static/data"
 	"github.com/easysoft/qcadmin/internal/static/haogstls"
 	"github.com/easysoft/qcadmin/internal/static/manifests"
-	"github.com/ergoapi/util/file"
 )
 
 func StageFiles() error {

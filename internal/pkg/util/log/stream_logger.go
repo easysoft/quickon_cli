@@ -13,8 +13,9 @@ import (
 	"sync"
 
 	"github.com/cockroachdb/errors"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log/survey"
 	"github.com/sirupsen/logrus"
+
+	"github.com/easysoft/qcadmin/internal/pkg/util/log/survey"
 )
 
 // StreamLogger logs all messages to a stream

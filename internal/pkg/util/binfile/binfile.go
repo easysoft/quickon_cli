@@ -12,9 +12,11 @@ import (
 	"runtime"
 
 	"github.com/cockroachdb/errors"
-	"github.com/easysoft/qcadmin/common"
-	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/ergoapi/util/file"
+
+	"github.com/easysoft/qcadmin/common"
+
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 )
 
 type Meta struct{}

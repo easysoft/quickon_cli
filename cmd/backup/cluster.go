@@ -8,11 +8,12 @@ package backup
 
 import (
 	"github.com/cockroachdb/errors"
+	"github.com/spf13/cobra"
+
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
-	"github.com/spf13/cobra"
 )
 
 func NewCmdBackupCluster(f factory.Factory) *cobra.Command {

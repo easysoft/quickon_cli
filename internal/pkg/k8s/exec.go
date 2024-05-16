@@ -8,12 +8,13 @@ import (
 	"context"
 	"io"
 
-	corev1 "k8s.io/api/core/v1"
-
 	"github.com/cockroachdb/errors"
-	"github.com/easysoft/qcadmin/internal/pkg/util"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/tools/remotecommand"
+
+	"github.com/easysoft/qcadmin/internal/pkg/util"
+
+	corev1 "k8s.io/api/core/v1"
 )
 
 type ExecResult struct {

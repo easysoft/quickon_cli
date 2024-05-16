@@ -7,9 +7,10 @@
 package tool
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/hosts"
-	"github.com/spf13/cobra"
 )
 
 var hostsPath string

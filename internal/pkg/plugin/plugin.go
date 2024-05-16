@@ -13,11 +13,13 @@ import (
 	"os"
 	"strings"
 
-	gv "github.com/Masterminds/semver/v3"
 	"github.com/cockroachdb/errors"
+
 	"github.com/easysoft/qcadmin/common"
-	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+
+	gv "github.com/Masterminds/semver/v3"
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 	corev1 "k8s.io/api/core/v1"
 	kubeerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

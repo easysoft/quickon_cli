@@ -7,9 +7,10 @@
 package experimental
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/easysoft/qcadmin/internal/pkg/cli/kubectl"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
-	"github.com/spf13/cobra"
 )
 
 // KubectlCommand kubectl command.

@@ -9,9 +9,10 @@ package debug
 import (
 	"context"
 
+	"github.com/spf13/cobra"
+
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
-	"github.com/spf13/cobra"
 )
 
 func PortForwardCommand(f factory.Factory) *cobra.Command {

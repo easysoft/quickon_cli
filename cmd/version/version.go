@@ -15,17 +15,18 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/easysoft/qcadmin/internal/app/config"
+	"github.com/cockroachdb/errors"
+	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/github"
+	"github.com/imroc/req/v3"
+
+	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/app/config"
+	"github.com/easysoft/qcadmin/pkg/qucheng/upgrade"
 
 	gv "github.com/Masterminds/semver/v3"
-	"github.com/cockroachdb/errors"
-	"github.com/easysoft/qcadmin/common"
 	logpkg "github.com/easysoft/qcadmin/internal/pkg/util/log"
-	"github.com/easysoft/qcadmin/pkg/qucheng/upgrade"
-	"github.com/ergoapi/util/color"
-	"github.com/imroc/req/v3"
 )
 
 var versionTpl = `{{with .Client -}}

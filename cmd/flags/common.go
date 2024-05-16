@@ -12,9 +12,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+
+	"github.com/easysoft/qcadmin/internal/pkg/types"
 )
 
 // BashCompEnvVarFlag cobra flag's annotation used for bind env to flag.

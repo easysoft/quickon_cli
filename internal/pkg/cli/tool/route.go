@@ -7,8 +7,9 @@
 package tool
 
 import (
-	"github.com/easysoft/qcadmin/internal/pkg/util/route"
 	"github.com/spf13/cobra"
+
+	"github.com/easysoft/qcadmin/internal/pkg/util/route"
 )
 
 var (

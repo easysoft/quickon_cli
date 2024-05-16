@@ -18,8 +18,9 @@ import (
 	"strings"
 
 	"github.com/cockroachdb/errors"
-	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/ulikunitz/xz"
+
+	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 )
 
 func matchExecutableName(cmd, target string) bool {

@@ -18,7 +18,6 @@ import (
 	"time"
 
 	"github.com/ergoapi/util/exstr"
-
 	"github.com/google/gops/goprocess"
 	"github.com/shirou/gopsutil/v3/process"
 )

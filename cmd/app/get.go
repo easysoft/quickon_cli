@@ -9,13 +9,14 @@ package app
 import (
 	"os"
 
-	"github.com/easysoft/qcadmin/common"
-
-	"github.com/easysoft/qcadmin/internal/app/debug"
-	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
-	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+
+	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/app/debug"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 )
 
 func NewCmdAppGet(f factory.Factory) *cobra.Command {

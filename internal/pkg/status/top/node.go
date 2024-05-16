@@ -11,10 +11,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/easysoft/qcadmin/internal/pkg/k8s"
-	"github.com/easysoft/qcadmin/internal/pkg/util/output"
 	"github.com/gosuri/uitable"
 	"k8s.io/apimachinery/pkg/labels"
+
+	"github.com/easysoft/qcadmin/internal/pkg/k8s"
+	"github.com/easysoft/qcadmin/internal/pkg/util/output"
 )
 
 type NodeOption struct {

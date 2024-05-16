@@ -24,12 +24,11 @@ import (
 	"strings"
 
 	"github.com/cockroachdb/errors"
+	"github.com/ergoapi/util/file"
 	"github.com/pkg/sftp"
 	"github.com/schollz/progressbar/v3"
 	"golang.org/x/crypto/ssh"
 	"k8s.io/apimachinery/pkg/util/wait"
-
-	"github.com/ergoapi/util/file"
 )
 
 func (s *SSH) RemoteSha256Sum(host, remoteFilePath string) string {

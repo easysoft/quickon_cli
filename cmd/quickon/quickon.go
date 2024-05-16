@@ -9,15 +9,16 @@ package quickon
 import (
 	"fmt"
 
+	"github.com/ergoapi/util/confirm"
+	"github.com/ergoapi/util/exnet"
+	"github.com/spf13/cobra"
+
 	"github.com/easysoft/qcadmin/cmd/flags"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/pkg/providers"
 	"github.com/easysoft/qcadmin/pkg/quickon"
-	"github.com/ergoapi/util/confirm"
-	"github.com/ergoapi/util/exnet"
-	"github.com/spf13/cobra"
 )
 
 var (

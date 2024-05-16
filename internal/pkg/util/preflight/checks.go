@@ -33,19 +33,19 @@ import (
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
-
 	"github.com/shirou/gopsutil/v3/disk"
-	netutil "k8s.io/apimachinery/pkg/util/net"
 	"k8s.io/apimachinery/pkg/util/validation"
-	system "k8s.io/system-validators/validators"
-	utilsexec "k8s.io/utils/exec"
-	netutils "k8s.io/utils/net"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/initsystem"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+
 	qnetutil "github.com/easysoft/qcadmin/internal/pkg/util/netutil"
+	netutil "k8s.io/apimachinery/pkg/util/net"
+	system "k8s.io/system-validators/validators"
+	utilsexec "k8s.io/utils/exec"
+	netutils "k8s.io/utils/net"
 )
 
 const (

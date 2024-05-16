@@ -21,12 +21,11 @@ import (
 	"strings"
 	"time"
 
-	"golang.org/x/crypto/ssh"
-	"k8s.io/apimachinery/pkg/util/wait"
-
 	"github.com/cockroachdb/errors"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
+	"golang.org/x/crypto/ssh"
+	"k8s.io/apimachinery/pkg/util/wait"
 )
 
 func (s *SSH) getClientConfig() *ssh.ClientConfig {

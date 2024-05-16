@@ -13,14 +13,16 @@ import (
 	"time"
 
 	"github.com/cockroachdb/errors"
-	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
-	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
-	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/exhash"
 	"github.com/manifoldco/promptui"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
+
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 )
 
 func NewCmdAppMarket(f factory.Factory) *cobra.Command {

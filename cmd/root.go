@@ -11,16 +11,18 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ergoapi/util/color"
+	"github.com/ergoapi/util/excmd"
+	"github.com/muesli/roff"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/cobra"
+
 	"github.com/easysoft/qcadmin/cmd/flags"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
-	"github.com/ergoapi/util/color"
-	"github.com/ergoapi/util/excmd"
+
 	mcobra "github.com/muesli/mango-cobra"
-	"github.com/muesli/roff"
-	"github.com/sirupsen/logrus"
-	"github.com/spf13/cobra"
 )
 
 var (

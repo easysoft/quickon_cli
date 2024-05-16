@@ -7,9 +7,10 @@
 package tool
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/easysoft/qcadmin/internal/pkg/util/downloader"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
-	"github.com/spf13/cobra"
 )
 
 func EmbedWgetCommand(f factory.Factory) *cobra.Command {

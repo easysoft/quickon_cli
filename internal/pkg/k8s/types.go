@@ -12,8 +12,9 @@ import (
 	"strings"
 
 	"github.com/logrusorgru/aurora/v3"
-	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
+
+	v1 "k8s.io/api/core/v1"
 )
 
 const (

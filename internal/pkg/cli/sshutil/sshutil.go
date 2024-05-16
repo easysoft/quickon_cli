@@ -7,10 +7,11 @@
 package sshutil
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/ssh"
-	"github.com/spf13/cobra"
 )
 
 func EmbedSSHCommand(f factory.Factory) *cobra.Command {

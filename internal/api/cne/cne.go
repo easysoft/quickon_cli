@@ -9,9 +9,10 @@ package cne
 import (
 	"fmt"
 
+	"github.com/imroc/req/v3"
+
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
-	"github.com/imroc/req/v3"
 )
 
 type CneAPI struct {

@@ -10,9 +10,11 @@ import (
 	"fmt"
 	"os"
 
-	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
-	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/spf13/cobra"
+
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+
+	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
 )
 
 var (

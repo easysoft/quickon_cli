@@ -10,8 +10,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/easysoft/qcadmin/internal/pkg/util/log/survey"
 	"github.com/sirupsen/logrus"
+
+	"github.com/easysoft/qcadmin/internal/pkg/util/log/survey"
 )
 
 // DiscardLogger just discards every log statement

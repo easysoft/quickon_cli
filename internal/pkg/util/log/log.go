@@ -10,11 +10,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/easysoft/qcadmin/internal/pkg/util/log/survey"
-
-	"github.com/easysoft/qcadmin/common"
 	"github.com/mgutz/ansi"
 	"github.com/sirupsen/logrus"
+
+	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/pkg/util/log/survey"
 )
 
 var defaultLog Logger = &stdoutLogger{

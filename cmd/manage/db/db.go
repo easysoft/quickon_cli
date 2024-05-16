@@ -7,8 +7,9 @@
 package db
 
 import (
-	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/spf13/cobra"
+
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 )
 
 func NewCmdDB(f factory.Factory) *cobra.Command {
