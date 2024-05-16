@@ -4,7 +4,7 @@
 # (2) Affero General Public License 3.0 (AGPL 3.0)
 # license that can be found in the LICENSE file.
 
-FROM ysicing/debian
+FROM easysoft/debian:12
 
 COPY ./_output/qcadmin_linux_amd64 /usr/bin/qcadmin
 
