@@ -74,6 +74,8 @@ spec:
         - start
         - --config
         - /etc/config/config.json
+        - --configmap-name
+        - q-local-config
         volumeMounts:
         - name: config-volume
           mountPath: /etc/config/
@@ -93,7 +95,7 @@ metadata:
   name: q-local
   annotations:
     defaultVolumeType: "local"
-    storageclass.kubernetes.io/is-default-class: "false"
+    storageclass.kubernetes.io/is-default-class: "true"
 provisioner: rancher.io/local-path
 volumeBindingMode: WaitForFirstConsumer
 reclaimPolicy: Delete
