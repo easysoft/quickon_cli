@@ -68,7 +68,7 @@ func GetChartRepo(p string) string {
 	} else {
 		p = "stable"
 	}
-	return fmt.Sprintf("https://hub.qucheng.com/chartrepo/%s", p)
+	return fmt.Sprintf("https://hub.zentao.net/chartrepo/%s", p)
 }
 
 // GetChannel 获取chartrepo channel地址

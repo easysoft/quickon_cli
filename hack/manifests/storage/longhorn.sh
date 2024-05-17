@@ -6,7 +6,7 @@
 # license that can be found in the LICENSE file.
 
 qcadmin exp helm repo-list | grep install || (
-  qcadmin exp helm repo-add --name install --url https://hub.qucheng.com/chartrepo/stable
+  qcadmin exp helm repo-add --name install --url https://hub.zentao.net/chartrepo/stable
 )
 qcadmin exp helm repo-update
 

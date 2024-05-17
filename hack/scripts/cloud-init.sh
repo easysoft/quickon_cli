@@ -39,7 +39,7 @@ StartLimitBurst=10
 ExecStartPre=-/bin/sh -xc '! /usr/bin/systemctl is-enabled --quiet nm-cloud-setup.service'
 ExecStartPre=-/sbin/modprobe br_netfilter
 ExecStartPre=-/sbin/modprobe overlay
-ExecStart=/usr/local/bin/k3s "server" "--docker" "--kubelet-arg=max-pods=220" "--kube-proxy-arg=proxy-mode=ipvs" "--kube-proxy-arg=masquerade-all=true" "--kube-proxy-arg=metrics-bind-address=0.0.0.0" "--data-dir=/opt/quickon/platform" "--pause-image=hub.qucheng.com/library/k3s-pause:3.6" "--disable-network-policy" "--disable-helm-controller" "--disable=servicelb,traefik" " --tls-san=kapi.qucheng.local" "--service-node-port-range=22767-32767" "--system-default-registry=hub.qucheng.com/library" "--cluster-cidr=10.42.0.0/16" "--service-cidr=10.43.0.0/16"
+ExecStart=/usr/local/bin/k3s "server" "--docker" "--kubelet-arg=max-pods=220" "--kube-proxy-arg=proxy-mode=ipvs" "--kube-proxy-arg=masquerade-all=true" "--kube-proxy-arg=metrics-bind-address=0.0.0.0" "--data-dir=/opt/quickon/platform" "--pause-image=hub.zentao.net/library/k3s-pause:3.6" "--disable-network-policy" "--disable-helm-controller" "--disable=servicelb,traefik" " --tls-san=kapi.qucheng.local" "--service-node-port-range=22767-32767" "--system-default-registry=hub.zentao.net/library" "--cluster-cidr=10.42.0.0/16" "--service-cidr=10.43.0.0/16"
 LimitNOFILE=1048576
 LimitNPROC=infinity
 LimitCORE=infinity
@@ -102,7 +102,7 @@ spec:
       serviceAccountName: qcli-cm
       containers:
       - name: qcli-cm
-        image: hub.qucheng.com/platform/podinstall:2022102713
+        image: hub.zentao.net/platform/podinstall:2022102713
         imagePullPolicy: Always
         env:
         - name: APP_NODE_IP

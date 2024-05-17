@@ -41,7 +41,7 @@ func NewCmdAppMarket(f factory.Factory) *cobra.Command {
 				return err
 			}
 			if len(repos) == 0 {
-				return errors.Errorf("not found qucheng market, you should: %s exp helm repo-add --name qucheng --url https://hub.qucheng.com/chartrepo/stable", os.Args[0])
+				return errors.Errorf("not found qucheng market, you should: %s exp helm repo-add --name qucheng --url https://hub.zentao.net/chartrepo/stable", os.Args[0])
 			}
 			quchengRepoName := ""
 			for _, repo := range repos {
@@ -51,7 +51,7 @@ func NewCmdAppMarket(f factory.Factory) *cobra.Command {
 				}
 			}
 			if len(quchengRepoName) == 0 {
-				return errors.Errorf("not found qucheng market, you should: %s exp helm repo-add --name qucheng --url https://hub.qucheng.com/chartrepo/stable", os.Args[0])
+				return errors.Errorf("not found qucheng market, you should: %s exp helm repo-add --name qucheng --url https://hub.zentao.net/chartrepo/stable", os.Args[0])
 			}
 			charts, err := hc.ListCharts(quchengRepoName, "", false)
 			if err != nil {

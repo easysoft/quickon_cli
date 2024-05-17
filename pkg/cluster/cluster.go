@@ -69,7 +69,7 @@ func NewCluster(f factory.Factory) *Cluster {
 		},
 		DataStore:             "",
 		Storage:               "nfs",
-		Registry:              "hub.qucheng.com",
+		Registry:              "hub.zentao.net",
 		OffLine:               false,
 		IgnorePreflightErrors: false,
 	}
@@ -87,8 +87,8 @@ func (c *Cluster) getInitFlags() []types.Flag {
 			Name:   "hub",
 			P:      &c.Registry,
 			V:      c.Registry,
-			EnvVar: "hub.qucheng.com",
-			Usage:  `custom image hub, e.g: hub.qucheng.com`,
+			EnvVar: "hub.zentao.net",
+			Usage:  `custom image hub, e.g: hub.zentao.net`,
 		},
 		{
 			Name:   "storage",

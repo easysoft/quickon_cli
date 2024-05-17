@@ -75,7 +75,7 @@ func repoInit(f factory.Factory) *cobra.Command {
 		},
 	}
 	helm.Flags().StringVarP(&name, "name", "n", "install", "repo name")
-	helm.Flags().StringVarP(&url, "url", "u", "https://hub.qucheng.com/chartrepo/stable", "repo url")
+	helm.Flags().StringVarP(&url, "url", "u", "https://hub.zentao.net/chartrepo/stable", "repo url")
 	return helm
 }
 

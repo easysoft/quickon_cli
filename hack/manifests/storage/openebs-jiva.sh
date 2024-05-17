@@ -6,6 +6,6 @@
 # license that can be found in the LICENSE file.
 
 
-helm repo add q-stable https://hub.qucheng.com/chartrepo/stable
+helm repo add q-stable https://hub.zentao.net/chartrepo/stable
 helm repo update
 helm upgrade -i openebs q-stable/openebs -n quickon-storage --create-namespace

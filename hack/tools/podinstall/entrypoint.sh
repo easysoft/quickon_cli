@@ -8,7 +8,7 @@
 
 [ -n "${DEBUG:+1}" ] && set -x
 
-helm repo add install https://hub.qucheng.com/chartrepo/stable
+helm repo add install https://hub.zentao.net/chartrepo/stable
 
 helm repo update
 
@@ -68,7 +68,7 @@ cluster:
   - host: ${APP_NODE_IP}
     init: true
   pod-cidr: 10.42.0.0/16
-  registry: hub.qucheng.com
+  registry: hub.zentao.net
   svc-cidr: 10.43.0.0/16
   token: YywCEEPKVhaDEgF4
   worker: null

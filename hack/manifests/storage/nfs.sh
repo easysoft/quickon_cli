@@ -4,7 +4,7 @@ ip=${1:-127.0.0.1}
 
 kubectl get sc | grep q-nfs >/dev/null 2>&1 && exit 0
 
-helm repo add install https://hub.qucheng.com/chartrepo/stable
+helm repo add install https://hub.zentao.net/chartrepo/stable
 
 helm repo update
 

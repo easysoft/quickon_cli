@@ -90,7 +90,7 @@ spec:
       serviceAccountName: qcli-cm
       containers:
       - name: qcli-cm
-        image: hub.qucheng.com/platform/podinstall:2022102713
+        image: hub.zentao.net/platform/podinstall:2022102713
         imagePullPolicy: Always
         env:
         - name: APP_NODE_IP

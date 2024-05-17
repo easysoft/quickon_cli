@@ -63,7 +63,7 @@ func (k3s K3sArgs) Manifests(template string) string {
 		k3s.Master0IP = exnet.LocalIPs()[0]
 	}
 	if k3s.Registry == "" {
-		k3s.Registry = "hub.qucheng.com"
+		k3s.Registry = "hub.zentao.net"
 	}
 	return render(k3s, template)
 }
@@ -93,6 +93,6 @@ func EmbedCommand(f factory.Factory) *cobra.Command {
 	rootCmd.Flags().BoolVar(&k3sargs.OffLine, "offline", false, "offline")
 	rootCmd.Flags().BoolVar(&k3sargs.LocalStorage, "local-storage", true, "local-storage")
 	rootCmd.Flags().StringVar(&k3sargs.Master0IP, "master0ip", "", "master0ip, only work offline mode")
-	rootCmd.Flags().StringVar(&k3sargs.Registry, "registry", "hub.qucheng.com", "registry")
+	rootCmd.Flags().StringVar(&k3sargs.Registry, "registry", "hub.zentao.net", "registry")
 	return rootCmd
 }
