@@ -10,11 +10,13 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/easysoft/qcadmin/cmd"
-	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/github"
 	"github.com/ergoapi/util/version"
+
+	"github.com/easysoft/qcadmin/cmd"
+	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+
 	doc "github.com/ysicing/cobra2vitepress"
 )
 
