@@ -34,7 +34,7 @@ qcadmin cluster init [flags]
   -d, --data-dir string           cluster & quickon data dir (default "/opt/quickon")
       --datastore string          datastore, e.g: mysql://root:123456@tcp(localhost:3306)/k3s?charset=utf8&parseTime=True&loc=Local
   -h, --help                      help for init
-      --hub string                custom image hub, e.g: hub.qucheng.com (default "hub.qucheng.com")
+      --hub string                custom image hub, e.g: hub.zentao.net (default "hub.zentao.net")
       --ignore-preflight-errors   ignore precheck error
       --master stringArray        master ip list, e.g: 192.168.0.1:22
       --offline                   offline install, only whitelist users are supported

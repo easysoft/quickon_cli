@@ -24,7 +24,7 @@ qcadmin experimental k3stpl [flags]
       --master0ip string      master0ip, only work offline mode
       --offline               offline
       --pod-cidr string       cluster cidr (default "10.42.0.0/16")
-      --registry string       registry (default "hub.qucheng.com")
+      --registry string       registry (default "hub.zentao.net")
       --service-cidr string   service cidr (default "10.43.0.0/16")
 ```
 

@@ -31,7 +31,7 @@ qcadmin init [flags]
       --db-replication            db use replication mode, default standalone: false
       --domain string             custom domain
   -h, --help                      help for init
-      --hub string                custom image hub, e.g: hub.qucheng.com (default "hub.qucheng.com")
+      --hub string                custom image hub, e.g: hub.zentao.net (default "hub.zentao.net")
       --ignore-preflight-errors   ignore precheck error
       --master stringArray        master ip list, e.g: 192.168.0.1:22
       --password string           ssh password

@@ -16,7 +16,7 @@ qcadmin experimental helm repo-init [flags]
 ```
   -h, --help          help for repo-init
   -n, --name string   repo name (default "install")
-  -u, --url string    repo url (default "https://hub.qucheng.com/chartrepo/stable")
+  -u, --url string    repo url (default "https://hub.zentao.net/chartrepo/stable")
 ```
 
 ### Options inherited from parent commands
