@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.0.22 (2024-05-17)
+
+
+### Contributors
+
+
 ## v3.0.21 (2024-05-17)
 
  * [7cd59e0](https://github.com/easysoft/quickon_cli/commit/7cd59e06447d15e11129003c98a7a418beef0f0e) feat: update local storage provisioner service account
