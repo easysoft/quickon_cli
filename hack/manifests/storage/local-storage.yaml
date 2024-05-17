@@ -76,6 +76,8 @@ spec:
         - /etc/config/config.json
         - --configmap-name
         - q-local-config
+        - --service-account-name
+        - q-local-provisioner-service-account
         volumeMounts:
         - name: config-volume
           mountPath: /etc/config/
