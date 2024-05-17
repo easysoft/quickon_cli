@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.0.21 (2024-05-17)
+
+ * [7cd59e0](https://github.com/easysoft/quickon_cli/commit/7cd59e06447d15e11129003c98a7a418beef0f0e) feat: update local storage provisioner service account
+ * [bedd13d](https://github.com/easysoft/quickon_cli/commit/bedd13dac2ca40b3f93350778e531b98f92d2ee1) fix: update default storage class and configuration for local storage
+ * [8d07755](https://github.com/easysoft/quickon_cli/commit/8d0775597ca4387a23339cd02e587af0613c1512) build(deps): bump github.com/jackpal/gateway from 1.0.14 to 1.0.15
+ * [49ca43c](https://github.com/easysoft/quickon_cli/commit/49ca43c6a9564cbc89048c05f0ba31c472b569cb) build(deps): bump github.com/jackpal/gateway from 1.0.13 to 1.0.14
+ * [73109dc](https://github.com/easysoft/quickon_cli/commit/73109dc30d64387c7d59aad33dff7b909b13b74a) build(deps): bump github.com/ulikunitz/xz from 0.5.11 to 0.5.12
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.0.20 (2024-04-24)
 
  * [58d2efb](https://github.com/easysoft/quickon_cli/commit/58d2efb9a7c9c3f01821bf804cc4b9b5ea12a0e5) build(deps): bump tailscale.com from 1.62.0 to 1.64.2
