@@ -152,6 +152,59 @@ func (k *K8sStatusCollector) deploymentStatus(ctx context.Context, ns, name, ali
 	return false, nil
 }
 
+func (k *K8sStatusCollector) daemonsetStatus(ctx context.Context, ns, name, aliasname, t string, status *Status) (bool, error) {
+	k.option.Log.Debugf("check cm %s status", aliasname)
+	stateCount := PodStateCount{Type: "Daemonset"}
+	d, err := k.client.GetDaemonSet(ctx, ns, name, metav1.GetOptions{})
+	if kubeerr.IsNotFound(err) {
+		stateCount.Disabled = true
+		if t == "k8s" {
+			status.KubeStatus.PodState[aliasname] = stateCount
+		} else {
+			status.QStatus.PodState[aliasname] = stateCount
+		}
+		return true, nil
+	}
+
+	if err != nil {
+		stateCount.Disabled = false
+		if t == "k8s" {
+			status.KubeStatus.PodState[aliasname] = stateCount
+		} else {
+			status.QStatus.PodState[aliasname] = stateCount
+		}
+		return false, err
+	}
+
+	if d == nil {
+		stateCount.Disabled = false
+		if t == "k8s" {
+			status.KubeStatus.PodState[aliasname] = stateCount
+		} else {
+			status.QStatus.PodState[aliasname] = stateCount
+		}
+		return false, errors.Errorf("component %s is not available", aliasname)
+	}
+
+	stateCount.Ready = int(d.Status.NumberReady)
+	stateCount.Available = int(d.Status.NumberAvailable)
+	stateCount.Unavailable = int(d.Status.NumberUnavailable)
+	stateCount.Disabled = false
+	if t == "k8s" {
+		status.KubeStatus.PodState[aliasname] = stateCount
+	} else {
+		status.QStatus.PodState[aliasname] = stateCount
+	}
+	notReady := stateCount.Desired - stateCount.Ready
+	if notReady > 0 {
+		k.option.Log.Warnf("%d pods of Deployment %s are not ready", notReady, name)
+	}
+	if unavailable := stateCount.Unavailable - notReady; unavailable > 0 {
+		k.option.Log.Warnf("%d pods of Deployment %s are not available", unavailable, name)
+	}
+	return false, nil
+}
+
 // serviceStatus 检查服务状态
 func (k *K8sStatusCollector) serviceStatus(ctx context.Context, status *Status) error {
 	// 集群
@@ -183,7 +236,7 @@ func (k *K8sStatusCollector) platformPluginStatus(ctx context.Context, p plugin.
 	} else {
 		stateCount.Disabled = false
 		if p.Type == "ingress" {
-			k.deploymentStatus(ctx, common.GetDefaultSystemNamespace(true), fmt.Sprintf("ingress-%s", common.DefaultIngressName), common.DefaultIngressName, "", status)
+			k.ingressStatus(ctx, common.GetDefaultSystemNamespace(true), fmt.Sprintf("ingress-%s", common.DefaultIngressName), common.DefaultIngressName, status)
 		} else if p.Type == common.DefaultCneOperatorName {
 			k.deploymentStatus(ctx, common.GetDefaultSystemNamespace(true), common.DefaultCneOperatorName, common.DefaultCneOperatorName, "", status)
 		}
@@ -231,4 +284,52 @@ func (k *K8sStatusCollector) nodesStatus(ctx context.Context, status *Status) er
 		status.KubeStatus.Version = version
 	}
 	return nil
+}
+
+func (k *K8sStatusCollector) ingressStatus(ctx context.Context, ns, name, aliasname string, status *Status) (bool, error) {
+	k.option.Log.Debugf("check cm %s status", aliasname)
+	var stateCount PodStateCount
+	ds, _ := k.client.GetDaemonSet(ctx, ns, name, metav1.GetOptions{})
+	deploy, _ := k.client.GetDeployment(ctx, ns, name, metav1.GetOptions{})
+	if ds == nil && deploy == nil {
+		stateCount.Disabled = true
+		status.QStatus.PodState[aliasname] = stateCount
+		return true, nil
+	}
+	stateCount.Disabled = false
+	if ds != nil && !ds.CreationTimestamp.IsZero() {
+		k.option.Log.Debugf("detch %s kind DaemonSet", name)
+		stateCount.Type = "DaemonSet"
+		stateCount.Desired = int(ds.Status.DesiredNumberScheduled)
+		stateCount.Ready = int(ds.Status.NumberReady)
+		stateCount.Available = int(ds.Status.NumberAvailable)
+		stateCount.Unavailable = int(ds.Status.NumberUnavailable)
+		notReady := stateCount.Desired - stateCount.Ready
+		if notReady > 0 {
+			k.option.Log.Warnf("%d pods of DaemonSet %s are not ready", notReady, name)
+		}
+		if unavailable := stateCount.Unavailable - notReady; unavailable > 0 {
+			k.option.Log.Warnf("%d pods of DaemonSet %s are not available", unavailable, name)
+		}
+	} else if deploy != nil && !deploy.CreationTimestamp.IsZero(){
+		k.option.Log.Debugf("detch %s kind Deployment", name)
+		stateCount.Type = "Deployment"
+		if *deploy.Spec.Replicas > 0 {
+			stateCount.Desired = int(deploy.Status.Replicas)
+			stateCount.Ready = int(deploy.Status.ReadyReplicas)
+			stateCount.Available = int(deploy.Status.AvailableReplicas)
+			stateCount.Unavailable = int(deploy.Status.UnavailableReplicas)
+			notReady := stateCount.Desired - stateCount.Ready
+			if notReady > 0 {
+				k.option.Log.Warnf("%d pods of Deployment %s are not ready", notReady, name)
+			}
+			if unavailable := stateCount.Unavailable - notReady; unavailable > 0 {
+				k.option.Log.Warnf("%d pods of Deployment %s are not available", unavailable, name)
+			}
+		} else {
+			k.option.Log.Warnf("Deployment %s disabled", name)
+		}
+	}
+	status.QStatus.PodState[aliasname] = stateCount
+	return false, nil
 }
