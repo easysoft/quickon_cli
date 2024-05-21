@@ -135,9 +135,6 @@ func StatusCommand(f factory.Factory) *cobra.Command {
 	status := &cobra.Command{
 		Use:   "status",
 		Short: "status cluster",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return nil
-		},
 	}
 	status.AddCommand(statussubcmd.TopNodeCmd())
 	return status

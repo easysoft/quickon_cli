@@ -311,7 +311,7 @@ func (k *K8sStatusCollector) ingressStatus(ctx context.Context, ns, name, aliasn
 		if unavailable := stateCount.Unavailable - notReady; unavailable > 0 {
 			k.option.Log.Warnf("%d pods of DaemonSet %s are not available", unavailable, name)
 		}
-	} else if deploy != nil && !deploy.CreationTimestamp.IsZero(){
+	} else if deploy != nil && !deploy.CreationTimestamp.IsZero() {
 		k.option.Log.Debugf("detch %s kind Deployment", name)
 		stateCount.Type = "Deployment"
 		if *deploy.Spec.Replicas > 0 {
