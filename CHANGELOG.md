@@ -1,5 +1,16 @@
 # Changelog
 
+## v3.0.23 (2024-05-22)
+
+ * [ab0f578](https://github.com/easysoft/quickon_cli/commit/ab0f5784554053dc42ed3763073a9fa16963f656) fix: add error checking and update description for `InstallCommand`
+ * [de8fcfb](https://github.com/easysoft/quickon_cli/commit/de8fcfbf776e4a74c2b8d73e05df758be5a51b72) refactor: refactor `cluster` command in `cmd/cluster/cluster.go`
+ * [204812f](https://github.com/easysoft/quickon_cli/commit/204812f7b5e87a88659b6b1293d73dee519370dd) build(deps): bump tailscale.com from 1.64.2 to 1.66.3
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.0.22 (2024-05-17)
 
 
