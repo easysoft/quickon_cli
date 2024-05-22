@@ -22,24 +22,30 @@ var (
 	installExample = templates.Examples(`
 		# install tools
 		z experimental install helm`)
+	installTools = map[string]any{
+		"helm":    true,
+		"kubectl": true,
+		"mc":      true,
+		"etcdctl": true,
+		"dnsctl":  true,
+	}
 )
 
 // InstallCommand install some tools
 func InstallCommand(f factory.Factory) *cobra.Command {
 	installCmd := &cobra.Command{
 		Use:     "install [flags]",
-		Short:   "install tools, like: helm, kubectl",
+		Short:   "install tools, like: helm, kubectl,etcdctl,mc,dnsctl",
 		Example: installExample,
 		Args:    cobra.MinimumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) < 1 {
 				f.GetLog().Fatalf("args error: %v", args)
-				return errors.New("missing args: helm or kubectl")
+				return errors.New("missing args: tool name")
 			}
 			tool := args[0]
-			if tool != "helm" && tool != "kubectl" && tool != "etcdctl" && tool != "mc" {
-				// TODO add more tools
-				return errors.Errorf("not support tool: %s, only suppor helm, kubectl, etcdctl", tool)
+			if _, exist := installTools[tool]; !exist {
+				return errors.Errorf("not support tool: %s", tool)
 			}
 			return nil
 		},

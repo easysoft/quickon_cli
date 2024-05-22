@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/cockroachdb/errors"
 	"github.com/spf13/cobra"
 
 	"github.com/easysoft/qcadmin/internal/api/cne"
@@ -24,6 +25,12 @@ func NewCmdBackupApp(f factory.Factory) *cobra.Command {
 		Use:   "app",
 		Short: "backup app",
 		Long:  "backup app",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if len(app) == 0 || len(ns) == 0 {
+				return errors.New("missing app or ns")
+			}
+			return nil
+		},
 		Run: func(cmd *cobra.Command, args []string) {
 			log.Infof("start backup app: %s", app)
 			cneClient := cne.NewCneAPI()
