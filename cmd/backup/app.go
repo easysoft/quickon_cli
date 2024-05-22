@@ -7,17 +7,31 @@
 package backup
 
 import (
+	"os"
 	"strings"
 	"time"
 
 	"github.com/cockroachdb/errors"
+	"github.com/gosuri/uitable"
 	"github.com/spf13/cobra"
 
 	"github.com/easysoft/qcadmin/internal/api/cne"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+	"github.com/easysoft/qcadmin/internal/pkg/util/output"
 )
 
 func NewCmdBackupApp(f factory.Factory) *cobra.Command {
+	bc := &cobra.Command{
+		Use:   "app",
+		Short: "backup app",
+		Long:  "backup app",
+	}
+	bc.AddCommand(newCmdBackupAppCreate(f))
+	bc.AddCommand(newCmdBackupAppList(f))
+	return bc
+}
+
+func newCmdBackupAppCreate(f factory.Factory) *cobra.Command {
 	var app, ns, backupName string
 	var err error
 	log := f.GetLog()
@@ -35,7 +49,7 @@ func NewCmdBackupApp(f factory.Factory) *cobra.Command {
 			log.Infof("start backup app: %s", app)
 			cneClient := cne.NewCneAPI()
 			if backupName == "" {
-				backupName, err = cneClient.AppBackUP(ns, app)
+				backupName, err = cneClient.CreateAppBackUP(ns, app)
 				if err != nil {
 					log.Errorf("backup app %s failed, reason: %v", app, err)
 					return
@@ -71,5 +85,53 @@ func NewCmdBackupApp(f factory.Factory) *cobra.Command {
 	bc.Flags().StringVar(&app, "app", "", "app chart name")
 	bc.Flags().StringVarP(&ns, "namespace", "n", "", "namespace")
 	bc.Flags().StringVarP(&backupName, "backupName", "b", "", "existing backup name")
+	return bc
+}
+
+func newCmdBackupAppList(f factory.Factory) *cobra.Command {
+	var app, ns, show string
+	log := f.GetLog()
+	bc := &cobra.Command{
+		Use:   "list",
+		Short: "list app backup",
+		Long:  "list app backup",
+		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if len(app) == 0 || len(ns) == 0 {
+				return errors.New("missing app or ns")
+			}
+			return nil
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cneClient := cne.NewCneAPI()
+			data, err := cneClient.ListAppBackUP(ns, app)
+			if err != nil {
+				log.Errorf("backup app %s failed, reason: %v", app, err)
+				return nil
+			}
+			switch strings.ToLower(show) {
+			case "json":
+				return output.EncodeJSON(os.Stdout, data)
+			case "yaml":
+				return output.EncodeYAML(os.Stdout, data)
+			default:
+				log.Infof("list backup app: %s", app)
+				table := uitable.New()
+				table.MaxColWidth = 80
+				table.Wrap = true
+				for _, d := range data {
+					table.AddRow("name: ", d.Name)
+					table.AddRow("status: ", d.Status)
+					table.AddRow("restore: ", len(d.Restores))
+					table.AddRow("dbs: ", len(d.BackupDetails.DBs))
+					table.AddRow("volumes: ", len(d.BackupDetails.Volumes))
+					table.AddRow("------------")
+				}
+				return output.EncodeTable(os.Stdout, table)
+			}
+		},
+	}
+	bc.Flags().StringVar(&app, "app", "", "app chart name")
+	bc.Flags().StringVarP(&ns, "namespace", "n", "", "namespace")
+	bc.Flags().StringVarP(&show, "output", "o", "", "prints the output in the specified format. Allowed values: table, json, yaml (default table)")
 	return bc
 }

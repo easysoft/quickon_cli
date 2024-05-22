@@ -34,3 +34,45 @@ type AppBackUPStatus struct {
 	Reason string `json:"reason,omitempty"`
 	Status string `json:"status"`
 }
+
+type AppBackUPListResp struct {
+	Code    int                 `json:"code"`
+	Message string              `json:"message"`
+	Data    []AppBackUPListData `json:"data"`
+}
+
+type AppBackUPListData struct {
+	Name          string           `json:"name"`
+	Status        string           `json:"status"`
+	ChartName     string           `json:"chart_name"`
+	ChartVersion  string           `json:"chart_version"`
+	BackupDetails BackupDetails    `json:"backup_details"`
+	Restores      []BackupRestores `json:"restores"`
+}
+
+type BackupDetails struct {
+	DBs     []DB     `json:"db"`
+	Volumes []Volume `json:"volume"`
+}
+
+type DB struct {
+	Type   string `json:"db_type"`
+	Name   string `json:"db_name"`
+	Status string `json:"status"`
+	Cost   int64  `json:"cost"`
+	Size   int64  `json:"size"`
+}
+
+type Volume struct {
+	Name      string `json:"pvc_name"`
+	Volume    string `json:"volume"`
+	Status    string `json:"status"`
+	Cost      int64  `json:"cost"`
+	TotalSize int64  `json:"total_bytes"`
+	DoneSize  int64  `json:"doneBytes"`
+}
+
+type BackupRestores struct {
+	Name   string `json:"name"`
+	Status string `json:"status"`
+}

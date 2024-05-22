@@ -8,6 +8,7 @@ package cne
 
 import (
 	"fmt"
+	"reflect"
 
 	"github.com/imroc/req/v3"
 
@@ -22,14 +23,14 @@ type CneAPI struct {
 
 func NewCneAPI() *CneAPI {
 	config, _ := config.LoadConfig()
-	c := req.C().R().SetHeader(common.CneAPITokenHeader, config.APIToken)
+	c := req.C().SetUserAgent(common.GetUG()).R().SetHeader(common.CneAPITokenHeader, config.APIToken)
 	return &CneAPI{
 		Req:      c,
 		Endpoint: fmt.Sprintf("http://%s:32380", config.Cluster.InitNode),
 	}
 }
 
-func (c *CneAPI) AppBackUP(ns, chartName string) (string, error) {
+func (c *CneAPI) CreateAppBackUP(ns, chartName string) (string, error) {
 	var result AppBackUPResp
 	appbackup := &AppBackUPReq{Namespace: ns, Name: chartName}
 	resp, err := c.Req.SetBody(appbackup).
@@ -54,4 +55,35 @@ func (c *CneAPI) AppBackUPStatus(ns, chartName, backupName string) (*AppBackUPSt
 		return &result.Data, nil
 	}
 	return nil, err
+}
+
+func (c *CneAPI) ListAppBackUP(ns, chartName string) ([]AppBackUPListData, error) {
+	var result AppBackUPListResp
+	resp, err := c.Req.SetQueryParams(map[string]string{
+		"namespace": ns,
+		"name":      chartName,
+	}).
+		SetSuccessResult(&result).
+		Get(c.Endpoint + "/api/cne/app/backups")
+	if resp.IsSuccessState() {
+		return result.Data, nil
+	}
+	return nil, err
+}
+
+func struct2map(obj any) map[string]any {
+	result := make(map[string]any)
+	v := reflect.ValueOf(obj)
+	t := reflect.TypeOf(obj)
+	for i := 0; i < v.NumField(); i++ {
+		field := v.Field(i)
+		fieldType := t.Field(i)
+		fieldName := fieldType.Name
+		if field.Kind() == reflect.Struct {
+			result[fieldName] = struct2map(field.Interface())
+		} else {
+			result[fieldName] = field.Interface()
+		}
+	}
+	return result
 }
