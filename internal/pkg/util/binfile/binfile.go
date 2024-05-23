@@ -56,14 +56,3 @@ func (p *Meta) LoadLocalBin(binName string) (string, error) {
 	}
 	return filebin, nil
 }
-
-// func (p *Meta) download(binName string) error {
-// 	log.Debugf("unpack %s bin failed, will download from remote.", binName)
-// 	binPath := fmt.Sprintf("/usr/local/bin/%s", binName)
-// 	if _, err := downloader.Download(common.GetBinURL(binName), binPath); err != nil {
-// 		return err
-// 	}
-// 	os.Chmod(binPath, common.FileMode0755)
-// 	log.Donef("download %s complete", binName)
-// 	return nil
-// }
