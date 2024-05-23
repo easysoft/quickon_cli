@@ -760,11 +760,12 @@ func RunInitNodeChecks(execer utilsexec.Interface, cfg *types.Metadata, ignorePr
 		// Linux only
 		// TODO: support other OS, if control-plane is supported on it.
 		MemCheck{Mem: common.ControlPlaneMem, Devops: devops},
-		FirewalldCheck{ports: []int{80, 443, 6443, 32379}},
+		FirewalldCheck{ports: []int{80, 443, 6443, 32379, 32380}},
 		PortOpenCheck{port: 80},
 		PortOpenCheck{port: 443},
 		PortOpenCheck{port: 6443},
 		PortOpenCheck{port: 32379},
+		PortOpenCheck{port: 32380},
 		NetworkCheck{offline: offline},
 		// FileAvailableCheck{Path: kubeadmconstants.GetStaticPodFilepath(kubeadmconstants.KubeAPIServer, manifestsDir)},
 		// FileAvailableCheck{Path: kubeadmconstants.GetStaticPodFilepath(kubeadmconstants.KubeControllerManager, manifestsDir)},
