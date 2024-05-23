@@ -86,3 +86,13 @@ func GetConsoleURL(cfg *config.Config) string {
 	}
 	return domain
 }
+
+// ValidNamespace valid namespace
+func ValidNamespace(ns string) bool {
+	switch ns {
+	case common.DefaultAppNamespace, common.DefaultSystemNamespace:
+		return true
+	default:
+		return false
+	}
+}

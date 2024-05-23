@@ -17,6 +17,7 @@ import (
 
 	"github.com/easysoft/qcadmin/internal/api/cne"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
+	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
 	"github.com/easysoft/qcadmin/internal/pkg/util/output"
 )
 
@@ -42,6 +43,9 @@ func newCmdBackupAppCreate(f factory.Factory) *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(app) == 0 || len(ns) == 0 {
 				return errors.New("missing app or ns")
+			}
+			if !kutil.ValidNamespace(ns) {
+				return errors.New("allow support quickon prefix namespace")
 			}
 			return nil
 		},
@@ -98,6 +102,9 @@ func newCmdBackupAppList(f factory.Factory) *cobra.Command {
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if len(app) == 0 || len(ns) == 0 {
 				return errors.New("missing app or ns")
+			}
+			if !kutil.ValidNamespace(ns) {
+				return errors.New("allow support quickon prefix namespace")
 			}
 			return nil
 		},
