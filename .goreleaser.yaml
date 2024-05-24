@@ -157,3 +157,5 @@ release:
   prerelease: auto
   replace_existing_draft: true
   mode: replace
+  extra_files:
+    - glob: version.json

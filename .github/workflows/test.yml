@@ -80,23 +80,3 @@ jobs:
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
-
-  preRelease:
-    name: "build"
-    timeout-minutes: 20
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: ${{ env.GO_VERSION }}
-          check-latest: true
-      - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v5
-        with:
-          version: latest
-          args: release --clean --config .goreleaser.dev.yaml --skip validate,announce
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
