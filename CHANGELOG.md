@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.0.25 (2024-05-24)
+
+ * [3ce2c3f](https://github.com/easysoft/quickon_cli/commit/3ce2c3fddc6f3926fd6389f90ff9e169a0517057) feat: refactor GetVersion function and add test cases in common/func_test.go
+
+### Contributors
+
+ * ysicing
+
 ## v3.0.24 (2024-05-24)
 
  * [72aed51](https://github.com/easysoft/quickon_cli/commit/72aed513dc705546570b9803e7bde31b449acd7c) refactor: update Chrome version constant and remove unused functions
