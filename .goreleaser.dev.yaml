@@ -1,0 +1,62 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+project_name: qcadmin
+
+env:
+  - GO111MODULE=on
+
+before:
+  hooks:
+    - task generate
+    - ./hack/scripts/gencompletions.sh
+    - ./hack/scripts/genmanpages.sh
+
+builds:
+  - ldflags:
+      - -w -s -X github.com/easysoft/qcadmin/common.Version={{.Summary}}
+      - -X github.com/easysoft/qcadmin/common.BuildDate={{.CommitDate}}
+      - -X github.com/easysoft/qcadmin/common.GitCommitHash={{.ShortCommit}}
+      - -X k8s.io/client-go/pkg/version.gitVersion={{.Summary}}
+      - -X k8s.io/client-go/pkg/version.gitCommit={{.FullCommit}}
+      - -X k8s.io/client-go/pkg/version.gitTreeState=dirty
+      - -X k8s.io/client-go/pkg/version.buildDate={{.CommitDate}}
+      - -X k8s.io/client-go/pkg/version.gitMajor=1
+      - -X k8s.io/client-go/pkg/version.gitMinor=24
+      - -X k8s.io/component-base/version.gitVersion={{.Summary}}
+      - -X k8s.io/component-base/version.gitCommit={{.FullCommit}}
+      - -X k8s.io/component-base/version.gitTreeState=dirty
+      - -X k8s.io/component-base/version.gitMajor=1
+      - -X k8s.io/component-base/version.gitMinor=24
+      - -X k8s.io/component-base/version.buildDate={{.CommitDate}}
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    main: main.go
+    id: qcadmin
+    binary: qcadmin
+
+archives:
+  - format: binary
+    name_template: "qcadmin_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ .Version }}-snapshot-{{ .ShortCommit }}"
+
+release:
+  target_commitish: "{{ .FullCommit	 }}"
+  prerelease: true
+  replace_existing_draft: true
+  mode: replace
+  make_latest: false
+  header: |
+    ## Commit Auto build
+  footer: |
+    Those were the changes on {{ .Commit }}!
+
