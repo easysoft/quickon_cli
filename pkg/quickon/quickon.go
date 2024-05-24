@@ -228,7 +228,7 @@ func (m *Meta) Init() error {
 		}
 	}
 	installVersion := common.GetVersion(m.DevopsMode, m.Type, m.Version)
-	m.Log.Infof("devops: %v, type: %s, version: %s(%s), channel: %s", m.DevopsMode, m.Type, m.Version, installVersion, common.GetChannel(m.Version))
+	m.Log.Infof("devops: %v, type: %s, version: %s, channel: %s", m.DevopsMode, m.Type, installVersion, common.GetChannel(m.Version))
 	m.Log.Debugf("start init %s", common.GetInstallType(m.DevopsMode))
 	cfg.Quickon.Type = common.QuickonType(m.Type)
 	cfg.Quickon.DevOps = m.DevopsMode

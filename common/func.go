@@ -60,24 +60,28 @@ func GetChannel(p string) string {
 }
 
 // GetVersion 获取版本地址
-func GetVersion(devops bool, p, version string) string {
-	v := strings.Split(version, "-")
-	if len(v) != 2 {
-		switch p {
-		case string(ZenTaoIPDType):
-			return DefaultZentaoDevOPSIPDVersion
-		case string(ZenTaoBizType):
-			return DefaultZentaoDevOPSBizVersion
-		case string(ZenTaoMaxType):
-			return DefaultZentaoDevOPSMaxVersion
-		default:
-			if devops {
-				return DefaultZentaoDevOPSOSSVersion
-			}
-			return DefaultQuickonOSSVersion
-		}
+func GetVersion(devops bool, typ, version string) string {
+	if !devops {
+		// 渠成不支持版本
+		return DefaultQuickonOSSVersion
 	}
-	return v[1]
+	v := strings.Split(version, "-")
+	if len(v) == 2 {
+		return v[1]
+	}
+	defaultVersion := DefaultZentaoDevOPSOSSVersion
+	switch typ {
+	case string(ZenTaoIPDType):
+		defaultVersion = DefaultZentaoDevOPSIPDVersion
+	case string(ZenTaoBizType):
+		defaultVersion = DefaultZentaoDevOPSBizVersion
+	case string(ZenTaoMaxType):
+		defaultVersion = DefaultZentaoDevOPSMaxVersion
+	}
+	if version == defaultVersion || len(version) == 0 {
+		return defaultVersion
+	}
+	return version
 }
 
 func GetDefaultConfig() string {
