@@ -97,6 +97,6 @@ jobs:
         uses: goreleaser/goreleaser-action@v5
         with:
           version: latest
-          args: release --clean --config .goreleaser.dev.yml
+          args: release --clean --config .goreleaser.dev.yaml
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
