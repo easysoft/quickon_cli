@@ -1,5 +1,15 @@
 # Changelog
 
+## v3.0.24 (2024-05-24)
+
+ * [72aed51](https://github.com/easysoft/quickon_cli/commit/72aed513dc705546570b9803e7bde31b449acd7c) refactor: update Chrome version constant and remove unused functions
+ * [319e22f](https://github.com/easysoft/quickon_cli/commit/319e22f259e01f7a6eda19b2d2a10bab84e36be4) feat: add support for validating and allowing namespaces
+ * [8c71fef](https://github.com/easysoft/quickon_cli/commit/8c71fef4dfcc580e52852bf37829edb1f3754aea) feat: add backup subcommands and support for listing backups
+
+### Contributors
+
+ * ysicing
+
 ## v3.0.23 (2024-05-22)
 
  * [ab0f578](https://github.com/easysoft/quickon_cli/commit/ab0f5784554053dc42ed3763073a9fa16963f656) fix: add error checking and update description for `InstallCommand`
