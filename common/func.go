@@ -78,10 +78,7 @@ func GetVersion(devops bool, typ, version string) string {
 	case string(ZenTaoMaxType):
 		defaultVersion = DefaultZentaoDevOPSMaxVersion
 	}
-	if version == defaultVersion || len(version) == 0 {
-		return defaultVersion
-	}
-	return version
+	return defaultVersion
 }
 
 func GetDefaultConfig() string {
