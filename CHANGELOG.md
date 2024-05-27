@@ -1,5 +1,15 @@
 # Changelog
 
+## v3.0.26 (2024-05-27)
+
+ * [8fcf7c6](https://github.com/easysoft/quickon_cli/commit/8fcf7c6f72436dc6b87137da4833317b3ffc081f) refactor: refactor code and improve formatting in several functions
+ * [8d1431e](https://github.com/easysoft/quickon_cli/commit/8d1431ee9a5907c9a50337bfe442ed5f8f39065a) build(deps): bump github.com/schollz/progressbar/v3
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.0.25 (2024-05-24)
 
  * [3ce2c3f](https://github.com/easysoft/quickon_cli/commit/3ce2c3fddc6f3926fd6389f90ff9e169a0517057) feat: refactor GetVersion function and add test cases in common/func_test.go
