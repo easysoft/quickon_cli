@@ -57,7 +57,7 @@ func (q *Devops) GetFlags() []types.Flag {
 	fs := q.MetaData.GetCustomFlags()
 	fs = append(fs, types.Flag{
 		Name:  "version",
-		Usage: fmt.Sprintf("zentao devops version %s", common.DefaultZentaoDevOPSOSSVersion),
+		Usage: fmt.Sprintf("zentao version %s,custom version use custom-%s", common.DefaultZentaoDevOPSOSSVersion, common.DefaultZentaoDevOPSOSSVersion),
 		P:     &q.MetaData.Version,
 		V:     q.MetaData.Version,
 	}, types.Flag{

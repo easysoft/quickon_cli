@@ -8,7 +8,7 @@
 # Source code is available at https://github.com/easysoft/quickon_cli
 
 # SCRIPT_COMMIT_SHA="a77fcbaf862d7b2d1eb8b08c5920adde14edc4ca"
-# SCRIPT_DATA="Fri Sep  8 09:46:36 AM CST 2023"
+# SCRIPT_DATA="Wed May 29 17:29:14 CST 2024"
 
 # Usage:
 #   curl ... | ENV_VAR=... sh -
@@ -16,20 +16,18 @@
 #   ENV_VAR=... ./install.sh
 #
 # Example:
-#   Installing Quickon with ZenTao:
+#   Installing DevOPS with ZenTao:
 #     curl ... | DEVOPS_TYPE="" sh -
 #   - DEVOPS_TYPE
-#     Install Type when install Quickon.
+#     Install Type when install Zentao DevOPS.
 #     Defaults to '', support 'max', 'biz', 'ipd'
 #   - DEVOPS_VERSION
-#     Install Version when install Quickon.
+#     Install Version when install Zentao DevOPS.
 #     Defaults to ''
 #   - INSTALL_DOMAIN
 #     If not set default use gen default domain
 #   - DEBUG
 #     If set, print debug information
-#   - SKIP_DEVOPS_INIT
-#     If set, skip devops init
 
 set -e
 set -o noglob
@@ -204,8 +202,8 @@ install_zentao_devops() {
   if [ -n "${DEVOPS_VERSION}" ]; then
     INSTALL_COMMAND="${INSTALL_COMMAND} --version ${DEVOPS_VERSION}"
   fi
-  if [ -n "${SKIP_DEVOPS_INIT}" ]; then
-    INSTALL_COMMAND="${INSTALL_COMMAND} --skip-devops-init"
+  if [ -n "${DEBUG}" ]; then
+    INSTALL_COMMAND="${INSTALL_COMMAND} --debug"
   fi
   eval "$INSTALL_COMMAND"
 }
