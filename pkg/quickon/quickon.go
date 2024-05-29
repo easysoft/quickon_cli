@@ -87,9 +87,9 @@ func (m *Meta) GetCustomFlags() []types.Flag {
 		},
 		{
 			Name:  "skip-devops-init",
-			Usage: "allow user skip devops init, default: false",
+			Usage: "allow user skip devops init, default: true",
 			P:     &m.SkipDevOPSInit,
-			V:     false,
+			V:     true,
 		},
 		{
 			Name:  "db-replication",
