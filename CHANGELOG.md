@@ -1,5 +1,16 @@
 # Changelog
 
+## v3.0.28 (2024-06-03)
+
+ * [fbc5fd7e](https://github.com/easysoft/quickon_cli/commit/fbc5fd7e0220a39060c90e91da6a6be9ea356d48) build(deps): bump github.com/imroc/req/v3 from 3.42.3 to 3.43.7
+ * [232d97da](https://github.com/easysoft/quickon_cli/commit/232d97da4ddc3408478d7b9a37456df886dcffba) feat: "Implement new devops script and update install configurations"
+ * [af154e4c](https://github.com/easysoft/quickon_cli/commit/af154e4cc02d141c4c97c873a117fa670d833a01) refactor: refactor installation process and update usage examples in main files
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.0.27 (2024-05-29)
 
 
