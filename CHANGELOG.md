@@ -1,5 +1,15 @@
 # Changelog
 
+## v3.0.29 (2024-06-06)
+
+ * [50fabbf0](https://github.com/easysoft/quickon_cli/commit/50fabbf015724b526c329e99457019db593c53dc) feat: add storage class name to helmargs
+ * [8b6274cf](https://github.com/easysoft/quickon_cli/commit/8b6274cfaf72ff3a5e013633df0c55454d881c5f) build(deps): bump goreleaser/goreleaser-action from 5 to 6
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.0.28 (2024-06-03)
 
  * [fbc5fd7e](https://github.com/easysoft/quickon_cli/commit/fbc5fd7e0220a39060c90e91da6a6be9ea356d48) build(deps): bump github.com/imroc/req/v3 from 3.42.3 to 3.43.7
