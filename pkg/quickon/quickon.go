@@ -207,10 +207,12 @@ func (m *Meta) Init() error {
 	m.Log.Debug("waiting for storage to be ready...")
 	waitsc := time.Now()
 	// wait.BackoffUntil TODO
+	scName := ""
 	for {
 		sc, _ := m.kubeClient.GetDefaultSC(ctx)
 		if sc != nil {
 			m.Log.Donef("default storage %s is ready", sc.Name)
+			scName = sc.Name
 			break
 		}
 		time.Sleep(time.Second * 5)
@@ -335,6 +337,9 @@ func (m *Meta) Init() error {
 		} else {
 			hostdomain = fmt.Sprintf("console.%s", hostdomain)
 		}
+	}
+	if len(scName) > 0 {
+		helmargs = append(helmargs, "--set", fmt.Sprintf("global.storageClass=%s", scName))
 	}
 
 	if m.OffLine {
