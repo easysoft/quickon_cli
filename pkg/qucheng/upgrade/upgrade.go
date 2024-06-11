@@ -136,7 +136,7 @@ func Upgrade(flagVersion string, testmode bool, log log.Logger) error {
 				newProduct := selectItems[it].Key.String()
 				defaultValue["deploy"].(map[string]interface{})["product"] = newProduct
 				appnewVersion := common.GetVersion(true, newProduct, "")
-				if selectItems[it].Key != common.ZenTaoOSSType {
+				if !(selectItems[it].Key == common.ZenTaoOSSType || selectItems[it].Key == common.ZenTaoOldOSSType) {
 					appnewVersion = fmt.Sprintf("%s%s.k8s", newProduct, common.GetVersion(true, newProduct, ""))
 					if newProduct != product.(string) {
 						log.Warn("切换版本升级(如开源版升级到企业版), 可能导致因版本授权问题无法正常使用, 如有问题请联系技术支持!")

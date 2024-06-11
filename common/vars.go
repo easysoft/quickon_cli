@@ -23,7 +23,9 @@ type cloudAPIS struct {
 type QuickonType string
 
 var (
-	ZenTaoOSSType QuickonType = "oss" // 开源版
+	// Deprecated: ZenTaoOldOSSType is deprecated, use ZenTaoOSSType instead
+	ZenTaoOldOSSType QuickonType = "oss" // 开源版
+	ZenTaoOSSType QuickonType = "open" // 开源版
 	ZenTaoMaxType QuickonType = "max" // 旗舰版
 	ZenTaoBizType QuickonType = "biz" // 企业版
 	ZenTaoIPDType QuickonType = "ipd" // IPD版
