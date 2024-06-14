@@ -24,11 +24,11 @@ type QuickonType string
 
 var (
 	// Deprecated: ZenTaoOldOSSType is deprecated, use ZenTaoOSSType instead
-	ZenTaoOldOSSType QuickonType = "oss" // 开源版
-	ZenTaoOSSType QuickonType = "open" // 开源版
-	ZenTaoMaxType QuickonType = "max" // 旗舰版
-	ZenTaoBizType QuickonType = "biz" // 企业版
-	ZenTaoIPDType QuickonType = "ipd" // IPD版
+	ZenTaoOldOSSType QuickonType = "oss"  // 开源版
+	ZenTaoOSSType    QuickonType = "open" // 开源版
+	ZenTaoMaxType    QuickonType = "max"  // 旗舰版
+	ZenTaoBizType    QuickonType = "biz"  // 企业版
+	ZenTaoIPDType    QuickonType = "ipd"  // IPD版
 )
 
 func (q QuickonType) String() string {
