@@ -79,8 +79,11 @@ func EmbedCommand(f factory.Factory) *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			log := f.GetLog()
 			tplfile, _ := os.CreateTemp("/tmp", "")
-			log.Infof("file: %s", tplfile.Name())
+			log.Infof("file k3s service: %s", tplfile.Name())
 			file.WriteFile(tplfile.Name(), k3sargs.Manifests(""), true)
+			registriesfile, _ := os.CreateTemp("/tmp", "")
+			log.Infof("file embedded registries: %s", registriesfile.Name())
+			file.WriteFile(registriesfile.Name(), k3sargs.Manifests(common.K3SEmbeddedMirrorsTpl), true)
 		},
 	}
 	rootCmd.Flags().StringVar(&k3sargs.PodCIDR, "pod-cidr", "10.42.0.0/16", "cluster cidr")

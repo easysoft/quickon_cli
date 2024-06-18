@@ -160,6 +160,7 @@ ExecStart=/usr/local/bin/k3s \
       --tls-san kubeapi.corp.cc \
       --tls-san apiserver.cluster.local \
       --tls-san {{ .KubeAPI }} \
+      --embedded-registry \
       {{if .PodCIDR -}}
         --cluster-cidr {{ .PodCIDR }} \
       {{end -}}
@@ -199,4 +200,9 @@ ExecStart=/usr/local/bin/k3s \
       --prefer-bundled-bin \
       --kube-proxy-arg "proxy-mode=ipvs" "masquerade-all=true" \
       --kube-proxy-arg "metrics-bind-address=0.0.0.0"
+`
+
+const K3SEmbeddedMirrorsTpl = `mirrors:
+  hub.qucheng.com:
+  hub.zentao.net:
 `
