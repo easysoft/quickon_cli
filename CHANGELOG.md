@@ -1,5 +1,19 @@
 # Changelog
 
+## v3.0.30 (2024-06-24)
+
+ * [e2b3db83](https://github.com/easysoft/quickon_cli/commit/e2b3db837fb176790b1db5ea1a1092934eb0f527) * [feat]: update zentao version
+ * [411a55fa](https://github.com/easysoft/quickon_cli/commit/411a55fa1cecbaa5c965d76e518b9e238f5df893) build(deps): bump helm.sh/helm/v3 from 3.14.3 to 3.15.2
+ * [5a5f63cb](https://github.com/easysoft/quickon_cli/commit/5a5f63cb0d5f7f5dd298769226dfa046fc3af594) build(deps): bump github.com/spf13/cobra from 1.8.0 to 1.8.1
+ * [de361eb2](https://github.com/easysoft/quickon_cli/commit/de361eb2aa109afdf96149782cb574385a41ae79) * update longhorn checkenv script
+ * [312ec204](https://github.com/easysoft/quickon_cli/commit/312ec20492d9d83c3eb4e85a0f7b47bc161f253e) * [refac] changed oss type from oss to open
+ * [0dcce450](https://github.com/easysoft/quickon_cli/commit/0dcce45086ed9a702fbf4c935a1225823076af50) build(deps): bump github.com/schollz/progressbar/v3
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.0.29 (2024-06-06)
 
  * [50fabbf0](https://github.com/easysoft/quickon_cli/commit/50fabbf015724b526c329e99457019db593c53dc) feat: add storage class name to helmargs
