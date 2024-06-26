@@ -5,9 +5,11 @@
 # (2) Affero General Public License 3.0 (AGPL 3.0)
 # license that can be found in the LICENSE file.
 
-qcadmin exp helm repo-list | grep install || (
-  qcadmin exp helm repo-add --name install --url https://hub.zentao.net/chartrepo/stable
+z exp helm repo-list | grep install || (
+  z exp helm repo-add --name install --url https://hub.zentao.net/chartrepo/stable
 )
-qcadmin exp helm repo-update
+z exp helm repo-update
 
-helm upgrade -i longhorn q-stable/longhorn -n quickon-storage --create-namespace
+# z helm upgrade -i longhorn install/longhorn -n quickon-storage --create-namespace --set ingress.host=lh.local
+
+# z exp helm upgrade --repo install --name longhorn -n quickon-storage --chart longhorn --set ingress.host=lh.local
