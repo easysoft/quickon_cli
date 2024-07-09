@@ -1,5 +1,17 @@
 # Changelog
 
+## v3.0.31 (2024-07-09)
+
+ * [5a4edd27](https://github.com/easysoft/quickon_cli/commit/5a4edd27d019fe194aa30598ce264f3ca57f134b) * [feat]: update zentao version
+ * [9eb37934](https://github.com/easysoft/quickon_cli/commit/9eb37934157e093f2ba62f4496050719bad94e6f) build(deps): bump tailscale.com from 1.66.3 to 1.68.2
+ * [7d133ef9](https://github.com/easysoft/quickon_cli/commit/7d133ef9f3ceeb2fe60bff1203a1b22320d052c9) build(deps): bump github.com/cockroachdb/errors from 1.11.1 to 1.11.3
+ * [02a96101](https://github.com/easysoft/quickon_cli/commit/02a96101709ef33335f1442c409ade7ee8c3c180) * [fix]: update longhorn install
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.0.30 (2024-06-24)
 
  * [e2b3db83](https://github.com/easysoft/quickon_cli/commit/e2b3db837fb176790b1db5ea1a1092934eb0f527) * [feat]: update zentao version
