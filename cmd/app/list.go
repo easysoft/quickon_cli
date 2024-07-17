@@ -40,6 +40,11 @@ func NewCmdAppList(f factory.Factory) *cobra.Command {
 				return err
 			}
 
+			if len(release) == 0 {
+				log.Warn("no found app")
+				return nil
+			}
+
 			selectApp := promptui.Select{
 				Label: "select app",
 				Items: release,
