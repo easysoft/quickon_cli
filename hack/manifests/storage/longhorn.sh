@@ -12,4 +12,4 @@ z exp helm repo-update
 
 # z helm upgrade -i longhorn install/longhorn -n quickon-storage --create-namespace --set ingress.host=lh.local
 
-# z exp helm upgrade --repo install --name longhorn -n quickon-storage --chart longhorn --set ingress.host=lh.local
+z exp helm upgrade --repo install --name longhorn -n quickon-storage --chart longhorn --set ingress.host=lh.local

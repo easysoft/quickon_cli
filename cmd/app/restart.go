@@ -29,9 +29,7 @@ func NewCmdAppRestart(f factory.Factory) *cobra.Command {
 		Use:        "restart",
 		Short:      "restart app",
 		Args:       cobra.ExactArgs(1),
-		Hidden:     true,
-		Deprecated: "zentao not support query by url",
-		Example:    `z app exec http://console.example.corp.cc/instance-view-39.html`,
+		Example:    `z app`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			url := args[0]
 			apidebug := log.GetLevel() == logrus.DebugLevel

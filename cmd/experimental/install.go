@@ -28,6 +28,7 @@ var (
 		"mc":      true,
 		"etcdctl": true,
 		"dnsctl":  true,
+		"nerdctl": true,
 	}
 )
 
@@ -35,7 +36,7 @@ var (
 func InstallCommand(f factory.Factory) *cobra.Command {
 	installCmd := &cobra.Command{
 		Use:     "install [flags]",
-		Short:   "install tools, like: helm, kubectl,etcdctl,mc,dnsctl",
+		Short:   "install tools, like: helm, kubectl,etcdctl,mc,dnsctl,nerdctl",
 		Example: installExample,
 		Args:    cobra.MinimumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {

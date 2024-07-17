@@ -1,7 +1,9 @@
 mirrors:
   "docker.io":
     endpoint:
-      - "http://hub.quickon.me:32378"
+      - "http://127.0.0.1:32378"
+  "hub.zentao.net":
+    endpoint:
       - "http://127.0.0.1:32378"
   "hub.qucheng.com":
     endpoint:
