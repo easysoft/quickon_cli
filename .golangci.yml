@@ -68,6 +68,9 @@ issues:
     - linters:
         - goheader
       text: "rights reserved"
+    - linters:
+        - staticcheck
+      text: "SA1019: common.ZenTaoOldOSSType is deprecated"
   exclude-dirs:
     - hack/bin
     - testdata$

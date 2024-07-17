@@ -26,10 +26,10 @@ func NewCmdAppRestart(f factory.Factory) *cobra.Command {
 	log := f.GetLog()
 	var useip bool
 	app := &cobra.Command{
-		Use:        "restart",
-		Short:      "restart app",
-		Args:       cobra.ExactArgs(1),
-		Example:    `z app`,
+		Use:     "restart",
+		Short:   "restart app",
+		Args:    cobra.ExactArgs(1),
+		Example: `z app`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			url := args[0]
 			apidebug := log.GetLevel() == logrus.DebugLevel
