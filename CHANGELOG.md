@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.0.32 (2024-07-23)
+
+ * [c65e53da](https://github.com/easysoft/quickon_cli/commit/c65e53da1c15b6f6cd5aee8eff4e0fb2610f5e54) * [feat] update zentao version
+ * [828d26a5](https://github.com/easysoft/quickon_cli/commit/828d26a5109763dac7dad3088ffa4327da321053) build(deps): bump tailscale.com from 1.68.2 to 1.70.0
+ * [aa96cec9](https://github.com/easysoft/quickon_cli/commit/aa96cec90bb67d71dec3531d2aca114abee01f07) feat: enhance error handling and user feedback
+ * [d8d2ce2b](https://github.com/easysoft/quickon_cli/commit/d8d2ce2bcd7034c496f80ff8ae6f410b88ccb2c2) * refactor: update various files with new configurations and scripts
+ * [b0278db2](https://github.com/easysoft/quickon_cli/commit/b0278db2720314d7c6e4a2ec94029f79a5cd746b) build(deps): bump helm.sh/helm/v3 from 3.15.2 to 3.15.3
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.0.31 (2024-07-09)
 
  * [5a4edd27](https://github.com/easysoft/quickon_cli/commit/5a4edd27d019fe194aa30598ce264f3ca57f134b) * [feat]: update zentao version
