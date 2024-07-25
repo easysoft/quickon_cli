@@ -187,12 +187,10 @@ ExecStart=/usr/local/bin/k3s \
         --flannel-backend {{ .CNI }} \
       {{end -}}
     {{else -}}
+      --server https://{{ .KubeAPI }}:6443 \
       agent \
     {{end -}}
       --token {{ .KubeToken }} \
-    {{if not .Master0 -}}
-      --server https://{{ .KubeAPI }}:6443 \
-    {{end -}}
       --data-dir {{.DataDir}} \
       --docker \
       --pause-image {{ .Registry }}/rancher/mirrored-pause:3.6 \
