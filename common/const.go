@@ -64,10 +64,10 @@ const (
 const (
 	DefaultQuickonOSSVersion      = "3.0.2" // 开源版本
 	DefaultQuickonEEVersion       = "1.0"
-	DefaultZentaoDevOPSOSSVersion = "20.3.0"
-	DefaultZentaoDevOPSMaxVersion = "5.2.0"
-	DefaultZentaoDevOPSBizVersion = "10.2.0"
-	DefaultZentaoDevOPSIPDVersion = "2.2.0"
+	DefaultZentaoDevOPSOSSVersion = "20.4.0"
+	DefaultZentaoDevOPSMaxVersion = "5.3.0"
+	DefaultZentaoDevOPSBizVersion = "10.3.0"
+	DefaultZentaoDevOPSIPDVersion = "2.3.0"
 	K3sBinName                    = "k3s"
 	K3sBinPath                    = "/usr/local/bin/k3s"
 	HelmBinName                   = "helm"
