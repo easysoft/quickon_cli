@@ -27,7 +27,7 @@ qcadmin platform init [flags]
   -p, --provider string    install provider, support devops, quickon (default "devops")
       --skip-devops-init   allow user skip devops init (default true)
   -t, --type string        devops type, support oss, max, biz, ipd (default "open")
-      --version string     zentao version 20.3.0,custom version use custom-20.3.0 (default "20.3.0")
+      --version string     zentao version 20.4.0,custom version use custom-20.4.0 (default "20.4.0")
 ```
 
 ### Options inherited from parent commands

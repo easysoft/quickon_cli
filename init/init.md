@@ -45,7 +45,7 @@ qcadmin init [flags]
       --storage string            storage, e.g: nfs,local (default "nfs")
   -t, --type string               devops type, support oss, max, biz, ipd (default "open")
   -u, --username string           ssh user (default "root")
-      --version string            zentao version 20.3.0,custom version use custom-20.3.0 (default "20.3.0")
+      --version string            zentao version 20.4.0,custom version use custom-20.4.0 (default "20.4.0")
       --worker stringArray        worker ip list, e.g: 192.168.0.1:22
 ```
 

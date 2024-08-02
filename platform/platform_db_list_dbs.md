@@ -14,7 +14,7 @@ qcadmin platform db list dbs [flags]
 ### Examples
 
 ```
-/tmp/go-build2106237700/b001/exe/docs platform db list dbs
+/tmp/go-build383775644/b001/exe/docs platform db list dbs
 ```
 
 ### Options
