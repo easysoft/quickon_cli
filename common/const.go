@@ -72,7 +72,7 @@ const (
 	K3sBinPath                    = "/usr/local/bin/k3s"
 	HelmBinName                   = "helm"
 	HelmBinPath                   = "/usr/local/bin/helm"
-	K3sBinVersion                 = "v1.28.9+k3s1"
+	K3sBinVersion                 = "v1.28.12+k3s1"
 	K3sBinURL                     = "https://github.com/k3s-io/k3s/releases/download"
 	K3sAgentEnv                   = "/etc/systemd/system/k3s-agent.service.env"
 	K3sKubeConfig                 = "/etc/rancher/k3s/k3s.yaml"
