@@ -1,5 +1,19 @@
 # Changelog
 
+## v3.1.0 (2024-08-05)
+
+ * [d652711a](https://github.com/easysoft/quickon_cli/commit/d652711a03934abc78de677e03b1f7d7cff379cb) build(deps): bump github.com/gofrs/flock from 0.8.1 to 0.12.1
+ * [c1f81011](https://github.com/easysoft/quickon_cli/commit/c1f810112832d354b744d70269803202d0d62d83) * [app] update zentao version
+ * [b1e996cc](https://github.com/easysoft/quickon_cli/commit/b1e996cc7fda3c3ce6b2823150f7c393fb691ebf) * [sec] update go mod dep
+ * [c4cc3b06](https://github.com/easysoft/quickon_cli/commit/c4cc3b060f8a8ec7b38ad6df88e0b5ef1d00c74a) * [feat] update k3s version
+ * [ea00f65d](https://github.com/easysoft/quickon_cli/commit/ea00f65da045f7d50ca25b82d8fe9c05a4302f77) build(deps): bump golang.org/x/term from 0.21.0 to 0.22.0
+ * [08b0a8ff](https://github.com/easysoft/quickon_cli/commit/08b0a8fffece302a22aa6f1df905ffc70d3d838c) refactor: update kube API server URL in ExecStart command
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.0.32 (2024-07-23)
 
  * [c65e53da](https://github.com/easysoft/quickon_cli/commit/c65e53da1c15b6f6cd5aee8eff4e0fb2610f5e54) * [feat] update zentao version
