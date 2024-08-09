@@ -143,12 +143,16 @@ func (c Client) Upgrade(name, repoName, chartName, chartVersion string, values m
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf("locate chart %s failed: %v", chartName, err))
 	}
-	c.log.Infof("chart name %s path: %s", chartName, p)
+	c.log.Debugf("chart name %s path: %s", chartName, p)
 	ct, err := loader.Load(p)
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf("load chart %s failed: %v", chartName, err))
 	}
-	// TODO 获取之前参数，并且更新参数
+	releaseValue, err := c.GetDetail(name)
+	if err != nil {
+		return nil, errors.Errorf("fetch %s chart release value failed, %v", name, err)
+	}
+	values = MergeMaps(releaseValue.Config, values)
 	release, err := client.Run(name, ct, values)
 	if err != nil {
 		return release, errors.Wrap(err, fmt.Sprintf("upgrade tool %s with chart %s failed: %v", name, chartName, err))

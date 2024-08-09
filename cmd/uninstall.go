@@ -44,7 +44,6 @@ func newCmdUninstall(f factory.Factory) *cobra.Command {
 				return
 			}
 		}
-		log.Donef("uninstall success")
 	}
 	uninstallCmd.PersistentFlags().BoolVar(&cleanCluster, "all", true, "clean all")
 	return uninstallCmd

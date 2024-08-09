@@ -169,6 +169,9 @@ ExecStart=/usr/local/bin/k3s \
       {{if .DataStore -}}
         --datastore-endpoint {{ .DataStore }} \
       {{else -}}
+      {{if not .Master0 -}}
+        --server https://{{ .KubeAPI }}:6443 \
+      {{end -}}
         --cluster-init \
         --etcd-expose-metrics \
         --etcd-snapshot-name auto-snapshot \

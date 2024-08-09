@@ -16,6 +16,8 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
+
+	exhelm "github.com/easysoft/qcadmin/internal/pkg/util/helm"
 )
 
 func EmbedCommand(f factory.Factory) *cobra.Command {
@@ -43,14 +45,14 @@ func repoInit(f factory.Factory) *cobra.Command {
 		Short: "init helm repo",
 		PostRunE: func(cmd *cobra.Command, args []string) error {
 			logpkg.Debug("update helm repo")
-			hc, err := helm.NewClient(&helm.Config{Namespace: ""})
+			hc, err := exhelm.NewClient(&exhelm.Config{Namespace: ""})
 			if err != nil {
 				return errors.Errorf("helm create go client err: %v", err)
 			}
 			return hc.UpdateRepo()
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			hc, err := helm.NewClient(&helm.Config{Namespace: ""})
+			hc, err := exhelm.NewClient(&exhelm.Config{Namespace: ""})
 			if err != nil {
 				return errors.Errorf("helm create go client err: %v", err)
 			}
@@ -85,7 +87,7 @@ func repoList(f factory.Factory) *cobra.Command {
 		Short: "list helm repo",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			logpkg := f.GetLog()
-			hc, err := helm.NewClient(&helm.Config{Namespace: ""})
+			hc, err := exhelm.NewClient(&helm.Config{Namespace: ""})
 			if err != nil {
 				return errors.Errorf("helm create go client err: %v", err)
 			}
@@ -107,7 +109,7 @@ func repoUpdate(f factory.Factory) *cobra.Command {
 		Use:   "repo-update",
 		Short: "update information of available charts locally from chart repositories",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			hc, err := helm.NewClient(&helm.Config{Namespace: ""})
+			hc, err := exhelm.NewClient(&helm.Config{Namespace: ""})
 			if err != nil {
 				return errors.Errorf("helm create go client err: %v", err)
 			}
@@ -127,7 +129,7 @@ func repoAdd(f factory.Factory) *cobra.Command {
 			if len(name) == 0 || len(url) == 0 {
 				return errors.Errorf("name or url is empty")
 			}
-			hc, err := helm.NewClient(&helm.Config{Namespace: ""})
+			hc, err := exhelm.NewClient(&helm.Config{Namespace: ""})
 			if err != nil {
 				return errors.Errorf("helm create go client err: %v", err)
 			}
@@ -148,7 +150,7 @@ func repoDel(f factory.Factory) *cobra.Command {
 		Aliases: []string{"repo-remove"},
 		Short:   "del a chart repository",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			hc, err := helm.NewClient(&helm.Config{Namespace: ""})
+			hc, err := exhelm.NewClient(&helm.Config{Namespace: ""})
 			if err != nil {
 				return errors.Errorf("helm create go client err: %v", err)
 			}
@@ -187,11 +189,11 @@ func chartUpgrade(f factory.Factory) *cobra.Command {
 			if ns == "" {
 				ns = "default"
 			}
-			hc, err := helm.NewClient(&helm.Config{Namespace: ns})
+			hc, err := exhelm.NewClient(&exhelm.Config{Namespace: ns})
 			if err != nil {
 				return errors.Errorf("helm create go client err: %v", err)
 			}
-			values, _ := helm.MergeValues(p)
+			values, _ := exhelm.MergeValues(p)
 			_, err = hc.Upgrade(name, repoName, chartName, chartVersion, values)
 			return err
 		},
@@ -221,7 +223,7 @@ func chartUninstall(f factory.Factory) *cobra.Command {
 			if ns == "" {
 				ns = "default"
 			}
-			hc, err := helm.NewClient(&helm.Config{Namespace: ns})
+			hc, err := exhelm.NewClient(&exhelm.Config{Namespace: ns})
 			if err != nil {
 				return errors.Errorf("helm create go client err: %v", err)
 			}
@@ -248,7 +250,7 @@ func chartClean(f factory.Factory) *cobra.Command {
 			if ns == "" {
 				ns = "default"
 			}
-			hc, err := helm.NewClient(&helm.Config{Namespace: ns})
+			hc, err := exhelm.NewClient(&exhelm.Config{Namespace: ns})
 			if err != nil {
 				return errors.Errorf("helm create go client err: %v", err)
 			}
@@ -274,7 +276,7 @@ func chartList(f factory.Factory) *cobra.Command {
 		Use:   "list",
 		Short: "list all chart installed by quickon",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			hc, err := helm.NewClient(&helm.Config{Namespace: ns})
+			hc, err := exhelm.NewClient(&exhelm.Config{Namespace: ns})
 			if err != nil {
 				return errors.Errorf("helm create go client err: %v", err)
 			}
