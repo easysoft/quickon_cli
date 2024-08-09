@@ -1,5 +1,14 @@
 # Changelog
 
+## v3.1.1 (2024-08-09)
+
+ * [e89956c0](https://github.com/easysoft/quickon_cli/commit/e89956c0c40ad9c7de1d5d5d143dbeaabdba9cb6) * refactor: refactor helm client initialization and logging functionality
+ * [07651749](https://github.com/easysoft/quickon_cli/commit/07651749b5bd432c017776974b437acfea050be1) refactor: refactor version handling across multiple files
+
+### Contributors
+
+ * ysicing
+
 ## v3.1.0 (2024-08-05)
 
  * [d652711a](https://github.com/easysoft/quickon_cli/commit/d652711a03934abc78de677e03b1f7d7cff379cb) build(deps): bump github.com/gofrs/flock from 0.8.1 to 0.12.1
