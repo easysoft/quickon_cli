@@ -1,5 +1,17 @@
 # Changelog
 
+## v3.1.2 (2024-08-19)
+
+ * [59af0f51](https://github.com/easysoft/quickon_cli/commit/59af0f51af5a34b9918f57b1146f576e11108936) * [fix] update mod fix build
+ * [e30256e5](https://github.com/easysoft/quickon_cli/commit/e30256e590bc0d968b5b3616e8e5bfc13a5cc190) + [feat] update zentao version
+ * [34e04bc0](https://github.com/easysoft/quickon_cli/commit/34e04bc0ef3da7e245ead39fb8932fe1cbe9e8c4) build(deps): bump github.com/ergoapi/util from 0.6.4 to 0.7.7
+ * [55a5dc38](https://github.com/easysoft/quickon_cli/commit/55a5dc3861797bc234ddf02cc85e5cf639c0e1e7) build(deps): bump github.com/shirou/gopsutil/v3 from 3.24.3 to 3.24.5
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.1.1 (2024-08-09)
 
  * [e89956c0](https://github.com/easysoft/quickon_cli/commit/e89956c0c40ad9c7de1d5d5d143dbeaabdba9cb6) * refactor: refactor helm client initialization and logging functionality
