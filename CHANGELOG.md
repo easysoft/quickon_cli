@@ -1,5 +1,16 @@
 # Changelog
 
+## v3.1.3 (2024-09-02)
+
+ * [42493704](https://github.com/easysoft/quickon_cli/commit/42493704a00e4e6997c0dfc15ffb00063325b48d) * [feat] update zentao version
+ * [03a45e9e](https://github.com/easysoft/quickon_cli/commit/03a45e9e0c956b9f807bcaf1b3c005ecf3362668) build(deps): bump github.com/vishvananda/netlink
+ * [05e4f07a](https://github.com/easysoft/quickon_cli/commit/05e4f07a10f8dffcc64cd8aae9aa3af8f0027478) build(deps): bump helm.sh/helm/v3 from 3.15.3 to 3.15.4
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.1.2 (2024-08-19)
 
  * [59af0f51](https://github.com/easysoft/quickon_cli/commit/59af0f51af5a34b9918f57b1146f576e11108936) * [fix] update mod fix build
