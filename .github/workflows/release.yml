@@ -101,7 +101,7 @@ jobs:
       - name: fetch current version
         id: get-current-tag
         uses: actions-ecosystem/action-get-latest-tag@v1.6.0
-      - uses: peter-evans/create-pull-request@v6
+      - uses: peter-evans/create-pull-request@v7
         id: cpr
         with:
           title: 'docs: updated CHANGELOG.md & docs for ${{steps.get-current-tag.outputs.tag }}'
