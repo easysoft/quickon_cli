@@ -177,7 +177,7 @@ func chartUpgrade(f factory.Factory) *cobra.Command {
 			if len(ns) > 0 {
 				kubeClient, err := k8s.NewSimpleClient(common.GetKubeConfig())
 				if err != nil {
-					return errors.Errorf("load k8s client failed, reason: %v", err)
+					return errors.Errorf("load kube client failed, reason: %v", err)
 				}
 				if err := kubeClient.CheckNamespace(context.Background(), ns); err != nil {
 					return errors.Errorf("check namespace %s failed, reason: %v", ns, err)

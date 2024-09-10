@@ -40,7 +40,7 @@ func NewCmdAppRestart(f factory.Factory) *cobra.Command {
 			}
 			k8sClient, err := k8s.NewSimpleClient()
 			if err != nil {
-				log.Errorf("k8s client err: %v", err)
+				log.Errorf("kube client create err: %v", err)
 				return err
 			}
 			ctx := context.Background()

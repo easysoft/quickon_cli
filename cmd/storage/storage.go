@@ -156,7 +156,7 @@ func defaultStorage(f factory.Factory) *cobra.Command {
 			logpkg := f.GetLog()
 			kubeClient, err := k8s.NewSimpleClient(common.GetKubeConfig())
 			if err != nil {
-				return errors.Errorf("load k8s client failed, reason: %v", err)
+				return errors.Errorf("kube client create failed, reason: %v", err)
 			}
 			ctx := context.Background()
 			scs, err := kubeClient.ListSC(ctx, metav1.ListOptions{})

@@ -311,7 +311,7 @@ func (c *Client) DeleteOrEvictPodsSimple(ctx context.Context, name string) error
 		return err
 	}
 	if policyGroupVersion == "" {
-		return errors.New("k8s not support eviction subresource")
+		return errors.New("kube api not support eviction subresource")
 	}
 	for _, v := range pods {
 		c.EvictPod(ctx, v, policyGroupVersion)

@@ -104,7 +104,7 @@ func domainAdd(f factory.Factory) *cobra.Command {
 				kclient, _ := k8s.NewSimpleClient()
 				ns, err := kclient.GetNamespace(context.TODO(), common.DefaultKubeSystem, metav1.GetOptions{})
 				if err != nil {
-					log.Errorf("conn k8s err: %v", err)
+					log.Errorf("fetch kube api failed: %v", err)
 					return
 				}
 				secretKey := string(ns.ObjectMeta.GetUID())

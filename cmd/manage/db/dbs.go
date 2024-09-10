@@ -80,7 +80,7 @@ func cmdDbsList(f factory.Factory) *cobra.Command {
 			if actions[iac].Name == "manage" {
 				// https://console.example.corp.cc/adminer/?server=10.10.16.15%3A3306&username=root&db=ysicing&password=password123
 				if err := fakeDbUserInfo(qclient, &dbs[it]); err != nil {
-					return errors.Errorf("call k8s api err: %v", err)
+					return errors.Errorf("call kube api err: %v", err)
 				}
 				url := fmt.Sprintf("%s/adminer/?server=%s&username=%s&db=%s&password=%s", kutil.GetConsoleURL(cfg), dbs[it].Status.Address, dbs[it].Spec.Account.User.Value, "", dbs[it].Spec.Account.Password.Value)
 				log.Infof("open browser access url: %s", url)

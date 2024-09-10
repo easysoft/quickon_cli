@@ -310,11 +310,11 @@ func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error
 }
 
 func (c *Cluster) waitk3sReady(host string, sshClient ssh.Interface) error {
-	c.log.StartWait("check k8s ready.")
+	c.log.StartWait("check k3s ready.")
 	try := 0
 	err := wait.ExponentialBackoff(defaultBackoff, func() (bool, error) {
 		try++
-		c.log.Debugf("the %d/%d time tring to check k8s status", try, defaultBackoff.Steps)
+		c.log.Debugf("the %d/%d time tring to check k3s status", try, defaultBackoff.Steps)
 		// TODO 地址错误问题
 		err := sshClient.Copy(host, "/etc/rancher/k3s/k3s.yaml", common.DefaultQuickONKubeConfig())
 		if err != nil {
@@ -330,9 +330,9 @@ func (c *Cluster) waitk3sReady(host string, sshClient ssh.Interface) error {
 	})
 	c.log.StopWait()
 	if err != nil {
-		return errors.Errorf("check k8s ready failed, reason: %w", err)
+		return errors.Errorf("check k3s ready failed, reason: %w", err)
 	}
-	c.log.Done("check k8s ready.")
+	c.log.Done("check k3s ready.")
 	return nil
 }
 
@@ -485,7 +485,7 @@ func (c *Cluster) DeleteNode() error {
 	sshClient := ssh.NewSSHClient(&cfg.Global.SSH, true)
 	kubeClient, err := k8s.NewSimpleClient(common.GetKubeConfig())
 	if err != nil {
-		return errors.Errorf("load k8s client failed, reason: %v", err)
+		return errors.Errorf("load kube client failed, reason: %v", err)
 	}
 	for _, ip := range c.IPs {
 		if ip == cfg.Cluster.InitNode {

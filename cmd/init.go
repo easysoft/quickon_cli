@@ -66,7 +66,7 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 	nCluster := nativeCluster.NewCluster(f)
 	if file.CheckFileExists(common.GetKubeConfig()) {
 		name = "incluster"
-		initCmd.Long = `Found k8s config, run this command in order to set up Quickon Control Plane`
+		initCmd.Long = `Found kubeconfig, run this command in order to set up Quickon Control Plane`
 	} else {
 		fs = append(fs, nCluster.GetInitFlags()...)
 		initCmd.Long = `Run this command in order to set up the Kubernetes & Quickon Control Plane`
@@ -82,7 +82,7 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 		if name == "incluster" {
 			// TODO Check k8s ready
 			if _, err := k8s.NewSimpleClient(); err != nil {
-				log.Errorf("k8s is not ready, please check your k8s cluster, just run %s ", color.SGreen("%s exp kubectl get nodes", globalToolPath))
+				log.Errorf("kube cluster is not ready, please check your cluster, just run %s ", color.SGreen("%s exp kubectl get nodes", globalToolPath))
 				os.Exit(0)
 			}
 		} else {
@@ -102,7 +102,7 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 		if name == "native" {
 			log.Infof("start init native provider")
 			if err := nCluster.InitNode(); err != nil {
-				log.Errorf("init k8s cluster failed, reason: %v", err)
+				log.Errorf("init kube cluster failed, reason: %v", err)
 				return
 			}
 		}

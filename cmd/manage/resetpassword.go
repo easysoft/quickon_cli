@@ -55,12 +55,12 @@ func NewResetPassword(f factory.Factory) *cobra.Command {
 			if cfg.APIToken == "" {
 				k8sClient, err := k8s.NewSimpleClient()
 				if err != nil {
-					log.Errorf("k8s client err: %v", err)
+					log.Errorf("kube client create err: %v", err)
 					return
 				}
 				cneapiDeploy, err := k8sClient.GetDeployment(context.Background(), common.GetDefaultSystemNamespace(true), "qucheng", metav1.GetOptions{})
 				if err != nil {
-					log.Errorf("get k8s deploy err: %v", err)
+					log.Errorf("get kube deploy err: %v", err)
 					return
 				}
 				for _, e := range cneapiDeploy.Spec.Template.Spec.Containers[0].Env {

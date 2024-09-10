@@ -94,7 +94,7 @@ func cmdDbSvcList(f factory.Factory) *cobra.Command {
 			if actions[iac].Name == "manage" {
 				// https://console.example.corp.cc/adminer/?server=10.10.16.15%3A3306&username=root&db=ysicing&password=password123
 				if err := fakeDbSvcUserInfo(qclient, &gdbServices[it]); err != nil {
-					return errors.Errorf("call k8s api err: %v", err)
+					return errors.Errorf("call kube api err: %v", err)
 				}
 				url := fmt.Sprintf("%s/adminer/?server=%s&username=%s&db=%s&password=%s", kutil.GetConsoleURL(cfg), gdbServices[it].Status.Address, gdbServices[it].Spec.Account.User.Value, "", gdbServices[it].Spec.Account.Password.Value)
 				log.Infof("open browser access url: %s", url)

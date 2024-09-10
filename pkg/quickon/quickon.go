@@ -103,7 +103,7 @@ func (m *Meta) GetCustomFlags() []types.Flag {
 func (m *Meta) GetKubeClient() error {
 	kubeClient, err := k8s.NewSimpleClient(common.GetKubeConfig())
 	if err != nil {
-		return errors.Errorf("load k8s client failed, reason: %v", err)
+		return errors.Errorf("kube client create failed: %v", err)
 	}
 	m.kubeClient = kubeClient
 	return nil
