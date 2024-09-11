@@ -77,6 +77,7 @@ jobs:
           go install github.com/go-task/task/v3/cmd/task@latest
       - name: Run Linter
         run: |
+          task generate
           task lint
           modifyCode=$(git status  -s | grep M | wc -l)
           git status  -s
