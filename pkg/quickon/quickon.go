@@ -329,8 +329,9 @@ func (m *Meta) Init() error {
 	}
 	hostdomain := m.Domain
 	if kutil.IsLegalDomain(hostdomain) && m.DomainType == "api" {
-		helmargs = append(helmargs, "--set", "ingress.tls.enabled=true")
-		helmargs = append(helmargs, "--set", "ingress.tls.secretName=tls-haogs-cn")
+		m.Log.Debugf("use tls cert for domain %s", hostdomain)
+		// helmargs = append(helmargs, "--set", "ingress.tls.enabled=true")
+		// helmargs = append(helmargs, "--set", "ingress.tls.secretName=tls-haogs-cn")
 	} else {
 		if m.DevopsMode {
 			hostdomain = fmt.Sprintf("zentao.%s", hostdomain)
