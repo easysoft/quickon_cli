@@ -74,9 +74,9 @@ func local(f factory.Factory) *cobra.Command {
 	logpkg := f.GetLog()
 	cmd := &cobra.Command{
 		Use:   "local",
-		Short: "deploy local storage",
+		Short: "deploy local pv storage",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			kubeargs := []string{"experimental", "kubectl", "apply", "-f", common.GetCustomScripts("hack/manifests/storage/local-storage.yaml")}
+			kubeargs := []string{"experimental", "kubectl", "apply", "-f", common.GetCustomScripts("hack/manifests/storage/local.yaml")}
 			output, err := qcexec.Command(os.Args[0], kubeargs...).CombinedOutput()
 			if err != nil {
 				logpkg.Errorf("upgrade install local storage failed: %s", string(output))

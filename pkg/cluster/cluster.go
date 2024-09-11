@@ -95,7 +95,7 @@ func (c *Cluster) getInitFlags() []types.Flag {
 			P:      &c.Storage,
 			V:      c.Storage,
 			EnvVar: common.DefaultStorageType,
-			Usage:  `storage, e.g: nfs,local`,
+			Usage:  `storage, e.g: nfs,local,none`,
 		},
 		{
 			Name:  "datastore",
@@ -278,10 +278,12 @@ func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error
 			return errors.Errorf("%s run install nfs script failed, reason: %v", cfg.Cluster.InitNode, err)
 		}
 	} else if c.Storage == "local" {
-		kubeargs := []string{"experimental", "kubectl", "apply", "-f", common.GetCustomScripts("hack/manifests/storage/local-storage.yaml")}
+		kubeargs := []string{"experimental", "kubectl", "apply", "-f", common.GetCustomScripts("hack/manifests/storage/local.yaml")}
 		if err := qcexec.CommandRun(os.Args[0], kubeargs...); err != nil {
 			return errors.Errorf("%s run install local storage failed, reason: %v", cfg.Cluster.InitNode, err)
 		}
+	} else if c.Storage == "none" {
+		c.log.Infof("skip install storage")
 	}
 	kclient, _ := k8s.NewSimpleClient()
 	if ns, _ := kclient.GetNamespace(context.TODO(), common.DefaultKubeSystem, metav1.GetOptions{}); ns != nil {
