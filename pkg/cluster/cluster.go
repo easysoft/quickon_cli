@@ -306,6 +306,7 @@ func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error
 	} else {
 		cfg.Install.Type = "online"
 	}
+	cfg.Install.Version = common.Version
 	return cfg.SaveConfig()
 }
 

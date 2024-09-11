@@ -14,6 +14,7 @@ import (
 
 	"github.com/ergoapi/util/exstr"
 	"github.com/ergoapi/util/file"
+	"github.com/ergoapi/util/version"
 	"github.com/ergoapi/util/ztime"
 
 	"github.com/easysoft/qcadmin/common"
@@ -72,12 +73,15 @@ func SplitDomain(domain string) (string, string) {
 func GetConsoleURL(cfg *config.Config) string {
 	domain := cfg.Domain
 	if len(domain) > 0 {
-		prekey := "console"
+		prekey := "console."
 		if cfg.Quickon.DevOps {
-			prekey = "zentao"
+			prekey = ""
+			if len(cfg.Install.Version) == 0 || version.LTv2(cfg.Install.Version, common.Version) {
+				prekey = "zentao."
+			}
 		}
 		if !IsLegalDomain(cfg.Domain) || cfg.Quickon.Domain.Type != "api" {
-			domain = fmt.Sprintf("http://%s.%s", prekey, cfg.Domain)
+			domain = fmt.Sprintf("http://%s%s", prekey, cfg.Domain)
 		} else {
 			domain = fmt.Sprintf("https://%s", cfg.Domain)
 		}

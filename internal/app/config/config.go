@@ -48,8 +48,9 @@ type Storage struct {
 }
 
 type Install struct {
-	Type string `yaml:"type" json:"type"`
-	Pkg  string `yaml:"pkg" json:"pkg"`
+	Type    string `yaml:"type" json:"type"`
+	Pkg     string `yaml:"pkg" json:"pkg"`
+	Version string `yaml:"version" json:"version"`
 }
 
 type Quickon struct {

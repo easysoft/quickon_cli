@@ -36,6 +36,7 @@ linters:
 issues:
   exclude:
     - G101 # gosec: Potential hardcoded credentials
+    - G115 # gosec: integer overflow conversion int
   max-same-issues: 0
   # Excluding configuration per-path, per-linter, per-text and per-source
   exclude-rules:

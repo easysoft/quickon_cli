@@ -280,10 +280,10 @@ func (m *Meta) Init() error {
 				}
 			}
 		} else {
-			m.Log.Infof("use custom domain %s, you should add dns record to your domain: *.%s -> %s", m.Domain, color.SGreen(m.Domain), color.SGreen(m.IP))
+			m.Log.Infof("use custom domain %s, you need to add two A records for your domain: %s -> %s, *.%s -> %s", m.Domain, color.SGreen(m.Domain), color.SGreen(m.IP), color.SGreen(m.Domain), color.SGreen(m.IP))
 		}
 	} else {
-		m.Log.Infof("use custom domain %s, you should add dns record to your domain: *.%s -> %s", m.Domain, color.SGreen(m.Domain), color.SGreen(m.IP))
+		m.Log.Infof("use custom domain %s, you need to add two A records for your domain: %s -> %s, *.%s -> %s", m.Domain, color.SGreen(m.Domain), color.SGreen(m.IP), color.SGreen(m.Domain), color.SGreen(m.IP))
 	}
 	token := expass.PwGenAlphaNum(32)
 
@@ -333,9 +333,7 @@ func (m *Meta) Init() error {
 		// helmargs = append(helmargs, "--set", "ingress.tls.enabled=true")
 		// helmargs = append(helmargs, "--set", "ingress.tls.secretName=tls-haogs-cn")
 	} else {
-		if m.DevopsMode {
-			hostdomain = fmt.Sprintf("zentao.%s", hostdomain)
-		} else {
+		if !m.DevopsMode {
 			hostdomain = fmt.Sprintf("console.%s", hostdomain)
 		}
 	}

@@ -11,6 +11,7 @@ import (
 
 	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/exnet"
+	"github.com/ergoapi/util/version"
 	"k8s.io/kubectl/pkg/util/i18n"
 	"k8s.io/kubectl/pkg/util/templates"
 
@@ -85,7 +86,11 @@ func (q *Devops) Show() {
 	q.MetaData.Log.Info("----------------------------\t")
 	if len(domain) > 0 {
 		if !kutil.IsLegalDomain(cfg.Domain) || cfg.Quickon.Domain.Type != "api" {
-			domain = fmt.Sprintf("http://zentao.%s", cfg.Domain)
+			if len(cfg.Install.Version) == 0 || version.LTv2(cfg.Install.Version, common.Version) {
+				domain = fmt.Sprintf("http://zentao.%s", cfg.Domain)
+			} else {
+				domain = fmt.Sprintf("http://%s", cfg.Domain)
+			}
 		} else {
 			domain = fmt.Sprintf("https://%s", cfg.Domain)
 		}
