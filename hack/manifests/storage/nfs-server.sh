@@ -3,9 +3,11 @@
 set -e
 
 if type apt >/dev/null 2>&1; then
+  export PATH=/usr/sbin:$PATH
   apt update
   apt install -y nfs-common nfs-kernel-server
 elif type yum >/dev/null 2>&1; then
+  export PATH=/sbin:$PATH
   yum makecache
   yum install -y nfs-utils
 else
@@ -28,7 +30,6 @@ systemctl restart nfs-server
 echo "$SPATH *(insecure,rw,sync,no_root_squash,no_subtree_check)" > /etc/exports
 
 exportfs -r
-
 showmount -e 127.0.0.1
 
 touch $SPATH/.quickon
