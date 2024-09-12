@@ -13,6 +13,7 @@ import (
 
 	"github.com/cockroachdb/errors"
 	"github.com/ergoapi/util/file"
+	"github.com/ergoapi/util/version"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
@@ -211,7 +212,13 @@ func (k *K8sStatusCollector) serviceStatus(ctx context.Context, status *Status) 
 	k.deploymentStatus(ctx, "kube-system", "coredns", "coredns", "k8s", status)
 	k.deploymentStatus(ctx, "kube-system", "metrics-server", "metrics-server", "k8s", status)
 	if k.cfg.Storage.Type == "local" {
-		k.deploymentStatus(ctx, "kube-system", "local-path-provisioner", "local-path-provisioner", "k8s", status)
+		name := "q-local-provisioner"
+		if len(k.cfg.Install.Version) == 0 || version.LTv2(k.cfg.Install.Version, common.Version) {
+			name = "local-path-provisioner"
+		}
+		k.deploymentStatus(ctx, "kube-system", name, "q-local", "k8s", status)
+	} else if k.cfg.Storage.Type == "nfs" {
+		k.deploymentStatus(ctx, "kube-system", "q-nfs-nfs-subdir-external-provisioner", "q-nfs", "k8s", status)
 	}
 	// 业务层
 	k.deploymentStatus(ctx, common.GetDefaultSystemNamespace(true), common.GetReleaseName(k.cfg.Quickon.DevOps), common.GetReleaseName(k.cfg.Quickon.DevOps), "", status)
@@ -224,6 +231,7 @@ func (k *K8sStatusCollector) serviceStatus(ctx context.Context, status *Status) 
 	for _, p := range plugins {
 		k.platformPluginStatus(ctx, p, status)
 	}
+	k.platformInstallStatus(ctx, status)
 	return nil
 }
 
@@ -332,4 +340,14 @@ func (k *K8sStatusCollector) ingressStatus(ctx context.Context, ns, name, aliasn
 	}
 	status.QStatus.PodState[aliasname] = stateCount
 	return false, nil
+}
+
+func (k *K8sStatusCollector) platformInstallStatus(ctx context.Context, status *Status) {
+	k.option.Log.Debug("check platform init status")
+	num, err := k.client.CountPodNumByNamespace(ctx, common.DefaultSystemNamespace)
+	if err != nil || num == 0 {
+		status.QStatus.Init = false
+		return
+	}
+	status.QStatus.Init = true
 }

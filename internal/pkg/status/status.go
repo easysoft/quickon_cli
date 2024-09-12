@@ -30,7 +30,7 @@ type PodStateMap map[string]PodStateCount
 type Status struct {
 	output     string     `json:"-" yaml:"-"`
 	KubeStatus KubeStatus `json:"k8s" yaml:"k8s"`
-	QStatus    QStatus    `json:"platform" yaml:"platform"`
+	QStatus    QStatus    `json:"platform,omitempty" yaml:"platform,omitempty"`
 }
 
 type KubeStatus struct {
@@ -60,6 +60,7 @@ type PodStateCount struct {
 }
 
 type QStatus struct {
+	Init        bool        `json:"init" yaml:"init"`
 	PodState    PodStateMap `json:"service,omitempty" yaml:"service,omitempty"`
 	PluginState PodStateMap `json:"plugin,omitempty" yaml:"plugin,omitempty"`
 }
@@ -73,6 +74,7 @@ func newStatus(output string) *Status {
 			PodState:  PodStateMap{},
 		},
 		QStatus: QStatus{
+			Init:        false,
 			PodState:    PodStateMap{},
 			PluginState: PodStateMap{},
 		},
@@ -109,46 +111,48 @@ func (s *Status) Format() error {
 			}
 		}
 		fmt.Fprintf(w, "\n")
-		fmt.Fprintf(w, "Platform Status: \n")
-		if s.QStatus.PodState["platform"].Disabled {
-			fmt.Fprintf(w, "  %s\t%s\n", "status", color.SBlue("disabled"))
-			w.Flush()
-			return output.EncodeText(os.Stdout, buf.Bytes())
-		}
-		cfg, _ := config.LoadConfig()
-		consoleURL := kutil.GetConsoleURL(cfg)
-		fmt.Fprintf(w, "  namespace:\t%s\n", color.SBlue(common.GetDefaultSystemNamespace(true)))
-		if cfg.Quickon.DevOps {
-			fmt.Fprintf(w, "  console:      %s\n", color.SGreen(consoleURL))
-		} else {
-			fmt.Fprintf(w, "  console:      %s(%s/%s)\n", color.SGreen(consoleURL), color.SGreen(common.QuchengDefaultUser), color.SGreen(cfg.ConsolePassword))
-		}
-		ptOK := true
-		fmt.Fprintf(w, "  component status: \n")
-		for name, state := range s.QStatus.PodState {
-			if state.Disabled {
-				fmt.Fprintf(w, "    %s\t%s\n", name, color.SBlue("disabled"))
+		if s.QStatus.Init {
+			fmt.Fprintf(w, "Platform Status: \n")
+			if s.QStatus.PodState["platform"].Disabled {
+				fmt.Fprintf(w, "  %s\t%s\n", "status", color.SBlue("disabled"))
+				w.Flush()
+				return output.EncodeText(os.Stdout, buf.Bytes())
+			}
+			cfg, _ := config.LoadConfig()
+			consoleURL := kutil.GetConsoleURL(cfg)
+			fmt.Fprintf(w, "  namespace:\t%s\n", color.SBlue(common.GetDefaultSystemNamespace(true)))
+			if cfg.Quickon.DevOps {
+				fmt.Fprintf(w, "  console:      %s\n", color.SGreen(consoleURL))
 			} else {
-				if state.Available > 0 {
-					fmt.Fprintf(w, "    %s\t%s\n", name, color.SGreen("ok"))
+				fmt.Fprintf(w, "  console:      %s(%s/%s)\n", color.SGreen(consoleURL), color.SGreen(common.QuchengDefaultUser), color.SGreen(cfg.ConsolePassword))
+			}
+			ptOK := true
+			fmt.Fprintf(w, "  component status: \n")
+			for name, state := range s.QStatus.PodState {
+				if state.Disabled {
+					fmt.Fprintf(w, "    %s\t%s\n", name, color.SBlue("disabled"))
 				} else {
-					fmt.Fprintf(w, "    %s\t%s\n", name, color.SRed("warn"))
-					ptOK = false
+					if state.Available > 0 {
+						fmt.Fprintf(w, "    %s\t%s\n", name, color.SGreen("ok"))
+					} else {
+						fmt.Fprintf(w, "    %s\t%s\n", name, color.SRed("warn"))
+						ptOK = false
+					}
 				}
 			}
-		}
-		fmt.Fprintf(w, "  plugin status: \n")
-		for name, state := range s.QStatus.PluginState {
-			if state.Disabled {
-				fmt.Fprintf(w, "    %s\t%s\n", name, color.SBlue("disabled"))
-			} else {
-				fmt.Fprintf(w, "    %s\t%s\n", name, color.SGreen("enabled"))
+			fmt.Fprintf(w, "  plugin status: \n")
+			for name, state := range s.QStatus.PluginState {
+				if state.Disabled {
+					fmt.Fprintf(w, "    %s\t%s\n", name, color.SBlue("disabled"))
+				} else {
+					fmt.Fprintf(w, "    %s\t%s\n", name, color.SGreen("enabled"))
+				}
 			}
-		}
-		if ptOK {
-			fmt.Fprintf(w, "  %s\t%s\n", "status", color.SGreen("health"))
-		} else {
-			fmt.Fprintf(w, "  %s\t%s\n", "status", color.SRed("unhealth"))
+			if ptOK {
+				fmt.Fprintf(w, "  %s\t%s\n", "status", color.SGreen("health"))
+			} else {
+				fmt.Fprintf(w, "  %s\t%s\n", "status", color.SRed("unhealth"))
+			}
 		}
 		w.Flush()
 		return output.EncodeText(os.Stdout, buf.Bytes())
