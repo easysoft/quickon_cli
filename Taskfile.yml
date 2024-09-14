@@ -135,6 +135,12 @@ tasks:
     cmds:
       - docker buildx build --pull --push --platform linux/amd64 -t ttl.sh/easysoft/qcadmin .
 
+  tlsrenew:
+    desc: build tlsrenew image
+    dir: hack/tools/httptls
+    cmds:
+      - docker buildx build --pull --push --platform linux/amd64 -t ttl.sh/platform/tlsrenew:2024 .
+
   trivy-docker:
     desc: trivy docker image
     cmds:

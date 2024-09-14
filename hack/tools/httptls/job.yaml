@@ -24,7 +24,7 @@ spec:
       - env:
         - name: DOMAIN
           value: zcz13.haogs.cn
-        image: hub.zentao.net/platform/tlsrenew:2022
+        image: hub.zentao.net/platform/tlsrenew:2024
         imagePullPolicy: Always
         name: renewtls
       restartPolicy: OnFailure

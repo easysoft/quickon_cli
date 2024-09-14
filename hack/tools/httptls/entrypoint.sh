@@ -5,11 +5,13 @@
 # (2) Affero General Public License 3.0 (AGPL 3.0)
 # license that can be found in the LICENSE file.
 
+set -e
 
-set -xe
+[ ! -z $DEBUG ] && set -x
 
 export APP_DOMAIN=${DOMAIN:-k3s.local}
 export TOP_DOMAIN=${APP_DOMAIN#*.}
+export NS=${NS:-quickon-system}
 
-kubectl apply -f  https://pkg.qucheng.com/ssl/${TOP_DOMAIN}/${APP_DOMAIN}/tls.yaml
-kubectl apply -f  https://pkg.qucheng.com/ssl/${TOP_DOMAIN}/${APP_DOMAIN}/tls.yaml -n cne-system
+kubectl apply -f  https://pkg.zentao.net/ssl/${TOP_DOMAIN}/${APP_DOMAIN}/tls.yaml -n kube-system
+kubectl apply -f  https://pkg.zentao.net/ssl/${TOP_DOMAIN}/${APP_DOMAIN}/tls.yaml -n $NS
