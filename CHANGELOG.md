@@ -1,5 +1,24 @@
 # Changelog
 
+## v3.2.0 (2024-09-14)
+
+ * [b446b6ee](https://github.com/easysoft/quickon_cli/commit/b446b6ee369293cbe07d9905b889858d1031f850) * [fix] fix nfs install path typo
+ * [a5f58da1](https://github.com/easysoft/quickon_cli/commit/a5f58da1a72e14e7883c97b42a821985efc66701) * [feat] bump zentao version
+ * [83945fdc](https://github.com/easysoft/quickon_cli/commit/83945fdc58d1fdc8f42f44525c46ce4e3277d819) * [feat] imp status show
+ * [206e0f0c](https://github.com/easysoft/quickon_cli/commit/206e0f0c65a6a3b49bdf195786f3b472e4ad1aa4) * [storage]: update local pv & longhorn
+ * [788f5128](https://github.com/easysoft/quickon_cli/commit/788f5128d02b6add8c5592f473c1b551c345026f) + [feat]: add tuned balanced optimal
+ * [30a01304](https://github.com/easysoft/quickon_cli/commit/30a013043955442dbbd7216228860090a95875db) * [ci]: imp lint action
+ * [8c4c3a89](https://github.com/easysoft/quickon_cli/commit/8c4c3a899be574299a0de53e7739791f90a8c652) + [feat]: enhance domain handling and installation version
+ * [892f4692](https://github.com/easysoft/quickon_cli/commit/892f469250b389e747854e840f62bf6756719229) * [feat]: configure zentaopaas tls logging and adjust helm arguments
+ * [420f6bcb](https://github.com/easysoft/quickon_cli/commit/420f6bcb4db86c782b1539b106b02f7a425b7ccb) * [ci] fmt code
+ * [ae85001e](https://github.com/easysoft/quickon_cli/commit/ae85001e3f0cd8d7de2c96ba6566987bcd0b88b2) build(deps): bump golang.org/x/sys from 0.24.0 to 0.25.0
+ * [b6b3cc8f](https://github.com/easysoft/quickon_cli/commit/b6b3cc8ff75ddfababe20dfba42c768cc2924c56) build(deps): bump peter-evans/create-pull-request from 6 to 7
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.1.3 (2024-09-02)
 
  * [42493704](https://github.com/easysoft/quickon_cli/commit/42493704a00e4e6997c0dfc15ffb00063325b48d) * [feat] update zentao version
