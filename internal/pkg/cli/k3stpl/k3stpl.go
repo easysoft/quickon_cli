@@ -9,6 +9,7 @@ package k3stpl
 import (
 	"bytes"
 	"os"
+	"regexp"
 	"text/template"
 
 	"github.com/ergoapi/util/exnet"
@@ -39,7 +40,8 @@ func render(data K3sArgs, temp string) string {
 	var b bytes.Buffer
 	t := template.Must(template.New("k3s").Parse(temp))
 	_ = t.Execute(&b, &data)
-	return b.String()
+	re := regexp.MustCompile(`(?m)^\s*$[\r\n]*|[\r\n]+\s+\z`)
+	return re.ReplaceAllString(b.String(), "")
 }
 
 func (k3s K3sArgs) Manifests(template string) string {
@@ -95,5 +97,6 @@ func EmbedCommand(f factory.Factory) *cobra.Command {
 	rootCmd.Flags().StringVar(&k3sargs.Master0IP, "master0ip", "", "master0ip, only work offline mode")
 	rootCmd.Flags().StringVar(&k3sargs.Registry, "registry", "hub.zentao.net", "registry")
 	rootCmd.Flags().StringVar(&k3sargs.DataStore, "datasource", "", "datasource")
+	rootCmd.Flags().StringVar(&k3sargs.CNI, "cni", "", "cni")
 	return rootCmd
 }

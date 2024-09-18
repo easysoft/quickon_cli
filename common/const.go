@@ -160,12 +160,9 @@ ExecStart=/usr/local/bin/k3s \
       --tls-san kubeapi.corp.cc \
       --tls-san apiserver.cluster.local \
       --tls-san {{ .KubeAPI }} \
-      {{- if .PodCIDR }}
-      --cluster-cidr {{ .PodCIDR }} \
-      {{- end -}}
-      {{- if .ServiceCIDR }}
-      --service-cidr {{ .ServiceCIDR }} \
-      {{- end -}}
+      {{if .PodCIDR }}--cluster-cidr {{ .PodCIDR }} \ {{end}}
+      {{if .ServiceCIDR }}--service-cidr {{ .ServiceCIDR }} \ {{end}}
+      {{if .CNI }}--flannel-backend {{ .CNI }} \ {{ end }}
       {{- if .DataStore }}
       --datastore-endpoint {{ .DataStore }} \
       {{- else}}
@@ -176,19 +173,12 @@ ExecStart=/usr/local/bin/k3s \
       --etcd-expose-metrics \
       --etcd-snapshot-name auto-snapshot \
       --etcd-snapshot-compress \
-      {{- end -}}
-      {{- if .LocalStorage }}
-      --disable servicelb,traefik \
-      {{else -}}
-      --disable servicelb,traefik,local-storage \
-      {{- end -}}
+      {{- end}}
       --disable-cloud-controller \
       --system-default-registry {{ .Registry }} \
       --disable-network-policy \
       --disable-helm-controller \
-      {{if .CNI }}
-      --flannel-backend {{ .CNI }} \
-      {{end -}}
+      {{if .LocalStorage }}--disable servicelb,traefik \ {{- else }}--disable servicelb,traefik,local-storage \ {{- end }}
     {{- else}}
       agent \
       --server https://{{ .KubeAPI }}:6443 \
