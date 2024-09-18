@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.2.2 (2024-09-18)
+
+ * [6a6b16fd](https://github.com/easysoft/quickon_cli/commit/6a6b16fdf71d75a9a049ea5776ba647ce9c2f208) * [fix] fix typo systemd
+
+### Contributors
+
+ * ysicing
+
 ## v3.2.1 (2024-09-18)
 
  * [c620733c](https://github.com/easysoft/quickon_cli/commit/c620733c3331d1bc860b9ba16c1cf2ef8a7e99f3) * [fix] fix typo systemd
