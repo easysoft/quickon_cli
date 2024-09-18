@@ -140,6 +140,7 @@ datadir=$(cat /root/.qc/config/cluster.yaml | grep datadir | awk '{print $2}')
 [ ! -z "$datadir" ] && rm -rf $datadir
 
 [ -d "/etc/rancher/k3s" ] && rm -rf /etc/rancher/k3s
+[ -d "/etc/rancher/node" ] && rm -rf /etc/rancher/node
 [ -d "/run/k3s" ] && rm -rf /run/k3s
 [ -d "/run/flannel" ] && rm -rf /run/flannel
 [ -d "/var/lib/rancher/k3s" ] && rm -rf /var/lib/rancher/k3s

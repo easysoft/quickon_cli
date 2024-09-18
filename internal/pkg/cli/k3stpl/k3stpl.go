@@ -96,7 +96,6 @@ func EmbedCommand(f factory.Factory) *cobra.Command {
 	rootCmd.Flags().BoolVar(&k3sargs.LocalStorage, "local-storage", true, "local-storage")
 	rootCmd.Flags().StringVar(&k3sargs.Master0IP, "master0ip", "", "master0ip, only work offline mode")
 	rootCmd.Flags().StringVar(&k3sargs.Registry, "registry", "hub.zentao.net", "registry")
-	rootCmd.Flags().StringVar(&k3sargs.DataStore, "datasource", "", "datasource")
 	rootCmd.Flags().StringVar(&k3sargs.CNI, "cni", "", "cni")
 	return rootCmd
 }

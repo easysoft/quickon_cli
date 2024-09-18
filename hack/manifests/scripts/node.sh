@@ -44,6 +44,7 @@ check_docker() {
   which_cmd=$(command -v docker 2>/dev/null || true)
   if [ -z "${which_cmd}" ]; then
     sed -i "s#--docker \\\##g" /root/.k3s.service
+    sed -i "s#--docker##g" /root/.k3s.service
   fi
 }
 

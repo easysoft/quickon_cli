@@ -157,37 +157,43 @@ ExecStartPre=-/sbin/modprobe overlay
 ExecStart=/usr/local/bin/k3s \
     {{- if .TypeMaster}}
       server \
-      --tls-san kubeapi.corp.cc \
-      --tls-san apiserver.cluster.local \
-      --tls-san {{ .KubeAPI }} \
-      {{if .PodCIDR }}--cluster-cidr {{ .PodCIDR }} \ {{end}}
-      {{if .ServiceCIDR }}--service-cidr {{ .ServiceCIDR }} \ {{end}}
-      {{if .CNI }}--flannel-backend {{ .CNI }} \ {{ end }}
+        --tls-san kubeapi.corp.cc \
+        --tls-san apiserver.cluster.local \
+        --tls-san {{ .KubeAPI }} \
+      {{if .PodCIDR }}
+        --cluster-cidr {{ .PodCIDR }} \
+      {{end}}
+      {{if .ServiceCIDR }}
+        --service-cidr {{ .ServiceCIDR }} \
+      {{end}}
+      {{if .CNI }}
+        --flannel-backend {{ .CNI }} \
+      {{ end }}
       {{- if .DataStore }}
-      --datastore-endpoint {{ .DataStore }} \
+        --datastore-endpoint {{ .DataStore }} \
       {{- else}}
       {{if not .Master0 -}}
-      --server https://{{ .KubeAPI }}:6443 \
-      {{ end -}}
-      --cluster-init \
-      --etcd-expose-metrics \
-      --etcd-snapshot-name auto-snapshot \
-      --etcd-snapshot-compress \
+        --server https://{{ .KubeAPI }}:6443 \
+      {{ end }}
+        --cluster-init \
+        --etcd-expose-metrics \
+        --etcd-snapshot-name auto-snapshot \
+        --etcd-snapshot-compress \
       {{- end}}
-      --disable-cloud-controller \
-      --system-default-registry {{ .Registry }} \
-      --disable-network-policy \
-      --disable-helm-controller \
-      {{if .LocalStorage }}--disable servicelb,traefik \ {{- else }}--disable servicelb,traefik,local-storage \ {{- end }}
+        --disable-cloud-controller \
+        --system-default-registry {{ .Registry }} \
+        --disable-network-policy \
+        --disable-helm-controller \
+        --disable servicelb,traefik,local-storage \
     {{- else}}
       agent \
-      --server https://{{ .KubeAPI }}:6443 \
+        --server https://{{ .KubeAPI }}:6443 \
     {{- end }}
-      --token {{ .KubeToken }} \
-      --data-dir {{.DataDir}} \
-      --pause-image {{ .Registry }}/rancher/mirrored-pause:3.6 \
-      --prefer-bundled-bin \
-      --kube-proxy-arg "proxy-mode=ipvs" "masquerade-all=true" \
-      --kube-proxy-arg "metrics-bind-address=0.0.0.0" \
-      --docker
+        --token {{ .KubeToken }} \
+        --data-dir {{.DataDir}} \
+        --pause-image {{ .Registry }}/rancher/mirrored-pause:3.6 \
+        --prefer-bundled-bin \
+        --kube-proxy-arg "proxy-mode=ipvs" "masquerade-all=true" \
+        --kube-proxy-arg "metrics-bind-address=0.0.0.0" \
+        --docker
 `
