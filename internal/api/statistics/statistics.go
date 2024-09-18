@@ -9,6 +9,7 @@ package statistics
 import (
 	"fmt"
 
+	"github.com/ergoapi/util/zos"
 	"github.com/imroc/req/v3"
 
 	"github.com/easysoft/qcadmin/common"
@@ -22,6 +23,7 @@ type CollectData struct {
 	Type       string `json:"type"`
 	Action     string `json:"action"`
 	Devops     bool   `json:"devops,omitempty"`
+	OS         string `json:"os,omitempty"`
 }
 
 type Result struct {
@@ -39,6 +41,7 @@ func SendStatistics(action string) error {
 		Type:       cfg.Quickon.Type.String(),
 		Action:     action,
 		Devops:     cfg.Quickon.DevOps,
+		OS:         zos.GetDistro(),
 	}
 
 	// send statistics
