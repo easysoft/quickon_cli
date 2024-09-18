@@ -17,7 +17,6 @@ qcadmin experimental k3stpl [flags]
       --cni string            cni
       --data string           data type
       --data-dir string       data dir
-      --datasource string     datasource
   -h, --help                  help for k3stpl
       --kubeapi string        kubeapi
       --local-storage         local-storage (default true)
