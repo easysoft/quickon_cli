@@ -1,5 +1,14 @@
 # Changelog
 
+## v3.2.3 (2024-09-18)
+
+ * [67830815](https://github.com/easysoft/quickon_cli/commit/678308156f5bd169a602dca1e845e9175a8c3f6c) * [feat] imp statistics api
+ * [e3a7baf5](https://github.com/easysoft/quickon_cli/commit/e3a7baf583e2fa0a6055400da4ca8d82d377b6a7) + [feat] add statistics api
+
+### Contributors
+
+ * ysicing
+
 ## v3.2.2 (2024-09-18)
 
  * [6a6b16fd](https://github.com/easysoft/quickon_cli/commit/6a6b16fdf71d75a9a049ea5776ba647ce9c2f208) * [fix] fix typo systemd
