@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.2.1 (2024-09-18)
+
+ * [c620733c](https://github.com/easysoft/quickon_cli/commit/c620733c3331d1bc860b9ba16c1cf2ef8a7e99f3) * [fix] fix typo systemd
+ * [22bd7635](https://github.com/easysoft/quickon_cli/commit/22bd7635edda9e3522ca5c17280eabf1bd003c86) * [fix] fix typo systemd
+ * [6c505f29](https://github.com/easysoft/quickon_cli/commit/6c505f290ae5ce27a9ff379e0a0536ca5cc96cd7) build(deps): bump vite from 5.2.8 to 5.4.6 in /docs
+ * [92525506](https://github.com/easysoft/quickon_cli/commit/925255062b8b8cc72e7c6dc84aacdac57d34ae95) build(deps): bump github.com/schollz/progressbar/v3
+ * [38b271b0](https://github.com/easysoft/quickon_cli/commit/38b271b037a1c12aba22cb440f7231efe1d432b8) * [tls] add tls build
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.2.0 (2024-09-14)
 
  * [b446b6ee](https://github.com/easysoft/quickon_cli/commit/b446b6ee369293cbe07d9905b889858d1031f850) * [fix] fix nfs install path typo
