@@ -17,6 +17,7 @@ import (
 	"github.com/easysoft/qcadmin/cmd/flags"
 	"github.com/easysoft/qcadmin/cmd/precheck"
 	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/api/statistics"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
@@ -128,6 +129,7 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 			return
 		}
 		cp.Show()
+		statistics.SendStatistics("install")
 	}
 	return initCmd
 }

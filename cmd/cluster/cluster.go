@@ -15,6 +15,7 @@ import (
 
 	"github.com/easysoft/qcadmin/cmd/flags"
 	"github.com/easysoft/qcadmin/cmd/precheck"
+	"github.com/easysoft/qcadmin/internal/api/statistics"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/pkg/cluster"
 
@@ -57,7 +58,11 @@ func InitCommand(f factory.Factory) *cobra.Command {
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return myCluster.InitNode()
+			if err := myCluster.InitNode(); err != nil {
+				return err
+			}
+			// statistics.SendStatistics("install")
+			return nil
 		},
 	}
 	init.Flags().AddFlagSet(flags.ConvertFlags(init, myCluster.GetInitFlags()))
@@ -122,6 +127,7 @@ func CleanCommand(f factory.Factory) *cobra.Command {
 					return err
 				}
 				log.Donef("uninstall cluster success")
+				statistics.SendStatistics("uninstall")
 				return nil
 			}
 			log.Donef("cancel clean cluster")

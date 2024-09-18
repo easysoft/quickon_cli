@@ -14,6 +14,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/easysoft/qcadmin/cmd/flags"
+	"github.com/easysoft/qcadmin/internal/api/statistics"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
@@ -97,6 +98,7 @@ func UninstallCommand(f factory.Factory) *cobra.Command {
 					return err
 				}
 				log.Done("uninstall platform success")
+				statistics.SendStatistics("uninstall")
 				return nil
 			}
 			log.Donef("cancel uninstall platform")
