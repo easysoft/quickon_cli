@@ -1,5 +1,15 @@
 # Changelog
 
+## v3.2.4 (2024-09-23)
+
+ * [d07481f3](https://github.com/easysoft/quickon_cli/commit/d07481f33425351989a91a7ab89200503829c2e2) * [cluster] bump k3s version
+ * [a7e095d2](https://github.com/easysoft/quickon_cli/commit/a7e095d26704f465a36f6e9c7eff4f418c1a3334) build(deps): bump github.com/Masterminds/semver/v3 from 3.2.1 to 3.3.0
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.2.3 (2024-09-18)
 
  * [67830815](https://github.com/easysoft/quickon_cli/commit/678308156f5bd169a602dca1e845e9175a8c3f6c) * [feat] imp statistics api
