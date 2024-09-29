@@ -16,6 +16,7 @@ import (
 	"k8s.io/kubectl/pkg/util/templates"
 
 	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/api/statistics"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
@@ -100,6 +101,7 @@ func (q *Devops) Show() {
 	q.MetaData.Log.Donef("🎉 zentao devops install success, docs: %s", common.ZentaoDocs)
 	q.MetaData.Log.Info("----------------------------\t")
 	q.MetaData.Log.Donef("console: %s", color.SGreen(domain))
+	q.SendStatistics()
 }
 
 func (q *Devops) GetKubeClient() error {
@@ -119,4 +121,8 @@ func (q *Devops) GetUsageExample() string {
 	return templates.Examples(i18n.T(`
 	# init devops platform with example domain your.example.devops.domain
 	z init --provider devops --domain your.example.devops.domain`))
+}
+
+func (q *Devops) SendStatistics() {
+	statistics.SendStatistics("install")
 }

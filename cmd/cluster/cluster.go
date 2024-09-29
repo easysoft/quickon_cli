@@ -127,7 +127,7 @@ func CleanCommand(f factory.Factory) *cobra.Command {
 					return err
 				}
 				log.Donef("uninstall cluster success")
-				statistics.SendStatistics("uninstall")
+				statistics.SendStatistics("uninstall-cluster")
 				return nil
 			}
 			log.Donef("cancel clean cluster")

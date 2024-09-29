@@ -98,7 +98,7 @@ func UninstallCommand(f factory.Factory) *cobra.Command {
 					return err
 				}
 				log.Done("uninstall platform success")
-				statistics.SendStatistics("uninstall")
+				statistics.SendStatistics("uninstall-platform")
 				return nil
 			}
 			log.Donef("cancel uninstall platform")

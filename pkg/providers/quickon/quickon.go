@@ -19,6 +19,7 @@ import (
 	"k8s.io/kubectl/pkg/util/templates"
 
 	"github.com/easysoft/qcadmin/common"
+	"github.com/easysoft/qcadmin/internal/api/statistics"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/kutil"
@@ -118,6 +119,7 @@ func (q *Quickon) Show() {
 		color.SGreen(domain), color.SGreen(common.QuchengDefaultUser), color.SGreen(q.MetaData.ConsolePassword))
 	q.MetaData.Log.Donef("docs: %s", common.QuchengDocs)
 	q.MetaData.Log.Done("support: 768721743(QQGroup)")
+	q.SendStatistics()
 }
 
 func (q *Quickon) GetKubeClient() error {
@@ -137,4 +139,8 @@ func (q *Quickon) GetUsageExample() string {
 	return templates.Examples(i18n.T(`
 	# init quickon platform use example domain your.example.quickon.domain
 	z init --provider quickon --domain your.example.quickon.domain`))
+}
+
+func (q *Quickon) SendStatistics() {
+	statistics.SendStatistics("install")
 }

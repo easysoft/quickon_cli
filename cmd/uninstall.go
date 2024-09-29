@@ -12,7 +12,6 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/easysoft/qcadmin/internal/api/statistics"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
@@ -37,7 +36,6 @@ func newCmdUninstall(f factory.Factory) *cobra.Command {
 			log.Errorf("uninstall platform failed, reason: %v", err)
 			return
 		}
-		statistics.SendStatistics("uninstall")
 		if cleanCluster {
 			// TODO 检查集群是否是quickon安装的
 			log.Debugf("start uninstall cluster")
