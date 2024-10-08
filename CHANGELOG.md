@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.2.5 (2024-10-08)
+
+ * [48a9aa73](https://github.com/easysoft/quickon_cli/commit/48a9aa73c588fbfbd876d91e3a5628b7322dcdc5) * [ci] update action go version
+ * [2bb51416](https://github.com/easysoft/quickon_cli/commit/2bb51416867cf9ff02be360636bd66e8e75f58ea) * [feat] bump zentao version
+ * [87b984fe](https://github.com/easysoft/quickon_cli/commit/87b984fe3b14b2b3a94dd08fe9bed70d17a45386) build(deps): bump golang.org/x/crypto from 0.27.0 to 0.28.0
+ * [e9a4faf4](https://github.com/easysoft/quickon_cli/commit/e9a4faf48c14c73b3661ca83eeea4e39dbd17c63) build(deps): bump github.com/ergoapi/util from 0.7.7 to 0.7.8
+ * [f72dda95](https://github.com/easysoft/quickon_cli/commit/f72dda955dda8ad37e3fb8c57962b57bb6309596) * [misc] fix statistics code
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.2.4 (2024-09-23)
 
  * [d07481f3](https://github.com/easysoft/quickon_cli/commit/d07481f33425351989a91a7ab89200503829c2e2) * [cluster] bump k3s version
