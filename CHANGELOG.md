@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.2.6 (2024-10-12)
+
+ * [2c16fa15](https://github.com/easysoft/quickon_cli/commit/2c16fa153c3aef76b413727339e796dadd2d4afd) * [fix] imp upgrade
+
+### Contributors
+
+ * ysicing
+
 ## v3.2.5 (2024-10-08)
 
  * [48a9aa73](https://github.com/easysoft/quickon_cli/commit/48a9aa73c588fbfbd876d91e3a5628b7322dcdc5) * [ci] update action go version
