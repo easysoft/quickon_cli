@@ -110,8 +110,6 @@ func Upgrade(flagVersion string, testmode bool, log log.Logger) error {
 			if devops && cv.Name == common.DefaultZentaoPaasName {
 				deploy := defaultValue["deploy"]
 				product := deploy.(map[string]interface{})["product"]
-				versions := deploy.(map[string]interface{})["versions"]
-				appoldVersion := versions.(map[string]interface{})[product.(string)]
 				switch product {
 				case common.ZenTaoBizType.String():
 					selectItems = selectItems[1:]
@@ -120,7 +118,7 @@ func Upgrade(flagVersion string, testmode bool, log log.Logger) error {
 				case common.ZenTaoIPDType.String():
 					selectItems = selectItems[3:]
 				}
-				log.Infof("current version: %v(%v)", product, appoldVersion)
+				log.Infof("current version: %v", product)
 				selectApp := promptui.Select{
 					Label: "select upgrade version",
 					Items: selectItems,
@@ -134,7 +132,6 @@ func Upgrade(flagVersion string, testmode bool, log log.Logger) error {
 				}
 				it, _, _ := selectApp.Run()
 				newProduct := selectItems[it].Key.String()
-				defaultValue["deploy"].(map[string]interface{})["product"] = newProduct
 				appnewVersion := common.GetVersion(true, newProduct, "")
 				if !(selectItems[it].Key == common.ZenTaoOSSType || selectItems[it].Key == common.ZenTaoOldOSSType) {
 					appnewVersion = fmt.Sprintf("%s%s.k8s", newProduct, common.GetVersion(true, newProduct, ""))
@@ -142,9 +139,11 @@ func Upgrade(flagVersion string, testmode bool, log log.Logger) error {
 						log.Warn("切换版本升级(如开源版升级到企业版), 可能导致因版本授权问题无法正常使用, 如有问题请联系技术支持!")
 					}
 				}
-				defaultValue["deploy"].(map[string]interface{})["versions"].(map[string]interface{})[product.(string)] = appnewVersion
-				log.Infof("devops mode, product: %v, oldversion: %v, newversion: %v", product, appoldVersion, appnewVersion)
-				msg := fmt.Sprintf("Are you sure to upgrade from %v(%v) to %v(%v)", product, appoldVersion, selectItems[it].Key.String(), appnewVersion)
+				defaultValue["deploy"] = map[string]any{
+					"product": newProduct,
+				}
+				log.Debugf("devops mode, product: %v, version: %v", product, appnewVersion)
+				msg := fmt.Sprintf("Are you sure to upgrade to %v(%v)", selectItems[it].Key.String(), appnewVersion)
 				status, _ := confirm.Confirm(msg)
 				if !status {
 					log.Warnf("upgrade %s canceled", cv.Name)
@@ -156,7 +155,7 @@ func Upgrade(flagVersion string, testmode bool, log log.Logger) error {
 					}
 				}
 			}
-			if _, err := helmClient.Upgrade(cv.Name, common.DefaultHelmRepoName, cv.Name, "", defaultValue); err != nil {
+			if _, err := helmClient.Upgrade(cv.Name, common.DefaultHelmRepoName, cv.Name, "", defaultValue, false); err != nil {
 				log.Warnf("upgrade %s failed, reason: %v", cv.Name, err)
 			} else {
 				log.Donef("upgrade %s success", cv.Name)

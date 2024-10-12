@@ -362,11 +362,11 @@ func (m *Meta) Init() error {
 	if m.DevopsMode {
 		// 指定类型
 		helmargs = append(helmargs, "--set", fmt.Sprintf("deploy.product=%s", m.Type))
-		deployVersion := fmt.Sprintf("deploy.versions.%s=%s%s.k8s", m.Type, m.Type, installVersion)
-		if m.Type == common.ZenTaoOSSType.String() {
-			deployVersion = fmt.Sprintf("deploy.versions.%s=%s", m.Type, installVersion)
-		}
-		helmargs = append(helmargs, "--set", deployVersion)
+		// deployVersion := fmt.Sprintf("deploy.versions.%s=%s%s.k8s", m.Type, m.Type, installVersion)
+		// if m.Type == common.ZenTaoOSSType.String() {
+		// 	deployVersion = fmt.Sprintf("deploy.versions.%s=%s", m.Type, installVersion)
+		// }
+		// helmargs = append(helmargs, "--set", deployVersion)
 		if helmchan != "stable" {
 			helmargs = append(helmargs, "--set", "image.repository=test/zentao")
 		}

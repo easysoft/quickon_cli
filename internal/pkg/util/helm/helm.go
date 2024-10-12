@@ -103,7 +103,7 @@ func (c Client) GetDetail(name string) (*release.Release, error) {
 	return result, nil
 }
 
-func (c Client) Upgrade(name, repoName, chartName, chartVersion string, values map[string]interface{}) (*release.Release, error) {
+func (c Client) Upgrade(name, repoName, chartName, chartVersion string, values map[string]interface{}, fetch bool) (*release.Release, error) {
 	repos, err := c.ListRepo()
 	if err != nil {
 		return nil, err
@@ -148,11 +148,13 @@ func (c Client) Upgrade(name, repoName, chartName, chartVersion string, values m
 	if err != nil {
 		return nil, errors.Wrap(err, fmt.Sprintf("load chart %s failed: %v", chartName, err))
 	}
-	releaseValue, err := c.GetDetail(name)
-	if err != nil {
-		return nil, errors.Errorf("fetch %s chart release value failed, %v", name, err)
+	if fetch {
+		releaseValue, err := c.GetDetail(name)
+		if err != nil {
+			return nil, errors.Errorf("fetch %s chart release value failed, %v", name, err)
+		}
+		values = MergeMaps(releaseValue.Config, values)
 	}
-	values = MergeMaps(releaseValue.Config, values)
 	release, err := client.Run(name, ct, values)
 	if err != nil {
 		return release, errors.Wrap(err, fmt.Sprintf("upgrade tool %s with chart %s failed: %v", name, chartName, err))

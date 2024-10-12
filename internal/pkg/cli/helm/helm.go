@@ -194,7 +194,7 @@ func chartUpgrade(f factory.Factory) *cobra.Command {
 				return errors.Errorf("helm create go client err: %v", err)
 			}
 			values, _ := exhelm.MergeValues(p)
-			_, err = hc.Upgrade(name, repoName, chartName, chartVersion, values)
+			_, err = hc.Upgrade(name, repoName, chartName, chartVersion, values, true)
 			return err
 		},
 	}

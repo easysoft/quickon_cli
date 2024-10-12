@@ -151,7 +151,7 @@ func domainAdd(f factory.Factory) *cobra.Command {
 				strvals.ParseInto(value, base)
 			}
 			defaultValue = exmap.MergeMaps(defaultValue, base)
-			if _, err := helmClient.Upgrade(common.DefaultQuchengName, common.DefaultHelmRepoName, common.DefaultQuchengName, "", defaultValue); err != nil {
+			if _, err := helmClient.Upgrade(common.DefaultQuchengName, common.DefaultHelmRepoName, common.DefaultQuchengName, "", defaultValue, false); err != nil {
 				log.Warnf("upgrade %s failed, reason: %v", common.DefaultQuchengName, err)
 			} else {
 				log.Donef("upgrade %s success", common.DefaultQuchengName)
