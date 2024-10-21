@@ -1,5 +1,15 @@
 # Changelog
 
+## v3.2.7 (2024-10-21)
+
+ * [c6b96900](https://github.com/easysoft/quickon_cli/commit/c6b96900644ac3a5a3e2c172901f9a50cef267fe) * [feat] bump zentao version
+ * [d74f5129](https://github.com/easysoft/quickon_cli/commit/d74f5129b1bef26041f1b150e031330193f291db) build(deps): bump github.com/miekg/dns from 1.1.58 to 1.1.62
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.2.6 (2024-10-12)
 
  * [2c16fa15](https://github.com/easysoft/quickon_cli/commit/2c16fa153c3aef76b413727339e796dadd2d4afd) * [fix] imp upgrade
