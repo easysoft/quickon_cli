@@ -277,7 +277,7 @@ func (m *Meta) Init() error {
 					// TODO  timeout
 					m.Log.Warnf("wait tls cert ready, timeout: %v", trywaitsc.Sub(waittls).Seconds())
 					cmd := fmt.Sprintf("%s pt tls", os.Args[0])
-					m.Log.Warnf("wait cluster install success, please use cmd check: %s", color.SGreen(cmd))
+					m.Log.Warnf("wait cluster install success, visit %s notice 'Your connection to this site isn't secure', please use follow cmd check and fix: %s", color.SGreen(m.Domain), color.SGreen(cmd))
 					break
 				}
 			}

@@ -39,6 +39,7 @@ func CheckReNewCertificate(force bool) (err error) {
 			}
 		}
 		if needRenew {
+			log.Infof("domain %s's certificate need renew now, start to renew", domain)
 			return renewCertificate(domain)
 		}
 		log.Infof("domain %s's certificate has not expired ", domain)
@@ -50,7 +51,7 @@ func CheckReNewCertificate(force bool) (err error) {
 
 func checkCertificate(domain string) (bool, error) {
 	log := log.GetInstance()
-	log.Debugf("start check domain %s certificate", domain)
+	log.Infof("start check domain %s certificate", domain)
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: false}, // nolint:gosec
 	}
@@ -88,13 +89,16 @@ func renewCertificate(domain string) error {
 	mainDomain := fmt.Sprintf("%s.%s", ds[len(ds)-2], ds[len(ds)-1])
 	coreDomain := fmt.Sprintf("%s.%s.%s", ds[len(ds)-3], ds[len(ds)-2], ds[len(ds)-1])
 	tlsfile := fmt.Sprintf("https://pkg.qucheng.com/ssl/%s/%s/tls.yaml", mainDomain, coreDomain)
+	log.Infof("renew %s tls certificate", domain)
 	log.Debugf("renew default tls certificate use %s", tlsfile)
 	if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", tlsfile, "-n", common.GetDefaultSystemNamespace(true), "--kubeconfig", common.GetKubeConfig()).Run(); err != nil {
 		log.Warnf("load renew tls cert for %s failed, reason: %v", common.GetDefaultSystemNamespace(true), err)
+		return nil
 	}
-	log.Debugf("renew ingress tls certificate")
 	if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", tlsfile, "--kubeconfig", common.GetKubeConfig()).Run(); err != nil {
 		log.Warnf("load renew tls cert for default failed, reason: %v", err)
+		return nil
 	}
+	log.Donef("renew tls certificate success")
 	return nil
 }
