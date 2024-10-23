@@ -258,7 +258,7 @@ func (m *Meta) Init() error {
 			for {
 				if file.CheckFileExists(defaultTLS) {
 					m.Log.StopWait()
-					m.Log.Done("download tls cert success")
+					m.Log.Done("detect tls cert file success")
 					if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", defaultTLS, "-n", common.GetDefaultSystemNamespace(true), "--kubeconfig", common.GetKubeConfig()).Run(); err != nil {
 						m.Log.Warnf("load default tls cert failed, reason: %v", err)
 					} else {
@@ -273,9 +273,11 @@ func (m *Meta) Init() error {
 				m.Log.Debug("wait for tls cert ready...")
 				time.Sleep(time.Second * 5)
 				trywaitsc := time.Now()
-				if trywaitsc.Sub(waittls) > time.Minute*3 {
+				if trywaitsc.Sub(waittls) >= time.Minute*5 {
 					// TODO  timeout
-					m.Log.Debugf("wait tls cert ready, timeout: %v", trywaitsc.Sub(waittls).Seconds())
+					m.Log.Warnf("wait tls cert ready, timeout: %v", trywaitsc.Sub(waittls).Seconds())
+					cmd := fmt.Sprintf("%s pt tls", os.Args[0])
+					m.Log.Warnf("wait cluster install success, please use cmd check: %s", color.SGreen(cmd))
 					break
 				}
 			}

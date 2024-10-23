@@ -52,7 +52,7 @@ func checkCertificate(domain string) (bool, error) {
 	log := log.GetInstance()
 	log.Debugf("start check domain %s certificate", domain)
 	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // nolint:gosec
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: false}, // nolint:gosec
 	}
 	client := &http.Client{
 		Transport: tr,
@@ -60,14 +60,20 @@ func checkCertificate(domain string) (bool, error) {
 	}
 	resp, err := client.Get(domain)
 	if err != nil {
+		if strings.Contains(err.Error(), "x509: certificate is valid for ingress.local") {
+			log.Warnf("domain %s use self-signed certificate", domain)
+			return true, nil
+		}
 		return false, err
 	}
 	defer func() { _ = resp.Body.Close() }()
 	for _, cert := range resp.TLS.PeerCertificates {
+		// 证书过期已过期
 		if !cert.NotAfter.After(time.Now()) {
 			log.Warnf("domain %s tls expired", domain)
 			return true, nil
 		}
+		// 证书过期时间在7天内过期
 		if cert.NotAfter.Sub(time.Now()).Hours() < 7*24 {
 			log.Warnf("domain %s tls expire after %fh", domain, cert.NotAfter.Sub(time.Now()).Hours())
 			return true, nil

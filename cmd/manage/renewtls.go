@@ -15,15 +15,14 @@ import (
 
 func NewRenewTLS(f factory.Factory) *cobra.Command {
 	var force bool
-	rtls := &cobra.Command{
-		Use:     "renewtls",
-		Short:   "renew tls domain",
-		Aliases: []string{"rtls", "rt"},
+	tlsCmd := &cobra.Command{
+		Use:     "tls",
+		Short:   "check and renew tls",
 		Version: "1.2.11",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return httptls.CheckReNewCertificate(force)
 		},
 	}
-	rtls.Flags().BoolVarP(&force, "force", "f", false, "force renew tls")
-	return rtls
+	tlsCmd.Flags().BoolVarP(&force, "force", "f", false, "force renew tls")
+	return tlsCmd
 }
