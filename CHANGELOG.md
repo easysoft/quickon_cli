@@ -1,5 +1,16 @@
 # Changelog
 
+## v3.2.8 (2024-10-23)
+
+ * [bfc103a8](https://github.com/easysoft/quickon_cli/commit/bfc103a875bc635264f2a84b120a1486678508f8) fix: enhance logging for TLS certificate management and security
+ * [de51f88b](https://github.com/easysoft/quickon_cli/commit/de51f88bd7cf6104e59e28535728c6c63edc2416) * [fix]: update tls gen timeout & imp tls check
+ * [d813afdd](https://github.com/easysoft/quickon_cli/commit/d813afddfa22993b63b2f2e940e062feeec4a729) build(deps): bump github.com/schollz/progressbar/v3
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.2.7 (2024-10-21)
 
  * [c6b96900](https://github.com/easysoft/quickon_cli/commit/c6b96900644ac3a5a3e2c172901f9a50cef267fe) * [feat] bump zentao version
