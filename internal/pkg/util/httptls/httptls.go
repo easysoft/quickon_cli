@@ -65,6 +65,10 @@ func checkCertificate(domain string) (bool, error) {
 			log.Warnf("domain %s use self-signed certificate", domain)
 			return true, nil
 		}
+		if strings.Contains(err.Error(), "x509: certificate has expired or is not vet valid") {
+			log.Warnf("domain %s tls expired", domain)
+			return true, nil
+		}
 		return false, err
 	}
 	defer func() { _ = resp.Body.Close() }()
