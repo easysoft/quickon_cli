@@ -1,5 +1,16 @@
 # Changelog
 
+## v3.2.9 (2024-11-05)
+
+ * [c9d03d06](https://github.com/easysoft/quickon_cli/commit/c9d03d06a46b6cf3156e4501d8fe0d226e5fd8f5) build(deps): bump github.com/imroc/req/v3 from 3.46.0 to 3.48.0
+ * [e6582d22](https://github.com/easysoft/quickon_cli/commit/e6582d22a14a4bfaaa5cd577b343d8c4f3fd91de) fix: update k3s version and improve TLS certificate logging
+ * [aca16d5b](https://github.com/easysoft/quickon_cli/commit/aca16d5ba226b0da1414989326363b16d63efac1) build(deps): bump github.com/schollz/progressbar/v3
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.2.8 (2024-10-23)
 
  * [bfc103a8](https://github.com/easysoft/quickon_cli/commit/bfc103a875bc635264f2a84b120a1486678508f8) fix: enhance logging for TLS certificate management and security
