@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.2.10 (2024-11-07)
+
+ * [27f1e8cf](https://github.com/easysoft/quickon_cli/commit/27f1e8cfa235789e3bfc97777a562feebc4a4d27) * [feat]: implement installation verification across services
+
+### Contributors
+
+ * ysicing
+
 ## v3.2.9 (2024-11-05)
 
  * [c9d03d06](https://github.com/easysoft/quickon_cli/commit/c9d03d06a46b6cf3156e4501d8fe0d226e5fd8f5) build(deps): bump github.com/imroc/req/v3 from 3.46.0 to 3.48.0

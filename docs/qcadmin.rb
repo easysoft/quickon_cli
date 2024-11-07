@@ -1,12 +1,12 @@
 class Qcadmin < Formula
     desc "qcadmin is an open-source lightweight cli tool for managing quickon."
     homepage "https://github.com/easysoft/quickon_cli"
-    version "3.2.9"
+    version "3.2.10"
 
     on_macos do
       if Hardware::CPU.arm?
         url "https://github.com/easysoft/quickon_cli/releases/download/v#{version}/qcadmin_darwin_arm64"
-        sha256 "d515e9331e04ace2c49ee7654ab50a90a1a53f9479ea8fa789aefe2c792833df"
+        sha256 "8b884d9994b91a029522421d9131b4a35d6e72c89e964dbc739ba374d8e7485c"
 
         def install
             bin.install "qcadmin_darwin_arm64" => "qcadmin"
@@ -15,7 +15,7 @@ class Qcadmin < Formula
 
       if Hardware::CPU.intel?
         url "https://github.com/easysoft/quickon_cli/releases/download/v#{version}/qcadmin_darwin_amd64"
-        sha256 "82e29d842ef22bba536eb1501681cd44fb2405e054ec4df446c14a4290db2ace"
+        sha256 "81d011c4389bf5519ac8bce5eefa8aef4f8ab6efcda9c024eecb34cce3193aa9"
 
         def install
             bin.install "qcadmin_darwin_amd64" => "qcadmin"
@@ -26,7 +26,7 @@ class Qcadmin < Formula
     on_linux do
       if Hardware::CPU.intel?
         url "https://github.com/easysoft/quickon_cli/releases/download/v#{version}/qcadmin_linux_amd64"
-        sha256 "bbd8b381b293bceed7ad34aeae40578628a6e4d2a3150e80293b545da37e55dc"
+        sha256 "62f76d4a3cc71167f0d313750456df66f169d3abb6b3b81229818e22c8516117"
 
         def install
             bin.install "qcadmin_linux_amd64" => "qcadmin"
@@ -35,7 +35,7 @@ class Qcadmin < Formula
 
       if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
         url "https://github.com/easysoft/quickon_cli/releases/download/v#{version}/qcadmin_linux_arm64"
-        sha256 "00cd66942c548aa057be975f8552fe9594fd67bb97f8c04314c06c83a1fbd206"
+        sha256 "f90e169495310c43bc6a229bf4bfba144f2f21f5b745f3976df8c7fb4c752683"
 
         def install
             bin.install "qcadmin_linux_arm64" => "qcadmin"
