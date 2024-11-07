@@ -112,6 +112,10 @@ func (q *Devops) Check() error {
 	return q.MetaData.Check()
 }
 
+func (q *Devops) CheckInstall() bool {
+	return q.MetaData.CheckInstall()
+}
+
 func (q *Devops) GetMeta() *quickon.Meta {
 	return q.MetaData
 }

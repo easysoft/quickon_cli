@@ -150,6 +150,19 @@ func (m *Meta) checkStorage() {
 	m.Log.Done("check default storage done")
 }
 
+func (m *Meta) CheckInstall() bool {
+	_, err := config.LoadConfig()
+	if err != nil {
+		return false
+	}
+	_, err = m.kubeClient.GetDeployment(context.Background(), common.GetDefaultSystemNamespace(true), common.GetReleaseName(m.DevopsMode), metav1.GetOptions{})
+	if err == nil {
+		m.Log.Debug("found exist quickon deployment")
+		return true
+	}
+	return false
+}
+
 func (m *Meta) Check() error {
 	if err := m.addHelmRepo(); err != nil {
 		return err

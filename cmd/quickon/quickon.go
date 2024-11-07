@@ -11,9 +11,11 @@ import (
 
 	"github.com/ergoapi/util/confirm"
 	"github.com/ergoapi/util/exnet"
+	"github.com/ergoapi/util/file"
 	"github.com/spf13/cobra"
 
 	"github.com/easysoft/qcadmin/cmd/flags"
+	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/api/statistics"
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
@@ -55,6 +57,9 @@ func InitCommand(f factory.Factory) *cobra.Command {
 	initCmd.PreRunE = func(cmd *cobra.Command, args []string) error {
 		if err := cp.GetKubeClient(); err != nil {
 			return err
+		}
+		if file.CheckFileExists(common.GetCustomConfig(common.InitFileName)) && cp.CheckInstall() {
+			return fmt.Errorf("quickon is already initialized")
 		}
 		return cp.Check()
 	}

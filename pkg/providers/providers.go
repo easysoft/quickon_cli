@@ -28,6 +28,7 @@ type Provider interface {
 	GetProviderName() string
 	GetMeta() *quickon.Meta
 	GetKubeClient() error
+	CheckInstall() bool
 	Check() error
 	GetFlags() []types.Flag
 	Install() error

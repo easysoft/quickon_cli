@@ -10,11 +10,13 @@ import (
 	"github.com/cockroachdb/errors"
 	"github.com/ergoapi/util/confirm"
 	"github.com/ergoapi/util/exnet"
+	"github.com/ergoapi/util/file"
 	"github.com/spf13/cobra"
 	"k8s.io/kubectl/pkg/util/templates"
 
 	"github.com/easysoft/qcadmin/cmd/flags"
 	"github.com/easysoft/qcadmin/cmd/precheck"
+	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/api/statistics"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/pkg/cluster"
@@ -46,10 +48,13 @@ func InitCommand(f factory.Factory) *cobra.Command {
 		Short:   "init cluster",
 		Example: initExample,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			// 禁止重复初始化
+			if file.CheckFileExists(common.GetCustomConfig(common.InitFileName)) {
+				return errors.New("cluster is already initialized")
+			}
 			if len(myCluster.MasterIPs) == 0 {
 				myCluster.MasterIPs = append(myCluster.MasterIPs, exnet.LocalIPs()[0])
 			}
-			// 禁止重复初始化
 			preCheck.IgnorePreflightErrors = myCluster.IgnorePreflightErrors
 			preCheck.OffLine = myCluster.OffLine
 			if err := preCheck.Run(); err != nil {

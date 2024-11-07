@@ -130,6 +130,10 @@ func (q *Quickon) Check() error {
 	return q.MetaData.Check()
 }
 
+func (q *Quickon) CheckInstall() bool {
+	return q.MetaData.CheckInstall()
+}
+
 func (q *Quickon) GetMeta() *quickon.Meta {
 	return q.MetaData
 }

@@ -45,6 +45,12 @@ check_docker() {
   if [ -z "${which_cmd}" ]; then
     sed -i "s#--docker \\\##g" /root/.k3s.service
     sed -i "s#--docker##g" /root/.k3s.service
+  else
+    docker_status=$(systemctl is-active docker)
+    if [ "${docker_status}" != "active" ]; then
+      sed -i "s#--docker \\\##g" /root/.k3s.service
+      sed -i "s#--docker##g" /root/.k3s.service
+    fi
   fi
 }
 
