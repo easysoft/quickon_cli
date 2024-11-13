@@ -1,5 +1,15 @@
 # Changelog
 
+## v3.2.11 (2024-11-13)
+
+ * [92b9df5e](https://github.com/easysoft/quickon_cli/commit/92b9df5eca988527ccc007486ae497c17bbca98e) * [chore]: update Zentao DevOPS component versions to lates
+ * [655ca859](https://github.com/easysoft/quickon_cli/commit/655ca8599df87bb4f386133acbbd0881c1a85e4a) build(deps): bump github.com/schollz/progressbar/v3
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.2.10 (2024-11-07)
 
  * [27f1e8cf](https://github.com/easysoft/quickon_cli/commit/27f1e8cfa235789e3bfc97777a562feebc4a4d27) * [feat]: implement installation verification across services
