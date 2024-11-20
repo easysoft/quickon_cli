@@ -136,6 +136,9 @@ func (m *Meta) checkStorage() {
 		cfg, _ := config.LoadConfig()
 		m.Log.Infof("not found default storage class, will install %s as default storage", cfg.Storage.Type)
 		m.Log.Debugf("start install default storage: nfs")
+		if len(cfg.Cluster.InitNode) == 0 {
+			cfg.Cluster.InitNode = exnet.LocalIPs()[0]
+		}
 		if err := qcexec.CommandRun(os.Args[0], "cluster", "storage", "nfs", "--ip", cfg.Cluster.InitNode, "--path", common.GetDefaultNFSStoragePath(cfg.DataDir)); err != nil {
 			m.Log.Errorf("install storage %s failed, reason: %v", cfg.Storage.Type, err)
 		} else {
