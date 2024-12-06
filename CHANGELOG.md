@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.2.12 (2024-12-06)
+
+ * [be737e7f](https://github.com/easysoft/quickon_cli/commit/be737e7f5bd4508fca2aeeef280fdcc7f286ca09) * [chore] bump Zentao DevOPS component versions
+ * [2949e383](https://github.com/easysoft/quickon_cli/commit/2949e3834b45d01bbf3b824b6aed680bbe40ce16) build(deps): bump github.com/quic-go/quic-go from 0.47.0 to 0.48.2
+ * [dd871777](https://github.com/easysoft/quickon_cli/commit/dd8717774ed3c354e4a34980e4106cdeebc70dc5) build(deps): bump github.com/pkg/sftp from 1.13.6 to 1.13.7
+ * [ee25bb4a](https://github.com/easysoft/quickon_cli/commit/ee25bb4ad47b9f12edc3063386ea2087f6d0bf3a) build(deps): bump github.com/Masterminds/semver/v3 from 3.3.0 to 3.3.1
+ * [ff9ebf78](https://github.com/easysoft/quickon_cli/commit/ff9ebf7818ae762112b6ce0dc9ce99baf6ffec93) build(deps): bump tailscale.com from 1.74.0 to 1.76.6
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.2.11 (2024-11-13)
 
  * [92b9df5e](https://github.com/easysoft/quickon_cli/commit/92b9df5eca988527ccc007486ae497c17bbca98e) * [chore]: update Zentao DevOPS component versions to lates
