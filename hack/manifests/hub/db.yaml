@@ -1,0 +1,56 @@
+services:
+  master:
+    image: hub.zentao.net/app/mysql:8.0.33-debian-11-r11
+    container_name: master
+    pull_policy: if_not_present
+    restart: always
+    volumes:
+      - 'masterdb:/bitnami/mysql/data'
+    ports:
+      - '3306:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=pass4ZentaoPaas
+      - MYSQL_USER=zenta0Abm1n
+      - MYSQL_PASSWORD=pass4Zenta0Pass
+      - MYSQL_DATABASE=zentaopaas
+      - MYSQL_CHARACTER_SET=utf8mb4
+      - MYSQL_COLLATE=utf8mb4_unicode_ci
+      - MYSQL_REPLICATION_MODE=master
+      - MYSQL_REPLICATION_USER=repl_user
+      - MYSQL_REPLICATION_PASSWORD=repl_password
+    healthcheck:
+      test: ['CMD', '/opt/bitnami/scripts/mysql/healthcheck.sh']
+      interval: 15s
+      timeout: 5s
+
+  slave:
+    image: hub.zentao.net/app/mysql:8.0.33-debian-11-r11
+    container_name: slave
+    pull_policy: if_not_present
+    restart: always
+    volumes:
+      - 'slavedb:/bitnami/mysql/data'
+    # ports:
+    #   - '3307:3306'
+    depends_on:
+      - master
+    environment:
+      - MYSQL_REPLICATION_MODE=slave
+      - MYSQL_REPLICATION_USER=repl_user
+      - MYSQL_REPLICATION_PASSWORD=repl_password
+      - MYSQL_USER=zenta0Abm1n
+      - MYSQL_PASSWORD=pass4Zenta0Pass
+      - MYSQL_DATABASE=zentaopaas
+      - MYSQL_MASTER_HOST=master
+      - MYSQL_MASTER_PORT_NUMBER=3306
+      - MYSQL_MASTER_ROOT_PASSWORD=pass4ZentaoPaas
+      - MYSQL_CHARACTER_SET=utf8mb4
+      - MYSQL_COLLATE=utf8mb4_unicode_ci
+    healthcheck:
+      test: ['CMD', '/opt/bitnami/scripts/mysql/healthcheck.sh']
+      interval: 15s
+      timeout: 5s
+
+volumes:
+  masterdb:
+  slavedb:
