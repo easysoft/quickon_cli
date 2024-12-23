@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"os"
 	"runtime"
-	"strings"
 
 	"github.com/ergoapi/util/file"
 	"github.com/spf13/cobra"
@@ -55,7 +54,7 @@ func (up option) DoQcadmin() {
 		up.log.Errorf("fetch latest version err, reason: %v", err)
 		return
 	}
-	if lastVersion == "" || lastVersion == common.Version || strings.Contains(common.Version, lastVersion) || uv.LTv2(lastVersion, common.Version) {
+	if lastVersion == "" || uv.NotGTv3(common.Version, lastVersion) {
 		up.log.Infof("The current version %s is the latest version", common.Version)
 		return
 	}
