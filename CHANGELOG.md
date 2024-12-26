@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.2.14 (2024-12-26)
+
+ * [2e6c4326](https://github.com/easysoft/quickon_cli/commit/2e6c4326cf8d17b7380f293411ac2e1594cb7f07) * [fix] fix go dep typo
+
+### Contributors
+
+ * ysicing
+
 ## v3.2.13 (2024-12-26)
 
  * [9b375581](https://github.com/easysoft/quickon_cli/commit/9b3755810cd112b68ebd56d645ec0ba5c7f2a1a1) * [fix] fix k8s dependencies
