@@ -1,5 +1,20 @@
 # Changelog
 
+## v3.2.13 (2024-12-26)
+
+ * [9b375581](https://github.com/easysoft/quickon_cli/commit/9b3755810cd112b68ebd56d645ec0ba5c7f2a1a1) * [fix] fix k8s dependencies
+ * [cdfa2e2e](https://github.com/easysoft/quickon_cli/commit/cdfa2e2e0a2d731c0cd2a46d30403e5a7a5f0aba) build(deps): bump tailscale.com from 1.76.6 to 1.78.3
+ * [0b0640a0](https://github.com/easysoft/quickon_cli/commit/0b0640a0d283f1e6bc7ab868a122251da4313aae) build(deps): bump github.com/containerd/continuity from 0.4.3 to 0.4.5
+ * [66391058](https://github.com/easysoft/quickon_cli/commit/66391058ebbc87e6a24a2ed4b48a52bd7a35d008) build(deps): bump golang.org/x/crypto from 0.28.0 to 0.31.0
+ * [ada9c8f6](https://github.com/easysoft/quickon_cli/commit/ada9c8f63df00f19555a859e69023e0c8adb12fa) build(deps): bump nanoid from 3.3.7 to 3.3.8 in /docs
+ * [e731c79e](https://github.com/easysoft/quickon_cli/commit/e731c79e0ccadbf2e7681d22b79c6943c4403232) build(deps): bump github.com/go-ping/ping from 1.1.0 to 1.2.0
+ * [32eed6ea](https://github.com/easysoft/quickon_cli/commit/32eed6eaf98a37ed6062ccd8b843177d68142ff7) feat: configure MySQL master-slave architecture with volumes
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.2.12 (2024-12-06)
 
  * [be737e7f](https://github.com/easysoft/quickon_cli/commit/be737e7f5bd4508fca2aeeef280fdcc7f286ca09) * [chore] bump Zentao DevOPS component versions
