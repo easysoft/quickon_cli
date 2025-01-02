@@ -708,3 +708,7 @@ func (c *Client) GetSecretKeyBySelector(ctx context.Context, namespace string, s
 	}
 	return "", errors.Errorf("key %s not found in secret %s", secretSelector.Key, secretSelector.Name)
 }
+
+func (c *Client) ListIngress(ctx context.Context, namespace string, opts metav1.ListOptions) (*networkingv1.IngressList, error) {
+	return c.Clientset.NetworkingV1().Ingresses(namespace).List(ctx, opts)
+}

@@ -27,6 +27,7 @@ func NewCmdAppList(f factory.Factory) *cobra.Command {
 	app := &cobra.Command{
 		Use:     "list",
 		Short:   "list app",
+		Long:    "list app and select app to show logs、exec、restart",
 		Example: `z app list`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			hc, err := helm.NewClient(&helm.Config{Namespace: ""})
@@ -87,10 +88,14 @@ func NewCmdAppList(f factory.Factory) *cobra.Command {
 			log.Infof("select app %s pod %s", release[it].Name, podName)
 			selectAction := promptui.Select{
 				Label: "select action",
-				Items: []string{"logs", "exec"},
+				Items: []string{"logs", "exec", "restart"},
 			}
 			_, action, _ := selectAction.Run()
 			podNamespace := podlist.Items[podit].Namespace
+			if action == "restart" {
+				log.Infof("restart app %s", release[it].Name)
+				return k8sClient.DeletePod(ctx, podNamespace, podName, metav1.DeleteOptions{})
+			}
 			selectPodContainer := promptui.Select{
 				Label: fmt.Sprintf("select %s's container", podName),
 				Items: podlist.Items[podit].Spec.Containers,

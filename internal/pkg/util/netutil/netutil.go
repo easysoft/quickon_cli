@@ -17,12 +17,13 @@ import (
 	"time"
 
 	"github.com/cockroachdb/errors"
-	"github.com/go-ping/ping"
 	"github.com/jackpal/gateway"
 	"github.com/miekg/dns"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
+
+	ping "github.com/prometheus-community/pro-bing"
 )
 
 // CheckDefaultRoute checks if the default route is reachable
