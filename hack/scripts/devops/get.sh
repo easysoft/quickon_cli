@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (c) 2021-2023 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
+# Copyright (c) 2021-2025 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
 # Use of this source code is covered by the following dual licenses:
 # (1) Z PUBLIC LICENSE 1.2 (ZPL 1.2)
 # (2) Affero General Public License 3.0 (AGPL 3.0)
@@ -7,8 +7,8 @@
 
 # Source code is available at https://github.com/easysoft/quickon_cli
 
-# SCRIPT_COMMIT_SHA="a77fcbaf862d7b2d1eb8b08c5920adde14edc4ca"
-# SCRIPT_DATA="Fri Sep  8 09:46:36 AM CST 2023"
+# SCRIPT_COMMIT_SHA="b617b5260d947c69caeafcfb89408e2b54d3d2a9"
+# SCRIPT_DATA="Wed Jan  8 16:02:39 CST 2025"
 
 # Usage:
 #   curl ... | ENV_VAR=... sh -

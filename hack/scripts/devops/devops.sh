@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (c) 2021-2023 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
+# Copyright (c) 2021-2025 北京渠成软件有限公司(Beijing Qucheng Software Co., Ltd. www.qucheng.com) All rights reserved.
 # Use of this source code is covered by the following dual licenses:
 # (1) Z PUBLIC LICENSE 1.2 (ZPL 1.2)
 # (2) Affero General Public License 3.0 (AGPL 3.0)
@@ -7,8 +7,8 @@
 
 # Source code is available at https://github.com/easysoft/quickon_cli
 
-# SCRIPT_COMMIT_SHA="a77fcbaf862d7b2d1eb8b08c5920adde14edc4ca"
-# SCRIPT_DATA="Wed May 29 17:29:14 CST 2024"
+# SCRIPT_COMMIT_SHA="b617b5260d947c69caeafcfb89408e2b54d3d2a9"
+# SCRIPT_DATA="Wed Jan  8 16:02:39 CST 2025"
 
 # Usage:
 #   curl ... | ENV_VAR=... sh -
@@ -26,11 +26,14 @@
 #     Defaults to ''
 #   - INSTALL_DOMAIN
 #     If not set default use gen default domain
-#   - SKIP_DEVOPS_INIT
+#   - SKIP_DEVOPS_INIT(Deprecated)
 #     Allow skip devops init
 #     Defaults to 'true'
 #   - DEBUG
 #     If set, print debug information
+#   - STORAGE_TYPE
+#     Storage Type when install Zentao DevOPS default use nfs as storage provider.
+#     Defaults to '', support 'local'
 
 set -e
 set -o noglob
@@ -53,6 +56,7 @@ fatal()
 }
 
 COS_URL=https://pkg.zentao.net/cli/devops
+STORAGE_TYPE=${STORAGE_TYPE:-}
 
 # --- define needed environment variables ---
 setup_env() {
@@ -205,8 +209,11 @@ install_zentao_devops() {
   if [ -n "${DEVOPS_VERSION}" ]; then
     INSTALL_COMMAND="${INSTALL_COMMAND} --version ${DEVOPS_VERSION}"
   fi
-  if [ "${SKIP_DEVOPS_INIT}" = "false" ]; then
-    INSTALL_COMMAND="${INSTALL_COMMAND} --skip-devops-init false"
+  # if [ "${SKIP_DEVOPS_INIT}" = "false" ]; then
+  #   INSTALL_COMMAND="${INSTALL_COMMAND} --skip-devops-init false"
+  # fi
+  if [ "${STORAGE_TYPE}" = "local" ]; then
+    INSTALL_COMMAND="${INSTALL_COMMAND} --storage local"
   fi
   if [ -n "${DEBUG}" ]; then
     INSTALL_COMMAND="${INSTALL_COMMAND} --debug"
