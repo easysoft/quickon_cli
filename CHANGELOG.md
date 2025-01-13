@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.2.15 (2025-01-13)
+
+ * [fd66c791](https://github.com/easysoft/quickon_cli/commit/fd66c7911a4e701875da57978afee07940e0519f) build(deps): bump github.com/schollz/progressbar/v3
+ * [aa3bd4b9](https://github.com/easysoft/quickon_cli/commit/aa3bd4b9128362d987a0bfcd2d8d9f11cce8a0ff) * [feat] script update
+ * [b617b526](https://github.com/easysoft/quickon_cli/commit/b617b5260d947c69caeafcfb89408e2b54d3d2a9) build(deps): bump golang.org/x/sys from 0.28.0 to 0.29.0
+ * [5b3a9375](https://github.com/easysoft/quickon_cli/commit/5b3a937586d6116dd9cd14f76ca3beb25b8a5e0e) feat: enhance app command functionality and update dependencies
+ * [244c4a73](https://github.com/easysoft/quickon_cli/commit/244c4a73125acdb6c26dfb8b9daf6f9798587335) build(deps): bump helm.sh/helm/v3 from 3.15.4 to 3.16.4
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.2.14 (2024-12-26)
 
  * [2e6c4326](https://github.com/easysoft/quickon_cli/commit/2e6c4326cf8d17b7380f293411ac2e1594cb7f07) * [fix] fix go dep typo
