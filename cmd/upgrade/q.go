@@ -25,8 +25,9 @@ import (
 )
 
 type option struct {
-	log log.Logger
-	dev bool
+	log       log.Logger
+	dev       bool
+	useGithub bool
 }
 
 func NewUpgradeQ(f factory.Factory) *cobra.Command {
@@ -43,12 +44,17 @@ func NewUpgradeQ(f factory.Factory) *cobra.Command {
 		},
 	}
 	upq.Flags().BoolVarP(&up.dev, "dev", "", false, "upgrade to dev version")
+	upq.Flags().BoolVarP(&up.useGithub, "github", "", false, "upgrade to github version")
 	return upq
 }
 
 func (up option) DoQcadmin() {
 	up.log.StartWait("fetch latest version from remote...")
-	lastVersion, lastType, err := version.PreCheckLatestVersion(up.log, up.dev, "")
+	st := ""
+	if up.useGithub {
+		st = "github"
+	}
+	lastVersion, lastType, err := version.PreCheckLatestVersion(up.log, up.dev, st)
 	up.log.StopWait()
 	if err != nil {
 		up.log.Errorf("fetch latest version err, reason: %v", err)
