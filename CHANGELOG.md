@@ -1,7 +1,14 @@
 # Changelog
 
+## v3.2.16 (2025-01-13)
+
+
+### Contributors
+
+
 ## v3.2.15 (2025-01-13)
 
+ * [46bbc927](https://github.com/easysoft/quickon_cli/commit/46bbc9273f52a922c6071d43dd1f7a7e538d8a81) * [feat] add option to toggle GitHub version usage in checks
  * [fd66c791](https://github.com/easysoft/quickon_cli/commit/fd66c7911a4e701875da57978afee07940e0519f) build(deps): bump github.com/schollz/progressbar/v3
  * [aa3bd4b9](https://github.com/easysoft/quickon_cli/commit/aa3bd4b9128362d987a0bfcd2d8d9f11cce8a0ff) * [feat] script update
  * [b617b526](https://github.com/easysoft/quickon_cli/commit/b617b5260d947c69caeafcfb89408e2b54d3d2a9) build(deps): bump golang.org/x/sys from 0.28.0 to 0.29.0
