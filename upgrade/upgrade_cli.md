@@ -14,8 +14,9 @@ qcadmin upgrade cli [flags]
 ### Options
 
 ```
-      --dev    upgrade to dev version
-  -h, --help   help for cli
+      --dev      upgrade to dev version
+      --github   upgrade to github version
+  -h, --help     help for cli
 ```
 
 ### Options inherited from parent commands
