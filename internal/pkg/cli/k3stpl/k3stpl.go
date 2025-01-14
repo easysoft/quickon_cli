@@ -65,7 +65,7 @@ func (k3s K3sArgs) Manifests(template string) string {
 		k3s.Master0IP = exnet.LocalIPs()[0]
 	}
 	if k3s.Registry == "" {
-		k3s.Registry = "hub.zentao.net"
+		k3s.Registry = common.DefaultHub
 	}
 	return render(k3s, template)
 }
@@ -85,8 +85,8 @@ func EmbedCommand(f factory.Factory) *cobra.Command {
 			file.WriteFile(tplfile.Name(), k3sargs.Manifests(""), true)
 		},
 	}
-	rootCmd.Flags().StringVar(&k3sargs.PodCIDR, "pod-cidr", "10.42.0.0/16", "cluster cidr")
-	rootCmd.Flags().StringVar(&k3sargs.ServiceCIDR, "service-cidr", "10.43.0.0/16", "service cidr")
+	rootCmd.Flags().StringVar(&k3sargs.PodCIDR, "pod-cidr", common.DefaultClusterPodCidr, "cluster cidr")
+	rootCmd.Flags().StringVar(&k3sargs.ServiceCIDR, "service-cidr", common.DefaultClusterServiceCidr, "service cidr")
 	rootCmd.Flags().StringVar(&k3sargs.DataDir, "data-dir", "", "data dir")
 	rootCmd.Flags().StringVar(&k3sargs.DataStore, "data", "", "data type")
 	rootCmd.Flags().StringVar(&k3sargs.KubeAPI, "kubeapi", "", "kubeapi")
@@ -95,7 +95,7 @@ func EmbedCommand(f factory.Factory) *cobra.Command {
 	rootCmd.Flags().BoolVar(&k3sargs.OffLine, "offline", false, "offline")
 	rootCmd.Flags().BoolVar(&k3sargs.LocalStorage, "local-storage", true, "local-storage")
 	rootCmd.Flags().StringVar(&k3sargs.Master0IP, "master0ip", "", "master0ip, only work offline mode")
-	rootCmd.Flags().StringVar(&k3sargs.Registry, "registry", "hub.zentao.net", "registry")
+	rootCmd.Flags().StringVar(&k3sargs.Registry, "registry", common.DefaultHub, "registry")
 	rootCmd.Flags().StringVar(&k3sargs.CNI, "cni", "", "cni")
 	return rootCmd
 }

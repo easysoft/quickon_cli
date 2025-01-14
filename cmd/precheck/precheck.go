@@ -7,6 +7,7 @@
 package precheck
 
 import (
+	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/internal/pkg/util/preflight"
@@ -24,8 +25,8 @@ func (pc PreCheck) Run() error {
 	log := log.GetInstance()
 	log.Info("start pre-flight checks")
 	if err := preflight.RunInitNodeChecks(utilsexec.New(), &types.Metadata{
-		ServiceCidr: "10.42.0.0/16",
-		ClusterCidr: "10.43.0.0/16",
+		ClusterCidr: common.DefaultClusterPodCidr,
+		ServiceCidr: common.DefaultClusterServiceCidr,
 	}, pc.IgnorePreflightErrors, pc.OffLine, pc.Devops); err != nil {
 		return err
 	}

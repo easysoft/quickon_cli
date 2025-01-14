@@ -61,15 +61,15 @@ func NewCluster(f factory.Factory) *Cluster {
 	return &Cluster{
 		log:         f.GetLog(),
 		CNI:         "flannel",
-		PodCIDR:     "10.42.0.0/16",
-		ServiceCIDR: "10.43.0.0/16",
-		DataDir:     "/opt/quickon",
+		PodCIDR:     common.DefaultClusterPodCidr,
+		ServiceCIDR: common.DefaultClusterServiceCidr,
+		DataDir:     common.DefaultQuickonDataDir,
 		SSH: types.SSH{
 			User: "root",
 		},
 		DataStore:             "",
-		Storage:               "nfs",
-		Registry:              "hub.zentao.net",
+		Storage:               common.DefaultStorageType,
+		Registry:              common.DefaultHub,
 		OffLine:               false,
 		IgnorePreflightErrors: false,
 	}
@@ -87,8 +87,8 @@ func (c *Cluster) getInitFlags() []types.Flag {
 			Name:   "hub",
 			P:      &c.Registry,
 			V:      c.Registry,
-			EnvVar: "hub.zentao.net",
-			Usage:  `custom image hub, e.g: hub.zentao.net`,
+			EnvVar: common.DefaultHub,
+			Usage:  `custom image hub`,
 		},
 		{
 			Name:   "storage",

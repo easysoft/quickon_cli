@@ -8,6 +8,7 @@ package helm
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/cockroachdb/errors"
 	"github.com/spf13/cobra"
@@ -77,7 +78,7 @@ func repoInit(f factory.Factory) *cobra.Command {
 		},
 	}
 	helm.Flags().StringVarP(&name, "name", "n", "install", "repo name")
-	helm.Flags().StringVarP(&url, "url", "u", "https://hub.zentao.net/chartrepo/stable", "repo url")
+	helm.Flags().StringVarP(&url, "url", "u", fmt.Sprintf("https://%s/chartrepo/stable", common.DefaultHub), "repo url")
 	return helm
 }
 

@@ -64,7 +64,7 @@ func (q *Devops) GetFlags() []types.Flag {
 		V:     q.MetaData.Version,
 	}, types.Flag{
 		Name:      "type",
-		Usage:     "devops type, support oss, max, biz, ipd",
+		Usage:     "devops type, support open(oss), max, biz, ipd",
 		P:         &q.MetaData.Type,
 		V:         common.ZenTaoOSSType.String(),
 		ShortHand: "t",

@@ -19,6 +19,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
+	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/helm"
 
@@ -41,7 +42,7 @@ func NewCmdAppMarket(f factory.Factory) *cobra.Command {
 				return err
 			}
 			if len(repos) == 0 {
-				return errors.Errorf("not found qucheng market, you should: %s exp helm repo-add --name qucheng --url https://hub.zentao.net/chartrepo/stable", os.Args[0])
+				return errors.Errorf("not found qucheng market, you should: %s exp helm repo-add --name qucheng --url https://%s/chartrepo/stable", os.Args[0], common.DefaultHub)
 			}
 			quchengRepoName := ""
 			for _, repo := range repos {
@@ -51,7 +52,7 @@ func NewCmdAppMarket(f factory.Factory) *cobra.Command {
 				}
 			}
 			if len(quchengRepoName) == 0 {
-				return errors.Errorf("not found qucheng market, you should: %s exp helm repo-add --name qucheng --url https://hub.zentao.net/chartrepo/stable", os.Args[0])
+				return errors.Errorf("not found qucheng market, you should: %s exp helm repo-add --name qucheng --url https://%s/chartrepo/stable", os.Args[0], common.DefaultHub)
 			}
 			charts, err := hc.ListCharts(quchengRepoName, "", false)
 			if err != nil {

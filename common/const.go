@@ -97,7 +97,10 @@ const (
 	DefaultCneOperatorName        = "cne-operator"
 	DefaultIngressName            = "nginx-ingress-controller"
 	DefaultKubeAPIDomain          = "kubeapi.quickon.local"
-	DefaultStorageType            = "nfs"
+	DefaultStorageType            = "local"
+	DefaultHub                    = "hub.zentao.net" // chart repo & image registry
+	DefaultClusterPodCidr         = "10.42.0.0/16"
+	DefaultClusterServiceCidr     = "10.43.0.0/16"
 	InitFileName                  = ".initdone"
 	InitLockFileName              = ".qlock"
 	InitModeCluster               = ".incluster"

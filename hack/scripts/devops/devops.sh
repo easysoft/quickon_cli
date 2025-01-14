@@ -7,8 +7,8 @@
 
 # Source code is available at https://github.com/easysoft/quickon_cli
 
-# SCRIPT_COMMIT_SHA="b617b5260d947c69caeafcfb89408e2b54d3d2a9"
-# SCRIPT_DATA="Wed Jan  8 16:02:39 CST 2025"
+# SCRIPT_COMMIT_SHA="46bbc9273f52a922c6071d43dd1f7a7e538d8a81"
+# SCRIPT_DATA="Tue Jan 14 13:12:29 CST 2025"
 
 # Usage:
 #   curl ... | ENV_VAR=... sh -
@@ -32,8 +32,8 @@
 #   - DEBUG
 #     If set, print debug information
 #   - STORAGE_TYPE
-#     Storage Type when install Zentao DevOPS default use nfs as storage provider.
-#     Defaults to '', support 'local'
+#     Storage Type when install Zentao DevOPS default use local as storage provider.
+#     Defaults to '', support 'local', 'nfs'
 
 set -e
 set -o noglob
@@ -212,8 +212,8 @@ install_zentao_devops() {
   # if [ "${SKIP_DEVOPS_INIT}" = "false" ]; then
   #   INSTALL_COMMAND="${INSTALL_COMMAND} --skip-devops-init false"
   # fi
-  if [ "${STORAGE_TYPE}" = "local" ]; then
-    INSTALL_COMMAND="${INSTALL_COMMAND} --storage local"
+  if [ "${STORAGE_TYPE}" = "nfs" ]; then
+    INSTALL_COMMAND="${INSTALL_COMMAND} --storage nfs"
   fi
   if [ -n "${DEBUG}" ]; then
     INSTALL_COMMAND="${INSTALL_COMMAND} --debug"

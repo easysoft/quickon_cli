@@ -134,15 +134,19 @@ func (m *Meta) checkStorage() {
 	if defaultClass == nil {
 		// default storage
 		cfg, _ := config.LoadConfig()
-		m.Log.Infof("not found default storage class, will install %s as default storage", cfg.Storage.Type)
-		m.Log.Debugf("start install default storage: nfs")
+		storage := common.DefaultStorageType
+		cfg.Storage.Type = storage
+		defer cfg.SaveConfig()
+		m.Log.Warnf("not found default storage class, will install %s as default storage", storage)
+		m.Log.Debugf("start install default storage: %s", storage)
 		if len(cfg.Cluster.InitNode) == 0 {
 			cfg.Cluster.InitNode = exnet.LocalIPs()[0]
 		}
-		if err := qcexec.CommandRun(os.Args[0], "cluster", "storage", "nfs", "--ip", cfg.Cluster.InitNode, "--path", common.GetDefaultNFSStoragePath(cfg.DataDir)); err != nil {
-			m.Log.Errorf("install storage %s failed, reason: %v", cfg.Storage.Type, err)
+		// old use nfs as default storage os.Args[0], "cluster", "storage", "nfs", "--ip", cfg.Cluster.InitNode, "--path", common.GetDefaultNFSStoragePath(cfg.DataDir)
+		if err := qcexec.CommandRun(os.Args[0], "cluster", "storage", "local"); err != nil {
+			m.Log.Errorf("install storage %s failed, reason: %v", storage, err)
 		} else {
-			m.Log.Donef("install storage %s success", cfg.Storage.Type)
+			m.Log.Donef("install storage %s success", storage)
 		}
 		// if err := qcexec.CommandRun(os.Args[0], "cluster", "storage", "set-default"); err != nil {
 		// 	m.Log.Errorf("set default storageclass failed, reason: %v", err)
