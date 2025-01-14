@@ -391,6 +391,8 @@ func (m *Meta) Init() error {
 		// helmargs = append(helmargs, "--set", deployVersion)
 		if helmchan != "stable" {
 			helmargs = append(helmargs, "--set", "image.repository=test/zentao")
+			helmargs = append(helmargs, "--set", "sidecars.backend.image.tag=dev")
+			helmargs = append(helmargs, "--set", "sidecars.backend.image.pullPolicy=Always")
 			deployVersion := fmt.Sprintf("deploy.versions.%s=%s%s.k8s", m.Type, m.Type, installVersion)
 			helmargs = append(helmargs, "--set", deployVersion)
 			if m.Type == common.ZenTaoOSSType.String() || m.Type == common.ZenTaoOldOSSType.String() {
