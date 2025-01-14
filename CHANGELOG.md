@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.2.17 (2025-01-14)
+
+ * [5577fd27](https://github.com/easysoft/quickon_cli/commit/5577fd27d67edee7162effcdbe3cab44c7d0719f) refactor: refactor configuration for improved consistency and clarity
+
+### Contributors
+
+ * ysicing
+
 ## v3.2.16 (2025-01-13)
 
 
