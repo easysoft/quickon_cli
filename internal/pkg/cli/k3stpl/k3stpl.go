@@ -55,6 +55,8 @@ func (k3s K3sArgs) Manifests(template string) string {
 	if k3s.CNI != "" && k3s.CNI != "flannel" {
 		if k3s.CNI == "wg" || k3s.CNI == "wireguard-native" || k3s.CNI == "wireguard" {
 			k3s.CNI = "wireguard-native"
+		} else if k3s.CNI == "host-gw" {
+			k3s.CNI = "host-gw"
 		} else {
 			k3s.CNI = "none"
 		}
@@ -96,6 +98,6 @@ func EmbedCommand(f factory.Factory) *cobra.Command {
 	rootCmd.Flags().BoolVar(&k3sargs.LocalStorage, "local-storage", true, "local-storage")
 	rootCmd.Flags().StringVar(&k3sargs.Master0IP, "master0ip", "", "master0ip, only work offline mode")
 	rootCmd.Flags().StringVar(&k3sargs.Registry, "registry", common.DefaultHub, "registry")
-	rootCmd.Flags().StringVar(&k3sargs.CNI, "cni", "", "cni")
+	rootCmd.Flags().StringVar(&k3sargs.CNI, "cni", "host-gw", "cni")
 	return rootCmd
 }

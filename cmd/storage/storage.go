@@ -54,13 +54,13 @@ func longhorn(f factory.Factory) *cobra.Command {
 		Use:   "longhorn",
 		Short: "deploy longhorn storage",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := qcexec.CommandRun("bash", "-c", common.GetCustomScripts("hack/manifests/storage/longhorn_environment_check.sh")); err != nil {
+			if err := qcexec.CommandRun("bash", "-c", common.GetCustomFile("hack/manifests/storage/longhorn_environment_check.sh")); err != nil {
 				return errors.Errorf("longhorn environment check failed, reason: %v", err)
 			}
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := qcexec.CommandRun("bash", "-c", common.GetCustomScripts("hack/manifests/storage/longhorn.sh")); err != nil {
+			if err := qcexec.CommandRun("bash", "-c", common.GetCustomFile("hack/manifests/storage/longhorn.sh")); err != nil {
 				return errors.Errorf("longhorn install failed, reason: %v", err)
 			}
 			logpkg.Infof("install longhorn storage success")
@@ -76,7 +76,7 @@ func local(f factory.Factory) *cobra.Command {
 		Use:   "local",
 		Short: "deploy local pv storage",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			kubeargs := []string{"experimental", "kubectl", "apply", "-f", common.GetCustomScripts("hack/manifests/storage/local.yaml")}
+			kubeargs := []string{"experimental", "kubectl", "apply", "-f", common.GetCustomFile("hack/manifests/storage/local.yaml")}
 			output, err := qcexec.Command(os.Args[0], kubeargs...).CombinedOutput()
 			if err != nil {
 				logpkg.Errorf("upgrade install local storage failed: %s", string(output))
@@ -107,7 +107,7 @@ func nfs(f factory.Factory) *cobra.Command {
 					return err
 				}
 				if an == "yes" {
-					if err := qcexec.CommandRun("bash", "-c", common.GetCustomScripts("hack/manifests/storage/nfs-server.sh")); err != nil {
+					if err := qcexec.CommandRun("bash", "-c", common.GetCustomFile("hack/manifests/storage/nfs-server.sh")); err != nil {
 						return errors.Errorf("%s run install nfs script failed, reason: %v", ip, err)
 					}
 					ip = exnet.LocalIPs()[0]

@@ -60,7 +60,7 @@ type Cluster struct {
 func NewCluster(f factory.Factory) *Cluster {
 	return &Cluster{
 		log:         f.GetLog(),
-		CNI:         "flannel",
+		CNI:         "host-gw",
 		PodCIDR:     common.DefaultClusterPodCidr,
 		ServiceCIDR: common.DefaultClusterServiceCidr,
 		DataDir:     common.DefaultQuickonDataDir,
@@ -173,7 +173,7 @@ func (c *Cluster) getMasterFlags() []types.Flag {
 			Name:  "cni",
 			P:     &c.CNI,
 			V:     c.CNI,
-			Usage: "k8s networking plugin, support flannel, wireguard, custom",
+			Usage: "k8s networking plugin, support flannel, wireguard, host-gw, custom",
 		},
 		{
 			Name:  "pod-cidr",
@@ -224,7 +224,7 @@ func (c *Cluster) preinit(mip, ip string, sshClient ssh.Interface) error {
 		return errors.Errorf("load cli version failed, reason: %v", err)
 	}
 	c.log.StartWait(ip + " start run init script")
-	if err := sshClient.CmdAsync(ip, common.GetCustomScripts("hack/manifests/scripts/init.sh")); err != nil {
+	if err := sshClient.CmdAsync(ip, common.GetCustomFile("hack/manifests/scripts/init.sh")); err != nil {
 		return errors.Errorf("%s run init script failed, reason: %v", ip, err)
 	}
 	c.log.StopWait()
@@ -235,7 +235,7 @@ func (c *Cluster) preinit(mip, ip string, sshClient ssh.Interface) error {
 		c.log.Debugf("cmd: %s", hostsArgs)
 		return errors.Errorf("%s add master0 (%s --> %s) failed, reason: %v", ip, common.DefaultKubeAPIDomain, mip, err)
 	}
-	if err := sshClient.CmdAsync(ip, common.GetCustomScripts("hack/manifests/scripts/node.sh")); err != nil {
+	if err := sshClient.CmdAsync(ip, common.GetCustomFile("hack/manifests/scripts/node.sh")); err != nil {
 		return errors.Errorf("%s run init script failed, reason: %v", ip, err)
 	}
 	return nil
@@ -274,11 +274,11 @@ func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error
 	}
 	c.log.Infof("install %s as default storage", c.Storage)
 	if c.Storage == "nfs" {
-		if err := qcexec.CommandRun("bash", "-c", common.GetCustomScripts("hack/manifests/storage/nfs-server.sh")); err != nil {
+		if err := qcexec.CommandRun("bash", "-c", common.GetCustomFile("hack/manifests/storage/nfs-server.sh")); err != nil {
 			return errors.Errorf("%s run install nfs script failed, reason: %v", cfg.Cluster.InitNode, err)
 		}
 	} else if c.Storage == "local" {
-		kubeargs := []string{"experimental", "kubectl", "apply", "-f", common.GetCustomScripts("hack/manifests/storage/local.yaml")}
+		kubeargs := []string{"experimental", "kubectl", "apply", "-f", common.GetCustomFile("hack/manifests/storage/local.yaml")}
 		if err := qcexec.CommandRun(os.Args[0], kubeargs...); err != nil {
 			return errors.Errorf("%s run install local storage failed, reason: %v", cfg.Cluster.InitNode, err)
 		}
@@ -461,7 +461,7 @@ func (c *Cluster) JoinNode() error {
 func (c *Cluster) cleanNode(ip string, sshClient ssh.Interface, wg *sync.WaitGroup) {
 	defer wg.Done()
 	c.log.StartWait(fmt.Sprintf("start clean node: %s", ip))
-	err := sshClient.CmdAsync(ip, common.GetCustomScripts("hack/manifests/scripts/cleankube.sh"))
+	err := sshClient.CmdAsync(ip, common.GetCustomFile("hack/manifests/scripts/cleankube.sh"))
 	c.log.StopWait()
 	if err != nil {
 		c.log.Warnf("clean node %s failed, reason: %v", ip, err)
@@ -535,7 +535,7 @@ func (c *Cluster) Stop() error {
 	for _, ip := range ips {
 		c.log.Debugf("stop node %s", ip)
 		wg.Add(1)
-		go c.actionNode(ip, "stop", common.GetCustomScripts("hack/manifests/scripts/stopnode.sh"), sshClient, &wg)
+		go c.actionNode(ip, "stop", common.GetCustomFile("hack/manifests/scripts/stopnode.sh"), sshClient, &wg)
 	}
 	wg.Wait()
 	c.log.Done("stop cluster success")
@@ -555,7 +555,7 @@ func (c *Cluster) StartUP() error {
 	for _, ip := range ips {
 		c.log.Debugf("startup node %s", ip)
 		wg.Add(1)
-		go c.actionNode(ip, "startup", common.GetCustomScripts("hack/manifests/scripts/startupnode.sh"), sshClient, &wg)
+		go c.actionNode(ip, "startup", common.GetCustomFile("hack/manifests/scripts/startupnode.sh"), sshClient, &wg)
 	}
 	wg.Wait()
 	c.log.Done("startup cluster success")

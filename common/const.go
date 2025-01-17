@@ -23,6 +23,7 @@ const (
 	DefaultCfgDir         = ".qc/config"
 	DefaultCacheDir       = ".qc/cache"
 	DefaultQuickonDataDir = "/opt/quickon"
+	DefaultNerdctlDir     = "/etc/nerdctl"
 )
 
 const (
@@ -114,6 +115,7 @@ const (
 	CloudflareEdgeTraceURL        = "https://www.cloudflare.com/cdn-cgi/trace"
 	CneAPITokenHeader             = "X-Auth-Token"
 	CDNVersionURL                 = "https://pkg.zentao.net/cli/devops/version.json"
+	DefaultNerdctlConfig          = "/etc/nerdctl/nerdctl.toml"
 )
 
 const (

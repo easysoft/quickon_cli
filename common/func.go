@@ -160,7 +160,7 @@ func GetDefaultQuickONNamespace() []string {
 	return ns
 }
 
-func GetCustomScripts(path string) string {
+func GetCustomFile(path string) string {
 	return fmt.Sprintf("%s/%s", GetDefaultDataDir(), path)
 }
 

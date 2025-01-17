@@ -10,6 +10,7 @@ import (
 	"os"
 
 	"github.com/cockroachdb/errors"
+	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
 
 	"github.com/easysoft/qcadmin/common"
@@ -27,6 +28,7 @@ var rootDirs = []string{
 var qDirs = []string{
 	common.GetDefaultQuickonPlatformDir(""),
 	common.GetDefaultQuickonBackupDir(""),
+	common.DefaultNerdctlDir,
 }
 
 func initRootDirectory() error {
@@ -47,6 +49,9 @@ func initRootDirectory() error {
 
 	if err := static.StageFiles(); err != nil {
 		return errors.Errorf("failed to stage files, err: %s", err)
+	}
+	if !file.CheckFileExists(common.DefaultNerdctlConfig) {
+		file.Copy(common.GetCustomFile("hack/manifests/hub/nerdctl.toml"), common.DefaultNerdctlConfig, true)
 	}
 	return nil
 }
