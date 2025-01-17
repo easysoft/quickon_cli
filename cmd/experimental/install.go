@@ -10,6 +10,7 @@ import (
 
 	"github.com/cockroachdb/errors"
 	"github.com/ergoapi/util/color"
+	"github.com/ergoapi/util/file"
 	"github.com/spf13/cobra"
 	"k8s.io/kubectl/pkg/util/templates"
 
@@ -63,6 +64,10 @@ func InstallCommand(f factory.Factory) *cobra.Command {
 			f.GetLog().Debugf("download %s result: %v", tool, res.Status)
 			_ = os.Chmod(localURL, common.FileMode0755)
 			if tool == "nerdctl" {
+				if !file.CheckFileExists(common.DefaultNerdctlConfig) {
+					os.MkdirAll(common.DefaultNerdctlDir, common.FileMode0777)
+					file.Copy(common.GetCustomFile("hack/manifests/hub/nerdctl.toml"), common.DefaultNerdctlConfig, true)
+				}
 				docker := fmt.Sprintf("%s/qc-docker", common.GetDefaultBinDir())
 				_ = os.Remove(docker)
 				_ = os.Link(localURL, docker)

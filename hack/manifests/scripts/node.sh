@@ -71,7 +71,7 @@ systemd_disable() {
 # }
 
 systemd_env() {
-  info "enabling k3s unit env"
+  info "init k3s tls env"
   cat > /tmp/.k3s.service.env <<EOF
 CATTLE_NEW_SIGNED_CERT_EXPIRATION_DAYS=3650
 EOF
