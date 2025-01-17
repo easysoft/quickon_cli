@@ -70,6 +70,16 @@ systemd_disable() {
 #     sh -c export | while read x v; do echo $v; done | grep -Ei '^(NO|HTTP|HTTPS)_PROXY' | $SUDO tee -a ${FILE_K3S_ENV} >/dev/null
 # }
 
+systemd_env() {
+  info "enabling k3s unit env"
+  cat > /tmp/.k3s.service.env <<EOF
+CATTLE_NEW_SIGNED_CERT_EXPIRATION_DAYS=3650
+EOF
+
+  $SUDO mv /tmp/.k3s.service.env /etc/systemd/system/k3s.service.env
+  $SUDO chmod 0777 /etc/systemd/system/k3s.service.env
+}
+
 # --- enable and start systemd service ---
 systemd_enable() {
     info "enabling k3s unit"
@@ -89,6 +99,7 @@ service_enable_and_start() {
     then
         info 'Failed to find memory cgroup, you may need to add "cgroup_memory=1 cgroup_enable=memory" to your linux cmdline (/boot/cmdline.txt on a Raspberry Pi)'
     fi
+    systemd_env
     systemd_enable
     systemd_start
     return 0
@@ -98,7 +109,7 @@ service_enable_and_start() {
 {
     create_symlinks
     systemd_disable
-    check_docker
+    # check_docker
     # create_env_file
     service_enable_and_start
 }

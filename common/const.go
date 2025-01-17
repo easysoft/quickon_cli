@@ -201,6 +201,5 @@ ExecStart=/usr/local/bin/k3s \
         --kube-proxy-arg "proxy-mode=ipvs" \
         --kube-proxy-arg "masquerade-all=true" \
         --kube-proxy-arg "ipvs-strict-arp=true" \
-        --kube-proxy-arg "metrics-bind-address=0.0.0.0" \
-        --docker
+        --kube-proxy-arg "metrics-bind-address=0.0.0.0"
 `

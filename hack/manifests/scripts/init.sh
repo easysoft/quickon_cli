@@ -90,9 +90,9 @@ sed -i  's/^.*net.ip.*/# &/g' /etc/sysctl.conf
 cat > /etc/sysctl.d/95-k8s-sysctl.conf <<EOF
 # 转发
 net.ipv4.ip_forward = 1
-net.ipv6.conf.all.disable_ipv6 = 1
-net.ipv6.conf.default.disable_ipv6 = 1
-net.ipv6.conf.lo.disable_ipv6=1
+# net.ipv6.conf.all.disable_ipv6 = 1
+# net.ipv6.conf.default.disable_ipv6 = 1
+# net.ipv6.conf.lo.disable_ipv6=1
 # 对直接连接的网络进行反向路径过滤
 net.ipv4.conf.all.rp_filter = 1
 net.ipv4.conf.default.rp_filter = 1
@@ -117,10 +117,10 @@ net.ipv4.tcp_syn_retries = 3
 # net.ipv4.icmp_echo_ignore_broadcasts = 1
 # net.ipv4.icmp_ignore_bogus_error_responses = 1
 #进程快速回收,避免系统中存在大量TIME_WAIT进程
-net.ipv4.tcp_tw_recycle = 1
+# net.ipv4.tcp_tw_recycle = 1
 net.ipv4.tcp_fin_timeout = 30 # 缩短TIME_WAIT时间,加速端口回收
 #端口重用, 一般不开启,仅对客户端有效果,对于高并发客户端,可以复用TIME_WAIT连接端口,避免源端口耗尽建连失败
-net.ipv4.tcp_tw_reuse = 0
+net.ipv4.tcp_tw_reuse = 1
 #临时端口范围
 net.ipv4.ip_local_port_range = 20000 65535
 #预留给kubernetes service的nodeport端口范围,不设置可能会造成
@@ -133,7 +133,7 @@ net.ipv4.ip_local_reserved_ports = 30000-32768
 net.ipv4.tcp_keepalive_time = 600
 net.ipv4.tcp_keepalive_intvl = 30
 net.ipv4.tcp_keepalive_probes = 10
-net.core.somaxconn = 32768
+net.core.somaxconn = 65535
 net.bridge.bridge-nf-call-iptables = 1
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-arptables = 1
