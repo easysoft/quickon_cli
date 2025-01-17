@@ -196,7 +196,9 @@ ExecStart=/usr/local/bin/k3s \
         --data-dir {{.DataDir}} \
         --pause-image {{ .Registry }}/rancher/mirrored-pause:3.6 \
         --prefer-bundled-bin \
-        --kube-proxy-arg "proxy-mode=ipvs" "masquerade-all=true" \
+        --kube-proxy-arg "proxy-mode=ipvs" \
+        --kube-proxy-arg "masquerade-all=true" \
+        --kube-proxy-arg "ipvs-strict-arp=true" \
         --kube-proxy-arg "metrics-bind-address=0.0.0.0" \
         --docker
 `
