@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/cockroachdb/errors"
+	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/expass"
 	"github.com/ergoapi/util/exstr"
@@ -26,6 +27,7 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/cli/k3stpl"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
+	"github.com/easysoft/qcadmin/internal/pkg/util/downloader"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/internal/pkg/util/log"
 	"github.com/easysoft/qcadmin/internal/pkg/util/ssh"
@@ -289,7 +291,9 @@ func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error
 	if ns, _ := kclient.GetNamespace(context.TODO(), common.DefaultKubeSystem, metav1.GetOptions{}); ns != nil {
 		cfg.Cluster.ID = string(ns.GetUID())
 	}
-
+	if err := c.installNerdctl(); err != nil {
+		c.log.Warnf("install nerdctl failed, after install cluster, you can use `%s` retry install nerdctl", color.SGreen("%s exp install nerdctl", os.Args[0]))
+	}
 	cfg.Cluster.PodCIDR = c.PodCIDR
 	cfg.Cluster.ServiceCIDR = c.ServiceCIDR
 	cfg.Cluster.CNI = c.CNI
@@ -336,6 +340,24 @@ func (c *Cluster) waitk3sReady(host string, sshClient ssh.Interface) error {
 		return errors.Errorf("check k3s ready failed, reason: %w", err)
 	}
 	c.log.Done("check k3s ready.")
+	return nil
+}
+
+func (c *Cluster) installNerdctl() error {
+	if c.OffLine {
+		return nil
+	}
+	remoteURL := fmt.Sprintf("https://pkg.qucheng.com/qucheng/cli/stable/tools/nerdctl-%s-%s", runtime.GOOS, runtime.GOARCH)
+	localURL := fmt.Sprintf("%s/qc-nerdctl", common.GetDefaultBinDir())
+	_, err := downloader.Download(remoteURL, localURL)
+	if err != nil {
+		return err
+	}
+	_ = os.Chmod(localURL, common.FileMode0755)
+	docker := fmt.Sprintf("%s/qc-docker", common.GetDefaultBinDir())
+	_ = os.Remove(docker)
+	_ = os.Link(localURL, docker)
+	c.log.Donef("install nerdctl success")
 	return nil
 }
 
