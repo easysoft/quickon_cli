@@ -1,5 +1,18 @@
 # Changelog
 
+## v3.3.0 (2025-01-17)
+
+ * [ad9828cb](https://github.com/easysoft/quickon_cli/commit/ad9828cbbb3dd0b45776875a0c670d43604d3422) refactor: enhance Nerdctl configuration setup and logging mechanics
+ * [ce3e1665](https://github.com/easysoft/quickon_cli/commit/ce3e1665011aa892916d761ba9e2b43153db670d) feat: enhance `nerdctl` installation and logging process
+ * [e3d4c12d](https://github.com/easysoft/quickon_cli/commit/e3d4c12dd29d9e12552a1a196feda40335f84af5) refactor: refactor k3s service configuration and sysctl settings
+ * [5a443c2a](https://github.com/easysoft/quickon_cli/commit/5a443c2a8573fe50b673839aeb60a6b64388ae81) refactor: refactor custom file handling for improved clarity and management
+ * [7e9d09e4](https://github.com/easysoft/quickon_cli/commit/7e9d09e4182ea6341485a5a336e3cf64cbc4c4a2) refactor: improve kube-proxy configuration
+ * [ba80013f](https://github.com/easysoft/quickon_cli/commit/ba80013f9c1d2048a922013064bedea34981d77f) * [feat] support dev install
+
+### Contributors
+
+ * ysicing
+
 ## v3.2.18 (2025-01-14)
 
  * [7e6487b6](https://github.com/easysoft/quickon_cli/commit/7e6487b66101f718778f02888955b0ffe8f611d4) * [feat] support dev install
