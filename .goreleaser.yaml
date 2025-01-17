@@ -1,5 +1,5 @@
-# This is an example .goreleaser.yml file with some sensible defaults.
-# Make sure to check the documentation at https://goreleaser.com
+version: 2
+
 project_name: qcadmin
 
 env:
@@ -53,7 +53,7 @@ checksum:
   name_template: 'checksums.txt'
 
 snapshot:
-  name_template: "{{ .Version }}-snapshot-{{ .ShortCommit }}"
+  version_template: "{{ .Version }}-snapshot-{{ .ShortCommit }}"
 
 nfpms:
 - file_name_template: 'qcadmin_{{ .Tag }}_{{ .Os }}_{{ .Arch }}'
