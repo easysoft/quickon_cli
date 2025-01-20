@@ -129,7 +129,7 @@ func (c *Cluster) GetSSHFlags() []types.Flag {
 			ShortHand: "u",
 			P:         &c.SSH.User,
 			V:         c.SSH.User,
-			Usage:     "ssh user",
+			Usage:     "ssh user, only support root",
 		},
 		{
 			Name:  "password",
@@ -216,13 +216,13 @@ func (c *Cluster) preinit(mip, ip string, sshClient ssh.Interface) error {
 		return errors.Errorf("copy k3s bin (%s:%s -> %s:%s) failed, reason: %v", ip, mip, k3sbin, common.K3sBinPath, ip, err)
 	}
 	qbin, _ := os.Executable()
-	if qbin != common.QcAdminBinPath {
+	if qbin != common.QcAdminBinPath || mip != ip {
 		if err := sshClient.Copy(ip, qbin, common.QcAdminBinPath); err != nil {
-			return errors.Errorf("copy cli bin (%s:%s -> %s:%s) failed, reason: %v", ip, mip, qbin, common.QcAdminBinPath, ip, err)
+			return errors.Errorf("copy cli bin (%s:%s -> %s:%s) failed, reason: %v", mip, qbin, ip, common.QcAdminBinPath, err)
 		}
 	}
 
-	if err := sshClient.CmdAsync(ip, "/usr/bin/qcadmin version"); err != nil {
+	if err := sshClient.CmdAsync(ip, fmt.Sprintf("%s version", common.QcAdminBinPath)); err != nil {
 		return errors.Errorf("load cli version failed, reason: %v", err)
 	}
 	c.log.StartWait(ip + " start run init script")
@@ -232,7 +232,7 @@ func (c *Cluster) preinit(mip, ip string, sshClient ssh.Interface) error {
 	c.log.StopWait()
 	c.log.Donef("%s run init script success", ip)
 	// add master0 ip
-	hostsArgs := fmt.Sprintf("/usr/bin/qcadmin exp tools hosts add --domain %s --ip %s", common.DefaultKubeAPIDomain, mip)
+	hostsArgs := fmt.Sprintf("%s exp tools hosts add --domain %s --ip %s", common.QcAdminBinPath, common.DefaultKubeAPIDomain, mip)
 	if err := sshClient.CmdAsync(ip, hostsArgs); err != nil {
 		c.log.Debugf("cmd: %s", hostsArgs)
 		return errors.Errorf("%s add master0 (%s --> %s) failed, reason: %v", ip, common.DefaultKubeAPIDomain, mip, err)
@@ -452,34 +452,43 @@ func (c *Cluster) CheckAuthExist() bool {
 	if cfg.Global.SSH.Passwd == "" || cfg.Global.SSH.Pk == "" || cfg.Global.SSH.PkData == "" {
 		return false
 	}
+	if cfg.Global.SSH.User != "root" {
+		return false
+	}
 	return true
 }
 
 func (c *Cluster) JoinNode() error {
-	c.log.Info("join node")
+	c.log.Info("start join node")
 	c.MasterIPs = exstr.DuplicateStrElement(c.MasterIPs)
 	c.WorkerIPs = exstr.DuplicateStrElement(c.WorkerIPs)
 	sshClient := ssh.NewSSHClient(&c.SSH, true)
 	cfg, _ := config.LoadConfig()
 	for _, host := range c.MasterIPs {
-		c.log.Debugf("ping master %s", host)
+		c.log.Debugf("check master available %s via ssh", host)
 		if err := sshClient.Ping(host); err != nil {
 			c.log.Warnf("skip join master: %s, reason: %v", host, err)
 			continue
 		}
+		c.log.Infof("check master available %s via ssh success", host)
 		if err := c.joinNode(host, true, cfg, sshClient); err != nil {
 			c.log.Warnf("skip join master: %s, reason: %v", host, err)
+			continue
 		}
+		c.log.Infof("join master %s success", host)
 	}
 	for _, host := range c.WorkerIPs {
-		c.log.Debugf("ping worker %s", host)
+		c.log.Debugf("check worker available %s via ssh", host)
 		if err := sshClient.Ping(host); err != nil {
 			c.log.Warnf("skip join worker: %s, reason: %v", host, err)
 			continue
 		}
+		c.log.Infof("check worker available %s via ssh success", host)
 		if err := c.joinNode(host, false, cfg, sshClient); err != nil {
 			c.log.Warnf("skip join worker: %s, reason: %v", host, err)
+			continue
 		}
+		c.log.Infof("join worker %s success", host)
 	}
 	return nil
 }

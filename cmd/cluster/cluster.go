@@ -12,6 +12,7 @@ import (
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/file"
 	"github.com/spf13/cobra"
+	"k8s.io/kubectl/pkg/util/i18n"
 	"k8s.io/kubectl/pkg/util/templates"
 
 	"github.com/easysoft/qcadmin/cmd/flags"
@@ -80,9 +81,19 @@ func JoinCommand(f factory.Factory) *cobra.Command {
 	join := &cobra.Command{
 		Use:   "join",
 		Short: "join cluster",
+		Example: templates.Examples(i18n.T(`
+	# join cluster by pass4Quickon
+	z cluster join --worker 192.168.99.52 --username z --password pass4Quickon
+
+	# join cluster by pkfile
+	z cluster join --master 192.168.99.52 --username z --pkfile /root/.ssh/id_rsa
+	`)),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if !authStatus && (len(myCluster.SSH.Passwd) == 0 && len(myCluster.SSH.Pk) == 0) {
 				return errors.New("missing ssh user or passwd or pk")
+			}
+			if myCluster.SSH.User != "root" {
+				return errors.New("only support root user")
 			}
 			return nil
 		},
