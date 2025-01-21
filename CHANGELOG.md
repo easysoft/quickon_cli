@@ -1,5 +1,16 @@
 # Changelog
 
+## v3.3.1 (2025-01-21)
+
+ * [989359d5](https://github.com/easysoft/quickon_cli/commit/989359d566b8b403b726eab03754cfcb9923056b) refactor: refactor logging and configuration for improved clarity
+ * [b23ee97c](https://github.com/easysoft/quickon_cli/commit/b23ee97ceea604b0306cf8bb506348dc35109319) feat: implement internationalization and update command usage
+ * [c2da2a0e](https://github.com/easysoft/quickon_cli/commit/c2da2a0e2527a0840143953db65bf44e5ac2487f) build(deps): bump github.com/jackpal/gateway from 1.0.15 to 1.0.16
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.3.0 (2025-01-17)
 
  * [ad9828cb](https://github.com/easysoft/quickon_cli/commit/ad9828cbbb3dd0b45776875a0c670d43604d3422) refactor: enhance Nerdctl configuration setup and logging mechanics
