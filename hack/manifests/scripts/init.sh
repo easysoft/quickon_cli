@@ -90,9 +90,9 @@ sed -i  's/^.*net.ip.*/# &/g' /etc/sysctl.conf
 cat > /etc/sysctl.d/95-k8s-sysctl.conf <<EOF
 # 转发
 net.ipv4.ip_forward = 1
-# net.ipv6.conf.all.disable_ipv6 = 1
-# net.ipv6.conf.default.disable_ipv6 = 1
-# net.ipv6.conf.lo.disable_ipv6=1
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6=1
 # 对直接连接的网络进行反向路径过滤
 net.ipv4.conf.all.rp_filter = 1
 net.ipv4.conf.default.rp_filter = 1

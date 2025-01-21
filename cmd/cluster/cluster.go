@@ -83,10 +83,10 @@ func JoinCommand(f factory.Factory) *cobra.Command {
 		Short: "join cluster",
 		Example: templates.Examples(i18n.T(`
 	# join cluster by pass4Quickon
-	z cluster join --worker 192.168.99.52 --username z --password pass4Quickon
+	z cluster join --worker 192.168.99.52 --password pass4Quickon
 
 	# join cluster by pkfile
-	z cluster join --master 192.168.99.52 --username z --pkfile /root/.ssh/id_rsa
+	z cluster join --worker 192.168.99.52 --pkfile /root/.ssh/id_rsa
 	`)),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if !authStatus && (len(myCluster.SSH.Passwd) == 0 && len(myCluster.SSH.Pk) == 0) {

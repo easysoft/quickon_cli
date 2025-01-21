@@ -470,12 +470,12 @@ func (c *Cluster) JoinNode() error {
 			c.log.Warnf("skip join master: %s, reason: %v", host, err)
 			continue
 		}
-		c.log.Infof("check master available %s via ssh success", host)
+		c.log.Donef("check master available %s via ssh success", host)
 		if err := c.joinNode(host, true, cfg, sshClient); err != nil {
 			c.log.Warnf("skip join master: %s, reason: %v", host, err)
 			continue
 		}
-		c.log.Infof("join master %s success", host)
+		c.log.Donef("join master %s success", host)
 	}
 	for _, host := range c.WorkerIPs {
 		c.log.Debugf("check worker available %s via ssh", host)
@@ -483,12 +483,12 @@ func (c *Cluster) JoinNode() error {
 			c.log.Warnf("skip join worker: %s, reason: %v", host, err)
 			continue
 		}
-		c.log.Infof("check worker available %s via ssh success", host)
+		c.log.Donef("check worker available %s via ssh success", host)
 		if err := c.joinNode(host, false, cfg, sshClient); err != nil {
 			c.log.Warnf("skip join worker: %s, reason: %v", host, err)
 			continue
 		}
-		c.log.Infof("join worker %s success", host)
+		c.log.Donef("join worker %s success", host)
 	}
 	return nil
 }

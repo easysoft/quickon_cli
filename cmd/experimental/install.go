@@ -72,10 +72,10 @@ func InstallCommand(f factory.Factory) *cobra.Command {
 				docker := fmt.Sprintf("%s/qc-docker", common.GetDefaultBinDir())
 				_ = os.Remove(docker)
 				_ = os.Link(localURL, docker)
-				f.GetLog().Donef(fmt.Sprintf("download %s success\n\t usage:   %s(%s)", tool, color.SGreen("%s %s", os.Args[0], tool), color.SGreen("%s docker", os.Args[0])))
+				f.GetLog().Donef(fmt.Sprintf("install %s success\n\t usage:   %s(%s)", tool, color.SGreen("%s %s", os.Args[0], tool), color.SGreen("%s docker", os.Args[0])))
 				return
 			}
-			f.GetLog().Donef(fmt.Sprintf("download %s success\n\t usage:   %s", tool, color.SGreen("%s %s", os.Args[0], tool)))
+			f.GetLog().Donef(fmt.Sprintf("install %s success\n\t usage:   %s", tool, color.SGreen("%s %s", os.Args[0], tool)))
 		},
 	}
 	return installCmd
