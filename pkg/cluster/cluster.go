@@ -351,7 +351,7 @@ func (c *Cluster) installNerdctl() error {
 		os.MkdirAll(common.DefaultNerdctlDir, common.FileMode0777)
 		file.Copy(common.GetCustomFile("hack/manifests/hub/nerdctl.toml"), common.DefaultNerdctlConfig, true)
 	}
-	remoteURL := fmt.Sprintf("https://pkg.qucheng.com/qucheng/cli/stable/tools/nerdctl-%s-%s", runtime.GOOS, runtime.GOARCH)
+	remoteURL := fmt.Sprintf("https://pkg.zentao.net/qucheng/cli/stable/tools/nerdctl-%s-%s", runtime.GOOS, runtime.GOARCH)
 	localURL := fmt.Sprintf("%s/qc-nerdctl", common.GetDefaultBinDir())
 	_, err := downloader.Download(remoteURL, localURL)
 	if err != nil {

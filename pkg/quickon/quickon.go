@@ -288,7 +288,7 @@ func (m *Meta) Init() error {
 					break
 				}
 				_, mainDomain := kutil.SplitDomain(m.Domain)
-				domainTLS := fmt.Sprintf("https://pkg.qucheng.com/ssl/%s/%s/tls.yaml", mainDomain, m.Domain)
+				domainTLS := fmt.Sprintf("https://pkg.zentao.net/ssl/%s/%s/tls.yaml", mainDomain, m.Domain)
 				qcexec.Command(os.Args[0], "experimental", "tools", "wget", "-t", domainTLS, "-d", defaultTLS).Run()
 				m.Log.Debug("wait for tls cert ready...")
 				time.Sleep(time.Second * 5)

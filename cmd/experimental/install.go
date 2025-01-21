@@ -24,12 +24,13 @@ var (
 		# install tools
 		z experimental install helm`)
 	installTools = map[string]any{
-		"helm":    true,
-		"kubectl": true,
-		"mc":      true,
-		"etcdctl": true,
-		"dnsctl":  true,
-		"nerdctl": true,
+		"helm":     true,
+		"kubectl":  true,
+		"mc":       true,
+		"etcdctl":  true,
+		"dnsctl":   true,
+		"nerdctl":  true,
+		"explorer": true,
 	}
 )
 
@@ -37,7 +38,7 @@ var (
 func InstallCommand(f factory.Factory) *cobra.Command {
 	installCmd := &cobra.Command{
 		Use:     "install [flags]",
-		Short:   "install tools, like: helm, kubectl,etcdctl,mc,dnsctl,nerdctl",
+		Short:   "install tools, like: helm, kubectl,etcdctl,mc,dnsctl,nerdctl,explorer",
 		Example: installExample,
 		Args:    cobra.MinimumNArgs(1),
 		PreRunE: func(cmd *cobra.Command, args []string) error {
@@ -54,7 +55,7 @@ func InstallCommand(f factory.Factory) *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			f.GetLog().Debugf("cli args: %v", args)
 			tool := args[0]
-			remoteURL := fmt.Sprintf("https://pkg.qucheng.com/qucheng/cli/stable/tools/%s-%s-%s", tool, runtime.GOOS, runtime.GOARCH)
+			remoteURL := fmt.Sprintf("https://pkg.zentao.net/qucheng/cli/stable/tools/%s-%s-%s", tool, runtime.GOOS, runtime.GOARCH)
 			localURL := fmt.Sprintf("%s/qc-%s", common.GetDefaultBinDir(), tool)
 			res, err := downloader.Download(remoteURL, localURL)
 			if err != nil {
@@ -71,8 +72,10 @@ func InstallCommand(f factory.Factory) *cobra.Command {
 				docker := fmt.Sprintf("%s/qc-docker", common.GetDefaultBinDir())
 				_ = os.Remove(docker)
 				_ = os.Link(localURL, docker)
+				f.GetLog().Donef(fmt.Sprintf("download %s success\n\t usage:   %s(%s)", tool, color.SGreen("%s %s", os.Args[0], tool), color.SGreen("%s docker", os.Args[0])))
+				return
 			}
-			f.GetLog().Donef(fmt.Sprintf("download %s success\n\t usage:   %s(%s)", tool, color.SGreen("%s %s", os.Args[0], tool), color.SGreen("%s docker", os.Args[0])))
+			f.GetLog().Donef(fmt.Sprintf("download %s success\n\t usage:   %s", tool, color.SGreen("%s %s", os.Args[0], tool)))
 		},
 	}
 	return installCmd

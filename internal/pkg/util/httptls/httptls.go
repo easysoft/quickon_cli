@@ -92,7 +92,7 @@ func renewCertificate(domain string) error {
 	ds := strings.Split(domain, ".")
 	mainDomain := fmt.Sprintf("%s.%s", ds[len(ds)-2], ds[len(ds)-1])
 	coreDomain := fmt.Sprintf("%s.%s.%s", ds[len(ds)-3], ds[len(ds)-2], ds[len(ds)-1])
-	tlsfile := fmt.Sprintf("https://pkg.qucheng.com/ssl/%s/%s/tls.yaml", mainDomain, coreDomain)
+	tlsfile := fmt.Sprintf("https://pkg.zentao.net/ssl/%s/%s/tls.yaml", mainDomain, coreDomain)
 	log.Infof("renew %s tls certificate", domain)
 	log.Debugf("renew default tls certificate use %s", tlsfile)
 	if err := qcexec.Command(os.Args[0], "experimental", "kubectl", "apply", "-f", tlsfile, "-n", common.GetDefaultSystemNamespace(true), "--kubeconfig", common.GetKubeConfig()).Run(); err != nil {

@@ -79,7 +79,8 @@ func (k3s K3sArgs) Template() string {
 func EmbedCommand(f factory.Factory) *cobra.Command {
 	var k3sargs K3sArgs
 	rootCmd := &cobra.Command{
-		Use: "k3stpl",
+		Use:   "k3stpl",
+		Short: "generate k3s manifests",
 		Run: func(cmd *cobra.Command, args []string) {
 			log := f.GetLog()
 			tplfile, _ := os.CreateTemp("/tmp", "")
