@@ -31,7 +31,6 @@ import (
 
 	"github.com/cockroachdb/errors"
 	"github.com/ergoapi/util/color"
-	"github.com/ergoapi/util/file"
 	"github.com/ergoapi/util/zos"
 	"github.com/shirou/gopsutil/v3/disk"
 	"k8s.io/apimachinery/pkg/util/validation"
@@ -605,32 +604,6 @@ func (sysver SystemVerificationCheck) Check() error {
 	return nil
 }
 
-// ContainerRuntimeCheck verifies the container runtime.
-type ContainerRuntimeCheck struct {
-}
-
-// Name returns label for RuntimeCheck.
-func (ContainerRuntimeCheck) Name() string {
-	return "CRI"
-}
-
-// Check validates the container runtime
-func (crc ContainerRuntimeCheck) Check() error {
-	log := log.GetInstance()
-	log.Debug("check container runtime")
-	if file.CheckFileExists(strings.ReplaceAll(common.CRISocketDocker, "unix://", "")) {
-		// Deprecated K3s now uses the systemd cgroup driver instead of cgroupfs when running under systemd 244 or later
-		// https://github.com/k3s-io/k3s/pull/5462
-		// if err := autodetect.VerifyDockerDaemon(); err != nil {
-		// 	return err
-		// }
-		log.Warnf("docker installed, will used docker runtime")
-		return nil
-	}
-	log.Infof("use default runtime: containerd")
-	return nil
-}
-
 // SwapCheck warns if swap is enabled
 type SwapCheck struct{}
 
@@ -781,9 +754,6 @@ func RunInitNodeChecks(execer utilsexec.Interface, cfg *types.Metadata, ignorePr
 	for _, cidr := range cidrs {
 		checks = append(checks, HTTPProxyCIDRCheck{Proto: "https", CIDR: cidr})
 	}
-
-	// v1.24+ docker deprecated
-	checks = append(checks, ContainerRuntimeCheck{})
 
 	// non-windows checks
 	if runtime.GOOS == "linux" {

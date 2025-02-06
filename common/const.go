@@ -43,26 +43,6 @@ const (
 )
 
 const (
-	// CRISocketContainerd is the containerd CRI endpoint
-	CRISocketContainerd = "unix:///var/run/containerd/containerd.sock"
-	// CRISocketCRIO is the cri-o CRI endpoint
-	CRISocketCRIO = "unix:///var/run/crio/crio.sock"
-	// CRISocketCRIDocker is the cri-dockerd CRI endpoint
-	CRISocketCRIDocker = "unix:///var/run/cri-dockerd.sock"
-	// CRISocketDocker is the cri-dockerd CRI endpoint
-	CRISocketDocker = "unix:///var/run/docker.sock"
-	// DefaultCRISocket defines the default CRI socket
-	DefaultCRISocket = CRISocketContainerd
-
-	// StatusRunning instance running status.
-	StatusRunning = "Running"
-	// StatusCreating instance creating status.
-	StatusCreating = "Creating"
-	// StatusFailed instance failed status.
-	StatusFailed = "Failed"
-)
-
-const (
 	DefaultQuickonOSSVersion      = "3.0.2" // 开源版本
 	DefaultQuickonEEVersion       = "1.0"
 	DefaultZentaoDevOPSOSSVersion = "21.4"
