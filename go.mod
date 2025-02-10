@@ -46,7 +46,7 @@ require (
 	golang.org/x/crypto v0.32.0
 	golang.org/x/sync v0.10.0
 	golang.org/x/sys v0.30.0
-	golang.org/x/term v0.28.0
+	golang.org/x/term v0.29.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gotest.tools v2.2.0+incompatible
 	helm.sh/helm/v3 v3.17.0
