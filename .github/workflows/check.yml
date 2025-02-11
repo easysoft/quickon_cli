@@ -36,10 +36,6 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
           check-latest: true
-      - name: Cache Go Dependencies
-        uses: magnetikonline/action-golang-cache@v5
-        with:
-          go-version-file: go.mod
       - name: install task
         run: |
           echo "install task"
@@ -67,10 +63,6 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
           check-latest: true
-      - name: Cache Go Dependencies
-        uses: magnetikonline/action-golang-cache@v5
-        with:
-          go-version-file: go.mod
       - name: install task
         run: |
           echo "install task"
@@ -97,10 +89,6 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
           check-latest: true
-      - name: Cache Go Dependencies
-        uses: magnetikonline/action-golang-cache@v5
-        with:
-          go-version-file: go.mod
       - name: install task
         run: |
           echo "install task"
@@ -113,17 +101,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  # coverage:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
-  #     - name: Setup Golang
-  #       uses: actions/setup-go@v5
-  #       with:
-  #         go-version: ${{ env.GO_VERSION }}
-  #         check-latest: true
-  #     - name: Run Coverage
-  #       run: make coverage
-  #     - name: Upload Coverage to Codecov
-  #       uses: codecov/codecov-action@v4
+
