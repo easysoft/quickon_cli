@@ -79,8 +79,9 @@ func JoinCommand(f factory.Factory) *cobra.Command {
 	myCluster := cluster.NewCluster(f)
 	authStatus := myCluster.CheckAuthExist()
 	join := &cobra.Command{
-		Use:   "join",
-		Short: "join cluster",
+		Use:     "join",
+		Short:   "join cluster",
+		Aliases: []string{"add"},
 		Example: templates.Examples(i18n.T(`
 	# join cluster by pass4Quickon
 	z cluster join --worker 192.168.99.52 --password pass4Quickon
@@ -187,6 +188,7 @@ func StartUPCommand(f factory.Factory) *cobra.Command {
 	stop := &cobra.Command{
 		Use:     "startup",
 		Short:   "startup cluster",
+		Aliases: []string{"start"},
 		Version: "3.0.9",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			status, _ := confirm.Confirm("Are you sure to start cluster")
