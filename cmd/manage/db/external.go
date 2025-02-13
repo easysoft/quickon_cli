@@ -10,6 +10,7 @@ import (
 	"context"
 	"net"
 
+	"github.com/ergoapi/util/color"
 	"github.com/spf13/cobra"
 	"k8s.io/apimachinery/pkg/util/intstr"
 
@@ -124,8 +125,8 @@ func cmdExternalDb(f factory.Factory) *cobra.Command {
 				return nil
 			}
 
-			log.Donef("Successfully created external database service %s in namespace %s", name, namespace)
-			log.Infof("You can access the database in cluster using: %s.%s:%d", name, namespace, port)
+			log.Donef("created external database service %s in namespace %s", name, namespace)
+			log.Infof("you can access the database in cluster using: %s", color.SGreen("%s.%s:%d", name, namespace, port))
 			return nil
 		},
 	}
