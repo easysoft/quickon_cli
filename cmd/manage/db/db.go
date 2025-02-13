@@ -24,5 +24,6 @@ func NewCmdDB(f factory.Factory) *cobra.Command {
 	dbListCmd.AddCommand(cmdDbsList(f))
 	dbListCmd.AddCommand(cmdDbSvcList(f))
 	dbCmd.AddCommand(dbListCmd)
+	dbCmd.AddCommand(cmdExternalDb(f))
 	return dbCmd
 }

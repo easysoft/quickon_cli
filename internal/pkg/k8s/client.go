@@ -409,6 +409,10 @@ func (c *Client) CreateService(ctx context.Context, namespace string, service *c
 	return c.Clientset.CoreV1().Services(namespace).Create(ctx, service, opts)
 }
 
+func (c *Client) UpdateService(ctx context.Context, namespace string, service *corev1.Service, opts metav1.UpdateOptions) (*corev1.Service, error) {
+	return c.Clientset.CoreV1().Services(namespace).Update(ctx, service, opts)
+}
+
 func (c *Client) DeleteService(ctx context.Context, namespace, name string, opts metav1.DeleteOptions) error {
 	return c.Clientset.CoreV1().Services(namespace).Delete(ctx, name, opts)
 }

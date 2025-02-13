@@ -96,6 +96,8 @@ const (
 	CneAPITokenHeader             = "X-Auth-Token"
 	CDNVersionURL                 = "https://pkg.zentao.net/cli/devops/version.json"
 	DefaultNerdctlConfig          = "/etc/nerdctl/nerdctl.toml"
+	DefaultExternalDBPort         = 3306
+	DefaultExternalDBName         = "ex-zentao-mysql"
 )
 
 const (
