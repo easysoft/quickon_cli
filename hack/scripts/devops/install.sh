@@ -34,6 +34,18 @@
 #   - STORAGE_TYPE
 #     Storage Type when install Zentao DevOPS default use local as storage provider.
 #     Defaults to '', support 'local', 'nfs'
+#   - EXTERNAL_HOST
+#     external database host
+#   - EXTERNAL_PORT
+#     external database port
+#   - EXTERNAL_ROOT_PASSWORD
+#     external database root password
+#   - EXTERNAL_USER
+#     external database user
+#   - EXTERNAL_PASSWORD
+#     external database password
+#   - EXTERNAL_DATABASE
+#     external database name
 
 set -e
 set -o noglob
