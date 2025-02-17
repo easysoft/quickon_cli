@@ -1,0 +1,67 @@
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: ex-zentao-mysql
+  namespace: quickon-system
+subsets:
+- addresses:
+  - ip: 192.168.99.31
+  ports:
+  - port: 3306
+    protocol: TCP
+    name: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ex-zentao-mysql
+  namespace: quickon-system
+spec:
+  ports:
+  - port: 3306
+    protocol: TCP
+    targetPort: 3306
+    name: mysql
+  type: ClusterIP
+---
+apiVersion: qucheng.easycorp.io/v1beta1
+kind: DbService
+metadata:
+  annotations:
+    easycorp.io/resource_alias: 5YWo5bGA5pWw5o2u5bqTLU15U1FMIDg=
+  labels:
+    easycorp.io/global_database: "true"
+  name: ex-zentao-mysql
+  namespace: quickon-system
+spec:
+  account:
+    password:
+      value: pAss4Zenta0Paas
+    user:
+      value: root
+  service:
+    name: ex-zentao-mysql
+    port: mysql
+  type: mysql
+---
+apiVersion: qucheng.easycorp.io/v1beta1
+kind: Db
+metadata:
+  name: ex-zentao-mysql-zentaopaas
+  namespace: quickon-system
+  labels:
+    provider: quickon
+    release: zentaopaas
+spec:
+  account:
+    password:
+      value: paSs4Zenta0Pass
+    user:
+      value: zenta0Abm1n
+  config:
+    grant_super_privilege: "true"
+  dbName: zenta0paas
+  targetService:
+    name: ex-zentao-mysql
+  reclaimPolicy: Retain

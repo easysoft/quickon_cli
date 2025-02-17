@@ -18,6 +18,7 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 
+	quchengv1beta1 "github.com/easysoft/quickon-api/qucheng/v1beta1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -27,6 +28,7 @@ func cmdExternalDb(f factory.Factory) *cobra.Command {
 	var port int32
 	var namespace string
 	var name string
+	var rootPassword string
 
 	log := f.GetLog()
 	cmd := &cobra.Command{
@@ -40,7 +42,7 @@ func cmdExternalDb(f factory.Factory) *cobra.Command {
 			}
 
 			// 创建 k8s client
-			client, err := k8s.NewSimpleClient()
+			client, err := k8s.NewSimpleQClient()
 			if err != nil {
 				log.Fatalf("failed to connect to k8s cluster: %v", err)
 				return nil
@@ -82,6 +84,7 @@ func cmdExternalDb(f factory.Factory) *cobra.Command {
 							Ports: []corev1.EndpointPort{
 								{
 									Port: port,
+									Name: "db",
 								},
 							},
 						},
@@ -108,12 +111,13 @@ func cmdExternalDb(f factory.Factory) *cobra.Command {
 						{
 							Port:       port,
 							TargetPort: intstr.FromInt(int(port)),
+							Protocol:   corev1.ProtocolTCP,
+							Name:       "db",
 						},
 					},
 				}
 			}
 
-			// 创建或更新 Service
 			_, err = client.GetService(ctx, namespace, name, metav1.GetOptions{})
 			if err != nil {
 				_, err = client.CreateService(ctx, namespace, svc, metav1.CreateOptions{})
@@ -124,7 +128,51 @@ func cmdExternalDb(f factory.Factory) *cobra.Command {
 				log.Fatalf("failed to create/update service: %v", err)
 				return nil
 			}
-
+			if len(rootPassword) > 0 {
+				log.Debug("detch root password for external database, will create dbsvc")
+				log.Donef("created external database secret %s in namespace %s", name, namespace)
+				dbsvc := &quchengv1beta1.DbService{
+					ObjectMeta: metav1.ObjectMeta{
+						Name:      svc.Name,
+						Namespace: svc.Namespace,
+						Annotations: map[string]string{
+							"easycorp.io/resource_alias": dbsvcResourceAlias(svc.Name),
+						},
+						Labels: map[string]string{
+							"easycorp.io/global_database": "true",
+						},
+					},
+					Spec: quchengv1beta1.DbServiceSpec{
+						Type: quchengv1beta1.DbTypeMysql,
+						Service: quchengv1beta1.Service{
+							Name:      svc.Name,
+							Namespace: svc.Namespace,
+							Port:      intstr.FromString("db"),
+						},
+						Account: quchengv1beta1.Account{
+							User: quchengv1beta1.AccountUser{
+								Value: "root",
+							},
+							Password: quchengv1beta1.AccountPassword{
+								Value: rootPassword,
+							},
+						},
+					},
+				}
+				_, err = client.GetDBSvc(ctx, namespace, svc.Name, metav1.GetOptions{})
+				if err != nil {
+					_, err = client.CreateDBSvc(ctx, namespace, dbsvc, metav1.CreateOptions{})
+				} else {
+					_, err = client.UpdateDBSvc(ctx, namespace, svc.Name, dbsvc, metav1.UpdateOptions{})
+				}
+				if err != nil {
+					log.Fatalf("failed to create/update dbsvc: %v", err)
+					return nil
+				}
+				log.Donef("created external database service %s in namespace %s", name, namespace)
+			} else {
+				log.Warn("ignore create dbsvc for external database")
+			}
 			log.Donef("created external database service %s in namespace %s", name, namespace)
 			log.Infof("you can access the database in cluster using: %s", color.SGreen("%s.%s:%d", name, namespace, port))
 			return nil
@@ -135,5 +183,6 @@ func cmdExternalDb(f factory.Factory) *cobra.Command {
 	cmd.Flags().Int32Var(&port, "port", common.DefaultExternalDBPort, "External database port")
 	cmd.Flags().StringVar(&namespace, "namespace", common.GetDefaultSystemNamespace(true), "Kubernetes namespace")
 	cmd.Flags().StringVar(&name, "name", common.DefaultExternalDBName, "Service name")
+	cmd.Flags().StringVar(&rootPassword, "root-password", "", "Root password for the database")
 	return cmd
 }

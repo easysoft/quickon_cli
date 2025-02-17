@@ -9,15 +9,15 @@ services:
     ports:
       - '3306:3306'
     environment:
-      - MYSQL_ROOT_PASSWORD=pass4ZentaoPaas
+      - MYSQL_ROOT_PASSWORD=pAss4Zenta0Paas
       - MYSQL_USER=zenta0Abm1n
-      - MYSQL_PASSWORD=pass4Zenta0Pass
-      - MYSQL_DATABASE=zentaopaas
+      - MYSQL_PASSWORD=paSs4Zenta0Pass
+      - MYSQL_DATABASE=zenta0paas
       - MYSQL_CHARACTER_SET=utf8mb4
       - MYSQL_COLLATE=utf8mb4_unicode_ci
       - MYSQL_REPLICATION_MODE=master
-      - MYSQL_REPLICATION_USER=repl_user
-      - MYSQL_REPLICATION_PASSWORD=repl_password
+      - MYSQL_REPLICATION_USER=repL_user
+      - MYSQL_REPLICATION_PASSWORD=rep1_pASsw0rd
     healthcheck:
       test: ['CMD', '/opt/bitnami/scripts/mysql/healthcheck.sh']
       interval: 15s
@@ -36,14 +36,14 @@ services:
       - master
     environment:
       - MYSQL_REPLICATION_MODE=slave
-      - MYSQL_REPLICATION_USER=repl_user
-      - MYSQL_REPLICATION_PASSWORD=repl_password
+      - MYSQL_REPLICATION_USER=repL_user
+      - MYSQL_REPLICATION_PASSWORD=rep1_pASsw0rd
       - MYSQL_USER=zenta0Abm1n
-      - MYSQL_PASSWORD=pass4Zenta0Pass
-      - MYSQL_DATABASE=zentaopaas
+      - MYSQL_PASSWORD=paSs4Zenta0Pass
+      - MYSQL_DATABASE=zenta0paas
       - MYSQL_MASTER_HOST=master
       - MYSQL_MASTER_PORT_NUMBER=3306
-      - MYSQL_MASTER_ROOT_PASSWORD=pass4ZentaoPaas
+      - MYSQL_MASTER_ROOT_PASSWORD=pAss4Zenta0Paas
       - MYSQL_CHARACTER_SET=utf8mb4
       - MYSQL_COLLATE=utf8mb4_unicode_ci
     healthcheck:

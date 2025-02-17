@@ -31,7 +31,6 @@ import (
 	"github.com/easysoft/qcadmin/common"
 
 	quchengclientset "github.com/easysoft/quickon-api/client/clientset/versioned"
-	quchengv1beta1 "github.com/easysoft/quickon-api/qucheng/v1beta1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
@@ -692,14 +691,6 @@ func (c *Client) ListDefaultIngressClass(ctx context.Context, opts metav1.ListOp
 
 func (c *Client) DeleteIngressClass(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	return c.Clientset.NetworkingV1().IngressClasses().Delete(ctx, name, opts)
-}
-
-func (c *Client) ListQuchengDBSvc(ctx context.Context, namespace string, opts metav1.ListOptions) (*quchengv1beta1.DbServiceList, error) {
-	return c.QClient.QuchengV1beta1().DbServices(namespace).List(ctx, opts)
-}
-
-func (c *Client) ListQuchengDB(ctx context.Context, namespace string, opts metav1.ListOptions) (*quchengv1beta1.DbList, error) {
-	return c.QClient.QuchengV1beta1().Dbs(namespace).List(ctx, opts)
 }
 
 func (c *Client) GetSecretKeyBySelector(ctx context.Context, namespace string, secretSelector *corev1.SecretKeySelector) (string, error) {

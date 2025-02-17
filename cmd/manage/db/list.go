@@ -12,9 +12,7 @@ import (
 	"os"
 
 	"github.com/cockroachdb/errors"
-	"github.com/ergoapi/util/exmap"
 	"github.com/manifoldco/promptui"
-	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 
 	"github.com/easysoft/qcadmin/internal/app/config"
@@ -31,22 +29,94 @@ type action struct {
 	Name string
 }
 
-// cmdDbSvcList list dbservice
-func cmdDbSvcList(f factory.Factory) *cobra.Command {
+func cmdDbsList(f factory.Factory) *cobra.Command {
 	log := f.GetLog()
-	var onlygdb bool
 	app := &cobra.Command{
-		Use:     "dbservice",
-		Aliases: []string{"gdb"},
-		Short:   "list dbservice(gdb)",
-		Example: fmt.Sprintf(`%s platform db list gdb`, os.Args[0]),
+		Use:     "db",
+		Aliases: []string{"database"},
+		Short:   "list database",
+		Example: fmt.Sprintf(`%s platform db list db`, os.Args[0]),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cfg, _ := config.LoadConfig()
 			qclient, err := k8s.NewSimpleQClient()
 			if err != nil {
 				return err
 			}
-			dbsvcs, err := qclient.ListQuchengDBSvc(context.TODO(), corev1.NamespaceAll, metav1.ListOptions{})
+			dbsList, err := qclient.ListDB(context.TODO(), corev1.NamespaceAll, metav1.ListOptions{})
+			if err != nil {
+				return err
+			}
+			if len(dbsList.Items) == 0 {
+				log.Warn("no found database")
+				return nil
+			}
+			var dbs []quchengv1beta1.Db
+			for _, db := range dbsList.Items {
+				if !*db.Status.Ready {
+					continue
+				}
+				dbs = append(dbs, db)
+			}
+			selectGDB := promptui.Select{
+				Label: "select database",
+				Items: dbs,
+				Templates: &promptui.SelectTemplates{
+					Label:    "{{ . }}?",
+					Active:   "\U0001F449 {{ .Name | cyan }} ({{ .Status.Address }})",
+					Inactive: "  {{ .Name | cyan }}",
+					Selected: "\U0001F389 {{ .Name | green | cyan }} ({{ .Status.Address }})",
+				},
+				Size: 5,
+			}
+			it, _, _ := selectGDB.Run()
+			actions := []action{{"manage"}}
+			selectDBAction := promptui.Select{
+				Label: "select action",
+				Items: actions,
+				Templates: &promptui.SelectTemplates{
+					Label:    "{{ . }}?",
+					Active:   "\U0001F449 {{ .Name | cyan }}",
+					Inactive: "  {{ .Name | cyan }}",
+					Selected: fmt.Sprintf("\U0001F389 {{ .Name | green | cyan }} (%s)", dbs[it].Status.Address),
+				},
+			}
+			iac, _, _ := selectDBAction.Run()
+			if actions[iac].Name == "manage" {
+				// https://console.example.corp.cc/adminer/?server=10.10.16.15%3A3306&username=root&db=ysicing&password=password123
+				if err := fakeDbUserInfo(qclient, &dbs[it]); err != nil {
+					return errors.Errorf("call kube api err: %v", err)
+				}
+				url := fmt.Sprintf("%s/adminer/?server=%s&username=%s&db=%s&password=%s", kutil.GetConsoleURL(cfg), dbs[it].Status.Address, dbs[it].Spec.Account.User.Value, "", dbs[it].Spec.Account.Password.Value)
+				log.Infof("open browser access url: %s", url)
+				// if err := browser.OpenURL(url); err == nil {
+				// 	log.Done("open browser success")
+				// 	return nil
+				// }
+				// log.Donef("open browser url: %s", url)
+				return nil
+			}
+			return nil
+		},
+	}
+	return app
+}
+
+// cmdDbSvcList list dbservice
+func cmdDbSvcList(f factory.Factory) *cobra.Command {
+	log := f.GetLog()
+	var onlygdb bool
+	app := &cobra.Command{
+		Use:     "dbsvc",
+		Aliases: []string{"dbservice"},
+		Short:   "list dbservice",
+		Example: fmt.Sprintf(`%s platform db dbsvc list`, os.Args[0]),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cfg, _ := config.LoadConfig()
+			qclient, err := k8s.NewSimpleQClient()
+			if err != nil {
+				return err
+			}
+			dbsvcs, err := qclient.ListDBSvc(context.TODO(), corev1.NamespaceAll, metav1.ListOptions{})
 			if err != nil {
 				return err
 			}
@@ -98,11 +168,11 @@ func cmdDbSvcList(f factory.Factory) *cobra.Command {
 				}
 				url := fmt.Sprintf("%s/adminer/?server=%s&username=%s&db=%s&password=%s", kutil.GetConsoleURL(cfg), gdbServices[it].Status.Address, gdbServices[it].Spec.Account.User.Value, "", gdbServices[it].Spec.Account.Password.Value)
 				log.Infof("open browser access url: %s", url)
-				if err := browser.OpenURL(url); err != nil {
-					log.Warnf("try open browser failed: %v", err)
-					return nil
-				}
-				log.Done("open browser success")
+				// if err := browser.OpenURL(url); err == nil {
+				// 	log.Done("open browser success")
+				// 	return nil
+				// }
+				// log.Donef("open browser url: %s", url)
 				return nil
 			}
 			return nil
@@ -110,39 +180,4 @@ func cmdDbSvcList(f factory.Factory) *cobra.Command {
 	}
 	app.Flags().BoolVar(&onlygdb, "onlygdb", false, "only show db service")
 	return app
-}
-
-func vaildGlobalDatabase(l map[string]string) bool {
-	if exmap.CheckLabel(l, "easycorp.io/global_database") {
-		return exmap.GetLabelValue(l, "easycorp.io/global_database") == "true"
-	}
-	return false
-}
-
-func fakeDbSvcUserInfo(qclient *k8s.Client, dbsvc *quchengv1beta1.DbService) error {
-	if dbsvc.Spec.Account.User.Value == "" {
-		user, err := qclient.GetSecretKeyBySelector(context.TODO(), dbsvc.Namespace, &corev1.SecretKeySelector{
-			LocalObjectReference: corev1.LocalObjectReference{
-				Name: dbsvc.Spec.Account.User.ValueFrom.SecretKeyRef.Name,
-			},
-			Key: dbsvc.Spec.Account.User.ValueFrom.SecretKeyRef.Key,
-		})
-		if err != nil {
-			return err
-		}
-		dbsvc.Spec.Account.User.Value = string(user)
-	}
-	if dbsvc.Spec.Account.Password.Value == "" {
-		user, err := qclient.GetSecretKeyBySelector(context.TODO(), dbsvc.Namespace, &corev1.SecretKeySelector{
-			LocalObjectReference: corev1.LocalObjectReference{
-				Name: dbsvc.Spec.Account.Password.ValueFrom.SecretKeyRef.Name,
-			},
-			Key: dbsvc.Spec.Account.Password.ValueFrom.SecretKeyRef.Key,
-		})
-		if err != nil {
-			return err
-		}
-		dbsvc.Spec.Account.Password.Value = string(user)
-	}
-	return nil
 }
