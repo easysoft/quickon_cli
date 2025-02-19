@@ -52,11 +52,9 @@ func GetChartRepo(p string) string {
 // GetChannel 获取chartrepo channel地址
 func GetChannel(p string) string {
 	if strings.HasPrefix(p, "test") || strings.HasPrefix(p, "edge") {
-		p = "test"
-	} else {
-		p = "stable"
+		return "test"
 	}
-	return p
+	return "stable"
 }
 
 // GetVersion 获取版本地址
@@ -82,6 +80,15 @@ func GetVersion(devops bool, typ, version string) string {
 		defaultVersion = strings.TrimSuffix(defaultVersion, ".0")
 	}
 	return defaultVersion
+}
+
+// NeedUseCustomVersion 是否需要使用自定义版本
+func NeedUseCustomVersion(version string) bool {
+	if strings.Contains(version, "stable") {
+		return false
+	}
+	v := strings.Split(version, "-")
+	return len(v) == 2
 }
 
 func GetDefaultConfig() string {
