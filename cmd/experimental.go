@@ -26,6 +26,8 @@ func newCmdExperimental(f factory.Factory) *cobra.Command {
 	experimentalCmd.AddCommand(experimental.SSHCommand(f))
 	experimentalCmd.AddCommand(experimental.SCPCommand(f))
 	experimentalCmd.AddCommand(experimental.K3sTPLCommand(f))
+	experimentalCmd.AddCommand(experimental.DebugCommand(f))
+	experimentalCmd.AddCommand(experimental.CheckCommand(f))
 	if zos.IsLinux() {
 		experimentalCmd.AddCommand(experimental.InstallCommand(f))
 	}

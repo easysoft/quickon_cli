@@ -9,7 +9,6 @@ package experimental
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/easysoft/qcadmin/internal/pkg/cli/debug"
 	"github.com/easysoft/qcadmin/internal/pkg/cli/tool"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 )
@@ -25,17 +24,4 @@ func ToolsCommand(f factory.Factory) *cobra.Command {
 	tCmd.AddCommand(tool.EmbedRouteCommand())
 	tCmd.AddCommand(tool.EmbedWgetCommand(f))
 	return tCmd
-}
-
-// DebugCommand debug command.
-func DebugCommand(f factory.Factory) *cobra.Command {
-	debugCmd := &cobra.Command{
-		Use:   "debug",
-		Short: "debug, not a stable interface, contains misc debug facilities",
-	}
-	debugCmd.AddCommand(debug.GOPSCommand(f))
-	debugCmd.AddCommand(debug.HostInfoCommand(f))
-	debugCmd.AddCommand(debug.NetcheckCommand(f))
-	debugCmd.AddCommand(debug.PortForwardCommand(f))
-	return debugCmd
 }
