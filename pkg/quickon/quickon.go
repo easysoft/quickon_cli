@@ -250,7 +250,8 @@ func (m *Meta) Init() error {
 		}
 	}
 	installVersion := common.GetVersion(m.DevopsMode, m.Type, m.Version)
-	m.Log.Infof("devops: %v, type: %s, version: %s, channel: %s", m.DevopsMode, m.Type, installVersion, common.GetChannel(m.Version))
+	repoChannel := common.GetChannel(m.Version)
+	m.Log.Infof("devops: %v, type: %s, version: %s, channel: %s", m.DevopsMode, m.Type, installVersion, repoChannel)
 	m.Log.Debugf("start init %s", common.GetInstallType(m.DevopsMode))
 	cfg.Quickon.Type = common.QuickonType(m.Type)
 	cfg.Quickon.DevOps = m.DevopsMode
@@ -342,13 +343,7 @@ func (m *Meta) Init() error {
 		m.Log.Done("check operator ready success")
 	}
 
-	helmchan := common.GetChannel(m.Version)
-	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.GetReleaseName(m.DevopsMode), "--repo", common.DefaultHelmRepoName, "--chart", common.GetReleaseName(m.DevopsMode), "--namespace", common.GetDefaultSystemNamespace(true), "--set", "env.APP_DOMAIN=" + m.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + helmchan}
-	if helmchan != "stable" {
-		helmargs = append(helmargs, "--set", "env.PHP_DEBUG=2")
-		helmargs = append(helmargs, "--set", "cloud.switchChannel=true")
-		helmargs = append(helmargs, "--set", "cloud.selectVersion=true")
-	}
+	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.GetReleaseName(m.DevopsMode), "--repo", common.DefaultHelmRepoName, "--chart", common.GetReleaseName(m.DevopsMode), "--namespace", common.GetDefaultSystemNamespace(true), "--set", "env.APP_DOMAIN=" + m.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + repoChannel}
 	hostdomain := m.Domain
 	if kutil.IsLegalDomain(hostdomain) && m.DomainType == "api" {
 		m.Log.Debugf("use tls cert for domain %s", hostdomain)
@@ -380,21 +375,19 @@ func (m *Meta) Init() error {
 	}
 
 	helmargs = append(helmargs, "--set", fmt.Sprintf("ingress.host=%s", hostdomain))
-
 	if m.DevopsMode {
 		// 指定类型
 		helmargs = append(helmargs, "--set", fmt.Sprintf("deploy.product=%s", m.Type))
-		// deployVersion := fmt.Sprintf("deploy.versions.%s=%s%s.k8s", m.Type, m.Type, installVersion)
-		// if m.Type == common.ZenTaoOSSType.String() {
-		// 	deployVersion = fmt.Sprintf("deploy.versions.%s=%s", m.Type, installVersion)
-		// }
-		// helmargs = append(helmargs, "--set", deployVersion)
-		if helmchan != "stable" {
+		if repoChannel == "test" {
 			helmargs = append(helmargs, "--set", "image.repository=test/zentao")
 			helmargs = append(helmargs, "--set", "sidecars.backend.image.tag=dev")
 			helmargs = append(helmargs, "--set", "sidecars.backend.image.pullPolicy=Always")
+			helmargs = append(helmargs, "--set", "env.PHP_DEBUG=2")
+			helmargs = append(helmargs, "--set", "cloud.switchChannel=true")
+			helmargs = append(helmargs, "--set", "cloud.selectVersion=true")
+		}
+		if common.NeedUseCustomVersion(m.Version) {
 			deployVersion := fmt.Sprintf("deploy.versions.%s=%s%s.k8s", m.Type, m.Type, installVersion)
-			helmargs = append(helmargs, "--set", deployVersion)
 			if m.Type == common.ZenTaoOSSType.String() || m.Type == common.ZenTaoOldOSSType.String() {
 				deployVersion = fmt.Sprintf("deploy.versions.open=%s", installVersion)
 			}
