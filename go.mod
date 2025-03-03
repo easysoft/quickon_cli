@@ -43,7 +43,7 @@ require (
 	github.com/vishvananda/netlink v1.3.0
 	github.com/xlab/treeprint v1.2.0
 	github.com/ysicing/cobra2vitepress v0.0.0-20231129091107-690364f0dca7
-	golang.org/x/crypto v0.33.0
+	golang.org/x/crypto v0.35.0
 	golang.org/x/sync v0.11.0
 	golang.org/x/sys v0.30.0
 	golang.org/x/term v0.29.0
