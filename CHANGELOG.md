@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.3.3 (2025-03-07)
+
+
+### Contributors
+
+
 ## v3.3.2 (2025-02-19)
 
  * [67442c32](https://github.com/easysoft/quickon_cli/commit/67442c327dd0b4451efcdfcebe9f6a34984e82fb) feat: refactor channel handling and improve logging practices
