@@ -2,7 +2,7 @@ module github.com/easysoft/qcadmin
 
 go 1.23.1
 
-toolchain go1.23.3
+toolchain go1.24.1
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
@@ -45,8 +45,8 @@ require (
 	github.com/ysicing/cobra2vitepress v0.0.0-20231129091107-690364f0dca7
 	golang.org/x/crypto v0.35.0
 	golang.org/x/sync v0.11.0
-	golang.org/x/sys v0.30.0
-	golang.org/x/term v0.29.0
+	golang.org/x/sys v0.31.0
+	golang.org/x/term v0.30.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gotest.tools v2.2.0+incompatible
 	helm.sh/helm/v3 v3.17.0
