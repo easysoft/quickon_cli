@@ -79,26 +79,5 @@ jobs:
               echo "Failed git modify files num is $modifyCode. Lic check error,please exec 'task gencopyright' in your code "
               exit -1
           fi
-  sonarcloud:
-    name: SonarCloud
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: ${{ env.GO_VERSION }}
-          check-latest: true
-      - name: install task
-        run: |
-          echo "install task"
-          go install github.com/go-task/task/v3/cmd/task@latest
-      - name: fix version
-        run: |
-          task version-ci
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
 
