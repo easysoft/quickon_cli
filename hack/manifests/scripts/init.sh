@@ -8,36 +8,50 @@
 
 [ -f "/.q.initdone" ] && exit 0
 
+args=$1
+
 echo "init system package..."
 
-if type apt >/dev/null 2>&1; then
-	export DEBIAN_FRONTEND=noninteractive
-	apt update -qq
-	apt remove -y -qq ufw lxd lxd-client lxcfs lxc-common
-	apt install --no-install-recommends --no-install-suggests -y -qq nfs-common iptables conntrack jq socat bash-completion open-iscsi rsync ipset ipvsadm htop net-tools wget psmisc git curl nload ebtables ethtool procps
-  systemctl enable --now iscsid
-  # ufw disable
-  # ufw allow 6443/tcp #apiserver
-  # ufw allow from 10.42.0.0/16 to any #pods
-  # ufw allow from 10.43.0.0/16 to any #services
-fi
+# --- install package
+install_package() {
 
-if type yum >/dev/null 2>&1; then
-	yum install -y -q nfs-utils iptables conntrack jq socat bash-completion rsync ipset ipvsadm htop net-tools wget psmisc git curl nload ebtables ethtool
-  yum --setopt=tsflags=noscripts install -y -q iscsi-initiator-utils
-  systemctl enable --now iscsid
-  systemctl disable firewalld || true
-  systemctl stop firewalld || true
-  systemctl mask firewalld || true
-  #  systemctl disable NetworkManager
-  #  systemctl stop NetworkManager
-  status=$(getenforce)
-  if [ "$status" != "Disabled" ]; then
-    setenforce 0
-    cp /etc/selinux/config /etc/selinux/config.bak
-    sed -i 's/^SELINUX=.*/SELINUX=disabled/g' /etc/selinux/config
+  if [ "$args" = "offline" ]; then
+    echo "offline skip install package"
+    return
   fi
-fi
+
+  if type apt >/dev/null 2>&1; then
+    export DEBIAN_FRONTEND=noninteractive
+    apt update -qq
+    apt remove -y -qq ufw lxd lxd-client lxcfs lxc-common
+    apt install --no-install-recommends --no-install-suggests -y -qq nfs-common iptables conntrack jq socat bash-completion open-iscsi rsync ipset ipvsadm htop net-tools wget psmisc git curl nload ebtables ethtool procps
+    systemctl enable --now iscsid
+    # ufw disable
+    # ufw allow 6443/tcp #apiserver
+    # ufw allow from 10.42.0.0/16 to any #pods
+    # ufw allow from 10.43.0.0/16 to any #services
+  fi
+
+  if type yum >/dev/null 2>&1; then
+    yum install -y -q nfs-utils iptables conntrack jq socat bash-completion rsync ipset ipvsadm htop net-tools wget psmisc git curl nload ebtables ethtool
+    yum --setopt=tsflags=noscripts install -y -q iscsi-initiator-utils
+    systemctl enable --now iscsid
+    systemctl disable firewalld || true
+    systemctl stop firewalld || true
+    systemctl mask firewalld || true
+    #  systemctl disable NetworkManager
+    #  systemctl stop NetworkManager
+    status=$(getenforce)
+    if [ "$status" != "Disabled" ]; then
+      setenforce 0
+      cp /etc/selinux/config /etc/selinux/config.bak
+      sed -i 's/^SELINUX=.*/SELINUX=disabled/g' /etc/selinux/config
+    fi
+  fi
+}
+
+
+config_system() {
 
 if command -v systemctl; then
 
@@ -90,9 +104,6 @@ sed -i  's/^.*net.ip.*/# &/g' /etc/sysctl.conf
 cat > /etc/sysctl.d/95-k8s-sysctl.conf <<EOF
 # 转发
 net.ipv4.ip_forward = 1
-net.ipv6.conf.all.disable_ipv6 = 1
-net.ipv6.conf.default.disable_ipv6 = 1
-net.ipv6.conf.lo.disable_ipv6=1
 # 对直接连接的网络进行反向路径过滤
 net.ipv4.conf.all.rp_filter = 1
 net.ipv4.conf.default.rp_filter = 1
@@ -119,8 +130,6 @@ net.ipv4.tcp_syn_retries = 3
 #进程快速回收,避免系统中存在大量TIME_WAIT进程
 # net.ipv4.tcp_tw_recycle = 1
 net.ipv4.tcp_fin_timeout = 30 # 缩短TIME_WAIT时间,加速端口回收
-#端口重用, 一般不开启,仅对客户端有效果,对于高并发客户端,可以复用TIME_WAIT连接端口,避免源端口耗尽建连失败
-net.ipv4.tcp_tw_reuse = 1
 #临时端口范围
 net.ipv4.ip_local_port_range = 20000 65535
 #预留给kubernetes service的nodeport端口范围,不设置可能会造成
@@ -154,7 +163,6 @@ fs.inotify.max_user_watches = 524288 # 表示同一用户同时可以添加的wa
 
 vm.swappiness = 0
 vm.max_map_count = 655360
-
 EOF
 
 sysctl -p /etc/sysctl.d/95-k8s-sysctl.conf
@@ -169,5 +177,11 @@ cat /etc/security/limits.conf | grep -vE "(^#|^$)" | wc | grep 0 && (
 EOF
 )
 
-touch /.q.initdone
-exit 0
+}
+
+{
+  install_package
+  config_system
+  touch /.q.initdone
+  exit 0
+}

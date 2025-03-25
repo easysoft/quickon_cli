@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"os"
 	"runtime"
+	"strings"
 	"sync"
 	"time"
 
@@ -226,7 +227,11 @@ func (c *Cluster) preinit(mip, ip string, sshClient ssh.Interface) error {
 		return errors.Errorf("load cli version failed, reason: %v", err)
 	}
 	c.log.StartWait(ip + " start run init script")
-	if err := sshClient.CmdAsync(ip, common.GetCustomFile("hack/manifests/scripts/init.sh")); err != nil {
+	initArgs := []string{common.GetCustomFile("hack/manifests/scripts/init.sh")}
+	if c.OffLine {
+		initArgs = append(initArgs, "offline")
+	}
+	if err := sshClient.CmdAsync(ip, strings.Join(initArgs, " ")); err != nil {
 		return errors.Errorf("%s run init script failed, reason: %v", ip, err)
 	}
 	c.log.StopWait()
