@@ -32,7 +32,7 @@ require (
 	github.com/muesli/mango-cobra v1.2.0
 	github.com/muesli/roff v0.1.0
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
-	github.com/pkg/sftp v1.13.8
+	github.com/pkg/sftp v1.13.9
 	github.com/prometheus-community/pro-bing v0.6.0
 	github.com/schollz/progressbar/v3 v3.18.0
 	github.com/shirou/gopsutil/v3 v3.24.5
