@@ -109,7 +109,7 @@ func cmdDbSvcList(f factory.Factory) *cobra.Command {
 		Use:     "dbsvc",
 		Aliases: []string{"dbservice"},
 		Short:   "list dbservice",
-		Example: fmt.Sprintf(`%s platform db dbsvc list`, os.Args[0]),
+		Example: fmt.Sprintf(`%s platform db list dbsvc`, os.Args[0]),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cfg, _ := config.LoadConfig()
 			qclient, err := k8s.NewSimpleQClient()
@@ -149,32 +149,29 @@ func cmdDbSvcList(f factory.Factory) *cobra.Command {
 				Size: 5,
 			}
 			it, _, _ := selectGDB.Run()
-			actions := []action{{"manage"}}
-			selectDBAction := promptui.Select{
-				Label: "select action",
-				Items: actions,
-				Templates: &promptui.SelectTemplates{
-					Label:    "{{ . }}?",
-					Active:   "\U0001F449 {{ .Name | cyan }}",
-					Inactive: "  {{ .Name | cyan }}",
-					Selected: fmt.Sprintf("\U0001F389 {{ .Name | green | cyan }} (%s)", gdbServices[it].Status.Address),
-				},
-			}
-			iac, _, _ := selectDBAction.Run()
-			if actions[iac].Name == "manage" {
-				// https://console.example.corp.cc/adminer/?server=10.10.16.15%3A3306&username=root&db=ysicing&password=password123
-				if err := fakeDbSvcUserInfo(qclient, &gdbServices[it]); err != nil {
-					return errors.Errorf("call kube api err: %v", err)
+			name := gdbServices[it].Name
+			namespace := gdbServices[it].Namespace
+			address := gdbServices[it].Status.Address
+			username := gdbServices[it].Spec.Account.User.Value
+			if len(username) == 0 && gdbServices[it].Spec.Account.User.ValueFrom != nil {
+				// get secret
+				secret, err := qclient.GetSecret(context.TODO(), namespace, gdbServices[it].Spec.Account.User.ValueFrom.SecretKeyRef.Name, metav1.GetOptions{})
+				if err != nil {
+					return err
 				}
-				url := fmt.Sprintf("%s/adminer/?server=%s&username=%s&db=%s&password=%s", kutil.GetConsoleURL(cfg), gdbServices[it].Status.Address, gdbServices[it].Spec.Account.User.Value, "", gdbServices[it].Spec.Account.Password.Value)
-				log.Infof("open browser access url: %s", url)
-				// if err := browser.OpenURL(url); err == nil {
-				// 	log.Done("open browser success")
-				// 	return nil
-				// }
-				// log.Donef("open browser url: %s", url)
-				return nil
+				username = string(secret.Data[gdbServices[it].Spec.Account.User.ValueFrom.SecretKeyRef.Key])
 			}
+			password := gdbServices[it].Spec.Account.Password.Value
+			if len(password) == 0 && gdbServices[it].Spec.Account.Password.ValueFrom != nil {
+				// get secret
+				secret, err := qclient.GetSecret(context.TODO(), namespace, gdbServices[it].Spec.Account.Password.ValueFrom.SecretKeyRef.Name, metav1.GetOptions{})
+				if err != nil {
+					return err
+				}
+				password = string(secret.Data[gdbServices[it].Spec.Account.Password.ValueFrom.SecretKeyRef.Key])
+			}
+			url := fmt.Sprintf("%s/adminer/?server=%s&username=%s&db=%s&password=%s", kutil.GetConsoleURL(cfg), address, username, "", password)
+			log.Infof("connect dbservice: %s\taddress: %s\n\tusername:%s\n\tpassword:%s\n\tadminer:%s", name, address, username, password, url)
 			return nil
 		},
 	}

@@ -23,18 +23,34 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// cmdExternalDb 外部数据库主命令
 func cmdExternalDb(f factory.Factory) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "external",
+		Aliases: []string{"etdb"},
+		Short:   "manage external database for platform",
+	}
+
+	// 添加子命令
+	cmd.AddCommand(cmdCreateExternalDb(f))
+	cmd.AddCommand(cmdDeleteExternalDb(f))
+	return cmd
+}
+
+// cmdCreateExternalDb 创建外部数据库子命令
+func cmdCreateExternalDb(f factory.Factory) *cobra.Command {
 	var host string
 	var port int32
 	var namespace string
 	var name string
-	var rootPassword string
+	var superUser string
+	var superPassword string
 
 	log := f.GetLog()
 	cmd := &cobra.Command{
-		Use:     "external",
-		Aliases: []string{"etdb"},
-		Short:   "use external database for platform",
+		Use:     "new",
+		Short:   "create new external database for platform",
+		Version: "4.0.0",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if host == "" || port == 0 {
 				log.Fatalf("host and port are required")
@@ -63,6 +79,8 @@ func cmdExternalDb(f factory.Factory) *cobra.Command {
 					Ports: []corev1.ServicePort{
 						{
 							Port:       port,
+							Protocol:   corev1.ProtocolTCP,
+							Name:       "db",
 							TargetPort: intstr.FromInt(int(port)),
 						},
 					},
@@ -83,8 +101,9 @@ func cmdExternalDb(f factory.Factory) *cobra.Command {
 							},
 							Ports: []corev1.EndpointPort{
 								{
-									Port: port,
-									Name: "db",
+									Port:     port,
+									Protocol: corev1.ProtocolTCP,
+									Name:     "db",
 								},
 							},
 						},
@@ -110,7 +129,7 @@ func cmdExternalDb(f factory.Factory) *cobra.Command {
 					Ports: []corev1.ServicePort{
 						{
 							Port:       port,
-							TargetPort: intstr.FromInt(int(port)),
+							TargetPort: intstr.FromInt32(port),
 							Protocol:   corev1.ProtocolTCP,
 							Name:       "db",
 						},
@@ -128,9 +147,8 @@ func cmdExternalDb(f factory.Factory) *cobra.Command {
 				log.Fatalf("failed to create/update service: %v", err)
 				return nil
 			}
-			if len(rootPassword) > 0 {
-				log.Debug("detch root password for external database, will create dbsvc")
-				log.Donef("created external database secret %s in namespace %s", name, namespace)
+			if len(superPassword) > 0 && len(superUser) > 0 {
+				log.Debug("detch super user & password for external database, will create dbsvc")
 				dbsvc := &quchengv1beta1.DbService{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:      svc.Name,
@@ -147,14 +165,14 @@ func cmdExternalDb(f factory.Factory) *cobra.Command {
 						Service: quchengv1beta1.Service{
 							Name:      svc.Name,
 							Namespace: svc.Namespace,
-							Port:      intstr.FromString("db"),
+							Port:      intstr.FromInt32(port),
 						},
 						Account: quchengv1beta1.Account{
 							User: quchengv1beta1.AccountUser{
-								Value: "root",
+								Value: superUser,
 							},
 							Password: quchengv1beta1.AccountPassword{
-								Value: rootPassword,
+								Value: superPassword,
 							},
 						},
 					},
@@ -169,9 +187,9 @@ func cmdExternalDb(f factory.Factory) *cobra.Command {
 					log.Fatalf("failed to create/update dbsvc: %v", err)
 					return nil
 				}
-				log.Donef("created external database service %s in namespace %s", name, namespace)
 			} else {
 				log.Warn("ignore create dbsvc for external database")
+				return nil
 			}
 			log.Donef("created external database service %s in namespace %s", name, namespace)
 			log.Infof("you can access the database in cluster using: %s", color.SGreen("%s.%s:%d", name, namespace, port))
@@ -183,6 +201,72 @@ func cmdExternalDb(f factory.Factory) *cobra.Command {
 	cmd.Flags().Int32Var(&port, "port", common.DefaultExternalDBPort, "External database port")
 	cmd.Flags().StringVar(&namespace, "namespace", common.GetDefaultSystemNamespace(true), "Kubernetes namespace")
 	cmd.Flags().StringVar(&name, "name", common.DefaultExternalDBName, "Service name")
-	cmd.Flags().StringVar(&rootPassword, "root-password", "", "Root password for the database")
+	cmd.Flags().StringVar(&superUser, "username", "root", "Super username for the database")
+	cmd.Flags().StringVar(&superPassword, "password", "", "Super user password for the database")
+	return cmd
+}
+
+// cmdDeleteExternalDb 删除外部数据库子命令
+func cmdDeleteExternalDb(f factory.Factory) *cobra.Command {
+	var namespace string
+	var name string
+
+	log := f.GetLog()
+	cmd := &cobra.Command{
+		Use:     "clean",
+		Aliases: []string{"delete"},
+		Version: "4.0.0",
+		Short:   "delete external database from platform",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			// 创建 k8s client
+			client, err := k8s.NewSimpleQClient()
+			if err != nil {
+				log.Fatalf("failed to connect to k8s cluster: %v", err)
+				return nil
+			}
+
+			ctx := context.Background()
+
+			// 检查服务是否存在
+			_, err = client.GetService(ctx, namespace, name, metav1.GetOptions{})
+			if err != nil {
+				log.Fatalf("service %s not found in namespace %s: %v", name, namespace, err)
+				return nil
+			}
+
+			// 删除 DbService (如果存在)
+			_, err = client.GetDBSvc(ctx, namespace, name, metav1.GetOptions{})
+			if err == nil {
+				err = client.DeleteDBSvc(ctx, namespace, name, metav1.DeleteOptions{})
+				if err != nil {
+					log.Warnf("failed to delete dbsvc %s: %v", name, err)
+				} else {
+					log.Infof("deleted dbsvc %s in namespace %s", name, namespace)
+				}
+			}
+
+			// 删除 Service
+			err = client.DeleteService(ctx, namespace, name, metav1.DeleteOptions{})
+			if err != nil {
+				log.Fatalf("failed to delete service %s: %v", name, err)
+				return nil
+			}
+
+			// 尝试删除 Endpoints (如果存在)
+			_, err = client.GetEndpoint(ctx, namespace, name, metav1.GetOptions{})
+			if err == nil {
+				err = client.DeleteEndpoint(ctx, namespace, name, metav1.DeleteOptions{})
+				if err != nil {
+					log.Warnf("failed to delete endpoints %s: %v", name, err)
+				}
+			}
+
+			log.Donef("deleted external database service %s in namespace %s", name, namespace)
+			return nil
+		},
+	}
+
+	cmd.Flags().StringVar(&namespace, "namespace", common.GetDefaultSystemNamespace(true), "Kubernetes namespace")
+	cmd.Flags().StringVar(&name, "name", common.DefaultExternalDBName, "Service name")
 	return cmd
 }

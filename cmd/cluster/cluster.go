@@ -189,10 +189,10 @@ func StartUPCommand(f factory.Factory) *cobra.Command {
 	myCluster := cluster.NewCluster(f)
 	log := f.GetLog()
 	stop := &cobra.Command{
-		Use:     "startup",
+		Use:     "start",
 		Short:   "startup cluster",
-		Aliases: []string{"start"},
-		Version: "3.0.9",
+		Aliases: []string{"startup"},
+		Version: "4.0.0",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			status, _ := confirm.Confirm("Are you sure to start cluster")
 			if status {
