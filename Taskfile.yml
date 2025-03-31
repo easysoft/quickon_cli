@@ -37,7 +37,7 @@ tasks:
   gencopyright:
     desc: generate code license
     cmds:
-      - go install github.com/google/addlicense@latest
+      - command -v addlicense || go install github.com/google/addlicense@latest
       - hack/scripts/gencopyright.sh
 
   godoc:
@@ -53,12 +53,12 @@ tasks:
 
   golint:
     cmds:
-      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+      - command -v golangci-lint || go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
       - golangci-lint run -v ./...
 
   gci:
     cmds:
-      - go install github.com/daixiang0/gci@v0.13.1
+      - command -v gci || go install github.com/daixiang0/gci@v0.13.1
       - gci write --skip-generated --custom-order -s standard -s default -s "prefix(github.com/easysoft/qcadmin)" -s blank -s dot -s alias .
 
   gomod:

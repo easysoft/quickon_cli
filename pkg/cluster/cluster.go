@@ -327,16 +327,9 @@ func (c *Cluster) waitk3sReady(host string, sshClient ssh.Interface) error {
 	err := wait.ExponentialBackoff(defaultBackoff, func() (bool, error) {
 		try++
 		c.log.Debugf("the %d/%d time tring to check k3s status", try, defaultBackoff.Steps)
-		// TODO 地址错误问题
-		err := sshClient.Copy(host, "/etc/rancher/k3s/k3s.yaml", common.DefaultQuickONKubeConfig())
+		err := sshClient.Copy(host, common.K3sKubeConfig, common.DefaultKubeConfig())
 		if err != nil {
 			return false, nil
-		}
-		// 本地不存在config文件, 同步最新的kubeconfig文件
-		if !file.CheckFileExists(common.DefaultKubeConfig()) {
-			if err := sshClient.Copy(host, common.DefaultQuickONKubeConfig(), common.DefaultKubeConfig()); err != nil {
-				return false, nil
-			}
 		}
 		return true, nil
 	})

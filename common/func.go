@@ -102,20 +102,13 @@ func DefaultKubeConfig() string {
 	return fmt.Sprintf("%v/config", d)
 }
 
-func DefaultQuickONKubeConfig() string {
-	home := zos.GetHomeDir()
-	d := home + "/" + DefaultCfgDir + "/.kube"
-	// os.MkdirAll(d, FileMode0644)
-	return fmt.Sprintf("%v/config", d)
-}
-
 // GetKubeConfig get kubeconfig
 func GetKubeConfig() string {
-	kubeCfg := DefaultQuickONKubeConfig()
+	kubeCfg := DefaultKubeConfig()
 	if file.CheckFileExists(kubeCfg) {
 		return kubeCfg
 	}
-	return DefaultKubeConfig()
+	return K3sKubeConfig
 }
 
 func GetCustomConfig(name string) string {
