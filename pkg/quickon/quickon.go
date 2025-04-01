@@ -406,48 +406,9 @@ func (m *Meta) Init() error {
 	}
 	m.Log.Donef("install %s success", common.GetReleaseName(m.DevopsMode))
 	if m.OffLine {
-		// install cne-market
-		m.Log.Infof("start deploy cloudapp market")
-		marketargs := []string{"experimental", "helm", "upgrade", "--name", "market", "--repo", common.DefaultHelmRepoName, "--chart", "cne-market-api", "--namespace", common.GetDefaultSystemNamespace(true)}
-		output, err := qcexec.Command(os.Args[0], marketargs...).CombinedOutput()
+		output, err := qcexec.Command(os.Args[0], "platform", "market-init", "--host", exnet.LocalIPs()[0]).CombinedOutput()
 		if err != nil {
 			m.Log.Warnf("upgrade install cloudapp market failed: %s", string(output))
-		}
-		// patch quickon
-		cmfileName := fmt.Sprintf("%s-files", common.GetReleaseName(m.DevopsMode))
-		m.Log.Debugf("fetch helm cm %s", cmfileName)
-		for i := 0; i < 20; i++ {
-			time.Sleep(5 * time.Second)
-			foundRepofiles, _ := m.kubeClient.GetConfigMap(ctx, common.GetDefaultSystemNamespace(true), cmfileName, metav1.GetOptions{})
-			if foundRepofiles != nil {
-				foundRepofiles.Data["repositories.yaml"] = fmt.Sprintf(`apiVersion: ""
-generated: "0001-01-01T00:00:00Z"
-repositories:
-- caFile: ""
-  certFile: ""
-  insecure_skip_tls_verify: true
-  keyFile: ""
-  name: qucheng-stable
-  pass_credentials_all: false
-  password: ""
-  url: http://%s:32377
-  username: ""
-`, exnet.LocalIPs()[0])
-				_, err := m.kubeClient.UpdateConfigMap(ctx, foundRepofiles, metav1.UpdateOptions{})
-				if err != nil {
-					m.Log.Warnf("patch offline repo file, check: kubectl get cm/%s  -n %s", cmfileName, common.GetDefaultSystemNamespace(true))
-				}
-				// 重建pod
-				pods, _ := m.kubeClient.ListPods(ctx, common.GetDefaultSystemNamespace(true), metav1.ListOptions{})
-				for _, pod := range pods.Items {
-					if strings.HasPrefix(pod.Name, common.GetReleaseName(m.DevopsMode)) {
-						if err := m.kubeClient.DeletePod(ctx, pod.Name, common.GetDefaultSystemNamespace(true), metav1.DeleteOptions{}); err != nil {
-							m.Log.Warnf("recreate %s pods", common.GetReleaseName(m.DevopsMode))
-						}
-					}
-				}
-				break
-			}
 		}
 	}
 	m.QuickONReady()
