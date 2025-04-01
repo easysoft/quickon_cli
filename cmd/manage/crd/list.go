@@ -4,7 +4,7 @@
 // (2) Affero General Public License 3.0 (AGPL 3.0)
 // license that can be found in the LICENSE file.
 
-package db
+package crd
 
 import (
 	"context"
@@ -29,13 +29,13 @@ type action struct {
 	Name string
 }
 
+// cmdDbsList list database
 func cmdDbsList(f factory.Factory) *cobra.Command {
 	log := f.GetLog()
 	app := &cobra.Command{
-		Use:     "db",
-		Aliases: []string{"database"},
+		Use:     "list",
 		Short:   "list database",
-		Example: fmt.Sprintf(`%s platform db list db`, os.Args[0]),
+		Example: fmt.Sprintf(`%s platform crd db list`, os.Args[0]),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cfg, _ := config.LoadConfig()
 			qclient, err := k8s.NewSimpleQClient()
@@ -106,10 +106,9 @@ func cmdDbSvcList(f factory.Factory) *cobra.Command {
 	log := f.GetLog()
 	var onlygdb bool
 	app := &cobra.Command{
-		Use:     "dbsvc",
-		Aliases: []string{"dbservice"},
-		Short:   "list dbservice",
-		Example: fmt.Sprintf(`%s platform db list dbsvc`, os.Args[0]),
+		Use:     "list",
+		Short:   "list db instance service",
+		Example: fmt.Sprintf(`%s platform crd dbsvc list`, os.Args[0]),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cfg, _ := config.LoadConfig()
 			qclient, err := k8s.NewSimpleQClient()
@@ -121,7 +120,7 @@ func cmdDbSvcList(f factory.Factory) *cobra.Command {
 				return err
 			}
 			if len(dbsvcs.Items) == 0 {
-				log.Warn("no found database service")
+				log.Warn("no found database instance service")
 				return nil
 			}
 			var gdbServices []quchengv1beta1.DbService

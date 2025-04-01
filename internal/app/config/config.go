@@ -57,6 +57,14 @@ type Quickon struct {
 	Type   common.QuickonType `yaml:"type" json:"type"`
 	DevOps bool               `yaml:"devops" json:"devops"`
 	Domain Domain             `yaml:"domain" json:"domain"`
+	ExtDB  ExtDB              `yaml:"extdb,omitempty" json:"extdb,omitempty"`
+}
+
+type ExtDB struct {
+	Host     string `yaml:"host" json:"host"`
+	Port     string `yaml:"port" json:"port"`
+	User     string `yaml:"user" json:"user"`
+	Password string `yaml:"password" json:"password"`
 }
 
 type Domain struct {

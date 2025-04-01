@@ -46,6 +46,10 @@ type Meta struct {
 	OffLine         bool
 	SkipDevOPSInit  bool
 	DBReplication   bool
+	ExtDBHost       string
+	ExtDBPort       string
+	ExtDBUser       string
+	ExtDBPassword   string
 	Type            string
 	App             string
 	kubeClient      *k8s.Client
@@ -96,6 +100,30 @@ func (m *Meta) GetCustomFlags() []types.Flag {
 			Usage: "db use replication mode, default standalone: false",
 			P:     &m.DBReplication,
 			V:     false,
+		},
+		{
+			Name:  "ext-db-host",
+			Usage: "external db host",
+			P:     &m.ExtDBHost,
+			V:     "",
+		},
+		{
+			Name:  "ext-db-port",
+			Usage: "external db port",
+			P:     &m.ExtDBPort,
+			V:     "3306",
+		},
+		{
+			Name:  "ext-db-user",
+			Usage: "external db user",
+			P:     &m.ExtDBUser,
+			V:     "root",
+		},
+		{
+			Name:  "ext-db-password",
+			Usage: "external db password",
+			P:     &m.ExtDBPassword,
+			V:     "",
 		},
 	}
 }
@@ -336,11 +364,25 @@ func (m *Meta) Init() error {
 	} else {
 		m.Log.Done("deployed operator success")
 	}
-	// TODO check operator ready
+	// check operator ready
 	if err := m.OperatorReady(); err != nil {
 		m.Log.Warnf("check operator ready failed, reason: %v", err)
 	} else {
 		m.Log.Done("check operator ready success")
+	}
+	useExtDB := false
+	// 如果外部数据库可用，则使用外部数据库
+	if m.ExtDBHost != "" && m.ExtDBPort != "" && m.ExtDBUser != "" && m.ExtDBPassword != "" {
+		args := []string{"platform", "db", "external", "new", "--host", m.ExtDBHost, "--port", m.ExtDBPort, "--username", m.ExtDBUser, "--password", m.ExtDBPassword}
+		if output, err := qcexec.Command(os.Args[0], args...).CombinedOutput(); err != nil {
+			m.Log.Warnf("create external dbservice failed, reason: %v, std: %s", err, string(output))
+		} else {
+			m.Log.Done("create external dbservice success")
+			useExtDB = true
+		}
+		if useExtDB {
+			// create external db
+		}
 	}
 
 	helmargs := []string{"experimental", "helm", "upgrade", "--name", common.GetReleaseName(m.DevopsMode), "--repo", common.DefaultHelmRepoName, "--chart", common.GetReleaseName(m.DevopsMode), "--namespace", common.GetDefaultSystemNamespace(true), "--set", "env.APP_DOMAIN=" + m.Domain, "--set", "env.CNE_API_TOKEN=" + token, "--set", "cloud.defaultChannel=" + repoChannel}

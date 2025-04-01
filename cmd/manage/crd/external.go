@@ -4,7 +4,7 @@
 // (2) Affero General Public License 3.0 (AGPL 3.0)
 // license that can be found in the LICENSE file.
 
-package db
+package crd
 
 import (
 	"context"
@@ -23,8 +23,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// cmdExternalDb 外部数据库主命令
-func cmdExternalDb(f factory.Factory) *cobra.Command {
+// cmdExternalDbSvc 外部数据库主命令
+func cmdExternalDbSvc(f factory.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "external",
 		Aliases: []string{"etdb"},
@@ -32,13 +32,13 @@ func cmdExternalDb(f factory.Factory) *cobra.Command {
 	}
 
 	// 添加子命令
-	cmd.AddCommand(cmdCreateExternalDb(f))
-	cmd.AddCommand(cmdDeleteExternalDb(f))
+	cmd.AddCommand(cmdCreateExternalDbSvc(f))
+	cmd.AddCommand(cmdDeleteExternalDbSvc(f))
 	return cmd
 }
 
-// cmdCreateExternalDb 创建外部数据库子命令
-func cmdCreateExternalDb(f factory.Factory) *cobra.Command {
+// cmdCreateExternalDbSvc 创建外部数据库子命令
+func cmdCreateExternalDbSvc(f factory.Factory) *cobra.Command {
 	var host string
 	var port int32
 	var namespace string
@@ -206,8 +206,8 @@ func cmdCreateExternalDb(f factory.Factory) *cobra.Command {
 	return cmd
 }
 
-// cmdDeleteExternalDb 删除外部数据库子命令
-func cmdDeleteExternalDb(f factory.Factory) *cobra.Command {
+// cmdDeleteExternalDbSvc 删除外部数据库子命令
+func cmdDeleteExternalDbSvc(f factory.Factory) *cobra.Command {
 	var namespace string
 	var name string
 

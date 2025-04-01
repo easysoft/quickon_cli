@@ -4,7 +4,7 @@
 // (2) Affero General Public License 3.0 (AGPL 3.0)
 // license that can be found in the LICENSE file.
 
-package db
+package crd
 
 import (
 	"github.com/spf13/cobra"
@@ -12,18 +12,12 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 )
 
-func NewCmdDB(f factory.Factory) *cobra.Command {
+// cmdDB 数据库实例管理
+func cmdDB(f factory.Factory) *cobra.Command {
 	dbCmd := &cobra.Command{
 		Use:   "db",
-		Short: "Manage Platform Databases",
+		Short: "manage platform database",
 	}
-	dbListCmd := &cobra.Command{
-		Use:   "list",
-		Short: "List Platform DB or DbService",
-	}
-	dbListCmd.AddCommand(cmdDbsList(f))
-	dbListCmd.AddCommand(cmdDbSvcList(f))
-	dbCmd.AddCommand(dbListCmd)
-	dbCmd.AddCommand(cmdExternalDb(f))
+	dbCmd.AddCommand(cmdDbsList(f))
 	return dbCmd
 }

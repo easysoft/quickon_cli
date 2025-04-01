@@ -11,7 +11,7 @@ import (
 
 	"github.com/easysoft/qcadmin/cmd/app"
 	"github.com/easysoft/qcadmin/cmd/manage"
-	"github.com/easysoft/qcadmin/cmd/manage/db"
+	"github.com/easysoft/qcadmin/cmd/manage/crd"
 	"github.com/easysoft/qcadmin/cmd/market"
 	"github.com/easysoft/qcadmin/cmd/quickon"
 	"github.com/easysoft/qcadmin/internal/app/config"
@@ -49,7 +49,7 @@ func newCmdPlatform(f factory.Factory) *cobra.Command {
 	platformCmd.AddCommand(quickon.InitCommand(f))
 	platformCmd.AddCommand(quickon.UninstallCommand(f))
 	platformCmd.AddCommand(manage.NewCmdPlugin(f))
-	platformCmd.AddCommand(db.NewCmdDB(f))
+	platformCmd.AddCommand(crd.NewCmdCrd(f))
 	platformCmd.AddCommand(market.NewMarketCmd(f))
 	cfg, _ := config.LoadConfig()
 	if cfg == nil || !cfg.Quickon.DevOps {
