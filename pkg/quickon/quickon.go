@@ -44,7 +44,6 @@ type Meta struct {
 	ConsolePassword string
 	DevopsMode      bool
 	OffLine         bool
-	SkipDevOPSInit  bool
 	DBReplication   bool
 	ExtDBHost       string
 	ExtDBPort       string
@@ -88,12 +87,6 @@ func (m *Meta) GetCustomFlags() []types.Flag {
 			P:      &m.OffLine,
 			V:      false,
 			Hidden: true,
-		},
-		{
-			Name:  "skip-devops-init",
-			Usage: "allow user skip devops init",
-			P:     &m.SkipDevOPSInit,
-			V:     true,
 		},
 		{
 			Name:  "db-replication",
@@ -411,9 +404,8 @@ func (m *Meta) Init() error {
 		helmargs = append(helmargs, "--set", "mysql.auth.host=zentaopaas-mysql.quickon-system.svc")
 	}
 
-	if m.SkipDevOPSInit {
-		helmargs = append(helmargs, "--set", "env.ZT_SKIP_DEVOPS_INIT=true")
-	}
+	// TODO: 等下个版本禅道正式发版后续删除
+	helmargs = append(helmargs, "--set", "env.ZT_SKIP_DEVOPS_INIT=true")
 
 	if m.DBReplication {
 		helmargs = append(helmargs, "--set", "mysql.replication.enabled=true")

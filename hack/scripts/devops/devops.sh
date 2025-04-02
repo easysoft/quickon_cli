@@ -25,10 +25,6 @@
 #     Install Version when install Zentao DevOPS.
 #     Defaults to ''
 #   - INSTALL_DOMAIN
-#     If not set default use gen default domain
-#   - SKIP_DEVOPS_INIT(Deprecated)
-#     Allow skip devops init
-#     Defaults to 'true'
 #   - DEBUG
 #     If set, print debug information
 #   - STORAGE_TYPE
@@ -209,9 +205,6 @@ install_zentao_devops() {
   if [ -n "${DEVOPS_VERSION}" ]; then
     INSTALL_COMMAND="${INSTALL_COMMAND} --version ${DEVOPS_VERSION}"
   fi
-  # if [ "${SKIP_DEVOPS_INIT}" = "false" ]; then
-  #   INSTALL_COMMAND="${INSTALL_COMMAND} --skip-devops-init false"
-  # fi
   if [ "${STORAGE_TYPE}" = "nfs" ]; then
     INSTALL_COMMAND="${INSTALL_COMMAND} --storage nfs"
   fi
