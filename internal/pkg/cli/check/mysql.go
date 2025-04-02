@@ -58,7 +58,7 @@ func CheckMySQLCommand(f factory.Factory) *cobra.Command {
 			return
 		},
 	}
-	cmd.Flags().StringVarP(&host, "host", "h", "localhost", "MySQL host")
+	cmd.Flags().StringVarP(&host, "host", "", "localhost", "MySQL host")
 	cmd.Flags().IntVarP(&port, "port", "", 3306, "MySQL port")
 	cmd.Flags().StringVarP(&username, "username", "u", "root", "MySQL username")
 	cmd.Flags().StringVarP(&password, "password", "p", "", "MySQL password")
