@@ -373,11 +373,12 @@ func (m *Meta) Init() error {
 	useExtDB := false
 	// 如果外部数据库可用，则使用外部数据库
 	if m.ExtDBHost != "" && m.ExtDBPort != "" && m.ExtDBUser != "" && m.ExtDBPassword != "" {
+		m.Log.Infof("detected external db, will use external db as cluster global database instance")
 		args := []string{"platform", "crd", "dbsvc", "new", "--host", m.ExtDBHost, "--port", m.ExtDBPort, "--username", m.ExtDBUser, "--password", m.ExtDBPassword}
 		if output, err := qcexec.Command(os.Args[0], args...).CombinedOutput(); err != nil {
 			m.Log.Warnf("create external dbservice failed, reason: %v, std: %s", err, string(output))
 		} else {
-			m.Log.Done("create external dbservice success")
+			m.Log.Done("configure external db as cluster global database instance success")
 			useExtDB = true
 		}
 	}
