@@ -373,15 +373,12 @@ func (m *Meta) Init() error {
 	useExtDB := false
 	// 如果外部数据库可用，则使用外部数据库
 	if m.ExtDBHost != "" && m.ExtDBPort != "" && m.ExtDBUser != "" && m.ExtDBPassword != "" {
-		args := []string{"platform", "db", "external", "new", "--host", m.ExtDBHost, "--port", m.ExtDBPort, "--username", m.ExtDBUser, "--password", m.ExtDBPassword}
+		args := []string{"platform", "crd", "dbsvc", "new", "--host", m.ExtDBHost, "--port", m.ExtDBPort, "--username", m.ExtDBUser, "--password", m.ExtDBPassword}
 		if output, err := qcexec.Command(os.Args[0], args...).CombinedOutput(); err != nil {
 			m.Log.Warnf("create external dbservice failed, reason: %v, std: %s", err, string(output))
 		} else {
 			m.Log.Done("create external dbservice success")
 			useExtDB = true
-		}
-		if useExtDB {
-			// create external db
 		}
 	}
 
@@ -405,6 +402,12 @@ func (m *Meta) Init() error {
 		helmargs = append(helmargs, "--set", "env.CNE_MARKET_API_SCHEMA=http")
 		helmargs = append(helmargs, "--set", "env.CNE_MARKET_API_HOST=market-cne-market-api.quickon-system.svc")
 		helmargs = append(helmargs, "--set", "env.CNE_MARKET_API_PORT=8088")
+	}
+	if useExtDB {
+		// create external db
+		helmargs = append(helmargs, "--set", "mysql.enabled=false")
+		helmargs = append(helmargs, "--set", "mysql.auth.dbservice.name=zentaopaas-mysql")
+		helmargs = append(helmargs, "--set", "mysql.auth.host=zentaopaas-mysql.quickon-system.svc")
 	}
 
 	if m.SkipDevOPSInit {
