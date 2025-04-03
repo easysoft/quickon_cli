@@ -158,7 +158,7 @@ func cmdNewDbSvc(f factory.Factory) *cobra.Command {
 				svc.Spec = corev1.ServiceSpec{
 					Ports: []corev1.ServicePort{
 						{
-							Port:       port,
+							Port:       3306,
 							Protocol:   corev1.ProtocolTCP,
 							Name:       "db",
 							TargetPort: intstr.FromInt(int(port)),
@@ -208,7 +208,7 @@ func cmdNewDbSvc(f factory.Factory) *cobra.Command {
 					ExternalName: host,
 					Ports: []corev1.ServicePort{
 						{
-							Port:       port,
+							Port:       3306,
 							TargetPort: intstr.FromInt32(port),
 							Protocol:   corev1.ProtocolTCP,
 							Name:       "db",
@@ -272,7 +272,7 @@ func cmdNewDbSvc(f factory.Factory) *cobra.Command {
 				return nil
 			}
 			log.Donef("created external database service %s in namespace %s", name, namespace)
-			log.Infof("you can access the database in cluster using: %s", color.SGreen("%s.%s:%d", name, namespace, port))
+			log.Infof("you can access the database in cluster using: %s", color.SGreen("%s.%s:3306", name, namespace))
 			return nil
 		},
 	}

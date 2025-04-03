@@ -10,6 +10,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -46,7 +47,7 @@ type Meta struct {
 	OffLine         bool
 	DBReplication   bool
 	ExtDBHost       string
-	ExtDBPort       string
+	ExtDBPort       int
 	ExtDBUser       string
 	ExtDBPassword   string
 	Type            string
@@ -104,7 +105,7 @@ func (m *Meta) GetCustomFlags() []types.Flag {
 			Name:  "ext-db-port",
 			Usage: "external db port",
 			P:     &m.ExtDBPort,
-			V:     "3306",
+			V:     3306,
 		},
 		{
 			Name:  "ext-db-user",
@@ -365,11 +366,11 @@ func (m *Meta) Init() error {
 	}
 	useExtDB := false
 	// 如果外部数据库可用，则使用外部数据库
-	if m.ExtDBHost != "" && m.ExtDBPort != "" && m.ExtDBUser != "" && m.ExtDBPassword != "" {
+	if m.ExtDBHost != "" && m.ExtDBUser != "" && m.ExtDBPassword != "" {
 		m.Log.Infof("detected external db, will use external db as cluster global database instance")
-		args := []string{"platform", "crd", "dbsvc", "new", "--host", m.ExtDBHost, "--port", m.ExtDBPort, "--username", m.ExtDBUser, "--password", m.ExtDBPassword}
-		if output, err := qcexec.Command(os.Args[0], args...).CombinedOutput(); err != nil {
-			m.Log.Warnf("create external dbservice failed, reason: %v, std: %s", err, string(output))
+		args := []string{"platform", "crd", "dbsvc", "new", "--host", m.ExtDBHost, "--port", strconv.Itoa(m.ExtDBPort), "--username", m.ExtDBUser, "--password", m.ExtDBPassword}
+		if err := qcexec.CommandRun(os.Args[0], args...); err != nil {
+			m.Log.Warnf("create external dbservice failed, reason: %v", err)
 		} else {
 			m.Log.Done("configure external db as cluster global database instance success")
 			useExtDB = true
@@ -400,8 +401,8 @@ func (m *Meta) Init() error {
 	if useExtDB {
 		// create external db
 		helmargs = append(helmargs, "--set", "mysql.enabled=false")
-		helmargs = append(helmargs, "--set", "mysql.auth.dbservice.name=zentaopaas-mysql")
-		helmargs = append(helmargs, "--set", "mysql.auth.host=zentaopaas-mysql.quickon-system.svc")
+		helmargs = append(helmargs, "--set", fmt.Sprintf("mysql.auth.dbservice.name=%s", common.DefaultExternalDBName))
+		helmargs = append(helmargs, "--set", fmt.Sprintf("mysql.auth.host=%s.quickon-system.svc", common.DefaultExternalDBName))
 	}
 
 	// TODO: 等下个版本禅道正式发版后续删除
@@ -470,7 +471,7 @@ func (m *Meta) QuickONReady() {
 
 // OperatorReady OperatorReady
 func (m *Meta) OperatorReady() error {
-	m.Log.Debugf("waiting for operator ready")
+	m.Log.Debug("waiting for operator ready")
 	for i := 1; i <= 10; i++ {
 		deploy, err := m.kubeClient.GetDeployment(context.Background(), common.GetDefaultSystemNamespace(true), common.DefaultCneOperatorName, metav1.GetOptions{})
 		if err != nil {
@@ -502,7 +503,7 @@ func (m *Meta) readyQuickON(ctx context.Context) error {
 			status = true
 			break
 		}
-		time.Sleep(time.Second * 10)
+		time.Sleep(time.Second * 5)
 	}
 	m.Log.StopWait()
 	if status {

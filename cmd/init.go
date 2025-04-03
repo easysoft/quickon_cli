@@ -20,6 +20,7 @@ import (
 	"github.com/easysoft/qcadmin/internal/app/config"
 	"github.com/easysoft/qcadmin/internal/pkg/k8s"
 	"github.com/easysoft/qcadmin/internal/pkg/types"
+	"github.com/easysoft/qcadmin/internal/pkg/util/db"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/pkg/providers"
 
@@ -95,6 +96,18 @@ func newCmdInit(f factory.Factory) *cobra.Command {
 			}
 			if len(nCluster.MasterIPs) == 0 {
 				nCluster.MasterIPs = append(nCluster.MasterIPs, exnet.LocalIPs()[0])
+			}
+		}
+		if len(meta.ExtDBHost) > 0 && len(meta.ExtDBPassword) > 0 {
+			cfg := &db.Config{
+				Host:     meta.ExtDBHost,
+				Port:     meta.ExtDBPort,
+				Username: meta.ExtDBUser,
+				Password: meta.ExtDBPassword,
+			}
+			if !db.CheckMySQL(cfg) {
+				log.Errorf("external db check failed, please check your external db")
+				os.Exit(-1)
 			}
 		}
 	}

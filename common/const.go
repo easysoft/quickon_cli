@@ -97,7 +97,7 @@ const (
 	CDNVersionURL                 = "https://pkg.zentao.net/cli/devops/version.json"
 	DefaultNerdctlConfig          = "/etc/nerdctl/nerdctl.toml"
 	DefaultExternalDBPort         = 3306
-	DefaultExternalDBName         = "zentaopaas-mysql"
+	DefaultExternalDBName         = "ex-zentaopaas-mysql"
 )
 
 const (

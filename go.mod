@@ -15,6 +15,7 @@ require (
 	github.com/easysoft/quickon-api v0.7.6
 	github.com/emirpasic/gods v1.18.1
 	github.com/ergoapi/util v0.7.12
+	github.com/go-sql-driver/mysql v1.9.1
 	github.com/gofrs/flock v0.12.1
 	github.com/google/gops v0.3.28
 	github.com/gosuri/uitable v0.0.4
@@ -66,6 +67,7 @@ require (
 
 require (
 	dario.cat/mergo v1.0.1 // indirect
+	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/6tail/lunar-go v1.3.15 // indirect
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230811130428-ced1acdcaa24 // indirect
 	github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 // indirect
