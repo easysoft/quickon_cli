@@ -1,5 +1,46 @@
 # Changelog
 
+## v4.0.0 (2025-04-03)
+
+ * [bd770bd5](https://github.com/easysoft/quickon_cli/commit/bd770bd54308aad22b2a2e3ee585c2693a49a6de) refactor: improve operator readiness check logic and configurations
+ * [c3abaf14](https://github.com/easysoft/quickon_cli/commit/c3abaf14b11307913e1c590ca770f606e0a5ab11) feat: enhance MySQL database configuration and connection utilities
+ * [3b2a886f](https://github.com/easysoft/quickon_cli/commit/3b2a886f1db80966d430e06be15a1d4439fc46c9) refactor: remove host option short flag for clarity and consistency
+ * [1ca11c87](https://github.com/easysoft/quickon_cli/commit/1ca11c87a138fe2dbbf39794b66a90fb3fdbf1c3) refactor: remove deprecated DevOps initialization options and references
+ * [17b12d38](https://github.com/easysoft/quickon_cli/commit/17b12d38967768037adbece366fdc896b60a5b67) feat: enhance external database configuration and logging support
+ * [8c7e9087](https://github.com/easysoft/quickon_cli/commit/8c7e90871bf581afd14d740f87f0dac905432e84) feat: enhance external database management commands and structure
+ * [ae66f077](https://github.com/easysoft/quickon_cli/commit/ae66f07798faa1da5958b6dded8566e18523e6e4) feat: refactor database command handling and integrate CRD management
+ * [49814f09](https://github.com/easysoft/quickon_cli/commit/49814f09ea06f7b323b8b59e0203de684edeeeb4) feat: refactor market initialization and deployment scripts
+ * [c832ca35](https://github.com/easysoft/quickon_cli/commit/c832ca35b166201cc20e0a22d6f9d5e4f71f5925) feat: enhance database command management and version update
+ * [edff276a](https://github.com/easysoft/quickon_cli/commit/edff276af516ba38f9bfd099c3da2a6458f6179b) refactor: enhance tool installation checks and refactor KubeConfig logic
+ * [42f76712](https://github.com/easysoft/quickon_cli/commit/42f76712481720a30b196ce7694168f5c3396aab) build(deps): bump github.com/pkg/sftp from 1.13.8 to 1.13.9
+ * [cc06bc6e](https://github.com/easysoft/quickon_cli/commit/cc06bc6ec9e48397ed3ccad5d7fb86f317e80075) build(deps): bump github.com/pkg/sftp from 1.13.7 to 1.13.8
+ * [ecd5e0de](https://github.com/easysoft/quickon_cli/commit/ecd5e0ded635e3da6b72ab1d1af119203c9ba3de) refactor: refactor initialization scripts with modular functions and offline support
+ * [4fac6698](https://github.com/easysoft/quickon_cli/commit/4fac66984743a0699af96c90e2a63bde1ab98318) build(deps): bump github.com/miekg/dns from 1.1.62 to 1.1.64
+ * [2818d07f](https://github.com/easysoft/quickon_cli/commit/2818d07f0f6cc415b48e961439983b104a869dcc) feat: improve MySQL connection management and error handling
+ * [301c66ed](https://github.com/easysoft/quickon_cli/commit/301c66ed449d811061c2fc2440d9b2e360d6f165) build(deps): bump github.com/cheggaaa/pb/v3 from 3.1.5 to 3.1.7
+ * [3c9ac0cd](https://github.com/easysoft/quickon_cli/commit/3c9ac0cdf90b3f54b0070db39f0dbf0efdccf3d7) build(deps): bump github.com/containerd/containerd from 1.7.24 to 1.7.27
+ * [ba71cdb4](https://github.com/easysoft/quickon_cli/commit/ba71cdb432bc9dfaff44a322dd7a48e963810532) build(deps): bump golang.org/x/term from 0.29.0 to 0.30.0
+ * [b2680d84](https://github.com/easysoft/quickon_cli/commit/b2680d84ef11ffe980ce26060e3df4cb03f4f2ac) build(deps): bump golang.org/x/net from 0.35.0 to 0.36.0
+ * [9a453552](https://github.com/easysoft/quickon_cli/commit/9a45355224efa76a0868874ad8ecaa19a3d238d6) build(deps): bump tailscale.com from 1.80.2 to 1.80.3
+ * [6dc6053b](https://github.com/easysoft/quickon_cli/commit/6dc6053b5c22be8786b352adecc80134c333a0d4) build(deps): bump golang.org/x/crypto from 0.33.0 to 0.35.0
+ * [49ad3465](https://github.com/easysoft/quickon_cli/commit/49ad3465f0eca2b019f3ed803aaf8a4bcd73e251) build(deps): bump github.com/spf13/pflag from 1.0.5 to 1.0.6
+ * [ed8f19c9](https://github.com/easysoft/quickon_cli/commit/ed8f19c9f1af116e388b8f38558a42ed95a7fdf5) refactor: refactor channel-related logic and clean up imports
+ * [3acf50f1](https://github.com/easysoft/quickon_cli/commit/3acf50f10a4fdf08441c814c9e81b00a4d7fd48e) feat: integrate experimental check and debug command functionalities
+ * [c6c11a04](https://github.com/easysoft/quickon_cli/commit/c6c11a042ca4c1d9200c6f1c200b3c52e660da57) build(deps): bump tailscale.com from 1.78.3 to 1.80.2
+ * [88880af3](https://github.com/easysoft/quickon_cli/commit/88880af3c9f626a1dd056cb326d645debfb00117) feat: initialize system setup for Kubernetes services and optimizations
+ * [45e2d3c8](https://github.com/easysoft/quickon_cli/commit/45e2d3c8750beae7022c368c991f9914c78e18c6) feat: enhance CLI to manage external databases and Kubernetes services
+ * [8864011d](https://github.com/easysoft/quickon_cli/commit/8864011d5e0c37c39ecc548af8e9933b8fae8c85) feat: enhance cluster command management and usability features
+ * [46a19430](https://github.com/easysoft/quickon_cli/commit/46a194305495ca7647a47de6ae2f04f01e3ea845) build(deps): bump golang.org/x/term from 0.28.0 to 0.29.0
+ * [2e20a694](https://github.com/easysoft/quickon_cli/commit/2e20a694138a07c3763c028f036026cc795ea859) build(deps): bump golang.org/x/sys from 0.29.0 to 0.30.0
+ * [6ab1b732](https://github.com/easysoft/quickon_cli/commit/6ab1b732e0a3d464ba0bbffcfd687d64f5535000) build(deps): bump helm.sh/helm/v3 from 3.16.4 to 3.17.0
+ * [ec9e6213](https://github.com/easysoft/quickon_cli/commit/ec9e6213e199df62bed62dc7d425a652ae9051a9) build(deps): bump vite from 5.4.6 to 5.4.14 in /docs
+ * [fdf62144](https://github.com/easysoft/quickon_cli/commit/fdf62144d4f88b7b66b2c782b780f8fa43496ad1) build(deps): bump github.com/prometheus-community/pro-bing
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v3.3.3 (2025-03-07)
 
 
