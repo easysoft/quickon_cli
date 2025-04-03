@@ -7,7 +7,7 @@
 
 # Source code is available at https://github.com/easysoft/quickon_cli
 
-# SCRIPT_COMMIT_SHA="b617b5260d947c69caeafcfb89408e2b54d3d2a9"
+# SCRIPT_COMMIT_SHA="bd770bd54308aad22b2a2e3ee585c2693a49a6de"
 # SCRIPT_DATA="Wed Jan  8 16:02:39 CST 2025"
 
 # Usage:

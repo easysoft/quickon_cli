@@ -7,8 +7,8 @@
 
 # Source code is available at https://github.com/easysoft/quickon_cli
 
-# SCRIPT_COMMIT_SHA="46bbc9273f52a922c6071d43dd1f7a7e538d8a81"
-# SCRIPT_DATA="Tue Jan 14 13:12:29 CST 2025"
+# SCRIPT_COMMIT_SHA="bd770bd54308aad22b2a2e3ee585c2693a49a6de"
+# SCRIPT_DATA="Thu Apr  3 11:27:15 CST 2025"
 
 # Usage:
 #   curl ... | ENV_VAR=... sh -
@@ -30,18 +30,18 @@
 #   - STORAGE_TYPE
 #     Storage Type when install Zentao DevOPS default use local as storage provider.
 #     Defaults to '', support 'local', 'nfs'
-#   - EXTERNAL_HOST
-#     external database host
-#   - EXTERNAL_PORT
-#     external database port
-#   - EXTERNAL_ROOT_PASSWORD
-#     external database root password
-#   - EXTERNAL_USER
-#     external database user
-#   - EXTERNAL_PASSWORD
-#     external database password
-#   - EXTERNAL_DATABASE
-#     external database name
+#   - EX_DB_HOST
+#     External Database Host when install Zentao DevOPS.
+#     Defaults to ''
+#   - EX_DB_PORT
+#     External Database Port when install Zentao DevOPS.
+#     Defaults to '3306'
+#   - EX_DB_USER
+#     External Database User when install Zentao DevOPS.
+#     Defaults to ''
+#   - EX_DB_PASSWORD
+#     External Database Password when install Zentao DevOPS.
+#     Defaults to ''
 
 set -e
 set -o noglob
@@ -219,6 +219,15 @@ install_zentao_devops() {
   fi
   if [ "${STORAGE_TYPE}" = "nfs" ]; then
     INSTALL_COMMAND="${INSTALL_COMMAND} --storage nfs"
+  fi
+  if [ -n "${EX_DB_HOST}" ] && [ -n "${EX_DB_PASSWORD}" ]; then
+    INSTALL_COMMAND="${INSTALL_COMMAND} --ext-db-host ${EX_DB_HOST} --ext-db-password ${EX_DB_PASSWORD}"
+    if [ -n "${EX_DB_PORT}" ] && [ "${EX_DB_PORT}" != "3306" ]; then
+      INSTALL_COMMAND="${INSTALL_COMMAND} --ext-db-port ${EX_DB_PORT}"
+    fi
+    if [ -n "${EX_DB_USER}" ] && [ "${EX_DB_USER}" != "root" ]; then
+      INSTALL_COMMAND="${INSTALL_COMMAND} --ext-db-user ${EX_DB_USER}"
+    fi
   fi
   if [ -n "${DEBUG}" ]; then
     INSTALL_COMMAND="${INSTALL_COMMAND} --debug"
