@@ -471,18 +471,18 @@ func (m *Meta) QuickONReady() {
 
 // OperatorReady OperatorReady
 func (m *Meta) OperatorReady() error {
-	m.Log.Debug("waiting for operator ready")
-	for i := 1; i <= 10; i++ {
+	m.Log.Info("waiting for operator ready")
+	for i := 1; i <= 60; i++ {
 		deploy, err := m.kubeClient.GetDeployment(context.Background(), common.GetDefaultSystemNamespace(true), common.DefaultCneOperatorName, metav1.GetOptions{})
 		if err != nil {
-			time.Sleep(time.Duration(i) * 2 * time.Second)
+			time.Sleep(4 * time.Second)
 			continue
 		}
 		ready := deploy.Status.ReadyReplicas == *deploy.Spec.Replicas
 		if ready {
 			return nil
 		}
-		time.Sleep(time.Duration(i) * 2 * time.Second)
+		time.Sleep(2 * time.Second)
 	}
 	return errors.Errorf("operator not ready")
 }
