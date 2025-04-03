@@ -14,7 +14,7 @@ qcadmin platform crd db list [flags]
 ### Examples
 
 ```
-/tmp/go-build4261835964/b001/exe/docs platform crd db list
+/tmp/go-build1678083872/b001/exe/docs platform crd db list
 ```
 
 ### Options
