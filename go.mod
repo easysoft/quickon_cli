@@ -47,7 +47,7 @@ require (
 	github.com/ysicing/cobra2vitepress v0.0.0-20231129091107-690364f0dca7
 	golang.org/x/crypto v0.35.0
 	golang.org/x/sync v0.11.0
-	golang.org/x/sys v0.31.0
+	golang.org/x/sys v0.32.0
 	golang.org/x/term v0.30.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gotest.tools v2.2.0+incompatible
