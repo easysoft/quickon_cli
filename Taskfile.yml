@@ -117,7 +117,7 @@ tasks:
     desc: Build Snapshot Version
     cmds:
       - task: clean
-      - goreleaser release --snapshot --clean --skip-publish
+      - goreleaser release --snapshot --clean --skip publish
 
   version-ci:
     desc: ci fix version
