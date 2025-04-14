@@ -1,5 +1,16 @@
 # Changelog
 
+## v4.1.0 (2025-04-14)
+
+ * [5e6a5060](https://github.com/easysoft/quickon_cli/commit/5e6a506004b744c9bc7a3f06022a975a1043bc99) feat: add USEPHP7 support for Zentao DevOps installation scripts
+ * [e9b38bb8](https://github.com/easysoft/quickon_cli/commit/e9b38bb8a5e792f575692b9c0c179670663ddd0b) build(deps): bump helm.sh/helm/v3 from 3.17.0 to 3.17.3
+ * [8e349067](https://github.com/easysoft/quickon_cli/commit/8e349067e7d131d4b8939f7604ea9b119024aeca) build(deps): bump golang.org/x/sys from 0.31.0 to 0.32.0
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v4.0.0 (2025-04-03)
 
  * [bd770bd5](https://github.com/easysoft/quickon_cli/commit/bd770bd54308aad22b2a2e3ee585c2693a49a6de) refactor: improve operator readiness check logic and configurations
