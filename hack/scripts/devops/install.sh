@@ -7,8 +7,8 @@
 
 # Source code is available at https://github.com/easysoft/quickon_cli
 
-# SCRIPT_COMMIT_SHA="bd770bd54308aad22b2a2e3ee585c2693a49a6de"
-# SCRIPT_DATA="Thu Apr  3 11:27:15 CST 2025"
+# SCRIPT_COMMIT_SHA="e9b38bb8a5e792f575692b9c0c179670663ddd0b"
+# SCRIPT_DATA="Mon Apr 14 10:18:36 CST 2025"
 
 # Usage:
 #   curl ... | ENV_VAR=... sh -
@@ -42,6 +42,9 @@
 #   - EX_DB_PASSWORD
 #     External Database Password when install Zentao DevOPS.
 #     Defaults to ''
+#   - USEPHP7
+#     Use PHP7 when install Zentao DevOPS.
+#     Defaults to 'false'
 
 set -e
 set -o noglob
@@ -228,6 +231,9 @@ install_zentao_devops() {
     if [ -n "${EX_DB_USER}" ] && [ "${EX_DB_USER}" != "root" ]; then
       INSTALL_COMMAND="${INSTALL_COMMAND} --ext-db-user ${EX_DB_USER}"
     fi
+  fi
+  if [ -n "${USEPHP7}" ]; then
+    INSTALL_COMMAND="${INSTALL_COMMAND} --use-php7"
   fi
   if [ -n "${DEBUG}" ]; then
     INSTALL_COMMAND="${INSTALL_COMMAND} --debug"

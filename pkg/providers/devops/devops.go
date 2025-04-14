@@ -68,6 +68,11 @@ func (q *Devops) GetFlags() []types.Flag {
 		P:         &q.MetaData.Type,
 		V:         common.ZenTaoOSSType.String(),
 		ShortHand: "t",
+	}, types.Flag{
+		Name:  "use-php7",
+		Usage: "use php7 when install zentao",
+		P:     &q.MetaData.UsePHP7,
+		V:     false,
 	})
 	return fs
 }

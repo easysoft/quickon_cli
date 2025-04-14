@@ -55,6 +55,7 @@ type Meta struct {
 	kubeClient      *k8s.Client
 	Log             log.Logger
 	DomainType      string
+	UsePHP7         bool
 }
 
 func New(f factory.Factory) *Meta {
@@ -397,6 +398,9 @@ func (m *Meta) Init() error {
 		helmargs = append(helmargs, "--set", "env.CNE_MARKET_API_SCHEMA=http")
 		helmargs = append(helmargs, "--set", "env.CNE_MARKET_API_HOST=market-cne-market-api.quickon-system.svc")
 		helmargs = append(helmargs, "--set", "env.CNE_MARKET_API_PORT=8088")
+	}
+	if m.UsePHP7 {
+		helmargs = append(helmargs, "--set", "deploy.phpVersion=php7")
 	}
 	if useExtDB {
 		// create external db
