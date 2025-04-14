@@ -80,3 +80,32 @@ jobs:
         if: always()
         with:
           sarif_file: 'trivy-results.sarif'
+
+  build-snapshot:
+    name: "build-snapshot"
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          check-latest: true
+      - name: install gox
+        run: |
+          echo "install gox"
+          go install github.com/mitchellh/gox@latest
+      - name: install task
+        run: |
+          echo "install task"
+          go install github.com/go-task/task/v3/cmd/task@latest
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          version: v2.8.2 #latest
+          install-only: true
+      - name: build qcadmin
+        run: |
+          task snapshot

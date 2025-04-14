@@ -46,7 +46,7 @@ builds:
     binary: qcadmin
 
 archives:
-  - format: binary
+  - formats: [ 'binary' ]
     name_template: "qcadmin_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
 
 checksum:
@@ -57,7 +57,7 @@ snapshot:
 
 nfpms:
 - file_name_template: 'qcadmin_{{ .Tag }}_{{ .Os }}_{{ .Arch }}'
-  builds:
+  ids:
   - qcadmin
   package_name: qcadmin
   priority: optional
