@@ -232,7 +232,7 @@ install_zentao_devops() {
       INSTALL_COMMAND="${INSTALL_COMMAND} --ext-db-user ${EX_DB_USER}"
     fi
   fi
-  if [ -n "${USEPHP7}" ]; then
+  if [ -n "${USEPHP7}" ] && [ "$(echo "${USEPHP7}" | tr '[:upper:]' '[:lower:]')" != "false" ]; then
     INSTALL_COMMAND="${INSTALL_COMMAND} --use-php7"
   fi
   if [ -n "${DEBUG}" ]; then
