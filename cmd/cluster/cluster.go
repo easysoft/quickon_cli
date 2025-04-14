@@ -7,22 +7,24 @@
 package cluster
 
 import (
+	"context"
+	"os"
+
 	"github.com/cockroachdb/errors"
+	"github.com/ergoapi/util/color"
 	"github.com/ergoapi/util/confirm"
 	"github.com/ergoapi/util/exnet"
 	"github.com/ergoapi/util/file"
 	"github.com/spf13/cobra"
-	"k8s.io/kubectl/pkg/util/i18n"
 	"k8s.io/kubectl/pkg/util/templates"
 
 	"github.com/easysoft/qcadmin/cmd/flags"
 	"github.com/easysoft/qcadmin/cmd/precheck"
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/api/statistics"
+	"github.com/easysoft/qcadmin/internal/pkg/status"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
 	"github.com/easysoft/qcadmin/pkg/cluster"
-
-	statussubcmd "github.com/easysoft/qcadmin/cmd/status"
 )
 
 var (
@@ -78,61 +80,6 @@ func InitCommand(f factory.Factory) *cobra.Command {
 	return init
 }
 
-func JoinCommand(f factory.Factory) *cobra.Command {
-	myCluster := cluster.NewCluster(f)
-	authStatus := myCluster.CheckAuthExist()
-	join := &cobra.Command{
-		Use:     "join",
-		Short:   "join cluster",
-		Aliases: []string{"add"},
-		Example: templates.Examples(i18n.T(`
-	# join cluster by pass4Quickon
-	z cluster join --worker 192.168.99.52 --password pass4Quickon
-
-	# join cluster by pkfile
-	z cluster join --worker 192.168.99.52 --pkfile /root/.ssh/id_rsa
-	`)),
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if !authStatus && (len(myCluster.SSH.Passwd) == 0 && len(myCluster.SSH.Pk) == 0) {
-				return errors.New("missing ssh user or passwd or pk")
-			}
-			if myCluster.SSH.User != "root" {
-				return errors.New("only support root user")
-			}
-			return nil
-		},
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return myCluster.JoinNode()
-		},
-	}
-	fs := myCluster.GetIPFlags()
-	if !authStatus {
-		fs = append(fs, myCluster.GetSSHFlags()...)
-	}
-	join.Flags().AddFlagSet(flags.ConvertFlags(join, fs))
-	return join
-}
-
-func DeleteCommand(f factory.Factory) *cobra.Command {
-	myCluster := cluster.NewCluster(f)
-	deleteCmd := &cobra.Command{
-		Use:     "delete",
-		Short:   "delete node(s)",
-		Aliases: []string{"del"},
-		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if len(myCluster.IPs) == 0 {
-				return errors.New("missing node ips")
-			}
-			return nil
-		},
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return myCluster.DeleteNode()
-		},
-	}
-	deleteCmd.Flags().StringSliceVar(&myCluster.IPs, "ips", nil, "ips, like 192.168.0.1:22")
-	return deleteCmd
-}
-
 func CleanCommand(f factory.Factory) *cobra.Command {
 	myCluster := cluster.NewCluster(f)
 	log := f.GetLog()
@@ -158,11 +105,39 @@ func CleanCommand(f factory.Factory) *cobra.Command {
 }
 
 func StatusCommand(f factory.Factory) *cobra.Command {
+	log := f.GetLog()
+	var params = status.K8sStatusOption{
+		Log:         log,
+		OnlyCluster: true,
+	}
 	status := &cobra.Command{
 		Use:   "status",
 		Short: "status cluster",
+		PreRun: func(cmd *cobra.Command, args []string) {
+			defaultArgs := os.Args
+			if !file.CheckFileExists(params.KubeConfig) {
+				log.Warnf("not found cluster. just run %s init cluster", color.SGreen("%s init", defaultArgs[0]))
+				os.Exit(0)
+			}
+		},
+		RunE: func(cmd *cobra.Command, args []string) error {
+			collector, err := status.NewK8sStatusCollector(params)
+			if err != nil {
+				return err
+			}
+			s, err := collector.Status(context.Background())
+			s.Format()
+			if err != nil {
+				log.Fatalf("Unable to determine status:  %s", err)
+			}
+			return err
+		},
 	}
-	status.AddCommand(statussubcmd.TopNodeCmd())
+	status.Flags().StringVarP(&params.KubeConfig, "kubeconfig", "c", common.GetKubeConfig(), "Kubernetes configuration file")
+	status.Flags().BoolVar(&params.Wait, "wait", false, "Wait for status to report success (no errors and warnings)")
+	status.Flags().DurationVar(&params.WaitDuration, "wait-duration", common.StatusWaitDuration, "Maximum time to wait for status")
+	status.Flags().BoolVar(&params.IgnoreWarnings, "ignore-warnings", false, "Ignore warnings when waiting for status to report success")
+	status.Flags().StringVarP(&params.ListOutput, "output", "o", "", "prints the output in the specified format. Allowed values: table, json, yaml (default table)")
 	return status
 }
 

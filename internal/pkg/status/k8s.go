@@ -34,6 +34,7 @@ type K8sStatusOption struct {
 	IgnoreWarnings bool
 	ListOutput     string
 	Log            log.Logger
+	OnlyCluster    bool
 }
 
 type K8sStatusCollector struct {
@@ -231,7 +232,9 @@ func (k *K8sStatusCollector) serviceStatus(ctx context.Context, status *Status) 
 	for _, p := range plugins {
 		k.platformPluginStatus(ctx, p, status)
 	}
-	k.platformInstallStatus(ctx, status)
+	if !k.option.OnlyCluster {
+		k.platformInstallStatus(ctx, status)
+	}
 	return nil
 }
 

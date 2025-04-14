@@ -8,7 +8,6 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"os"
 
 	"github.com/ergoapi/util/color"
@@ -18,14 +17,13 @@ import (
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/pkg/status"
 	"github.com/easysoft/qcadmin/internal/pkg/util/factory"
-
-	statussubcmd "github.com/easysoft/qcadmin/cmd/status"
 )
 
 func newCmdStatus(f factory.Factory) *cobra.Command {
 	log := f.GetLog()
 	var params = status.K8sStatusOption{
-		Log: log,
+		Log:         log,
+		OnlyCluster: false,
 	}
 	cmd := &cobra.Command{
 		Use:   "status",
@@ -57,8 +55,5 @@ func newCmdStatus(f factory.Factory) *cobra.Command {
 	cmd.Flags().DurationVar(&params.WaitDuration, "wait-duration", common.StatusWaitDuration, "Maximum time to wait for status")
 	cmd.Flags().BoolVar(&params.IgnoreWarnings, "ignore-warnings", false, "Ignore warnings when waiting for status to report success")
 	cmd.Flags().StringVarP(&params.ListOutput, "output", "o", "", "prints the output in the specified format. Allowed values: table, json, yaml (default table)")
-	topnode := statussubcmd.TopNodeCmd()
-	topnode.Deprecated = fmt.Sprintf("use %s instead", color.SGreen("%s cluster status nodes", os.Args[0]))
-	cmd.AddCommand(topnode)
 	return cmd
 }

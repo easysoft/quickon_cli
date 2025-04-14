@@ -37,11 +37,6 @@ func newCmdCluster(f factory.Factory) *cobra.Command {
 		Short:   "Cluster commands",
 		Version: "20230330",
 	}
-	clusterNodesCmd := &cobra.Command{
-		Use:     "nodes",
-		Short:   "cluster nodes manage commands",
-		Version: "20250211",
-	}
 	clusterCmd.AddCommand(newCmdPreCheck(f))
 	clusterCmd.AddCommand(cluster.InitCommand(f))
 	clusterCmd.AddCommand(cluster.CleanCommand(f))
@@ -49,8 +44,6 @@ func newCmdCluster(f factory.Factory) *cobra.Command {
 	clusterCmd.AddCommand(cluster.StopCommand(f))
 	clusterCmd.AddCommand(cluster.StartUPCommand(f))
 	clusterCmd.AddCommand(storage.NewCmdStorage(f))
-	clusterCmd.AddCommand(clusterNodesCmd)
-	clusterNodesCmd.AddCommand(cluster.JoinCommand(f))
-	clusterNodesCmd.AddCommand(cluster.DeleteCommand(f))
+	clusterCmd.AddCommand(cluster.NewCmdClusterNodes(f))
 	return clusterCmd
 }
