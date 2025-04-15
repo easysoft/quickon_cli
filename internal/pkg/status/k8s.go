@@ -13,7 +13,6 @@ import (
 
 	"github.com/cockroachdb/errors"
 	"github.com/ergoapi/util/file"
-	"github.com/ergoapi/util/version"
 
 	"github.com/easysoft/qcadmin/common"
 	"github.com/easysoft/qcadmin/internal/app/config"
@@ -154,59 +153,6 @@ func (k *K8sStatusCollector) deploymentStatus(ctx context.Context, ns, name, ali
 	return false, nil
 }
 
-func (k *K8sStatusCollector) daemonsetStatus(ctx context.Context, ns, name, aliasname, t string, status *Status) (bool, error) {
-	k.option.Log.Debugf("check cm %s status", aliasname)
-	stateCount := PodStateCount{Type: "Daemonset"}
-	d, err := k.client.GetDaemonSet(ctx, ns, name, metav1.GetOptions{})
-	if kubeerr.IsNotFound(err) {
-		stateCount.Disabled = true
-		if t == "k8s" {
-			status.KubeStatus.PodState[aliasname] = stateCount
-		} else {
-			status.QStatus.PodState[aliasname] = stateCount
-		}
-		return true, nil
-	}
-
-	if err != nil {
-		stateCount.Disabled = false
-		if t == "k8s" {
-			status.KubeStatus.PodState[aliasname] = stateCount
-		} else {
-			status.QStatus.PodState[aliasname] = stateCount
-		}
-		return false, err
-	}
-
-	if d == nil {
-		stateCount.Disabled = false
-		if t == "k8s" {
-			status.KubeStatus.PodState[aliasname] = stateCount
-		} else {
-			status.QStatus.PodState[aliasname] = stateCount
-		}
-		return false, errors.Errorf("component %s is not available", aliasname)
-	}
-
-	stateCount.Ready = int(d.Status.NumberReady)
-	stateCount.Available = int(d.Status.NumberAvailable)
-	stateCount.Unavailable = int(d.Status.NumberUnavailable)
-	stateCount.Disabled = false
-	if t == "k8s" {
-		status.KubeStatus.PodState[aliasname] = stateCount
-	} else {
-		status.QStatus.PodState[aliasname] = stateCount
-	}
-	notReady := stateCount.Desired - stateCount.Ready
-	if notReady > 0 {
-		k.option.Log.Warnf("%d pods of Deployment %s are not ready", notReady, name)
-	}
-	if unavailable := stateCount.Unavailable - notReady; unavailable > 0 {
-		k.option.Log.Warnf("%d pods of Deployment %s are not available", unavailable, name)
-	}
-	return false, nil
-}
-
 // serviceStatus 检查服务状态
 func (k *K8sStatusCollector) serviceStatus(ctx context.Context, status *Status) error {
 	// 集群
@@ -214,7 +160,7 @@ func (k *K8sStatusCollector) serviceStatus(ctx context.Context, status *Status) 
 	k.deploymentStatus(ctx, "kube-system", "metrics-server", "metrics-server", "k8s", status)
 	if k.cfg.Storage.Type == "local" {
 		name := "q-local-provisioner"
-		if len(k.cfg.Install.Version) == 0 || version.LTv2(k.cfg.Install.Version, common.Version) {
+		if len(k.cfg.Install.Version) == 0 {
 			name = "local-path-provisioner"
 		}
 		k.deploymentStatus(ctx, "kube-system", name, "q-local", "k8s", status)

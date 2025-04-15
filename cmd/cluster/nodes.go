@@ -32,7 +32,7 @@ func NewCmdClusterNodes(f factory.Factory) *cobra.Command {
 	}
 	clusterNodesCmd.AddCommand(joinCommand(f))
 	clusterNodesCmd.AddCommand(deleteCommand(f))
-	clusterNodesCmd.AddCommand(ListNodeCmd())
+	clusterNodesCmd.AddCommand(topNodeCommand())
 	return clusterNodesCmd
 }
 
@@ -91,12 +91,12 @@ func deleteCommand(f factory.Factory) *cobra.Command {
 	return deleteCmd
 }
 
-func ListNodeCmd() *cobra.Command {
+func topNodeCommand() *cobra.Command {
 	o := top.NodeOption{}
 	nodeCmd := &cobra.Command{
-		Use:                   "list",
+		Use:                   "toplist",
 		DisableFlagsInUseLine: true,
-		Short:                 "list nodes in cluster",
+		Short:                 "show node top usage info",
 		Example:               KRNodeExample,
 		Run: func(cmd *cobra.Command, args []string) {
 			o.Validate()
