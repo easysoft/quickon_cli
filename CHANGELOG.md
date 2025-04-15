@@ -1,5 +1,16 @@
 # Changelog
 
+## v4.2.0 (2025-04-15)
+
+ * [493e0168](https://github.com/easysoft/quickon_cli/commit/493e0168db5a4facf4204939b12357b70ac07b9c) feat: enhance local storage deployment and command configuration
+ * [20bc9f74](https://github.com/easysoft/quickon_cli/commit/20bc9f740b48cc21da0c6e49d0a081ca05a9ce27) refactor: streamline node command functionality and simplify checks
+ * [c4d73de8](https://github.com/easysoft/quickon_cli/commit/c4d73de802b6eb1db144acb046da9c214b7ea46c) feat: refactor cluster management commands and enhance status options
+ * [818ef722](https://github.com/easysoft/quickon_cli/commit/818ef72209ed47a03a841899e1f8e363b8117b52) fix: improve PHP 7 installation command case sensitivity handling
+
+### Contributors
+
+ * ysicing
+
 ## v4.1.0 (2025-04-14)
 
  * [5e6a5060](https://github.com/easysoft/quickon_cli/commit/5e6a506004b744c9bc7a3f06022a975a1043bc99) feat: add USEPHP7 support for Zentao DevOps installation scripts
