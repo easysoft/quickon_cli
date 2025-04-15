@@ -14,7 +14,7 @@ qcadmin platform crd dbsvc list [flags]
 ### Examples
 
 ```
-/tmp/go-build2944225943/b001/exe/docs platform crd dbsvc list
+/tmp/go-build152738301/b001/exe/docs platform crd dbsvc list
 ```
 
 ### Options

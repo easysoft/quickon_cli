@@ -25,7 +25,6 @@ qcadmin cluster storage nfs [flags]
 ```
   -h, --help          help for nfs
       --ip string     cloud cfs/nas ip
-      --name string   storage class name (default "q-nfs")
       --path string   cloud cfs/nas path
 ```
 
