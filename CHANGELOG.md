@@ -1,5 +1,13 @@
 # Changelog
 
+## v4.2.1 (2025-04-15)
+
+ * [fc5aebd4](https://github.com/easysoft/quickon_cli/commit/fc5aebd43436dd79968702323b327728f31e1d67) feat: standardize NFS storage class configuration and logging
+
+### Contributors
+
+ * ysicing
+
 ## v4.2.0 (2025-04-15)
 
  * [493e0168](https://github.com/easysoft/quickon_cli/commit/493e0168db5a4facf4204939b12357b70ac07b9c) feat: enhance local storage deployment and command configuration
