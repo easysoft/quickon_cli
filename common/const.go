@@ -98,6 +98,8 @@ const (
 	DefaultNerdctlConfig          = "/etc/nerdctl/nerdctl.toml"
 	DefaultExternalDBPort         = 3306
 	DefaultExternalDBName         = "ex-zentaopaas-mysql"
+	DefaultNFSStorageClass        = "q-nfs"
+	DefaultLocalStorageClass      = "q-local"
 )
 
 const (

@@ -163,9 +163,9 @@ func (k *K8sStatusCollector) serviceStatus(ctx context.Context, status *Status) 
 		if len(k.cfg.Install.Version) == 0 {
 			name = "local-path-provisioner"
 		}
-		k.deploymentStatus(ctx, "kube-system", name, "q-local", "k8s", status)
+		k.deploymentStatus(ctx, "kube-system", name, common.DefaultLocalStorageClass, "k8s", status)
 	} else if k.cfg.Storage.Type == "nfs" {
-		k.deploymentStatus(ctx, "kube-system", "q-nfs-nfs-subdir-external-provisioner", "q-nfs", "k8s", status)
+		k.deploymentStatus(ctx, "kube-system", "q-nfs-nfs-subdir-external-provisioner", common.DefaultNFSStorageClass, "k8s", status)
 	}
 	// 业务层
 	k.deploymentStatus(ctx, common.GetDefaultSystemNamespace(true), common.GetReleaseName(k.cfg.Quickon.DevOps), common.GetReleaseName(k.cfg.Quickon.DevOps), "", status)

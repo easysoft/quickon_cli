@@ -23,6 +23,7 @@ import (
 	"github.com/easysoft/qcadmin/internal/pkg/util/log/survey"
 
 	qcexec "github.com/easysoft/qcadmin/internal/pkg/util/exec"
+	kubeerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -93,7 +94,7 @@ func local(f factory.Factory) *cobra.Command {
 				logpkg.Errorf("upgrade install local storage failed: %s", string(output))
 				return err
 			}
-			logpkg.Infof("install local storage class %s (%s) success", color.SGreen("q-local"), color.SGreen(path))
+			logpkg.Infof("install local storage class %s (%s) success", color.SGreen(common.DefaultLocalStorageClass), color.SGreen(path))
 			return nil
 		},
 	}
@@ -102,13 +103,23 @@ func local(f factory.Factory) *cobra.Command {
 }
 
 func nfs(f factory.Factory) *cobra.Command {
-	var ip, path, name string
+	var ip, path string
 	logpkg := f.GetLog()
 	cmd := &cobra.Command{
 		Use:     "nfs",
 		Short:   "deploy nfs storage",
 		Example: nfsExample,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			kclient, _ := k8s.NewSimpleClient()
+			_, err := kclient.GetNamespace(context.TODO(), common.DefaultStorageNamespace, metav1.GetOptions{})
+			if err != nil {
+				if !kubeerr.IsNotFound(err) {
+					return err
+				}
+				if _, err := kclient.CreateNamespace(context.TODO(), common.DefaultStorageNamespace, metav1.CreateOptions{}); err != nil && kubeerr.IsAlreadyExists(err) {
+					return err
+				}
+			}
 			if len(ip) == 0 && len(path) == 0 {
 				an, err := logpkg.Question(&survey.QuestionOptions{
 					Question:     "nfs server ip is empty, install local nfs",
@@ -139,23 +150,22 @@ func nfs(f factory.Factory) *cobra.Command {
 			return errors.Errorf("nfs server ip or path is empty")
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			// TODO check install repo exist
-			if err := qcexec.Command(os.Args[0], "experimental", "helm", "repo-init").Run(); err != nil {
-				logpkg.Warnf("check helm repo failed: %v", err)
+			if err := qcexec.CommandRun("bash", "-c", fmt.Sprintf("%s %s %s", common.GetCustomFile("hack/manifests/storage/nfs.sh"), ip, path)); err != nil {
+				return errors.Errorf("precheck nfs storage failed, reason: %v", err)
 			}
-			helmargs := []string{"experimental", "helm", "upgrade", "--name", name, "--repo", common.DefaultHelmRepoName, "--chart", "nfs-subdir-external-provisioner", "--namespace", common.DefaultStorageNamespace, "--set", "nfs.server=" + ip, "--set", "nfs.path=" + path, "--set", "storageClass.name=" + name}
-			output, err := qcexec.Command(os.Args[0], helmargs...).CombinedOutput()
+			yamlfile := common.GetCustomFile("hack/manifests/storage/nfs.deploy.yaml")
+			kubeargs := []string{"experimental", "kubectl", "apply", "-f", yamlfile, "--namespace", common.DefaultStorageNamespace}
+			output, err := qcexec.Command(os.Args[0], kubeargs...).CombinedOutput()
 			if err != nil {
-				logpkg.Errorf("upgrade install nfs failed: %s", string(output))
+				logpkg.Errorf("upgrade install nfs storage failed: %s", string(output))
 				return err
 			}
-			logpkg.Infof("install nfs storage class %s (%s:%s) success", color.SGreen(name), color.SGreen(ip), color.SGreen(path))
+			logpkg.Infof("install nfs storage class %s (%s:%s) success", color.SGreen(common.DefaultNFSStorageClass), color.SGreen(ip), color.SGreen(path))
 			return nil
 		},
 	}
 	cmd.Flags().StringVar(&ip, "ip", os.Getenv("NFS_SERVER"), "cloud cfs/nas ip")
 	cmd.Flags().StringVar(&path, "path", os.Getenv("NFS_PATH"), "cloud cfs/nas path")
-	cmd.Flags().StringVar(&name, "name", "q-nfs", "storage class name")
 	return cmd
 }
 
