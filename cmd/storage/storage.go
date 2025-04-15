@@ -8,6 +8,7 @@ package storage
 
 import (
 	"context"
+	"fmt"
 	"os"
 
 	"github.com/cockroachdb/errors"
@@ -71,21 +72,32 @@ func longhorn(f factory.Factory) *cobra.Command {
 }
 
 func local(f factory.Factory) *cobra.Command {
+	var path string
 	logpkg := f.GetLog()
 	cmd := &cobra.Command{
 		Use:   "local",
 		Short: "deploy local pv storage",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			kubeargs := []string{"experimental", "kubectl", "apply", "-f", common.GetCustomFile("hack/manifests/storage/local.yaml")}
+			yamlfile := common.GetCustomFile("hack/manifests/storage/local.yaml")
+			if len(path) != 0 {
+				if err := qcexec.CommandRun("bash", "-c", fmt.Sprintf("%s %s", common.GetCustomFile("hack/manifests/storage/local.sh"), path)); err != nil {
+					return errors.Errorf("precheck local storage failed, reason: %v", err)
+				}
+				yamlfile = common.GetCustomFile("hack/manifests/storage/local.deploy.yaml")
+			} else {
+				path = "/opt/quickon/storage/local"
+			}
+			kubeargs := []string{"experimental", "kubectl", "apply", "-f", yamlfile}
 			output, err := qcexec.Command(os.Args[0], kubeargs...).CombinedOutput()
 			if err != nil {
 				logpkg.Errorf("upgrade install local storage failed: %s", string(output))
 				return err
 			}
-			logpkg.Infof("install local storage class %s (%s) success", color.SGreen("q-local"), color.SGreen("/opt/quickon/storage/local"))
+			logpkg.Infof("install local storage class %s (%s) success", color.SGreen("q-local"), color.SGreen(path))
 			return nil
 		},
 	}
+	cmd.Flags().StringVar(&path, "path", os.Getenv("LOCAL_PATH"), "local path")
 	return cmd
 }
 
@@ -141,8 +153,8 @@ func nfs(f factory.Factory) *cobra.Command {
 			return nil
 		},
 	}
-	cmd.Flags().StringVar(&ip, "ip", "", "cloud cfs/nas ip")
-	cmd.Flags().StringVar(&path, "path", "", "cloud cfs/nas path")
+	cmd.Flags().StringVar(&ip, "ip", os.Getenv("NFS_SERVER"), "cloud cfs/nas ip")
+	cmd.Flags().StringVar(&path, "path", os.Getenv("NFS_PATH"), "cloud cfs/nas path")
 	cmd.Flags().StringVar(&name, "name", "q-nfs", "storage class name")
 	return cmd
 }

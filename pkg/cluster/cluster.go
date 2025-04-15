@@ -21,6 +21,7 @@ import (
 	"github.com/ergoapi/util/expass"
 	"github.com/ergoapi/util/exstr"
 	"github.com/ergoapi/util/file"
+	"github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/util/wait"
 
 	"github.com/easysoft/qcadmin/common"
@@ -56,6 +57,8 @@ type Cluster struct {
 	OffLine               bool
 	Registry              string
 	Storage               string
+	StorageIP             string
+	StoragePath           string
 	DataStore             string
 	IgnorePreflightErrors bool
 }
@@ -99,6 +102,18 @@ func (c *Cluster) getInitFlags() []types.Flag {
 			V:      c.Storage,
 			EnvVar: common.DefaultStorageType,
 			Usage:  `storage, e.g: nfs,local,none`,
+		},
+		{
+			Name:  "storage-ip",
+			P:     &c.StorageIP,
+			V:     c.StorageIP,
+			Usage: `storage ip, nfs server ip`,
+		},
+		{
+			Name:  "storage-path",
+			P:     &c.StoragePath,
+			V:     c.StoragePath,
+			Usage: `storage path, nfs or local path`,
 		},
 		{
 			Name:  "datastore",
@@ -281,11 +296,22 @@ func (c *Cluster) initMaster0(cfg *config.Config, sshClient ssh.Interface) error
 	}
 	c.log.Infof("install %s as default storage", c.Storage)
 	if c.Storage == "nfs" {
-		if err := qcexec.CommandRun("bash", "-c", common.GetCustomFile("hack/manifests/storage/nfs-server.sh")); err != nil {
-			return errors.Errorf("%s run install nfs script failed, reason: %v", cfg.Cluster.InitNode, err)
+		if len(c.StorageIP) > 0 && len(c.StoragePath) > 0 {
+			kubeargs := []string{"cluster", "storage", "nfs", "--ip", c.StorageIP, "--path", c.StoragePath, fmt.Sprintf("--debug=%v", c.log.GetLevel() == logrus.DebugLevel)}
+			if err := qcexec.CommandRun(os.Args[0], kubeargs...); err != nil {
+				return errors.Errorf("%s run install nfs storage failed, reason: %v", cfg.Cluster.InitNode, err)
+			}
+		} else {
+			if err := qcexec.CommandRun("bash", "-c", common.GetCustomFile("hack/manifests/storage/nfs-server.sh")); err != nil {
+				return errors.Errorf("%s run install nfs script failed, reason: %v", cfg.Cluster.InitNode, err)
+			}
 		}
 	} else if c.Storage == "local" {
-		kubeargs := []string{"experimental", "kubectl", "apply", "-f", common.GetCustomFile("hack/manifests/storage/local.yaml")}
+		kubeargs := []string{"cluster", "storage", "local"}
+		if len(c.StoragePath) > 0 {
+			kubeargs = append(kubeargs, "--path", c.StoragePath)
+		}
+		kubeargs = append(kubeargs, fmt.Sprintf("--debug=%v", c.log.GetLevel() == logrus.DebugLevel))
 		if err := qcexec.CommandRun(os.Args[0], kubeargs...); err != nil {
 			return errors.Errorf("%s run install local storage failed, reason: %v", cfg.Cluster.InitNode, err)
 		}

@@ -7,8 +7,8 @@
 
 # Source code is available at https://github.com/easysoft/quickon_cli
 
-# SCRIPT_COMMIT_SHA="e9b38bb8a5e792f575692b9c0c179670663ddd0b"
-# SCRIPT_DATA="Mon Apr 14 10:18:36 CST 2025"
+# SCRIPT_COMMIT_SHA="20bc9f740b48cc21da0c6e49d0a081ca05a9ce27"
+# SCRIPT_DATA="Tue Apr 15 11:20:55 CST 2025"
 
 # Usage:
 #   curl ... | ENV_VAR=... sh -
@@ -30,6 +30,12 @@
 #   - STORAGE_TYPE
 #     Storage Type when install Zentao DevOPS default use local as storage provider.
 #     Defaults to '', support 'local', 'nfs'
+#   - STORAGE_IP
+#     Storage NFS IP when install Zentao DevOPS default use local as storage provider.
+#     Defaults to ''
+#   - STORAGE_PATH
+#     Storage NFS or Local Path when install Zentao DevOPS default use local as storage provider.
+#     Defaults to ''
 #   - EX_DB_HOST
 #     External Database Host when install Zentao DevOPS.
 #     Defaults to ''
@@ -222,6 +228,13 @@ install_zentao_devops() {
   fi
   if [ "${STORAGE_TYPE}" = "nfs" ]; then
     INSTALL_COMMAND="${INSTALL_COMMAND} --storage nfs"
+    if [ -n "${STORAGE_IP}" ] && [ -n "${STORAGE_PATH}" ]; then
+      INSTALL_COMMAND="${INSTALL_COMMAND} --storage-ip ${STORAGE_IP} --storage-path ${STORAGE_PATH}"
+    fi
+  else
+    if [ -n "${STORAGE_PATH}" ]; then
+      INSTALL_COMMAND="${INSTALL_COMMAND} --storage-path ${STORAGE_PATH}"
+    fi
   fi
   if [ -n "${EX_DB_HOST}" ] && [ -n "${EX_DB_PASSWORD}" ]; then
     INSTALL_COMMAND="${INSTALL_COMMAND} --ext-db-host ${EX_DB_HOST} --ext-db-password ${EX_DB_PASSWORD}"

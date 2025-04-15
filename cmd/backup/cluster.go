@@ -7,6 +7,8 @@
 package backup
 
 import (
+	"fmt"
+
 	"github.com/cockroachdb/errors"
 	"github.com/spf13/cobra"
 
@@ -32,7 +34,7 @@ func NewCmdBackupCluster(f factory.Factory) *cobra.Command {
 				return errors.Errorf("not support datastore %s", cfg.DB)
 			}
 			log.Info("start backup cluster datastore etcd")
-			return exec.CommandRun("bash", "-c", common.GetCustomFile("hack/manifests/scripts/etcd-snapshot.sh"), cfg.DataDir, common.GetDefaultLogDir())
+			return exec.CommandRun("bash", "-c", fmt.Sprintf("%s %s %s", common.GetCustomFile("hack/manifests/scripts/etcd-snapshot.sh"), cfg.DataDir, common.GetDefaultLogDir()))
 		},
 	}
 	return bc
