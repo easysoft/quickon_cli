@@ -1,8 +1,6 @@
 module github.com/easysoft/qcadmin
 
 go 1.23.1
-toolchain go1.24.1
-
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
 	github.com/BeidouCloudPlatform/go-bindata/v4 v4.1.0
@@ -20,7 +18,7 @@ require (
 	github.com/gosuri/uitable v0.0.4
 	github.com/imroc/req/v3 v3.49.1
 	github.com/inconshreveable/go-update v0.0.0-20160112193335-8152e7eb6ccf
-	github.com/jackpal/gateway v1.0.16
+	github.com/jackpal/gateway v1.1.1
 	github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213
 	github.com/kardianos/service v1.2.2
 	github.com/logrusorgru/aurora/v3 v3.0.0
