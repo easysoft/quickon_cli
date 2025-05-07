@@ -1,5 +1,19 @@
 # Changelog
 
+## v4.3.0 (2025-05-07)
+
+ * [07dc5257](https://github.com/easysoft/quickon_cli/commit/07dc5257e20668dba7456321bb0aae3ffec7ea06) * update k3s installation scripts for improved datastore handling
+ * [23b51f7c](https://github.com/easysoft/quickon_cli/commit/23b51f7c487b7eb647a2f1ad4d37be9589c22e9a) build(deps): bump github.com/jackpal/gateway from 1.0.16 to 1.1.1
+ * [4ffeaaea](https://github.com/easysoft/quickon_cli/commit/4ffeaaea2bcfd81bc6e28fd0d1042fd021a2b140) build(deps): bump github.com/spf13/cobra from 1.8.1 to 1.9.1
+ * [2a922ee7](https://github.com/easysoft/quickon_cli/commit/2a922ee77db24b6a196e27d563b34e6ad15d0b4a) build(deps): bump github.com/refraction-networking/utls
+ * [af915ec8](https://github.com/easysoft/quickon_cli/commit/af915ec8b2c4bd3dcc18ab720d7d20a85cd8234d) build(deps): bump tailscale.com from 1.80.3 to 1.82.5
+ * [c2ccefac](https://github.com/easysoft/quickon_cli/commit/c2ccefac3303068010f21f55bbe74f66ecf100dd) build(deps): bump golang.org/x/net from 0.37.0 to 0.38.0
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v4.2.1 (2025-04-15)
 
  * [fc5aebd4](https://github.com/easysoft/quickon_cli/commit/fc5aebd43436dd79968702323b327728f31e1d67) feat: standardize NFS storage class configuration and logging
