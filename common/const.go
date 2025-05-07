@@ -159,11 +159,10 @@ ExecStart=/usr/local/bin/k3s \
         --flannel-backend {{ .CNI }} \
       {{ end }}
       {{- if .DataStore }}
+        {{- if ne .DataStore "local"}}
         --datastore-endpoint {{ .DataStore }} \
+        {{-end}}
       {{- else}}
-      {{if not .Master0 -}}
-        --server https://{{ .KubeAPI }}:6443 \
-      {{ end }}
         --cluster-init \
         --etcd-expose-metrics \
         --etcd-snapshot-name auto-snapshot \
@@ -176,10 +175,12 @@ ExecStart=/usr/local/bin/k3s \
         --disable servicelb,traefik,local-storage \
     {{- else}}
       agent \
-        --server https://{{ .KubeAPI }}:6443 \
     {{- end }}
+      {{if not .Master0 -}}
+        --server https://{{ .KubeAPI }}:6443 \
+      {{ end }}
         --token {{ .KubeToken }} \
-        --data-dir {{.DataDir}} \
+        --data-dir {{ .DataDir }} \
         --pause-image {{ .Registry }}/rancher/mirrored-pause:3.6 \
         --prefer-bundled-bin \
         --kube-proxy-arg "proxy-mode=ipvs" \

@@ -1,6 +1,7 @@
 module github.com/easysoft/qcadmin
 
-go 1.23.1
+go 1.24.2
+
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
 	github.com/BeidouCloudPlatform/go-bindata/v4 v4.1.0
