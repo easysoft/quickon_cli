@@ -161,7 +161,7 @@ ExecStart=/usr/local/bin/k3s \
       {{- if .DataStore }}
         {{- if ne .DataStore "local"}}
         --datastore-endpoint {{ .DataStore }} \
-        {{-end}}
+        {{- end}}
       {{- else}}
         --cluster-init \
         --etcd-expose-metrics \
@@ -176,7 +176,7 @@ ExecStart=/usr/local/bin/k3s \
     {{- else}}
       agent \
     {{- end }}
-      {{if not .Master0 -}}
+      {{if not .Master0 }}
         --server https://{{ .KubeAPI }}:6443 \
       {{ end }}
         --token {{ .KubeToken }} \

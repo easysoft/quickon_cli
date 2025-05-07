@@ -91,7 +91,7 @@ func EmbedCommand(f factory.Factory) *cobra.Command {
 	rootCmd.Flags().StringVar(&k3sargs.PodCIDR, "pod-cidr", common.DefaultClusterPodCidr, "cluster cidr")
 	rootCmd.Flags().StringVar(&k3sargs.ServiceCIDR, "service-cidr", common.DefaultClusterServiceCidr, "service cidr")
 	rootCmd.Flags().StringVar(&k3sargs.DataDir, "data-dir", "", "data dir")
-	rootCmd.Flags().StringVar(&k3sargs.DataStore, "data", "", "data type")
+	rootCmd.Flags().StringVar(&k3sargs.DataStore, "datastore", "", "datastore")
 	rootCmd.Flags().StringVar(&k3sargs.KubeAPI, "kubeapi", "", "kubeapi")
 	rootCmd.Flags().BoolVar(&k3sargs.TypeMaster, "master", true, "master type")
 	rootCmd.Flags().BoolVar(&k3sargs.Master0, "master0", false, "master0")

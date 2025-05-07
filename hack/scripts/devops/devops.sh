@@ -51,6 +51,10 @@
 #   - USEPHP7
 #     Use PHP7 when install Zentao DevOPS.
 #     Defaults to 'false'
+#   - DATASTORE
+#     Use datastore when install k3s cluster.
+#     Defaults to '', support 'local(sqlite)', default use etcd as datastore
+#     If STORAGE_TYPE is 'local', use 'sqlite(local)' as datastore
 
 set -e
 set -o noglob
@@ -235,6 +239,9 @@ install_zentao_devops() {
     if [ -n "${STORAGE_PATH}" ]; then
       INSTALL_COMMAND="${INSTALL_COMMAND} --storage-path ${STORAGE_PATH}"
     fi
+    if [ -z "${DATASTORE}" ]; then
+      export DATASTORE="local"
+    fi
   fi
   if [ -n "${EX_DB_HOST}" ] && [ -n "${EX_DB_PASSWORD}" ]; then
     INSTALL_COMMAND="${INSTALL_COMMAND} --ext-db-host ${EX_DB_HOST} --ext-db-password ${EX_DB_PASSWORD}"
@@ -247,6 +254,9 @@ install_zentao_devops() {
   fi
   if [ -n "${USEPHP7}" ] && [ "$(echo "${USEPHP7}" | tr '[:upper:]' '[:lower:]')" != "false" ]; then
     INSTALL_COMMAND="${INSTALL_COMMAND} --use-php7"
+  fi
+  if [ -n "${DATASTORE}" ]; then
+    INSTALL_COMMAND="${INSTALL_COMMAND} --datastore ${DATASTORE}"
   fi
   if [ -n "${DEBUG}" ]; then
     INSTALL_COMMAND="${INSTALL_COMMAND} --debug"
