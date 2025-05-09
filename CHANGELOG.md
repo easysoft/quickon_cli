@@ -1,5 +1,11 @@
 # Changelog
 
+## v4.3.1 (2025-05-09)
+
+
+### Contributors
+
+
 ## v4.3.0 (2025-05-07)
 
  * [07dc5257](https://github.com/easysoft/quickon_cli/commit/07dc5257e20668dba7456321bb0aae3ffec7ea06) * update k3s installation scripts for improved datastore handling
