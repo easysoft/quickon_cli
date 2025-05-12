@@ -7,7 +7,7 @@ require (
 	github.com/BeidouCloudPlatform/go-bindata/v4 v4.1.0
 	github.com/Masterminds/semver/v3 v3.3.1
 	github.com/cheggaaa/pb/v3 v3.1.7
-	github.com/cockroachdb/errors v1.11.3
+	github.com/cockroachdb/errors v1.12.0
 	github.com/containerd/continuity v0.4.5
 	github.com/docker/docker v27.4.1+incompatible
 	github.com/easysoft/quickon-api v0.7.6
