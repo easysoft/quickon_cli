@@ -1,5 +1,15 @@
 # Changelog
 
+## v4.3.2 (2025-05-19)
+
+ * [19616e65](https://github.com/easysoft/quickon_cli/commit/19616e65cb04f0f8e01763d7c296e5391dd2d355) feat: add nerdctl configuration file creation and offline checks
+ * [4eb87b63](https://github.com/easysoft/quickon_cli/commit/4eb87b631dbe09d261a8cc9959a99ecc9a3b1b84) build(deps): bump github.com/cockroachdb/errors from 1.11.3 to 1.12.0
+
+### Contributors
+
+ * dependabot[bot]
+ * ysicing
+
 ## v4.3.1 (2025-05-09)
 
 
