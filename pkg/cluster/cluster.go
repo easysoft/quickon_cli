@@ -413,6 +413,7 @@ func (c *Cluster) joinNode(ip string, master bool, cfg *config.Config, sshClient
 	if err := sshClient.Copy(ip, tplSrc, tplDst); err != nil {
 		return errors.Errorf("%s copy tpl (%s:%s->%s:%s) failed, reason: %v", t, cfg.Cluster.InitNode, tplSrc, ip, tplDst, err)
 	}
+	c.OffLine = cfg.Install.Type == "offline"
 	if err := c.preinit(cfg.Cluster.InitNode, ip, sshClient); err != nil {
 		return err
 	}

@@ -105,11 +105,26 @@ service_enable_and_start() {
     return 0
 }
 
+# create nerdctl config
+create_nerdctl_file() {
+  [ -d "/etc/nerdctl" ] || mkdir /etc/nerdctl
+  file="/etc/nerdctl/nerdctl.toml"
+  if [ -f "$file" ]; then
+    file="/etc/nerdctl/z.nerdctl.toml"
+  fi
+  cat > "$file" <<EOF
+# $file
+address        = "unix:///run/k3s/containerd/containerd.sock"
+namespace      = "k8s.io"
+EOF
+}
+
 # --- run the install process --
 {
     create_symlinks
     systemd_disable
     # check_docker
     # create_env_file
+    create_nerdctl_file
     service_enable_and_start
 }
