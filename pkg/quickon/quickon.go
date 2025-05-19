@@ -341,12 +341,12 @@ func (m *Meta) Init() error {
 	cfg.S3.Password = expass.PwGenAlphaNum(16)
 	cfg.SaveConfig()
 	m.Log.Info("start deploy custom tools")
-	toolargs := []string{"experimental", "helm", "upgrade", "--name", "selfcert", "--repo", common.DefaultHelmRepoName, "--chart", "selfcert", "--namespace", common.GetDefaultSystemNamespace(true)}
-	if helmstd, err := qcexec.Command(os.Args[0], toolargs...).CombinedOutput(); err != nil {
-		m.Log.Warnf("deploy custom tools err: %v, std: %s", err, string(helmstd))
-	} else {
-		m.Log.Done("deployed custom tools success")
-	}
+	// toolargs := []string{"experimental", "helm", "upgrade", "--name", "selfcert", "--repo", common.DefaultHelmRepoName, "--chart", "selfcert", "--namespace", common.GetDefaultSystemNamespace(true)}
+	// if helmstd, err := qcexec.Command(os.Args[0], toolargs...).CombinedOutput(); err != nil {
+	// 	m.Log.Warnf("deploy custom tools err: %v, std: %s", err, string(helmstd))
+	// } else {
+	// 	m.Log.Done("deployed custom tools success")
+	// }
 	m.Log.Info("start deploy operator")
 	operatorargs := []string{"experimental", "helm", "upgrade", "--name", common.DefaultCneOperatorName, "--repo", common.DefaultHelmRepoName, "--chart", common.DefaultCneOperatorName, "--namespace", common.GetDefaultSystemNamespace(true),
 		"--set", "minio.ingress.enabled=true",
@@ -541,13 +541,13 @@ func (m *Meta) UnInstall() error {
 	m.Log.Warnf("start clean platform")
 	cfg, _ := config.LoadConfig()
 	// 清理helm安装应用
-	m.Log.Info("start uninstall cne custom tools")
-	toolArgs := []string{"experimental", "helm", "uninstall", "--name", "selfcert", "--namespace", common.GetDefaultSystemNamespace(true)}
-	if cleanStd, err := qcexec.Command(os.Args[0], toolArgs...).CombinedOutput(); err != nil {
-		m.Log.Warnf("uninstall cne custom tools err: %v, std: %s", err, string(cleanStd))
-	} else {
-		m.Log.Done("uninstall cne custom tools success")
-	}
+	// m.Log.Info("start uninstall cne custom tools")
+	// toolArgs := []string{"experimental", "helm", "uninstall", "--name", "selfcert", "--namespace", common.GetDefaultSystemNamespace(true)}
+	// if cleanStd, err := qcexec.Command(os.Args[0], toolArgs...).CombinedOutput(); err != nil {
+	// 	m.Log.Warnf("uninstall cne custom tools err: %v, std: %s", err, string(cleanStd))
+	// } else {
+	// 	m.Log.Done("uninstall cne custom tools success")
+	// }
 	m.Log.Info("start uninstall cne operator")
 	operatorArgs := []string{"experimental", "helm", "uninstall", "--name", common.DefaultCneOperatorName, "--namespace", common.GetDefaultSystemNamespace(true)}
 	if cleanStd, err := qcexec.Command(os.Args[0], operatorArgs...).CombinedOutput(); err != nil {
