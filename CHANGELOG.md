@@ -1,5 +1,14 @@
 # Changelog
 
+## v4.3.3 (2025-05-28)
+
+ * [9616387c](https://github.com/easysoft/quickon_cli/commit/9616387c1f7d80be94b157518f93727e4e5f7d10) build(deps): bump golang.org/x/sys from 0.32.0 to 0.33.0
+ * [647e08fd](https://github.com/easysoft/quickon_cli/commit/647e08fd143d5f9e88837a4cb72d38f0fc4cc517) build(deps): bump github.com/prometheus-community/pro-bing
+
+### Contributors
+
+ * dependabot[bot]
+
 ## v4.3.2 (2025-05-19)
 
  * [19616e65](https://github.com/easysoft/quickon_cli/commit/19616e65cb04f0f8e01763d7c296e5391dd2d355) feat: add nerdctl configuration file creation and offline checks
