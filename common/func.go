@@ -76,9 +76,7 @@ func GetVersion(devops bool, typ, version string) string {
 	case string(ZenTaoMaxType):
 		defaultVersion = DefaultZentaoDevOPSMaxVersion
 	}
-	if strings.HasSuffix(defaultVersion, ".0") {
-		defaultVersion = strings.TrimSuffix(defaultVersion, ".0")
-	}
+	defaultVersion = strings.TrimSuffix(defaultVersion, ".0")
 	return defaultVersion
 }
 
