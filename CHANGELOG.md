@@ -1,5 +1,18 @@
 # Changelog
 
+## v4.3.4 (2025-06-27)
+
+ * [e1fb67b9](https://github.com/easysoft/quickon_cli/commit/e1fb67b9cc50bd5721eec74d8b0f2b862d1f8497) build(deps): bump github.com/imroc/req/v3 from 3.49.1 to 3.53.0
+ * [ab035d68](https://github.com/easysoft/quickon_cli/commit/ab035d68730176c3394168f2ec0b42723fde8d22) build(deps): bump helm.sh/helm/v3 from 3.17.3 to 3.18.2
+ * [bb1c84cd](https://github.com/easysoft/quickon_cli/commit/bb1c84cde81e116d4eef945cdca2a21ac657d136) build(deps): bump github.com/cloudflare/circl from 1.5.0 to 1.6.1
+ * [8cc0a25d](https://github.com/easysoft/quickon_cli/commit/8cc0a25de79a28deb48e53c3e362e1d3dfbee9dd) build(deps): bump golang.org/x/term from 0.30.0 to 0.32.0
+ * [921de9ea](https://github.com/easysoft/quickon_cli/commit/921de9ea4e97ae83edc74068195fb2d665843d7f) build(deps): bump github.com/go-sql-driver/mysql from 1.9.1 to 1.9.2
+ * [42ebfe7f](https://github.com/easysoft/quickon_cli/commit/42ebfe7f61f8e8c351436301835e908aaeff2600) build(deps): bump github.com/vishvananda/netlink from 1.3.0 to 1.3.1
+
+### Contributors
+
+ * dependabot[bot]
+
 ## v4.3.3 (2025-05-28)
 
  * [9616387c](https://github.com/easysoft/quickon_cli/commit/9616387c1f7d80be94b157518f93727e4e5f7d10) build(deps): bump golang.org/x/sys from 0.32.0 to 0.33.0
