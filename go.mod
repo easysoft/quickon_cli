@@ -1,6 +1,6 @@
 module github.com/easysoft/qcadmin
 
-go 1.24.2
+go 1.24.4
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
@@ -60,7 +60,7 @@ require (
 	k8s.io/system-validators v1.7.0
 	k8s.io/utils v0.0.0-20241210054802-24370beab758
 	sigs.k8s.io/yaml v1.4.0
-	tailscale.com v1.82.5
+	tailscale.com v1.86.5
 )
 
 require (
@@ -200,9 +200,9 @@ require (
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/mod v0.25.0 // indirect
 	golang.org/x/net v0.41.0 // indirect
-	golang.org/x/oauth2 v0.28.0 // indirect
+	golang.org/x/oauth2 v0.30.0 // indirect
 	golang.org/x/text v0.26.0 // indirect
-	golang.org/x/time v0.10.0 // indirect
+	golang.org/x/time v0.11.0 // indirect
 	golang.org/x/tools v0.34.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20241209162323-e6fa225c2576 // indirect
 	google.golang.org/grpc v1.68.1 // indirect
