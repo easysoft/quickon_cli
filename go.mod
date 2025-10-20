@@ -1,6 +1,6 @@
 module github.com/easysoft/qcadmin
 
-go 1.24.2
+go 1.25.1
 
 require (
 	github.com/AlecAivazis/survey/v2 v2.3.7
@@ -9,7 +9,7 @@ require (
 	github.com/cheggaaa/pb/v3 v3.1.7
 	github.com/cockroachdb/errors v1.12.0
 	github.com/containerd/continuity v0.4.5
-	github.com/docker/docker v27.4.1+incompatible
+	github.com/docker/docker v27.5.1+incompatible
 	github.com/easysoft/quickon-api v0.7.6
 	github.com/emirpasic/gods v1.18.1
 	github.com/ergoapi/util v0.7.12
@@ -39,7 +39,7 @@ require (
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/pflag v1.0.6
-	github.com/ulikunitz/xz v0.5.12
+	github.com/ulikunitz/xz v0.5.15
 	github.com/vishvananda/netlink v1.3.1
 	github.com/xlab/treeprint v1.2.0
 	github.com/ysicing/cobra2vitepress v0.0.0-20231129091107-690364f0dca7
@@ -60,7 +60,7 @@ require (
 	k8s.io/system-validators v1.7.0
 	k8s.io/utils v0.0.0-20241210054802-24370beab758
 	sigs.k8s.io/yaml v1.4.0
-	tailscale.com v1.82.5
+	tailscale.com v1.88.4
 )
 
 require (
@@ -103,7 +103,7 @@ require (
 	github.com/getsentry/sentry-go v0.28.1 // indirect
 	github.com/go-errors/errors v1.5.1 // indirect
 	github.com/go-gorp/gorp/v3 v3.1.0 // indirect
-	github.com/go-json-experiment/json v0.0.0-20250223041408-d3c622f1b874 // indirect
+	github.com/go-json-experiment/json v0.0.0-20250813024750-ebf49471dced // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
@@ -153,6 +153,7 @@ require (
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/moby/spdystream v0.5.0 // indirect
+	github.com/moby/sys/reexec v0.1.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/monochromegane/go-gitignore v0.0.0-20200626010858-205db1a8cc00 // indirect
@@ -200,9 +201,9 @@ require (
 	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/mod v0.25.0 // indirect
 	golang.org/x/net v0.41.0 // indirect
-	golang.org/x/oauth2 v0.28.0 // indirect
+	golang.org/x/oauth2 v0.30.0 // indirect
 	golang.org/x/text v0.26.0 // indirect
-	golang.org/x/time v0.10.0 // indirect
+	golang.org/x/time v0.11.0 // indirect
 	golang.org/x/tools v0.34.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20241209162323-e6fa225c2576 // indirect
 	google.golang.org/grpc v1.68.1 // indirect
